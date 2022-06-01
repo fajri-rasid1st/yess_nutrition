@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:yess_nutrition/common/styles/color_scheme.dart';
+import 'package:yess_nutrition/common/styles/text_style.dart';
 import 'package:yess_nutrition/presentation/pages/home_page.dart';
 
 void main() {
@@ -10,6 +12,13 @@ void main() {
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+
+  // Mengganti warna status bar dan navigasi
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+    systemNavigationBarIconBrightness: Brightness.dark,
+    systemNavigationBarColor: primaryBackgroundColor,
+  ));
 
   runApp(const MyApp());
 }
@@ -23,10 +32,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Yess Nutrition',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blue,
-        ),
         fontFamily: 'Plus Jakarta Sans',
+        colorScheme: myColorScheme,
+        textTheme: myTextTheme,
+        dividerColor: dividerColor,
+        scaffoldBackgroundColor: scaffoldBackgroundColor,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: const HomePage(title: 'Yess Nutrition App'),
