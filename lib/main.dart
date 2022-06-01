@@ -1,10 +1,13 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/styles/text_style.dart';
 import 'package:yess_nutrition/presentation/pages/home_page.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Untuk mencegah orientasi landskap
@@ -19,6 +22,9 @@ void main() {
     systemNavigationBarIconBrightness: Brightness.dark,
     systemNavigationBarColor: primaryBackgroundColor,
   ));
+
+  // Initialize firebase
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(const MyApp());
 }
