@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 // Text Theme
 // Based on: https://material.io/design/typography/the-type-system.html#type-scale
-final TextTheme myTextTheme = TextTheme(
+final myTextTheme = TextTheme(
   headline1: GoogleFonts.plusJakartaSans(
     fontSize: 94,
     fontWeight: FontWeight.w300,

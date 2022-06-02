@@ -5,6 +5,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
+import 'package:yess_nutrition/presentation/widgets/clickable_text.dart';
+
+import '../../common/styles/button_style.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -47,7 +50,6 @@ class _LoginPageState extends State<LoginPage> {
           children: <Widget>[
             Stack(
               alignment: AlignmentDirectional.topCenter,
-              clipBehavior: Clip.none,
               children: <Widget>[
                 SvgPicture.asset(
                   'assets/svg/wave_background.svg',
@@ -55,16 +57,13 @@ class _LoginPageState extends State<LoginPage> {
                   fit: BoxFit.fitWidth,
                 ),
                 Positioned(
-                  top: 56,
-                  child: SvgPicture.asset(
-                    'assets/svg/yess_logo_white.svg',
-                    fit: BoxFit.fitWidth,
-                  ),
+                  top: 32,
+                  child: SvgPicture.asset('assets/svg/yess_logo_white.svg'),
                 ),
               ],
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+              padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -94,14 +93,88 @@ class _LoginPageState extends State<LoginPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
-                        _buildEmailField(),
-                        const SizedBox(height: 24),
-                        _buildPasswordField(),
+                        FormBuilderTextField(
+                          name: 'email',
+                          controller: _emailController,
+                          textInputAction: TextInputAction.next,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            labelText: 'Email',
+                            hintText: 'Masukkan email kamu',
+                            hintStyle: const TextStyle(
+                              color: secondaryTextColor,
+                            ),
+                            prefixIcon: const Icon(Icons.email_outlined),
+                          ),
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(
+                              errorText: 'Bagian ini harus diisi.',
+                            ),
+                            FormBuilderValidators.email(
+                              errorText: 'Masukkan email yang valid.',
+                            ),
+                          ]),
+                        ),
+                        const SizedBox(height: 20),
+                        FormBuilderTextField(
+                          name: 'password',
+                          controller: _passwordController,
+                          textInputAction: TextInputAction.done,
+                          keyboardType: TextInputType.visiblePassword,
+                          obscureText: _isPasswordInvisible,
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            labelText: 'Password',
+                            hintText: 'Masukkan password kamu',
+                            hintStyle: const TextStyle(
+                              color: secondaryTextColor,
+                            ),
+                            prefixIcon: const Icon(Icons.lock_outlined),
+                            suffixIcon: IconButton(
+                              icon: _isPasswordInvisible
+                                  ? const Icon(Icons.visibility_off_outlined)
+                                  : const Icon(Icons.visibility_outlined),
+                              onPressed: () {
+                                setState(() {
+                                  _isPasswordInvisible = !_isPasswordInvisible;
+                                });
+                              },
+                            ),
+                          ),
+                          validator: FormBuilderValidators.compose([
+                            FormBuilderValidators.required(
+                              errorText: 'Bagian ini harus diisi.',
+                            ),
+                          ]),
+                        ),
                         const SizedBox(height: 8),
-                        _buildForgotPasswordButton(context),
-                        const SizedBox(height: 16),
-                        _buildSubmitButton(context),
+                        const ClickableText(
+                          routeName: forgotPasswordRoute,
+                          text: 'Lupa Password?',
+                        ),
                       ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        FocusScope.of(context).unfocus();
+
+                        if (_formKey.currentState!.validate()) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('berhasil')),
+                          );
+                        }
+                      },
+                      style: elevatedButtonStyle,
+                      child: const Text('Masuk'),
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -121,30 +194,18 @@ class _LoginPageState extends State<LoginPage> {
                         size: 18,
                       ),
                       label: const Text('Lanjutkan dengan Google'),
-                      style: OutlinedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
+                      style: outlinedButtonStyle,
                     ),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 28),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      const Text('Belum punya akun? '),
-                      InkWell(
-                        onTap: () {
-                          Navigator.pushNamed(context, registerRoute);
-                        },
-                        child: const Text(
-                          'Daftar di sini.',
-                          style: TextStyle(
-                            color: primaryColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      )
+                    children: const <Widget>[
+                      Text('Belum punya akun? '),
+                      ClickableText(
+                        routeName: registerRoute,
+                        text: 'Daftar di sini.',
+                      ),
                     ],
                   ),
                 ],
@@ -153,100 +214,6 @@ class _LoginPageState extends State<LoginPage> {
           ],
         ),
       ),
-    );
-  }
-
-  SizedBox _buildSubmitButton(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () {
-          FocusScope.of(context).unfocus();
-
-          if (_formKey.currentState!.validate()) {
-            _formKey.currentState!.save();
-          }
-        },
-        style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-        child: const Text('Masuk'),
-      ),
-    );
-  }
-
-  InkWell _buildForgotPasswordButton(BuildContext context) {
-    return InkWell(
-      onTap: () => Navigator.pushNamed(context, forgotPasswordRoute),
-      child: const Text(
-        'Lupa Password?',
-        style: TextStyle(
-          color: primaryColor,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-
-  FormBuilderTextField _buildPasswordField() {
-    return FormBuilderTextField(
-      name: 'password',
-      controller: _passwordController,
-      textInputAction: TextInputAction.done,
-      keyboardType: TextInputType.visiblePassword,
-      obscureText: _isPasswordInvisible,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        labelText: 'Password',
-        hintText: 'Masukkan password kamu',
-        hintStyle: const TextStyle(color: secondaryTextColor),
-        prefixIcon: const Icon(Icons.lock_outline_rounded),
-        suffixIcon: IconButton(
-          icon: _isPasswordInvisible
-              ? const Icon(Icons.visibility_off_outlined)
-              : const Icon(Icons.visibility_outlined),
-          onPressed: () {
-            setState(() {
-              _isPasswordInvisible = !_isPasswordInvisible;
-            });
-          },
-        ),
-      ),
-      validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(
-          errorText: 'Bagian ini harus diisi.',
-        ),
-      ]),
-    );
-  }
-
-  FormBuilderTextField _buildEmailField() {
-    return FormBuilderTextField(
-      name: 'email',
-      controller: _emailController,
-      textInputAction: TextInputAction.next,
-      keyboardType: TextInputType.emailAddress,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        labelText: 'Email',
-        hintText: 'Masukkan email kamu',
-        hintStyle: const TextStyle(color: secondaryTextColor),
-        prefixIcon: const Icon(Icons.email_outlined),
-      ),
-      validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(
-          errorText: 'Bagian ini harus diisi.',
-        ),
-        FormBuilderValidators.email(
-          errorText: 'Masukkan email yang valid.',
-        ),
-      ]),
     );
   }
 }
