@@ -18,9 +18,7 @@ void main() async {
 
   // Mengganti warna status bar dan navigasi
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-    systemNavigationBarIconBrightness: Brightness.dark,
-    systemNavigationBarColor: primaryBackgroundColor,
+    systemNavigationBarColor: Colors.transparent,
   ));
 
   // Initialize firebase
