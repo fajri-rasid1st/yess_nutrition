@@ -46,10 +46,11 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: primaryBackgroundColor,
       body: SingleChildScrollView(
-        reverse: true,
         child: Column(
           children: <Widget>[
             Stack(
@@ -57,10 +58,9 @@ class _RegisterPageState extends State<RegisterPage> {
                 SvgPicture.asset(
                   'assets/svg/wave_background.svg',
                   alignment: Alignment.topCenter,
-                  fit: BoxFit.fitWidth,
+                  width: width,
                 ),
-                Positioned(
-                  top: 32,
+                SafeArea(
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Container(
@@ -83,7 +83,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -142,9 +142,7 @@ class _RegisterPageState extends State<RegisterPage> {
         prefixIcon: const Icon(Icons.person_outline),
       ),
       validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(
-          errorText: 'Bagian ini harus diisi.',
-        ),
+        FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
       ]),
     );
   }
@@ -165,12 +163,8 @@ class _RegisterPageState extends State<RegisterPage> {
         prefixIcon: const Icon(Icons.email_outlined),
       ),
       validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(
-          errorText: 'Bagian ini harus diisi.',
-        ),
-        FormBuilderValidators.email(
-          errorText: 'Masukkan email yang valid.',
-        ),
+        FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
+        FormBuilderValidators.email(errorText: 'Email tidak valid.'),
       ]),
     );
   }
@@ -202,12 +196,10 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
       validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(
-          errorText: 'Bagian ini harus diisi.',
-        ),
+        FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
         FormBuilderValidators.match(
           r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$',
-          errorText: 'Password minimal 8 karakter dengan 1 angka dan huruf.',
+          errorText: 'Password min. 8 karakter dengan 1 angka dan huruf.',
         ),
       ]),
     );
@@ -215,7 +207,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
   FormBuilderTextField _buildConfirmPasswordField() {
     return FormBuilderTextField(
-      name: 'confirmPassword',
+      name: 'confirm_password',
       controller: _confirmPasswordController,
       textInputAction: TextInputAction.done,
       keyboardType: TextInputType.visiblePassword,
@@ -240,12 +232,10 @@ class _RegisterPageState extends State<RegisterPage> {
         ),
       ),
       validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(
-          errorText: 'Bagian ini harus diisi.',
-        ),
+        FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
         FormBuilderValidators.equal<String>(
           _passwordController.text,
-          errorText: 'Password konfirmasi harus sama dengan password kamu.',
+          errorText: 'Harus sama dengan password kamu.',
         ),
       ]),
     );
@@ -258,7 +248,11 @@ class _RegisterPageState extends State<RegisterPage> {
         onPressed: () {
           FocusScope.of(context).unfocus();
 
+          _formKey.currentState!.save();
+
           if (_formKey.currentState!.validate()) {
+            print(_formKey.currentState!.value);
+
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text('berhasil')),
             );

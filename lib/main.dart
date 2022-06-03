@@ -1,7 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:yess_nutrition/presentation/pages/additional_information_page.dart';
 import 'package:yess_nutrition/presentation/pages/forgot_password_page.dart';
+import 'package:yess_nutrition/presentation/pages/home_page.dart';
 import 'package:yess_nutrition/presentation/pages/login_page.dart';
 import 'package:yess_nutrition/presentation/pages/register_page.dart';
 import 'common/styles/color_scheme.dart';
@@ -49,10 +51,6 @@ class MyApp extends StatelessWidget {
       home: const LoginPage(),
       onGenerateRoute: (settings) {
         switch (settings.name) {
-          case loginRoute:
-            return MaterialPageRoute(
-              builder: (_) => const LoginPage(),
-            );
           case registerRoute:
             return MaterialPageRoute(
               builder: (_) => const RegisterPage(),
@@ -60,6 +58,14 @@ class MyApp extends StatelessWidget {
           case forgotPasswordRoute:
             return MaterialPageRoute(
               builder: (_) => const ForgotPasswordPage(),
+            );
+          case additionalInformationRoute:
+            return MaterialPageRoute(
+              builder: (_) => const AdditionalInformationPage(),
+            );
+          case homeRoute:
+            return MaterialPageRoute(
+              builder: (_) => const HomePage(title: 'Yess Nutrition'),
             );
           default:
             return MaterialPageRoute(

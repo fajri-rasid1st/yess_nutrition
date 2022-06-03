@@ -8,7 +8,7 @@ const secondaryBackgroundColor = Color(0XFF8B80F8);
 const scaffoldBackgroundColor = Color(0XFFF5F6FA);
 const primaryTextColor = Color(0XFF2E3142);
 const secondaryTextColor = Color(0XFF9C9DB9);
-const dividerColor = Color(0XFFC7C7DB);
+const dividerColor = Color(0XFFD2D1E1);
 const errorColor = Color(0XFFF9877B);
 
 // Color Scheme
@@ -22,4 +22,5 @@ final myColorScheme = ColorScheme.fromSeed(
   background: primaryBackgroundColor,
   onBackground: primaryTextColor,
   error: errorColor,
+  errorContainer: errorColor,
 );

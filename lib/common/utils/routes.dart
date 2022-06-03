@@ -1,4 +1,7 @@
 // Some route name
-const loginRoute = '/login';
+
+const homeRoute = '/home';
+const loginRoute = '/';
 const registerRoute = '/register';
 const forgotPasswordRoute = '/forgot-password';
+const additionalInformationRoute = '/add-info';

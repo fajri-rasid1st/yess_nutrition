@@ -34,10 +34,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: primaryBackgroundColor,
       body: SingleChildScrollView(
-        reverse: true,
         child: Column(
           children: <Widget>[
             Stack(
@@ -45,10 +46,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 SvgPicture.asset(
                   'assets/svg/wave_background.svg',
                   alignment: Alignment.topCenter,
-                  fit: BoxFit.fitWidth,
+                  width: width,
                 ),
-                Positioned(
-                  top: 32,
+                SafeArea(
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Container(
@@ -71,7 +71,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+              padding: const EdgeInsets.fromLTRB(16, 24, 16, 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -92,47 +92,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     key: _formKey,
                     child: Column(
                       children: <Widget>[
-                        FormBuilderTextField(
-                          name: 'email',
-                          controller: _emailController,
-                          textInputAction: TextInputAction.next,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            labelText: 'Email',
-                            hintText: 'Masukkan email kamu',
-                            hintStyle:
-                                const TextStyle(color: secondaryTextColor),
-                            prefixIcon: const Icon(Icons.email_outlined),
-                          ),
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(
-                              errorText: 'Bagian ini harus diisi.',
-                            ),
-                            FormBuilderValidators.email(
-                              errorText: 'Masukkan email yang valid.',
-                            ),
-                          ]),
-                        ),
+                        _buildEmailField(),
                         const SizedBox(height: 16),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              FocusScope.of(context).unfocus();
-
-                              if (_formKey.currentState!.validate()) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('berhasil')),
-                                );
-                              }
-                            },
-                            style: elevatedButtonStyle,
-                            child: const Text('Daftar Sekarang'),
-                          ),
-                        )
+                        _buildSubmitButton(context)
                       ],
                     ),
                   ),
@@ -141,6 +103,51 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  FormBuilderTextField _buildEmailField() {
+    return FormBuilderTextField(
+      name: 'email',
+      controller: _emailController,
+      textInputAction: TextInputAction.done,
+      keyboardType: TextInputType.emailAddress,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        labelText: 'Email',
+        hintText: 'Masukkan email kamu',
+        hintStyle: const TextStyle(color: secondaryTextColor),
+        prefixIcon: const Icon(Icons.email_outlined),
+      ),
+      validator: FormBuilderValidators.compose([
+        FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
+        FormBuilderValidators.email(errorText: 'Email tidak valid.'),
+      ]),
+    );
+  }
+
+  SizedBox _buildSubmitButton(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () {
+          FocusScope.of(context).unfocus();
+
+          _formKey.currentState!.save();
+
+          if (_formKey.currentState!.validate()) {
+            print(_formKey.currentState!.value);
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('berhasil')),
+            );
+          }
+        },
+        style: elevatedButtonStyle,
+        child: const Text('Daftar Sekarang'),
       ),
     );
   }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import 'color_scheme.dart';
+
 // Text Theme
 // Based on: https://material.io/design/typography/the-type-system.html#type-scale
 final myTextTheme = TextTheme(
@@ -67,4 +69,7 @@ final myTextTheme = TextTheme(
     fontWeight: FontWeight.w400,
     letterSpacing: 1.5,
   ),
+).apply(
+  bodyColor: primaryTextColor,
+  displayColor: primaryTextColor,
 );

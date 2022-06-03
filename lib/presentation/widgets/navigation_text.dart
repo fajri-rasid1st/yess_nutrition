@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../../common/styles/color_scheme.dart';
 
-class ClickableText extends StatelessWidget {
+class NavigationText extends StatelessWidget {
   final String routeName;
   final String text;
 
-  const ClickableText({
+  const NavigationText({
     Key? key,
     required this.routeName,
     required this.text,

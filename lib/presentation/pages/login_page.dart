@@ -5,7 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
-import 'package:yess_nutrition/presentation/widgets/clickable_text.dart';
+import 'package:yess_nutrition/presentation/widgets/navigation_text.dart';
 
 import '../../common/styles/button_style.dart';
 
@@ -42,10 +42,11 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: primaryBackgroundColor,
       body: SingleChildScrollView(
-        reverse: true,
         child: Column(
           children: <Widget>[
             Stack(
@@ -54,16 +55,18 @@ class _LoginPageState extends State<LoginPage> {
                 SvgPicture.asset(
                   'assets/svg/wave_background.svg',
                   alignment: Alignment.topCenter,
-                  fit: BoxFit.fitWidth,
+                  width: width,
                 ),
-                Positioned(
-                  top: 32,
-                  child: SvgPicture.asset('assets/svg/yess_logo_white.svg'),
+                SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: SvgPicture.asset('assets/svg/yess_logo_white.svg'),
+                  ),
                 ),
               ],
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -93,67 +96,11 @@ class _LoginPageState extends State<LoginPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
-                        FormBuilderTextField(
-                          name: 'email',
-                          controller: _emailController,
-                          textInputAction: TextInputAction.next,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            labelText: 'Email',
-                            hintText: 'Masukkan email kamu',
-                            hintStyle: const TextStyle(
-                              color: secondaryTextColor,
-                            ),
-                            prefixIcon: const Icon(Icons.email_outlined),
-                          ),
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(
-                              errorText: 'Bagian ini harus diisi.',
-                            ),
-                            FormBuilderValidators.email(
-                              errorText: 'Masukkan email yang valid.',
-                            ),
-                          ]),
-                        ),
+                        _buildEmailField(),
                         const SizedBox(height: 20),
-                        FormBuilderTextField(
-                          name: 'password',
-                          controller: _passwordController,
-                          textInputAction: TextInputAction.done,
-                          keyboardType: TextInputType.visiblePassword,
-                          obscureText: _isPasswordInvisible,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            labelText: 'Password',
-                            hintText: 'Masukkan password kamu',
-                            hintStyle: const TextStyle(
-                              color: secondaryTextColor,
-                            ),
-                            prefixIcon: const Icon(Icons.lock_outlined),
-                            suffixIcon: IconButton(
-                              icon: _isPasswordInvisible
-                                  ? const Icon(Icons.visibility_off_outlined)
-                                  : const Icon(Icons.visibility_outlined),
-                              onPressed: () {
-                                setState(() {
-                                  _isPasswordInvisible = !_isPasswordInvisible;
-                                });
-                              },
-                            ),
-                          ),
-                          validator: FormBuilderValidators.compose([
-                            FormBuilderValidators.required(
-                              errorText: 'Bagian ini harus diisi.',
-                            ),
-                          ]),
-                        ),
+                        _buildPasswordField(),
                         const SizedBox(height: 8),
-                        const ClickableText(
+                        const NavigationText(
                           routeName: forgotPasswordRoute,
                           text: 'Lupa Password?',
                         ),
@@ -161,22 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        FocusScope.of(context).unfocus();
-
-                        if (_formKey.currentState!.validate()) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('berhasil')),
-                          );
-                        }
-                      },
-                      style: elevatedButtonStyle,
-                      child: const Text('Masuk'),
-                    ),
-                  ),
+                  _buildSubmitButton(context),
                   const SizedBox(height: 10),
                   const Center(
                     child: Text(
@@ -185,24 +117,13 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton.icon(
-                      onPressed: () {},
-                      icon: const FaIcon(
-                        FontAwesomeIcons.google,
-                        size: 18,
-                      ),
-                      label: const Text('Lanjutkan dengan Google'),
-                      style: outlinedButtonStyle,
-                    ),
-                  ),
+                  _buildGoogleSignInButton(),
                   const SizedBox(height: 28),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const <Widget>[
                       Text('Belum punya akun? '),
-                      ClickableText(
+                      NavigationText(
                         routeName: registerRoute,
                         text: 'Daftar di sini.',
                       ),
@@ -213,6 +134,96 @@ class _LoginPageState extends State<LoginPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  FormBuilderTextField _buildEmailField() {
+    return FormBuilderTextField(
+      name: 'email',
+      controller: _emailController,
+      textInputAction: TextInputAction.next,
+      keyboardType: TextInputType.emailAddress,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        labelText: 'Email',
+        hintText: 'Masukkan email kamu',
+        hintStyle: const TextStyle(color: secondaryTextColor),
+        prefixIcon: const Icon(Icons.email_outlined),
+      ),
+      validator: FormBuilderValidators.compose([
+        FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
+        FormBuilderValidators.email(errorText: 'Email tidak valid.'),
+      ]),
+    );
+  }
+
+  FormBuilderTextField _buildPasswordField() {
+    return FormBuilderTextField(
+      name: 'password',
+      controller: _passwordController,
+      textInputAction: TextInputAction.done,
+      keyboardType: TextInputType.visiblePassword,
+      obscureText: _isPasswordInvisible,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        labelText: 'Password',
+        hintText: 'Masukkan password kamu',
+        hintStyle: const TextStyle(color: secondaryTextColor),
+        prefixIcon: const Icon(Icons.lock_outlined),
+        suffixIcon: IconButton(
+          icon: _isPasswordInvisible
+              ? const Icon(Icons.visibility_off_outlined)
+              : const Icon(Icons.visibility_outlined),
+          onPressed: () {
+            setState(() {
+              _isPasswordInvisible = !_isPasswordInvisible;
+            });
+          },
+        ),
+      ),
+      validator: FormBuilderValidators.compose([
+        FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
+      ]),
+    );
+  }
+
+  SizedBox _buildSubmitButton(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () {
+          FocusScope.of(context).unfocus();
+
+          _formKey.currentState!.save();
+
+          if (_formKey.currentState!.validate()) {
+            print(_formKey.currentState!.value);
+
+            Navigator.pushNamed(context, additionalInformationRoute);
+          }
+        },
+        style: elevatedButtonStyle,
+        child: const Text('Masuk'),
+      ),
+    );
+  }
+
+  SizedBox _buildGoogleSignInButton() {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        onPressed: () {},
+        icon: const FaIcon(
+          FontAwesomeIcons.google,
+          size: 18,
+        ),
+        label: const Text('Lanjutkan dengan Google'),
+        style: outlinedButtonStyle,
       ),
     );
   }
