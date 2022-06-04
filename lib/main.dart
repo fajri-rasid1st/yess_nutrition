@@ -1,33 +1,47 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:provider/single_child_widget.dart';
+import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/presentation/pages/additional_information_page.dart';
 import 'package:yess_nutrition/presentation/pages/forgot_password_page.dart';
 import 'package:yess_nutrition/presentation/pages/home_page.dart';
 import 'package:yess_nutrition/presentation/pages/login_page.dart';
+import 'package:yess_nutrition/presentation/pages/main_page.dart';
 import 'package:yess_nutrition/presentation/pages/register_page.dart';
+import 'package:yess_nutrition/presentation/providers/auth_notifiers/delete_user_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/auth_notifiers/reset_password_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/auth_notifiers/sign_in_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/auth_notifiers/sign_out_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/auth_notifiers/sign_up_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/auth_notifiers/user_notifier.dart';
 import 'common/styles/color_scheme.dart';
 import 'common/styles/text_style.dart';
 import 'common/utils/routes.dart';
 import 'firebase_options.dart';
+import 'injection.dart' as di;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Untuk mencegah orientasi landscape
+  // Prevent landscape orientation
   SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
 
-  // Mengganti warna status bar dan navigasi
+  // Change status bar and navigation color
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     systemNavigationBarColor: primaryBackgroundColor,
     systemNavigationBarIconBrightness: Brightness.dark,
   ));
 
-  // Inisialisasi firebase
+  // Initialize firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Initialize service locator
+  di.init();
 
   runApp(const MyApp());
 }
@@ -37,48 +51,68 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Yess Nutrition',
-      theme: ThemeData(
-        fontFamily: 'Plus Jakarta Sans',
-        colorScheme: myColorScheme,
-        textTheme: myTextTheme,
-        dividerColor: dividerColor,
-        scaffoldBackgroundColor: scaffoldBackgroundColor,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+    return MultiProvider(
+      providers: <SingleChildWidget>[
+        ChangeNotifierProvider<UserNotifier>(
+          create: (_) => di.locator<UserNotifier>(),
+        ),
+        ChangeNotifierProvider<SignInNotifier>(
+          create: (_) => di.locator<SignInNotifier>(),
+        ),
+        ChangeNotifierProvider<SignUpNotifier>(
+          create: (_) => di.locator<SignUpNotifier>(),
+        ),
+        ChangeNotifierProvider<SignOutNotifier>(
+          create: (_) => di.locator<SignOutNotifier>(),
+        ),
+        ChangeNotifierProvider<ResetPasswordNotifier>(
+          create: (_) => di.locator<ResetPasswordNotifier>(),
+        ),
+        ChangeNotifierProvider<DeleteUserNotifier>(
+          create: (_) => di.locator<DeleteUserNotifier>(),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Yess Nutrition',
+        theme: ThemeData(
+          fontFamily: 'Plus Jakarta Sans',
+          colorScheme: myColorScheme,
+          textTheme: myTextTheme,
+          dividerColor: dividerColor,
+          scaffoldBackgroundColor: scaffoldBackgroundColor,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        navigatorKey: navigatorKey,
+        scaffoldMessengerKey: scaffoldMessengerKey,
+        home: const MainPage(),
+        onGenerateRoute: (settings) {
+          switch (settings.name) {
+            case loginRoute:
+              return MaterialPageRoute(
+                builder: (_) => const LoginPage(),
+              );
+            case registerRoute:
+              return MaterialPageRoute(
+                builder: (_) => const RegisterPage(),
+              );
+            case forgotPasswordRoute:
+              return MaterialPageRoute(
+                builder: (_) => const ForgotPasswordPage(),
+              );
+            case additionalInformationRoute:
+              return MaterialPageRoute(
+                builder: (_) => const AdditionalInformationPage(),
+              );
+            case homeRoute:
+              return MaterialPageRoute(
+                builder: (_) => const HomePage(),
+              );
+            default:
+              return null;
+          }
+        },
       ),
-      home: const LoginPage(),
-      onGenerateRoute: (settings) {
-        switch (settings.name) {
-          case registerRoute:
-            return MaterialPageRoute(
-              builder: (_) => const RegisterPage(),
-            );
-          case forgotPasswordRoute:
-            return MaterialPageRoute(
-              builder: (_) => const ForgotPasswordPage(),
-            );
-          case additionalInformationRoute:
-            return MaterialPageRoute(
-              builder: (_) => const AdditionalInformationPage(),
-            );
-          case homeRoute:
-            return MaterialPageRoute(
-              builder: (_) => const HomePage(title: 'Yess Nutrition'),
-            );
-          default:
-            return MaterialPageRoute(
-              builder: (_) {
-                return const Scaffold(
-                  body: Center(
-                    child: Text('Page not found'),
-                  ),
-                );
-              },
-            );
-        }
-      },
     );
   }
 }

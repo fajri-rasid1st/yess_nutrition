@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:yess_nutrition/common/styles/button_style.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
-import 'package:yess_nutrition/presentation/widgets/navigation_text.dart';
-
-import '../../common/styles/button_style.dart';
+import 'package:yess_nutrition/presentation/widgets/clickable_text.dart';
 
 class AdditionalInformationPage extends StatefulWidget {
   const AdditionalInformationPage({Key? key}) : super(key: key);
@@ -54,8 +53,8 @@ class _AdditionalInformationPageState extends State<AdditionalInformationPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  const NavigationText(
-                    routeName: homeRoute,
+                  ClickableText(
+                    onTap: () => Navigator.pushNamed(context, homeRoute),
                     text: 'Lewati',
                   ),
                   Container(
@@ -254,13 +253,7 @@ class _AdditionalInformationPageState extends State<AdditionalInformationPage> {
 
           _formKey.currentState!.save();
 
-          if (_formKey.currentState!.validate()) {
-            print(_formKey.currentState!.value);
-
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('berhasil')),
-            );
-          }
+          if (_formKey.currentState!.validate()) {}
         },
         style: elevatedButtonStyle,
         child: const Text('Lanjutkan'),

@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:provider/provider.dart';
+import 'package:yess_nutrition/common/styles/button_style.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
-
-import '../../common/styles/button_style.dart';
+import 'package:yess_nutrition/common/utils/enum_state.dart';
+import 'package:yess_nutrition/common/utils/keys.dart';
+import 'package:yess_nutrition/common/utils/snack_bar.dart';
+import 'package:yess_nutrition/presentation/providers/auth_notifiers/sign_up_notifier.dart';
+import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({Key? key}) : super(key: key);
@@ -30,6 +35,8 @@ class _RegisterPageState extends State<RegisterPage> {
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
     _confirmPasswordController = TextEditingController();
+
+    _passwordController.addListener(() => setState(() {}));
 
     super.initState();
   }
@@ -245,22 +252,44 @@ class _RegisterPageState extends State<RegisterPage> {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () {
-          FocusScope.of(context).unfocus();
-
-          _formKey.currentState!.save();
-
-          if (_formKey.currentState!.validate()) {
-            print(_formKey.currentState!.value);
-
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('berhasil')),
-            );
-          }
-        },
+        onPressed: () => _onPressedSubmitButton(context),
         style: elevatedButtonStyle,
         child: const Text('Daftar Sekarang'),
       ),
     );
+  }
+
+  Future<void> _onPressedSubmitButton(BuildContext context) async {
+    FocusScope.of(context).unfocus();
+
+    _formKey.currentState!.save();
+
+    if (_formKey.currentState!.validate()) {
+      final value = _formKey.currentState!.value;
+      final signUpNotifier = context.read<SignUpNotifier>();
+
+      // show loading when signUp is currently on process
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const LoadingIndicator(),
+      );
+
+      await signUpNotifier.signUp(value['email'], value['password']);
+
+      if (signUpNotifier.state == AuthState.error) {
+        final snackBar = createSnackBar(signUpNotifier.error);
+
+        scaffoldMessengerKey.currentState!
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
+
+        // just close the loading indicator
+        navigatorKey.currentState!.pop();
+      } else {
+        // navigate to first route after signUp complete
+        navigatorKey.currentState!.popUntil((route) => route.isFirst);
+      }
+    }
   }
 }

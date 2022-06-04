@@ -3,11 +3,16 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:provider/provider.dart';
+import 'package:yess_nutrition/common/styles/button_style.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
+import 'package:yess_nutrition/common/utils/enum_state.dart';
+import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
-import 'package:yess_nutrition/presentation/widgets/navigation_text.dart';
-
-import '../../common/styles/button_style.dart';
+import 'package:yess_nutrition/common/utils/snack_bar.dart';
+import 'package:yess_nutrition/presentation/providers/auth_notifiers/sign_in_notifier.dart';
+import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
+import 'package:yess_nutrition/presentation/widgets/clickable_text.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -100,10 +105,13 @@ class _LoginPageState extends State<LoginPage> {
                         const SizedBox(height: 20),
                         _buildPasswordField(),
                         const SizedBox(height: 8),
-                        const NavigationText(
-                          routeName: forgotPasswordRoute,
+                        ClickableText(
+                          onTap: () {
+                            navigatorKey.currentState!
+                                .pushNamed(forgotPasswordRoute);
+                          },
                           text: 'Lupa Password?',
-                        ),
+                        )
                       ],
                     ),
                   ),
@@ -121,12 +129,14 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 28),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const <Widget>[
-                      Text('Belum punya akun? '),
-                      NavigationText(
-                        routeName: registerRoute,
+                    children: <Widget>[
+                      const Text('Belum punya akun? '),
+                      ClickableText(
+                        onTap: () {
+                          navigatorKey.currentState!.pushNamed(registerRoute);
+                        },
                         text: 'Daftar di sini.',
-                      ),
+                      )
                     ],
                   ),
                 ],
@@ -196,21 +206,42 @@ class _LoginPageState extends State<LoginPage> {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () {
-          FocusScope.of(context).unfocus();
-
-          _formKey.currentState!.save();
-
-          if (_formKey.currentState!.validate()) {
-            print(_formKey.currentState!.value);
-
-            Navigator.pushNamed(context, additionalInformationRoute);
-          }
-        },
+        onPressed: () => _onPressedSubmitButton(context),
         style: elevatedButtonStyle,
         child: const Text('Masuk'),
       ),
     );
+  }
+
+  Future<void> _onPressedSubmitButton(BuildContext context) async {
+    FocusScope.of(context).unfocus();
+
+    _formKey.currentState!.save();
+
+    if (_formKey.currentState!.validate()) {
+      final value = _formKey.currentState!.value;
+      final signInNotifier = context.read<SignInNotifier>();
+
+      // show loading when signIn is currently on process
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const LoadingIndicator(),
+      );
+
+      await signInNotifier.signIn(value['email'], value['password']);
+
+      if (signInNotifier.state == AuthState.error) {
+        final snackBar = createSnackBar(signInNotifier.error);
+
+        scaffoldMessengerKey.currentState!
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
+      }
+
+      // navigate to first route after signIn complete
+      navigatorKey.currentState!.popUntil((route) => route.isFirst);
+    }
   }
 
   SizedBox _buildGoogleSignInButton() {
