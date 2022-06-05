@@ -30,9 +30,6 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
     _weightController = TextEditingController();
     _heightController = TextEditingController();
 
-    // TODO: updateUserData, change isFirstLogin to false to prevent user
-    //  navigate from this page again when next login.
-
     super.initState();
   }
 
@@ -263,7 +260,13 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
 
           _formKey.currentState!.save();
 
-          if (_formKey.currentState!.validate()) {}
+          if (_formKey.currentState!.validate()) {
+            // TODO: updateUserData, change isFirstLogin to false to prevent user
+            //  navigate from this page again. Also change gender, age, weight,
+            //  and height.
+
+            navigatorKey.currentState!.pushReplacementNamed(homeRoute);
+          }
         },
         style: elevatedButtonStyle,
         child: const Text('Lanjutkan'),
