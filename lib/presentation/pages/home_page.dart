@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/state_enum.dart';
 import 'package:yess_nutrition/presentation/providers/bottom_navigation_bar_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_button_navigation_bar.dart';
+import 'package:yess_nutrition/presentation/widgets/large_circular_progress.dart';
+import 'package:yess_nutrition/presentation/widgets/small_circular_progress.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -18,29 +22,36 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: const CustomButtonNavigationBar(),
-      body: Consumer<BottomNavigationBarNotifier>(
-          builder: (context, result, child) {
-        if (result.selectedMenu == MenuNavBar.Home) {
-          return const BodyHomePage();
-        } else if (result.selectedMenu == MenuNavBar.NutriTime) {
-          return const Center(
-            child: Text("Ini Halaman NutriTime"),
-          );
-        } else if (result.selectedMenu == MenuNavBar.NutriNews) {
-          return const Center(
-            child: Text("Ini Halaman NutriNews"),
-          );
-        } else if (result.selectedMenu == MenuNavBar.NutriShop) {
-          return const Center(
-            child: Text("Ini Halaman NutriShop"),
-          );
-        } else {
-          return const Center(
-            child: Text("Halaman tidak ditemukan"),
-          );
-        }
-      }),
+      body: Stack(
+        children: [
+          Consumer<BottomNavigationBarNotifier>(
+              builder: (context, result, child) {
+            if (result.selectedMenu == MenuNavBar.Home) {
+              return const BodyHomePage();
+            } else if (result.selectedMenu == MenuNavBar.NutriTime) {
+              return const Center(
+                child: Text("Ini Halaman NutriTime"),
+              );
+            } else if (result.selectedMenu == MenuNavBar.NutriNews) {
+              return const Center(
+                child: Text("Ini Halaman NutriNews"),
+              );
+            } else if (result.selectedMenu == MenuNavBar.NutriShop) {
+              return const Center(
+                child: Text("Ini Halaman NutriShop"),
+              );
+            } else {
+              return const Center(
+                child: Text("Halaman tidak ditemukan"),
+              );
+            }
+          }),
+          const Positioned(
+            bottom: 0,
+            child: CustomButtonNavigationBar(),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -51,84 +62,201 @@ class BodyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Stack(
+      fit: StackFit.expand,
       children: <Widget>[
-        Stack(
-          alignment: AlignmentDirectional.topStart,
-          clipBehavior: Clip.none,
-          children: <Widget>[
-            SvgPicture.asset(
-              'assets/svg/header_background.svg',
-              alignment: Alignment.topCenter,
-              fit: BoxFit.fitWidth,
-              width: MediaQuery.of(context).size.width,
+        _buildHeaderHomePage(context),
+        _buildContentHomePage(context)
+      ],
+    );
+  }
+
+  Widget _buildHeaderHomePage(BuildContext context) {
+    return Stack(
+      alignment: AlignmentDirectional.topStart,
+      clipBehavior: Clip.none,
+      children: <Widget>[
+        SvgPicture.asset(
+          'assets/svg/header_background.svg',
+          alignment: Alignment.topCenter,
+          fit: BoxFit.fitWidth,
+          width: MediaQuery.of(context).size.width,
+        ),
+        SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 36,
             ),
-            SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 36,
-                ),
-                child: Row(
+            child: Row(
+              children: [
+                Row(
                   children: [
-                    Row(
+                    Container(
+                      width: 50,
+                      height: 50,
+                      margin: const EdgeInsets.only(right: 12),
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(8),
+                        ),
+                      ),
+                      clipBehavior: Clip.hardEdge,
+                      child: Image.asset(
+                        'assets/img/test_avatar.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Container(
-                          width: 50,
-                          height: 50,
-                          margin: const EdgeInsets.only(right: 12),
-                          decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(8),
-                            ),
-                          ),
-                          clipBehavior: Clip.hardEdge,
-                          child: Image.asset(
-                            'assets/img/test_avatar.png',
-                            fit: BoxFit.cover,
+                        const Text(
+                          "Hai, Brandon!",
+                          style: TextStyle(
+                            color: primaryBackgroundColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w800,
                           ),
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Text(
-                              "Hai, Brandon!",
-                              style: TextStyle(
-                                color: primaryBackgroundColor,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                            const SizedBox(
-                              height: 4,
-                            ),
-                            Text(
-                              "Selamat Datang",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .caption
-                                  ?.copyWith(color: primaryBackgroundColor),
-                            ),
-                          ],
+                        const SizedBox(
+                          height: 4,
+                        ),
+                        Text(
+                          "Selamat Datang",
+                          style: Theme.of(context)
+                              .textTheme
+                              .caption
+                              ?.copyWith(color: primaryBackgroundColor),
                         ),
                       ],
                     ),
-                    const Spacer(),
-                    InkWell(
-                      onTap: () {},
-                      child: Container(
-                        width: 44,
-                        height: 44,
-                        decoration: const BoxDecoration(
-                          color: primaryColor,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(12),
-                          ),
-                        ),
-                        child: const Icon(
-                          Icons.settings_outlined,
-                          color: primaryBackgroundColor,
-                          size: 22,
+                  ],
+                ),
+                const Spacer(),
+                InkWell(
+                  onTap: () {
+                    const snackBar = SnackBar(
+                      content: Text('Yay! A SnackBar!'),
+                    );
+
+                    // Find the ScaffoldMessenger in the widget tree
+                    // and use it to show a SnackBar.
+                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  },
+                  child: Container(
+                    width: 44,
+                    height: 44,
+                    decoration: const BoxDecoration(
+                      color: primaryColor,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(12),
+                      ),
+                    ),
+                    child: const Icon(
+                      Icons.settings_outlined,
+                      color: primaryBackgroundColor,
+                      size: 22,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildContentHomePage(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: 130),
+      width: MediaQuery.of(context).size.width,
+      decoration: const BoxDecoration(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(24),
+          topRight: Radius.circular(24),
+        ),
+        color: scaffoldBackgroundColor,
+      ),
+      clipBehavior: Clip.hardEdge,
+      child: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            const SizedBox(
+              height: 24,
+            ),
+            _buildCardRingkasan(context),
+            const SizedBox(
+              height: 24,
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width - 32,
+              decoration: BoxDecoration(
+                color: primaryBackgroundColor,
+                borderRadius: const BorderRadius.all(Radius.circular(16)),
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                    offset: const Offset(0.0, 0.0),
+                    color: const Color(0XFF000000).withOpacity(0.05),
+                    blurRadius: 20,
+                  )
+                ],
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    top: 18.0, left: 18.0, right: 18.0, bottom: 10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Text(
+                      "NutriTime",
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle1
+                          ?.copyWith(fontWeight: FontWeight.w800),
+                    ),
+                    const SizedBox(
+                      height: 4,
+                    ),
+                    Text(
+                      "4 dari 8",
+                      style: Theme.of(context)
+                          .textTheme
+                          .caption
+                          ?.copyWith(color: secondaryTextColor),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: LinearPercentIndicator(
+                        lineHeight: 8,
+                        percent: 4 / 8,
+                        animation: true,
+                        animationDuration: 1000,
+                        progressColor: primaryColor,
+                        backgroundColor: secondaryColor,
+                        barRadius: const Radius.circular(10),
+                        padding: EdgeInsets.zero,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    Divider(
+                      color: dividerColor.withOpacity(0.6),
+                    ),
+                    Center(
+                      child: TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          "Lihat Detail",
+                          style: Theme.of(context).textTheme.button?.copyWith(
+                                color: primaryColor,
+                                letterSpacing: 0.5,
+                              ),
                         ),
                       ),
                     ),
@@ -136,23 +264,118 @@ class BodyHomePage extends StatelessWidget {
                 ),
               ),
             ),
+            const SizedBox(
+              height: 120,
+            ),
           ],
         ),
-        Positioned(
-          top: 140,
-          child: Container(
-            width: MediaQuery.of(context).size.width,
-            height: 200,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(24),
-                topRight: Radius.circular(24),
-              ),
-              color: scaffoldBackgroundColor,
+      ),
+    );
+  }
+
+  Widget _buildCardRingkasan(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width - 32,
+      decoration: BoxDecoration(
+        color: primaryBackgroundColor,
+        borderRadius: const BorderRadius.all(Radius.circular(16)),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            offset: const Offset(0.0, 0.0),
+            color: const Color(0XFF000000).withOpacity(0.05),
+            blurRadius: 20,
+          )
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(
+            top: 18.0, left: 18.0, right: 18.0, bottom: 10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              "Ringkasan Nutrisi Harian",
+              style: Theme.of(context)
+                  .textTheme
+                  .subtitle1
+                  ?.copyWith(fontWeight: FontWeight.w800),
             ),
-          ),
-        )
-      ],
+            const SizedBox(
+              height: 16,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const <Widget>[
+                LargeCircularProgress(
+                  backgroundColor: secondaryColor,
+                  descriptionProgress: "Kalori",
+                  progressColor: secondaryBackgroundColor,
+                  progress: 0.25,
+                ),
+                SizedBox(
+                  width: 24,
+                ),
+                LargeCircularProgress(
+                  backgroundColor: secondaryColor,
+                  descriptionProgress: "Air",
+                  progressColor: secondaryBackgroundColor,
+                  progress: 1,
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SmallCircularProgress(
+                  backgroundColor: const Color(0XFF5ECFF2).withOpacity(0.2),
+                  descriptionProgress: "Protein",
+                  progressColor: const Color(0XFF5ECFF2),
+                  progress: 0.5,
+                ),
+                const SizedBox(
+                  width: 24,
+                ),
+                SmallCircularProgress(
+                  backgroundColor: const Color(0XFFEF5EF2).withOpacity(0.2),
+                  descriptionProgress: "Protein",
+                  progressColor: const Color(0XFFEF5EF2),
+                  progress: 0.75,
+                ),
+                const SizedBox(
+                  width: 24,
+                ),
+                SmallCircularProgress(
+                  backgroundColor: const Color(0XFFFB958B).withOpacity(0.2),
+                  descriptionProgress: "Lemak",
+                  progressColor: errorColor,
+                  progress: 0.8,
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            Divider(
+              color: dividerColor.withOpacity(0.6),
+            ),
+            Center(
+              child: TextButton(
+                onPressed: () {},
+                child: Text(
+                  "Lihat Detail",
+                  style: Theme.of(context).textTheme.button?.copyWith(
+                        color: primaryColor,
+                        letterSpacing: 0.5,
+                      ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

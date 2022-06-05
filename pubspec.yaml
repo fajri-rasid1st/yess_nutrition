@@ -46,6 +46,8 @@ dependencies:
     material_design_icons_flutter: ^5.0.6595
     get_it: ^7.2.0
     provider: ^6.0.3
+    percent_indicator: ^4.2.2
+    countup: ^0.1.4
 
 dev_dependencies:
     flutter_test:
