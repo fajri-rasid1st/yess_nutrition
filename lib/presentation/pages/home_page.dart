@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/state_enum.dart';
 import 'package:yess_nutrition/presentation/providers/bottom_navigation_bar_notifier.dart';
+import 'package:yess_nutrition/presentation/widgets/card_nutri_time_task.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_button_navigation_bar.dart';
 import 'package:yess_nutrition/presentation/widgets/large_circular_progress.dart';
 import 'package:yess_nutrition/presentation/widgets/small_circular_progress.dart';
@@ -187,85 +188,149 @@ class BodyHomePage extends StatelessWidget {
             ),
             _buildCardRingkasan(context),
             const SizedBox(
-              height: 24,
+              height: 20,
             ),
-            Container(
-              width: MediaQuery.of(context).size.width - 32,
-              decoration: BoxDecoration(
-                color: primaryBackgroundColor,
-                borderRadius: const BorderRadius.all(Radius.circular(16)),
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                    offset: const Offset(0.0, 0.0),
-                    color: const Color(0XFF000000).withOpacity(0.05),
-                    blurRadius: 20,
-                  )
-                ],
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    top: 18.0, left: 18.0, right: 18.0, bottom: 10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  children: <Widget>[
-                    Text(
-                      "NutriTime",
-                      style: Theme.of(context)
-                          .textTheme
-                          .subtitle1
-                          ?.copyWith(fontWeight: FontWeight.w800),
-                    ),
-                    const SizedBox(
-                      height: 4,
-                    ),
-                    Text(
-                      "4 dari 8",
-                      style: Theme.of(context)
-                          .textTheme
-                          .caption
-                          ?.copyWith(color: secondaryTextColor),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    SizedBox(
-                      width: double.infinity,
-                      child: LinearPercentIndicator(
-                        lineHeight: 8,
-                        percent: 4 / 8,
-                        animation: true,
-                        animationDuration: 1000,
-                        progressColor: primaryColor,
-                        backgroundColor: secondaryColor,
-                        barRadius: const Radius.circular(10),
-                        padding: EdgeInsets.zero,
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 16,
-                    ),
-                    Divider(
-                      color: dividerColor.withOpacity(0.6),
-                    ),
-                    Center(
-                      child: TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          "Lihat Detail",
-                          style: Theme.of(context).textTheme.button?.copyWith(
+            _buildCardNutriTime(context),
+            const SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                children: [
+                  Text(
+                    "NutriNews",
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle1
+                        ?.copyWith(fontWeight: FontWeight.w800),
+                  ),
+                  const Spacer(),
+                  InkWell(
+                    onTap: () {},
+                    child: Row(
+                      children: [
+                        Text(
+                          "Selengkapnya",
+                          style: Theme.of(context).textTheme.overline?.copyWith(
                                 color: primaryColor,
-                                letterSpacing: 0.5,
+                                letterSpacing: 0.25,
+                                fontSize: 12,
                               ),
                         ),
-                      ),
+                        const Icon(
+                          MdiIcons.chevronRight,
+                          size: 20,
+                          color: primaryColor,
+                        ),
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(
               height: 120,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCardNutriTime(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width - 32,
+      decoration: BoxDecoration(
+        color: primaryBackgroundColor,
+        borderRadius: const BorderRadius.all(Radius.circular(16)),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            offset: const Offset(0.0, 0.0),
+            color: const Color(0XFF000000).withOpacity(0.05),
+            blurRadius: 20,
+          )
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(
+            top: 18.0, left: 18.0, right: 18.0, bottom: 10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            Text(
+              "NutriTime",
+              style: Theme.of(context)
+                  .textTheme
+                  .subtitle1
+                  ?.copyWith(fontWeight: FontWeight.w800),
+            ),
+            const SizedBox(
+              height: 4,
+            ),
+            Text(
+              "4 dari 8",
+              style: Theme.of(context)
+                  .textTheme
+                  .caption
+                  ?.copyWith(color: secondaryTextColor),
+            ),
+            const SizedBox(
+              height: 8,
+            ),
+            SizedBox(
+              width: double.infinity,
+              child: LinearPercentIndicator(
+                lineHeight: 8,
+                percent: 4 / 8,
+                animation: true,
+                animationDuration: 1000,
+                progressColor: primaryColor,
+                backgroundColor: secondaryColor,
+                barRadius: const Radius.circular(10),
+                padding: EdgeInsets.zero,
+              ),
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            ListView.separated(
+              primary: false,
+              padding: EdgeInsets.zero,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                return const CardNutriTimeTask();
+              },
+              itemCount: 2,
+              separatorBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 6,
+                  ),
+                  child: Divider(
+                    color: dividerColor.withOpacity(0.6),
+                  ),
+                );
+              },
+            ),
+            const SizedBox(
+              height: 16,
+            ),
+            Divider(
+              color: dividerColor.withOpacity(0.6),
+            ),
+            Center(
+              child: TextButton(
+                onPressed: () {},
+                child: Text(
+                  "Lihat Detail",
+                  style: Theme.of(context).textTheme.button?.copyWith(
+                        color: primaryColor,
+                        letterSpacing: 0.5,
+                      ),
+                ),
+              ),
             ),
           ],
         ),
