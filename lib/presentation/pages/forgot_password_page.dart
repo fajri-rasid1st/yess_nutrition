@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/button_style.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
-import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/snack_bar.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/reset_password_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
@@ -40,6 +39,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final resetPasswordNotifier = Provider.of<ResetPasswordNotifier>(context);
 
     return Scaffold(
       backgroundColor: primaryBackgroundColor,
@@ -99,7 +99,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       children: <Widget>[
                         _buildEmailField(),
                         const SizedBox(height: 16),
-                        _buildSubmitButton(context)
+                        _buildSubmitButton(context, resetPasswordNotifier)
                       ],
                     ),
                   ),
@@ -134,25 +134,30 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     );
   }
 
-  SizedBox _buildSubmitButton(BuildContext context) {
+  SizedBox _buildSubmitButton(
+    BuildContext context,
+    ResetPasswordNotifier resetPasswordNotifier,
+  ) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () => _onPressedSubmitButton(context),
+        onPressed: () => _onPressedSubmitButton(context, resetPasswordNotifier),
         style: elevatedButtonStyle,
         child: const Text('Kirim Email Konfirmasi'),
       ),
     );
   }
 
-  Future<void> _onPressedSubmitButton(BuildContext context) async {
+  Future<void> _onPressedSubmitButton(
+    BuildContext context,
+    ResetPasswordNotifier resetPasswordNotifier,
+  ) async {
     FocusScope.of(context).unfocus();
 
     _formKey.currentState!.save();
 
     if (_formKey.currentState!.validate()) {
       final value = _formKey.currentState!.value;
-      final resetPasswordNotifier = context.read<ResetPasswordNotifier>();
 
       // show loading when currently on process
       showDialog(
@@ -163,24 +168,26 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
       await resetPasswordNotifier.resetPassword(value['email']);
 
+      if (!mounted) return;
+
       if (resetPasswordNotifier.state == UserState.error) {
         final errorSnackBar = createSnackBar(resetPasswordNotifier.error);
 
-        scaffoldMessengerKey.currentState!
+        ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
           ..showSnackBar(errorSnackBar);
 
         // just close the loading indicator
-        navigatorKey.currentState!.pop();
+        Navigator.pop(context);
       } else {
         final succeessSnackBar = createSnackBar(resetPasswordNotifier.success);
 
-        scaffoldMessengerKey.currentState!
+        ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
           ..showSnackBar(succeessSnackBar);
 
         // navigate to first route after email sended
-        navigatorKey.currentState!.popUntil((route) => route.isFirst);
+        Navigator.popUntil(context, (route) => route.isFirst);
       }
     }
   }

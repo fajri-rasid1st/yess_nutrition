@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/presentation/pages/additional_info_page.dart';
 import 'package:yess_nutrition/presentation/pages/forgot_password_page.dart';
 import 'package:yess_nutrition/presentation/pages/home_page.dart';
@@ -91,8 +90,6 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: scaffoldBackgroundColor,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        navigatorKey: navigatorKey,
-        scaffoldMessengerKey: scaffoldMessengerKey,
         home: const AuthPage(),
         onGenerateRoute: (settings) {
           switch (settings.name) {

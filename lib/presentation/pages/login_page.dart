@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/button_style.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
-import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/snack_bar.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_in_notifier.dart';
@@ -48,6 +47,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
+    final signInNotifier = Provider.of<SignInNotifier>(context);
 
     return Scaffold(
       backgroundColor: primaryBackgroundColor,
@@ -107,8 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                         const SizedBox(height: 8),
                         ClickableText(
                           onTap: () {
-                            navigatorKey.currentState!
-                                .pushNamed(forgotPasswordRoute);
+                            Navigator.pushNamed(context, forgotPasswordRoute);
                           },
                           text: 'Lupa Password?',
                         )
@@ -116,7 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  _buildSubmitButton(context),
+                  _buildSubmitButton(context, signInNotifier),
                   const SizedBox(height: 10),
                   const Center(
                     child: Text(
@@ -133,7 +132,7 @@ class _LoginPageState extends State<LoginPage> {
                       const Text('Belum punya akun? '),
                       ClickableText(
                         onTap: () {
-                          navigatorKey.currentState!.pushNamed(registerRoute);
+                          Navigator.pushNamed(context, registerRoute);
                         },
                         text: 'Daftar di sini.',
                       )
@@ -202,25 +201,30 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  SizedBox _buildSubmitButton(BuildContext context) {
+  SizedBox _buildSubmitButton(
+    BuildContext context,
+    SignInNotifier signInNotifier,
+  ) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () => _onPressedSubmitButton(context),
+        onPressed: () => _onPressedSubmitButton(context, signInNotifier),
         style: elevatedButtonStyle,
         child: const Text('Masuk'),
       ),
     );
   }
 
-  Future<void> _onPressedSubmitButton(BuildContext context) async {
+  Future<void> _onPressedSubmitButton(
+    BuildContext context,
+    SignInNotifier signInNotifier,
+  ) async {
     FocusScope.of(context).unfocus();
 
     _formKey.currentState!.save();
 
     if (_formKey.currentState!.validate()) {
       final value = _formKey.currentState!.value;
-      final signInNotifier = context.read<SignInNotifier>();
 
       // show loading when sign in is currently on process
       showDialog(
@@ -229,20 +233,21 @@ class _LoginPageState extends State<LoginPage> {
         builder: (context) => const LoadingIndicator(),
       );
 
-
       // sign in process
       await signInNotifier.signIn(value['email'], value['password']);
+
+      if (!mounted) return;
 
       if (signInNotifier.state == UserState.error) {
         final snackBar = createSnackBar(signInNotifier.error);
 
-        scaffoldMessengerKey.currentState!
+        ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
           ..showSnackBar(snackBar);
       }
 
-      // navigate to first route after sign in complete
-      navigatorKey.currentState!.popUntil((route) => route.isFirst);
+      // remove dialog
+      Navigator.popUntil(context, (route) => route.isFirst);
     }
   }
 

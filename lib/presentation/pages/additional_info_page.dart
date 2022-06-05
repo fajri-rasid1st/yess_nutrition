@@ -2,12 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/button_style.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
-import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
-import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_out_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/clickable_text.dart';
 
 class AdditionalInfoPage extends StatefulWidget {
@@ -52,34 +49,14 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             SafeArea(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  ClickableText(
-                    onTap: () {
-                      navigatorKey.currentState!
-                          .pushReplacementNamed(homeRoute);
-                    },
-                    text: 'Lewati',
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: secondaryColor,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: IconButton(
-                      onPressed: () async {
-                        await context.read<SignOutNotifier>().signOut();
-                      },
-                      icon: const Icon(
-                        Icons.exit_to_app_outlined,
-                        color: primaryColor,
-                        size: 32,
-                      ),
-                      tooltip: 'Exit',
-                    ),
-                  )
-                ],
+              child: Align(
+                alignment: Alignment.topRight,
+                child: ClickableText(
+                  onTap: () {
+                    Navigator.pushReplacementNamed(context, homeRoute);
+                  },
+                  text: 'Lewati',
+                ),
               ),
             ),
             Center(
@@ -261,11 +238,7 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
           _formKey.currentState!.save();
 
           if (_formKey.currentState!.validate()) {
-            // TODO: updateUserData, change isFirstLogin to false to prevent user
-            //  navigate from this page again. Also change gender, age, weight,
-            //  and height.
-
-            navigatorKey.currentState!.pushReplacementNamed(homeRoute);
+            Navigator.pushReplacementNamed(context, homeRoute);
           }
         },
         style: elevatedButtonStyle,
