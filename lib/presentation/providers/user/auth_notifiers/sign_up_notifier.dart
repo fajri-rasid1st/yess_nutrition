@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
-import 'package:yess_nutrition/domain/usecases/auth_usecases/sign_in.dart';
+import 'package:yess_nutrition/domain/usecases/auth_usecases/sign_up.dart';
 
-class SignInNotifier extends ChangeNotifier {
-  final SignIn signInUseCase;
+class SignUpNotifier extends ChangeNotifier {
+  final SignUp signUpUseCase;
 
-  SignInNotifier({required this.signInUseCase});
+  SignUpNotifier({required this.signUpUseCase});
 
-  AuthState _state = AuthState.empty;
-  AuthState get state => _state;
+  UserState _state = UserState.empty;
+  UserState get state => _state;
 
   late UserEntity _user;
   UserEntity get user => _user;
@@ -17,18 +17,18 @@ class SignInNotifier extends ChangeNotifier {
   String _error = '';
   String get error => _error;
 
-  Future<void> signIn(String email, String password) async {
-    final result = await signInUseCase.execute(email, password);
+  Future<void> signUp(String email, String password) async {
+    final result = await signUpUseCase.execute(email, password);
 
     result.fold(
       (failure) {
         _error = failure.message;
-        _state = AuthState.error;
+        _state = UserState.error;
         notifyListeners();
       },
       (user) {
         _user = user;
-        _state = AuthState.success;
+        _state = UserState.success;
         notifyListeners();
       },
     );

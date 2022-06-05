@@ -4,18 +4,18 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:yess_nutrition/common/utils/keys.dart';
-import 'package:yess_nutrition/presentation/pages/additional_information_page.dart';
+import 'package:yess_nutrition/presentation/pages/additional_info_page.dart';
 import 'package:yess_nutrition/presentation/pages/forgot_password_page.dart';
 import 'package:yess_nutrition/presentation/pages/home_page.dart';
 import 'package:yess_nutrition/presentation/pages/login_page.dart';
-import 'package:yess_nutrition/presentation/pages/main_page.dart';
+import 'package:yess_nutrition/presentation/pages/auth_page.dart';
 import 'package:yess_nutrition/presentation/pages/register_page.dart';
-import 'package:yess_nutrition/presentation/providers/auth_notifiers/delete_user_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/auth_notifiers/reset_password_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/auth_notifiers/sign_in_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/auth_notifiers/sign_out_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/auth_notifiers/sign_up_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/auth_notifiers/user_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/delete_user_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/reset_password_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_in_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_out_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_up_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/get_user_notifier.dart';
 import 'common/styles/color_scheme.dart';
 import 'common/styles/text_style.dart';
 import 'common/utils/routes.dart';
@@ -53,8 +53,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: <SingleChildWidget>[
-        ChangeNotifierProvider<UserNotifier>(
-          create: (_) => di.locator<UserNotifier>(),
+        ChangeNotifierProvider<GetUserNotifier>(
+          create: (_) => di.locator<GetUserNotifier>(),
         ),
         ChangeNotifierProvider<SignInNotifier>(
           create: (_) => di.locator<SignInNotifier>(),
@@ -85,7 +85,7 @@ class MyApp extends StatelessWidget {
         ),
         navigatorKey: navigatorKey,
         scaffoldMessengerKey: scaffoldMessengerKey,
-        home: const MainPage(),
+        home: const AuthPage(),
         onGenerateRoute: (settings) {
           switch (settings.name) {
             case loginRoute:
@@ -100,9 +100,9 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(
                 builder: (_) => const ForgotPasswordPage(),
               );
-            case additionalInformationRoute:
+            case additionalInfoRoute:
               return MaterialPageRoute(
-                builder: (_) => const AdditionalInformationPage(),
+                builder: (_) => const AdditionalInfoPage(),
               );
             case homeRoute:
               return MaterialPageRoute(

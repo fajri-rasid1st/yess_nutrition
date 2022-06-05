@@ -14,3 +14,8 @@ abstract class Failure extends Equatable {
 class AuthFailure extends Failure {
   const AuthFailure(String message) : super(message);
 }
+
+/// A class that will be returned when a **Firestore Failure** occurs.
+class FirestoreFailure extends Failure {
+  const FirestoreFailure(String message) : super(message);
+}

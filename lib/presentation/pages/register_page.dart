@@ -8,7 +8,8 @@ import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/snack_bar.dart';
-import 'package:yess_nutrition/presentation/providers/auth_notifiers/sign_up_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_up_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/create_user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -267,17 +268,19 @@ class _RegisterPageState extends State<RegisterPage> {
     if (_formKey.currentState!.validate()) {
       final value = _formKey.currentState!.value;
       final signUpNotifier = context.read<SignUpNotifier>();
+      final createUserDataNotifier = context.read<CreateUserDataNotifier>();
 
-      // show loading when signUp is currently on process
+      // show loading when sign up is currently on process
       showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) => const LoadingIndicator(),
       );
 
+      // sign up process
       await signUpNotifier.signUp(value['email'], value['password']);
 
-      if (signUpNotifier.state == AuthState.error) {
+      if (signUpNotifier.state == UserState.error) {
         final snackBar = createSnackBar(signUpNotifier.error);
 
         scaffoldMessengerKey.currentState!
@@ -287,7 +290,10 @@ class _RegisterPageState extends State<RegisterPage> {
         // just close the loading indicator
         navigatorKey.currentState!.pop();
       } else {
-        // navigate to first route after signUp complete
+        // craete user data when sign up successfully
+        await createUserDataNotifier.createUserData(signUpNotifier.user);
+
+        // navigate to first route after sign up complete
         navigatorKey.currentState!.popUntil((route) => route.isFirst);
       }
     }

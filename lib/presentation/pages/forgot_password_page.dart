@@ -8,7 +8,7 @@ import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/snack_bar.dart';
-import 'package:yess_nutrition/presentation/providers/auth_notifiers/reset_password_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/reset_password_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
@@ -154,7 +154,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       final value = _formKey.currentState!.value;
       final resetPasswordNotifier = context.read<ResetPasswordNotifier>();
 
-      // show loading when signUp is currently on process
+      // show loading when currently on process
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -163,7 +163,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
       await resetPasswordNotifier.resetPassword(value['email']);
 
-      if (resetPasswordNotifier.state == AuthState.error) {
+      if (resetPasswordNotifier.state == UserState.error) {
         final errorSnackBar = createSnackBar(resetPasswordNotifier.error);
 
         scaffoldMessengerKey.currentState!
@@ -173,15 +173,13 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         // just close the loading indicator
         navigatorKey.currentState!.pop();
       } else {
-        final succeessSnackBar = createSnackBar(
-          'Tautan konfirmasi ubah password telah dikirim ke email anda',
-        );
+        final succeessSnackBar = createSnackBar(resetPasswordNotifier.success);
 
         scaffoldMessengerKey.currentState!
           ..hideCurrentSnackBar()
           ..showSnackBar(succeessSnackBar);
 
-        // navigate to first route after signUp complete
+        // navigate to first route after email sended
         navigatorKey.currentState!.popUntil((route) => route.isFirst);
       }
     }

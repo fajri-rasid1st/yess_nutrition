@@ -7,8 +7,8 @@ class DeleteUserNotifier extends ChangeNotifier {
 
   DeleteUserNotifier({required this.deleteUserUseCase});
 
-  AuthState _state = AuthState.empty;
-  AuthState get state => _state;
+  UserState _state = UserState.empty;
+  UserState get state => _state;
 
   String _error = '';
   String get error => _error;
@@ -19,11 +19,11 @@ class DeleteUserNotifier extends ChangeNotifier {
     result.fold(
       (failure) {
         _error = failure.message;
-        _state = AuthState.error;
+        _state = UserState.error;
         notifyListeners();
       },
       (_) {
-        _state = AuthState.success;
+        _state = UserState.success;
         notifyListeners();
       },
     );

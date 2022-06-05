@@ -13,13 +13,13 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
   @override
   Either<AuthFailure, Stream<UserEntity?>> getUser() {
     try {
-      final user = userAuthDataSource.getUser().map((user) {
+      final result = userAuthDataSource.getUser().map((user) {
         if (user == null) return null;
 
         return user.toEntity();
       });
 
-      return Right(user);
+      return Right(result);
     } on FirebaseAuthException catch (e) {
       return Left(AuthFailure(e.message ?? e.code));
     }
@@ -31,9 +31,9 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
     String password,
   ) async {
     try {
-      final user = await userAuthDataSource.signIn(email, password);
+      final result = await userAuthDataSource.signIn(email, password);
 
-      return Right(user.toEntity());
+      return Right(result.toEntity());
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'invalid-email':
@@ -54,9 +54,9 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
     String password,
   ) async {
     try {
-      final user = await userAuthDataSource.signUp(email, password);
+      final result = await userAuthDataSource.signUp(email, password);
 
-      return Right(user.toEntity());
+      return Right(result.toEntity());
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'invalid-email':
@@ -74,7 +74,9 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
   @override
   Future<Either<AuthFailure, void>> signOut() async {
     try {
-      return Right(await userAuthDataSource.signOut());
+      final result = await userAuthDataSource.signOut();
+
+      return Right(result);
     } on FirebaseAuthException catch (e) {
       return Left(AuthFailure(e.message ?? e.code));
     }
@@ -83,7 +85,9 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
   @override
   Future<Either<AuthFailure, void>> resetPassword(String email) async {
     try {
-      return Right(await userAuthDataSource.resetPassword(email));
+      final result = await userAuthDataSource.resetPassword(email);
+
+      return Right(result);
     } on FirebaseAuthException catch (e) {
       switch (e.code) {
         case 'invalid-email':
@@ -99,7 +103,9 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
   @override
   Future<Either<AuthFailure, void>> deleteUser() async {
     try {
-      return Right(await userAuthDataSource.deleteUser());
+      final result = await userAuthDataSource.deleteUser();
+
+      return Right(result);
     } on FirebaseAuthException catch (e) {
       return Left(AuthFailure(e.message ?? e.code));
     }

@@ -2,20 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/button_style.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
+import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
+import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_out_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/clickable_text.dart';
 
-class AdditionalInformationPage extends StatefulWidget {
-  const AdditionalInformationPage({Key? key}) : super(key: key);
+class AdditionalInfoPage extends StatefulWidget {
+  const AdditionalInfoPage({Key? key}) : super(key: key);
 
   @override
-  State<AdditionalInformationPage> createState() =>
-      _AdditionalInformationPageState();
+  State<AdditionalInfoPage> createState() => _AdditionalInfoPageState();
 }
 
-class _AdditionalInformationPageState extends State<AdditionalInformationPage> {
+class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
   late final GlobalKey<FormBuilderState> _formKey;
   late final TextEditingController _ageController;
   late final TextEditingController _weightController;
@@ -27,6 +29,9 @@ class _AdditionalInformationPageState extends State<AdditionalInformationPage> {
     _ageController = TextEditingController();
     _weightController = TextEditingController();
     _heightController = TextEditingController();
+
+    // TODO: updateUserData, change isFirstLogin to false to prevent user
+    //  navigate from this page again when next login.
 
     super.initState();
   }
@@ -54,7 +59,10 @@ class _AdditionalInformationPageState extends State<AdditionalInformationPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   ClickableText(
-                    onTap: () => Navigator.pushNamed(context, homeRoute),
+                    onTap: () {
+                      navigatorKey.currentState!
+                          .pushReplacementNamed(homeRoute);
+                    },
                     text: 'Lewati',
                   ),
                   Container(
@@ -63,7 +71,9 @@ class _AdditionalInformationPageState extends State<AdditionalInformationPage> {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: IconButton(
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () async {
+                        await context.read<SignOutNotifier>().signOut();
+                      },
                       icon: const Icon(
                         Icons.exit_to_app_outlined,
                         color: primaryColor,

@@ -7,23 +7,27 @@ class ResetPasswordNotifier extends ChangeNotifier {
 
   ResetPasswordNotifier({required this.resetPasswordUseCase});
 
-  AuthState _state = AuthState.empty;
-  AuthState get state => _state;
+  UserState _state = UserState.empty;
+  UserState get state => _state;
 
   String _error = '';
   String get error => _error;
+
+  String _success = '';
+  String get success => _success;
 
   Future<void> resetPassword(String email) async {
     final result = await resetPasswordUseCase.execute(email);
 
     result.fold(
       (failure) {
-         _error = failure.message;
-        _state = AuthState.error;
+        _error = failure.message;
+        _state = UserState.error;
         notifyListeners();
       },
       (_) {
-        _state = AuthState.success;
+        _success = 'Tautan untuk mengubah password telah dikirim ke email anda';
+        _state = UserState.success;
         notifyListeners();
       },
     );

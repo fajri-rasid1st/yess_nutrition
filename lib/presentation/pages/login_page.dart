@@ -10,7 +10,7 @@ import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/snack_bar.dart';
-import 'package:yess_nutrition/presentation/providers/auth_notifiers/sign_in_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_in_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 import 'package:yess_nutrition/presentation/widgets/clickable_text.dart';
 
@@ -222,16 +222,18 @@ class _LoginPageState extends State<LoginPage> {
       final value = _formKey.currentState!.value;
       final signInNotifier = context.read<SignInNotifier>();
 
-      // show loading when signIn is currently on process
+      // show loading when sign in is currently on process
       showDialog(
         context: context,
         barrierDismissible: false,
         builder: (context) => const LoadingIndicator(),
       );
 
+
+      // sign in process
       await signInNotifier.signIn(value['email'], value['password']);
 
-      if (signInNotifier.state == AuthState.error) {
+      if (signInNotifier.state == UserState.error) {
         final snackBar = createSnackBar(signInNotifier.error);
 
         scaffoldMessengerKey.currentState!
@@ -239,7 +241,7 @@ class _LoginPageState extends State<LoginPage> {
           ..showSnackBar(snackBar);
       }
 
-      // navigate to first route after signIn complete
+      // navigate to first route after sign in complete
       navigatorKey.currentState!.popUntil((route) => route.isFirst);
     }
   }

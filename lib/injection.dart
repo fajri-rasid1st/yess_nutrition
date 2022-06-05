@@ -11,19 +11,19 @@ import 'package:yess_nutrition/domain/usecases/auth_usecases/reset_password.dart
 import 'package:yess_nutrition/domain/usecases/auth_usecases/sign_in.dart';
 import 'package:yess_nutrition/domain/usecases/auth_usecases/sign_out.dart';
 import 'package:yess_nutrition/domain/usecases/auth_usecases/sign_up.dart';
-import 'package:yess_nutrition/presentation/providers/auth_notifiers/delete_user_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/auth_notifiers/reset_password_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/auth_notifiers/sign_in_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/auth_notifiers/sign_out_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/auth_notifiers/sign_up_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/auth_notifiers/user_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/delete_user_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/reset_password_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_in_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_out_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_up_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/get_user_notifier.dart';
 
 final locator = GetIt.instance;
 
 void init() {
   // Auth provider
   locator.registerFactory(
-    () => UserNotifier(getUserUseCase: locator()),
+    () => GetUserNotifier(getUserUseCase: locator()),
   );
   locator.registerFactory(
     () => SignInNotifier(signInUseCase: locator()),
@@ -61,6 +61,6 @@ void init() {
 
   // External
   locator.registerLazySingleton(() => FirebaseAuth.instance);
-  locator.registerLazySingleton(() => FirebaseStorage.instance);
   locator.registerLazySingleton(() => FirebaseFirestore.instance);
+  locator.registerLazySingleton(() => FirebaseStorage.instance);
 }

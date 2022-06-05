@@ -9,6 +9,7 @@ class UserEntity extends Equatable {
   final int age;
   final int weight;
   final int height;
+  final bool isFirstLogin;
 
   const UserEntity({
     required this.uid,
@@ -19,6 +20,7 @@ class UserEntity extends Equatable {
     required this.age,
     required this.weight,
     required this.height,
+    required this.isFirstLogin,
   });
 
   @override
@@ -31,5 +33,6 @@ class UserEntity extends Equatable {
         age,
         weight,
         height,
+        isFirstLogin,
       ];
 }

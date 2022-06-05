@@ -11,6 +11,7 @@ class UserModel extends Equatable {
   final int? age;
   final int? weight;
   final int? height;
+  final bool? isFirstLogin;
 
   const UserModel({
     required this.uid,
@@ -21,6 +22,7 @@ class UserModel extends Equatable {
     this.age,
     this.weight,
     this.height,
+    this.isFirstLogin,
   });
 
   factory UserModel.fromUserCredential(User user) {
@@ -30,6 +32,48 @@ class UserModel extends Equatable {
       name: user.displayName,
       imgUrl: user.photoURL,
     );
+  }
+
+  factory UserModel.fromEntity(UserEntity user) {
+    return UserModel(
+      uid: user.uid,
+      email: user.email,
+      name: user.name,
+      imgUrl: user.imgUrl,
+      gender: user.gender,
+      age: user.age,
+      weight: user.weight,
+      height: user.height,
+      isFirstLogin: user.isFirstLogin,
+    );
+  }
+
+  factory UserModel.fromDocument(Map<String, dynamic> user) {
+    return UserModel(
+      uid: user['uid'],
+      email: user['email'],
+      name: user['name'],
+      imgUrl: user['imgUrl'],
+      gender: user['gender'],
+      age: user['age'],
+      weight: user['weight'],
+      height: user['height'],
+      isFirstLogin: user['isFirstLogin'],
+    );
+  }
+
+  Map<String, dynamic> toDocument() {
+    return {
+      'uid': uid,
+      'email': email,
+      'name': name ?? '',
+      'imgUrl': imgUrl ?? '',
+      'gender': gender ?? '',
+      'age': age ?? 0,
+      'weight': weight ?? 0,
+      'height': height ?? 0,
+      'isFirstLogin': isFirstLogin ?? true,
+    };
   }
 
   UserEntity toEntity() {
@@ -42,6 +86,7 @@ class UserModel extends Equatable {
       age: age ?? 0,
       weight: weight ?? 0,
       height: height ?? 0,
+      isFirstLogin: isFirstLogin ?? true,
     );
   }
 
@@ -55,5 +100,6 @@ class UserModel extends Equatable {
         age,
         weight,
         height,
+        isFirstLogin,
       ];
 }

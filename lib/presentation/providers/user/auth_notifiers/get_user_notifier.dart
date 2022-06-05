@@ -3,15 +3,15 @@ import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
 import 'package:yess_nutrition/domain/usecases/auth_usecases/get_user.dart';
 
-class UserNotifier extends ChangeNotifier {
+class GetUserNotifier extends ChangeNotifier {
   final GetUser getUserUseCase;
 
-  UserNotifier({required this.getUserUseCase}) {
+  GetUserNotifier({required this.getUserUseCase}) {
     getUser();
   }
 
-  AuthState _state = AuthState.empty;
-  AuthState get state => _state;
+  UserState _state = UserState.empty;
+  UserState get state => _state;
 
   late Stream<UserEntity?> _user;
   Stream<UserEntity?> get user => _user;
@@ -25,12 +25,12 @@ class UserNotifier extends ChangeNotifier {
     result.fold(
       (failure) {
         _error = failure.message;
-        _state = AuthState.error;
+        _state = UserState.error;
         notifyListeners();
       },
       (user) {
         _user = user;
-        _state = AuthState.success;
+        _state = UserState.success;
         notifyListeners();
       },
     );
