@@ -4,6 +4,8 @@ import 'package:yess_nutrition/common/utils/state_enum.dart';
 import 'package:yess_nutrition/presentation/providers/bottom_navigation_bar_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_button_navigation_bar.dart';
 
+import 'nutri_time_page.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -28,9 +30,7 @@ class _HomePageState extends State<HomePage> {
             child: Text("Ini Halaman Home"),
           );
         } else if (result.selectedMenu == MenuNavBar.NutriTime) {
-          return const Center(
-            child: Text("Ini Halaman NutriTime"),
-          );
+          return NutriTimePage();
         } else if (result.selectedMenu == MenuNavBar.NutriNews) {
           return const Center(
             child: Text("Ini Halaman NutriNews"),
