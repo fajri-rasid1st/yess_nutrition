@@ -36,14 +36,10 @@ class _HomePageState extends State<HomePage> with AfterLayoutMixin<HomePage> {
   }
 
   Future<void> checkFirstSeen(BuildContext context) async {
-    // final userDataNotifier = context.read<ReadUserDataNotifier>();
-    // final userStream = userDataNotifier.user;
-    // final user = await userStream.first;
-
-    // if (!mounted) return;
-
+    // TODO: check if user is first login, navigate to additional information page
     // if (user.isFirstLogin) {
     //   Navigator.pushReplacementNamed(context, additionalInfoRoute);
+    //   TODO: updateUserData, set isFirstLogin to false.
     // }
   }
 }
