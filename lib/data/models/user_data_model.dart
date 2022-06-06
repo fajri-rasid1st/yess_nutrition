@@ -4,7 +4,7 @@ import 'package:yess_nutrition/domain/entities/user_data_entity.dart';
 class UserDataModel extends Equatable {
   final String uid;
   final String email;
-  final String? name;
+  final String name;
   final String? imgUrl;
   final String? gender;
   final int? age;
@@ -14,7 +14,7 @@ class UserDataModel extends Equatable {
   const UserDataModel({
     required this.uid,
     required this.email,
-    this.name,
+    required this.name,
     this.imgUrl,
     this.gender,
     this.age,
@@ -52,7 +52,7 @@ class UserDataModel extends Equatable {
     return UserDataEntity(
       uid: uid,
       email: email,
-      name: name ?? '',
+      name: name,
       imgUrl: imgUrl ?? '',
       gender: gender ?? '',
       age: age ?? 0,
@@ -65,7 +65,7 @@ class UserDataModel extends Equatable {
     return {
       'uid': uid,
       'email': email,
-      'name': name ?? '',
+      'name': name,
       'imgUrl': imgUrl ?? '',
       'gender': gender ?? '',
       'age': age ?? 0,

@@ -2,13 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/button_style.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
+import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
+import 'package:yess_nutrition/common/utils/snack_bar.dart';
+import 'package:yess_nutrition/domain/entities/user_entity.dart';
+import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/read_user_data_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/update_user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/clickable_text.dart';
+import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
 class AdditionalInfoPage extends StatefulWidget {
-  const AdditionalInfoPage({Key? key}) : super(key: key);
+  final UserEntity user;
+
+  const AdditionalInfoPage({Key? key, required this.user}) : super(key: key);
 
   @override
   State<AdditionalInfoPage> createState() => _AdditionalInfoPageState();
@@ -179,7 +188,7 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
       ),
       validator: FormBuilderValidators.compose([
         FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
-        FormBuilderValidators.integer(errorText: 'Input harus berupa angka.'),
+        FormBuilderValidators.integer(errorText: 'Input berupa angka integer.'),
       ]),
     );
   }
@@ -201,7 +210,7 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
       ),
       validator: FormBuilderValidators.compose([
         FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
-        FormBuilderValidators.integer(errorText: 'Input harus berupa angka.'),
+        FormBuilderValidators.integer(errorText: 'Input berupa angka integer.'),
       ]),
     );
   }
@@ -223,7 +232,7 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
       ),
       validator: FormBuilderValidators.compose([
         FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
-        FormBuilderValidators.integer(errorText: 'Input harus berupa angka.'),
+        FormBuilderValidators.integer(errorText: 'Input berupa angka integer.'),
       ]),
     );
   }
@@ -245,44 +254,57 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
     _formKey.currentState!.save();
 
     if (_formKey.currentState!.validate()) {
-      // final value = _formKey.currentState!.value;
-      // final getUserNotifier = context.read<GetUserNotifier>();
-      // final readUserDataNotifier = context.read<ReadUserDataNotifier>();
-      // final updateUserDataNotifier = context.read<UpdateUserDataNotifier>();
+      final value = _formKey.currentState!.value;
+      final readUserDataNotifier = context.read<ReadUserDataNotifier>();
+      final updateUserDataNotifier = context.read<UpdateUserDataNotifier>();
 
-      Navigator.pushReplacementNamed(context, homeRoute);
+      // show loading when on process
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const LoadingIndicator(),
+      );
 
-      // get user
-      // getUserNotifier.user.map((user) async {
-      //   if (user != null) {
-      //     // read user data
-      //     await readUserDataNotifier.readUserData(user.uid);
+      // read user data
+      await readUserDataNotifier.readUserData(widget.user.uid);
 
-      //     if (readUserDataNotifier.state == UserState.success) {
-      //       // get user data
-      //       final userData = readUserDataNotifier.userData;
+      if (!mounted) return;
 
-      //       // update user data
-      //       await updateUserDataNotifier.updateUserData(
-      //         userData.copyWith(
-      //           gender: value['gender'],
-      //           age: value['age'],
-      //           weight: value['weight'],
-      //           height: value['height'],
-      //         ),
-      //       );
+      if (readUserDataNotifier.state == UserState.success) {
+        // get user data
+        final userData = readUserDataNotifier.userData;
 
-      //       // navigate to home page
+        // update user data
+        await updateUserDataNotifier.updateUserData(
+          userData.copyWith(
+            gender: value['gender'],
+            age: int.tryParse(value['age']),
+            weight: int.tryParse(value['weight']),
+            height: int.tryParse(value['height']),
+          ),
+        );
 
-      //     } else {
-      //       final snackBar = createSnackBar(readUserDataNotifier.error);
+        if (!mounted) return;
 
-      //       ScaffoldMessenger.of(context)
-      //         ..hideCurrentSnackBar()
-      //         ..showSnackBar(snackBar);
-      //     }
-      //   }
-      // });
+        // close loading indicator
+        Navigator.pop(context);
+
+        // navigate to home page
+        Navigator.pushReplacementNamed(
+          context,
+          homeRoute,
+          arguments: widget.user,
+        );
+      } else {
+        final snackBar = createSnackBar(readUserDataNotifier.error);
+
+        // close loading indicator
+        Navigator.pop(context);
+
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
+      }
     }
   }
 }

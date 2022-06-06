@@ -292,10 +292,16 @@ class _RegisterPageState extends State<RegisterPage> {
           ..hideCurrentSnackBar()
           ..showSnackBar(snackBar);
       } else {
+        // get user
         final user = signUpNotifier.user;
 
+        // get user data
+        final userData = user.toUserData();
+
         // craete user data when sign up successfully
-        await createUserDataNotifier.createUserData(user.toUserData());
+        await createUserDataNotifier.createUserData(
+          userData.copyWith(name: value['name']),
+        );
 
         if (!mounted) return;
 
@@ -303,10 +309,10 @@ class _RegisterPageState extends State<RegisterPage> {
         Navigator.pop(context);
 
         // navigate to additional information page
-        Navigator.pushNamedAndRemoveUntil(
+        Navigator.pushReplacementNamed(
           context,
           additionalInfoRoute,
-          ((route) => route.isFirst),
+          arguments: user,
         );
       }
     }

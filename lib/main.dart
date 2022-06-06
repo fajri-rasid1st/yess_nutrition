@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:yess_nutrition/domain/entities/user_entity.dart';
 import 'package:yess_nutrition/presentation/pages/additional_info_page.dart';
 import 'package:yess_nutrition/presentation/pages/forgot_password_page.dart';
 import 'package:yess_nutrition/presentation/pages/home_page.dart';
@@ -114,12 +115,18 @@ class MyApp extends StatelessWidget {
                 builder: (_) => const ForgotPasswordPage(),
               );
             case additionalInfoRoute:
+              final user = settings.arguments as UserEntity;
+
               return MaterialPageRoute(
-                builder: (_) => const AdditionalInfoPage(),
+                builder: (_) => AdditionalInfoPage(user: user),
+                settings: settings,
               );
             case homeRoute:
+              final user = settings.arguments as UserEntity;
+
               return MaterialPageRoute(
-                builder: (_) => const HomePage(),
+                builder: (_) => HomePage(user: user),
+                settings: settings,
               );
             default:
               return null;

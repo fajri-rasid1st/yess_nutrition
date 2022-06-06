@@ -15,15 +15,15 @@ class AuthPage extends StatelessWidget {
 
     return StreamBuilder<UserEntity?>(
       stream: userNotifier.user,
-      builder: ((context, snapshot) {
+      builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.active) {
           final UserEntity? user = snapshot.data;
 
-          return user == null ? const LoginPage() : const HomePage();
+          return user == null ? const LoginPage() : HomePage(user: user);
         } else {
           return const Scaffold(body: LoadingIndicator());
         }
-      }),
+      },
     );
   }
 }

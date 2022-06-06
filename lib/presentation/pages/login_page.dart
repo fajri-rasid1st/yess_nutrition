@@ -242,11 +242,14 @@ class _LoginPageState extends State<LoginPage> {
           ..hideCurrentSnackBar()
           ..showSnackBar(snackBar);
       } else {
+        // get user
+        final user = signInNotifier.user;
+
         // close the loading indicator
         Navigator.pop(context);
 
         // navigate to home page
-        Navigator.pushReplacementNamed(context, homeRoute);
+        Navigator.pushReplacementNamed(context, homeRoute, arguments: user);
       }
     }
   }
