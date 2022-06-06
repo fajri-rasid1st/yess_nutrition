@@ -110,4 +110,15 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
       return Left(AuthFailure(e.message ?? e.code));
     }
   }
+
+  @override
+  Future<Either<AuthFailure, UserEntity?>> signInWithGoogle() async {
+    try {
+      final result = await userAuthDataSource.signInWithGoogle();
+
+      return Right(result?.toEntity());
+    } on FirebaseAuthException catch (e) {
+      return Left(AuthFailure(e.message ?? e.code));
+    }
+  }
 }

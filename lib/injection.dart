@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yess_nutrition/data/datasources/user_auth_data_source.dart';
 import 'package:yess_nutrition/data/datasources/user_firestore_data_source.dart';
 import 'package:yess_nutrition/data/repositories/user_auth_repository_impl.dart';
@@ -12,6 +13,7 @@ import 'package:yess_nutrition/domain/usecases/auth_usecases/delete_user.dart';
 import 'package:yess_nutrition/domain/usecases/auth_usecases/get_user.dart';
 import 'package:yess_nutrition/domain/usecases/auth_usecases/reset_password.dart';
 import 'package:yess_nutrition/domain/usecases/auth_usecases/sign_in.dart';
+import 'package:yess_nutrition/domain/usecases/auth_usecases/sign_in_with_google.dart';
 import 'package:yess_nutrition/domain/usecases/auth_usecases/sign_out.dart';
 import 'package:yess_nutrition/domain/usecases/auth_usecases/sign_up.dart';
 import 'package:yess_nutrition/domain/usecases/firestore_usecases/create_user_data.dart';
@@ -21,6 +23,7 @@ import 'package:yess_nutrition/domain/usecases/firestore_usecases/update_user_da
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/delete_user_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/reset_password_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_in_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_in_with_google_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_out_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_up_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/get_user_notifier.dart';
@@ -38,6 +41,9 @@ void init() {
   );
   locator.registerFactory(
     () => SignInNotifier(signInUseCase: locator()),
+  );
+  locator.registerFactory(
+    () => SignInWithGoogleNotifier(signInWithGoogleUseCase: locator()),
   );
   locator.registerFactory(
     () => SignUpNotifier(signUpUseCase: locator()),
@@ -69,6 +75,7 @@ void init() {
   // Auth usecases
   locator.registerLazySingleton(() => GetUser(locator()));
   locator.registerLazySingleton(() => SignIn(locator()));
+  locator.registerLazySingleton(() => SignInWithGoogle(locator()));
   locator.registerLazySingleton(() => SignUp(locator()));
   locator.registerLazySingleton(() => SignOut(locator()));
   locator.registerLazySingleton(() => ResetPassword(locator()));
@@ -90,7 +97,10 @@ void init() {
 
   // Data sources
   locator.registerLazySingleton<UserAuthDataSource>(
-    () => UserAuthDataSourceImpl(firebaseAuth: locator()),
+    () => UserAuthDataSourceImpl(
+      firebaseAuth: locator(),
+      googleSignIn: locator(),
+    ),
   );
   locator.registerLazySingleton<UserFirestoreDataSource>(
     () => UserFirestoreDataSourceImpl(firebaseFirestore: locator()),
@@ -100,4 +110,5 @@ void init() {
   locator.registerLazySingleton(() => FirebaseAuth.instance);
   locator.registerLazySingleton(() => FirebaseFirestore.instance);
   locator.registerLazySingleton(() => FirebaseStorage.instance);
+  locator.registerLazySingleton(() => GoogleSignIn());
 }

@@ -164,16 +164,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
       if (!mounted) return;
 
-      if (resetPasswordNotifier.state == UserState.error) {
-        final errorSnackBar = createSnackBar(resetPasswordNotifier.error);
-
-        // close the loading indicator
-        Navigator.pop(context);
-
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(errorSnackBar);
-      } else {
+      if (resetPasswordNotifier.state == UserState.success) {
         final succeessSnackBar = createSnackBar(resetPasswordNotifier.success);
 
         ScaffoldMessenger.of(context)
@@ -182,6 +173,15 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
         // navigate to first route after email sended
         Navigator.popUntil(context, (route) => route.isFirst);
+      } else {
+        final errorSnackBar = createSnackBar(resetPasswordNotifier.error);
+
+        // close the loading indicator
+        Navigator.pop(context);
+
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(errorSnackBar);
       }
     }
   }

@@ -10,6 +10,8 @@ import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/snack_bar.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_in_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_in_with_google_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/create_user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 import 'package:yess_nutrition/presentation/widgets/clickable_text.dart';
 
@@ -123,7 +125,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  _buildGoogleSignInButton(),
+                  _buildGoogleSignInButton(context),
                   const SizedBox(height: 28),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -211,6 +213,21 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+  SizedBox _buildGoogleSignInButton(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        onPressed: () => _onPressedGoogleSignInButton(context),
+        icon: const FaIcon(
+          FontAwesomeIcons.google,
+          size: 18,
+        ),
+        label: const Text('Lanjutkan dengan Google'),
+        style: outlinedButtonStyle,
+      ),
+    );
+  }
+
   Future<void> _onPressedSubmitButton(BuildContext context) async {
     FocusScope.of(context).unfocus();
 
@@ -232,16 +249,7 @@ class _LoginPageState extends State<LoginPage> {
 
       if (!mounted) return;
 
-      if (signInNotifier.state == UserState.error) {
-        final snackBar = createSnackBar(signInNotifier.error);
-
-        // close the loading indicator
-        Navigator.pop(context);
-
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(snackBar);
-      } else {
+      if (signInNotifier.state == UserState.success) {
         // get user
         final user = signInNotifier.user;
 
@@ -250,22 +258,47 @@ class _LoginPageState extends State<LoginPage> {
 
         // navigate to home page
         Navigator.pushReplacementNamed(context, homeRoute, arguments: user);
+      } else {
+        final snackBar = createSnackBar(signInNotifier.error);
+
+        // close the loading indicator
+        Navigator.pop(context);
+
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
       }
     }
   }
 
-  SizedBox _buildGoogleSignInButton() {
-    return SizedBox(
-      width: double.infinity,
-      child: OutlinedButton.icon(
-        onPressed: () {},
-        icon: const FaIcon(
-          FontAwesomeIcons.google,
-          size: 18,
-        ),
-        label: const Text('Lanjutkan dengan Google'),
-        style: outlinedButtonStyle,
-      ),
-    );
+  Future<void> _onPressedGoogleSignInButton(BuildContext context) async {
+    final googleSignInNotifier = context.read<SignInWithGoogleNotifier>();
+    final createUserDataNotifier = context.read<CreateUserDataNotifier>();
+
+    await googleSignInNotifier.signInWithGoogle();
+
+    if (!mounted) return;
+
+    if (googleSignInNotifier.state == UserState.success) {
+      // get user
+      final user = googleSignInNotifier.user;
+
+      // get user data
+      final userData = user.toUserData();
+
+      // craete user data when sign in successfully
+      await createUserDataNotifier.createUserData(userData);
+
+      if (!mounted) return;
+
+      // navigate to home page
+      Navigator.pushReplacementNamed(context, homeRoute, arguments: user);
+    } else {
+      final snackBar = createSnackBar(googleSignInNotifier.error);
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackBar);
+    }
   }
 }

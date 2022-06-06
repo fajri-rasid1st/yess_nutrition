@@ -282,16 +282,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
       if (!mounted) return;
 
-      if (signUpNotifier.state == UserState.error) {
-        final snackBar = createSnackBar(signUpNotifier.error);
-
-        // close the loading indicator
-        Navigator.pop(context);
-
-        ScaffoldMessenger.of(context)
-          ..hideCurrentSnackBar()
-          ..showSnackBar(snackBar);
-      } else {
+      if (signUpNotifier.state == UserState.success) {
         // get user
         final user = signUpNotifier.user;
 
@@ -314,6 +305,15 @@ class _RegisterPageState extends State<RegisterPage> {
           additionalInfoRoute,
           arguments: user,
         );
+      } else {
+        final snackBar = createSnackBar(signUpNotifier.error);
+
+        // close the loading indicator
+        Navigator.pop(context);
+
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
       }
     }
   }

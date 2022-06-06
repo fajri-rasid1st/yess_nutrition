@@ -13,6 +13,7 @@ import 'package:yess_nutrition/presentation/pages/register_page.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/delete_user_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/reset_password_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_in_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_in_with_google_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_out_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_up_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/get_user_notifier.dart';
@@ -62,6 +63,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<SignInNotifier>(
           create: (_) => di.locator<SignInNotifier>(),
+        ),
+        ChangeNotifierProvider<SignInWithGoogleNotifier>(
+          create: (_) => di.locator<SignInWithGoogleNotifier>(),
         ),
         ChangeNotifierProvider<SignUpNotifier>(
           create: (_) => di.locator<SignUpNotifier>(),
