@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
@@ -19,11 +20,28 @@ class HomePage extends StatefulWidget {
   @override
   State<HomePage> createState() => _HomePageState();
 }
+=======
+import 'package:provider/provider.dart';
+import 'package:yess_nutrition/common/utils/routes.dart';
+import 'package:yess_nutrition/domain/entities/user_entity.dart';
+import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_out_notifier.dart';
+
+class HomePage extends StatefulWidget {
+  final UserEntity user;
+
+  const HomePage({Key? key, required this.user}) : super(key: key);
+>>>>>>> 6fb69a623258b7825c8ccda92a0d1e009ffdddcb
+
+class _HomePageState extends State<HomePage> {
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
 
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+<<<<<<< HEAD
       body: Stack(
         children: [
           Consumer<BottomNavigationBarNotifier>(
@@ -515,6 +533,23 @@ class BodyHomePage extends StatelessWidget {
           );
         },
         itemCount: 5,
+=======
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () async {
+            await context.read<SignOutNotifier>().signOut();
+
+            if (!mounted) return;
+
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              loginRoute,
+              ((route) => false),
+            );
+          },
+          child: const Text('Log Out'),
+        ),
+>>>>>>> 6fb69a623258b7825c8ccda92a0d1e009ffdddcb
       ),
     );
   }

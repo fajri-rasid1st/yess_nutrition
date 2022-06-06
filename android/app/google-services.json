@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "82449681129-ijemc330poids84kbv6nfah5ukun7sof.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.yess_nutrition",
+            "certificate_hash": "df2013975a78d4183ec4c4bf594bfb488a89600c"
+          }
+        },
+        {
           "client_id": "82449681129-1h6b6al7i9lqlf10mchongma28bj90f2.apps.googleusercontent.com",
           "client_type": 3
         }

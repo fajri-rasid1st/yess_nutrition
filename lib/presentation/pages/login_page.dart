@@ -3,8 +3,17 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:provider/provider.dart';
+import 'package:yess_nutrition/common/styles/button_style.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
+import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
+import 'package:yess_nutrition/common/utils/snack_bar.dart';
+import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_in_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_in_with_google_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/create_user_data_notifier.dart';
+import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
+import 'package:yess_nutrition/presentation/widgets/clickable_text.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -39,32 +48,31 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: primaryBackgroundColor,
       body: SingleChildScrollView(
-        reverse: true,
         child: Column(
           children: <Widget>[
             Stack(
               alignment: AlignmentDirectional.topCenter,
-              clipBehavior: Clip.none,
               children: <Widget>[
                 SvgPicture.asset(
                   'assets/svg/wave_background.svg',
                   alignment: Alignment.topCenter,
-                  fit: BoxFit.fitWidth,
+                  width: width,
                 ),
-                Positioned(
-                  top: 56,
-                  child: SvgPicture.asset(
-                    'assets/svg/yess_logo_white.svg',
-                    fit: BoxFit.fitWidth,
+                SafeArea(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: SvgPicture.asset('assets/svg/yess_logo_white.svg'),
                   ),
                 ),
               ],
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -95,15 +103,20 @@ class _LoginPageState extends State<LoginPage> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
                         _buildEmailField(),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: 20),
                         _buildPasswordField(),
                         const SizedBox(height: 8),
-                        _buildForgotPasswordButton(context),
-                        const SizedBox(height: 16),
-                        _buildSubmitButton(context),
+                        ClickableText(
+                          onTap: () {
+                            Navigator.pushNamed(context, forgotPasswordRoute);
+                          },
+                          text: 'Lupa Password?',
+                        )
                       ],
                     ),
                   ),
+                  const SizedBox(height: 16),
+                  _buildSubmitButton(context),
                   const SizedBox(height: 10),
                   const Center(
                     child: Text(
@@ -112,38 +125,17 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  SizedBox(
-                    width: double.infinity,
-                    child: OutlinedButton.icon(
-                      onPressed: () {},
-                      icon: const FaIcon(
-                        FontAwesomeIcons.google,
-                        size: 18,
-                      ),
-                      label: const Text('Lanjutkan dengan Google'),
-                      style: OutlinedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
+                  _buildGoogleSignInButton(context),
+                  const SizedBox(height: 28),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       const Text('Belum punya akun? '),
-                      InkWell(
+                      ClickableText(
                         onTap: () {
                           Navigator.pushNamed(context, registerRoute);
                         },
-                        child: const Text(
-                          'Daftar di sini.',
-                          style: TextStyle(
-                            color: primaryColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        text: 'Daftar di sini.',
                       )
                     ],
                   ),
@@ -153,74 +145,6 @@ class _LoginPageState extends State<LoginPage> {
           ],
         ),
       ),
-    );
-  }
-
-  SizedBox _buildSubmitButton(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () {
-          FocusScope.of(context).unfocus();
-
-          if (_formKey.currentState!.validate()) {
-            _formKey.currentState!.save();
-          }
-        },
-        style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-        child: const Text('Masuk'),
-      ),
-    );
-  }
-
-  InkWell _buildForgotPasswordButton(BuildContext context) {
-    return InkWell(
-      onTap: () => Navigator.pushNamed(context, forgotPasswordRoute),
-      child: const Text(
-        'Lupa Password?',
-        style: TextStyle(
-          color: primaryColor,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-
-  FormBuilderTextField _buildPasswordField() {
-    return FormBuilderTextField(
-      name: 'password',
-      controller: _passwordController,
-      textInputAction: TextInputAction.done,
-      keyboardType: TextInputType.visiblePassword,
-      obscureText: _isPasswordInvisible,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
-        labelText: 'Password',
-        hintText: 'Masukkan password kamu',
-        hintStyle: const TextStyle(color: secondaryTextColor),
-        prefixIcon: const Icon(Icons.lock_outline_rounded),
-        suffixIcon: IconButton(
-          icon: _isPasswordInvisible
-              ? const Icon(Icons.visibility_off_outlined)
-              : const Icon(Icons.visibility_outlined),
-          onPressed: () {
-            setState(() {
-              _isPasswordInvisible = !_isPasswordInvisible;
-            });
-          },
-        ),
-      ),
-      validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(
-          errorText: 'Bagian ini harus diisi.',
-        ),
-      ]),
     );
   }
 
@@ -240,13 +164,141 @@ class _LoginPageState extends State<LoginPage> {
         prefixIcon: const Icon(Icons.email_outlined),
       ),
       validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(
-          errorText: 'Bagian ini harus diisi.',
-        ),
-        FormBuilderValidators.email(
-          errorText: 'Masukkan email yang valid.',
-        ),
+        FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
+        FormBuilderValidators.email(errorText: 'Email tidak valid.'),
       ]),
     );
+  }
+
+  FormBuilderTextField _buildPasswordField() {
+    return FormBuilderTextField(
+      name: 'password',
+      controller: _passwordController,
+      textInputAction: TextInputAction.done,
+      keyboardType: TextInputType.visiblePassword,
+      obscureText: _isPasswordInvisible,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        labelText: 'Password',
+        hintText: 'Masukkan password kamu',
+        hintStyle: const TextStyle(color: secondaryTextColor),
+        prefixIcon: const Icon(Icons.lock_outlined),
+        suffixIcon: IconButton(
+          icon: _isPasswordInvisible
+              ? const Icon(Icons.visibility_off_outlined)
+              : const Icon(Icons.visibility_outlined),
+          onPressed: () {
+            setState(() {
+              _isPasswordInvisible = !_isPasswordInvisible;
+            });
+          },
+        ),
+      ),
+      validator: FormBuilderValidators.compose([
+        FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
+      ]),
+    );
+  }
+
+  SizedBox _buildSubmitButton(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () => _onPressedSubmitButton(context),
+        style: elevatedButtonStyle,
+        child: const Text('Masuk'),
+      ),
+    );
+  }
+
+  SizedBox _buildGoogleSignInButton(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        onPressed: () => _onPressedGoogleSignInButton(context),
+        icon: const FaIcon(
+          FontAwesomeIcons.google,
+          size: 18,
+        ),
+        label: const Text('Lanjutkan dengan Google'),
+        style: outlinedButtonStyle,
+      ),
+    );
+  }
+
+  Future<void> _onPressedSubmitButton(BuildContext context) async {
+    FocusScope.of(context).unfocus();
+
+    _formKey.currentState!.save();
+
+    if (_formKey.currentState!.validate()) {
+      final value = _formKey.currentState!.value;
+      final signInNotifier = context.read<SignInNotifier>();
+
+      // show loading when sign in is currently on process
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const LoadingIndicator(),
+      );
+
+      // sign in process
+      await signInNotifier.signIn(value['email'], value['password']);
+
+      if (!mounted) return;
+
+      if (signInNotifier.state == UserState.success) {
+        // get user
+        final user = signInNotifier.user;
+
+        // close the loading indicator
+        Navigator.pop(context);
+
+        // navigate to home page
+        Navigator.pushReplacementNamed(context, homeRoute, arguments: user);
+      } else {
+        final snackBar = createSnackBar(signInNotifier.error);
+
+        // close the loading indicator
+        Navigator.pop(context);
+
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
+      }
+    }
+  }
+
+  Future<void> _onPressedGoogleSignInButton(BuildContext context) async {
+    final googleSignInNotifier = context.read<SignInWithGoogleNotifier>();
+    final createUserDataNotifier = context.read<CreateUserDataNotifier>();
+
+    await googleSignInNotifier.signInWithGoogle();
+
+    if (!mounted) return;
+
+    if (googleSignInNotifier.state == UserState.success) {
+      // get user
+      final user = googleSignInNotifier.user;
+
+      // get user data
+      final userData = user.toUserData();
+
+      // craete user data when sign in successfully
+      await createUserDataNotifier.createUserData(userData);
+
+      if (!mounted) return;
+
+      // navigate to home page
+      Navigator.pushReplacementNamed(context, homeRoute, arguments: user);
+    } else {
+      final snackBar = createSnackBar(googleSignInNotifier.error);
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackBar);
+    }
   }
 }
