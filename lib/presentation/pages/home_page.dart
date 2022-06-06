@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/state_enum.dart';
 import 'package:yess_nutrition/presentation/providers/bottom_navigation_bar_notifier.dart';
+import 'package:yess_nutrition/presentation/widgets/card_nutri_news_home.dart';
+import 'package:yess_nutrition/presentation/widgets/card_nutri_shop_home.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_time_task.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_button_navigation_bar.dart';
 import 'package:yess_nutrition/presentation/widgets/large_circular_progress.dart';
@@ -80,7 +81,7 @@ class BodyHomePage extends StatelessWidget {
           'assets/svg/header_background.svg',
           alignment: Alignment.topCenter,
           fit: BoxFit.fitWidth,
-          width: MediaQuery.of(context).size.width,
+          width: double.infinity,
         ),
         SafeArea(
           child: Padding(
@@ -171,7 +172,7 @@ class BodyHomePage extends StatelessWidget {
   Widget _buildContentHomePage(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 130),
-      width: MediaQuery.of(context).size.width,
+      width: double.infinity,
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(24),
@@ -194,41 +195,19 @@ class BodyHomePage extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                children: [
-                  Text(
-                    "NutriNews",
-                    style: Theme.of(context)
-                        .textTheme
-                        .subtitle1
-                        ?.copyWith(fontWeight: FontWeight.w800),
-                  ),
-                  const Spacer(),
-                  InkWell(
-                    onTap: () {},
-                    child: Row(
-                      children: [
-                        Text(
-                          "Selengkapnya",
-                          style: Theme.of(context).textTheme.overline?.copyWith(
-                                color: primaryColor,
-                                letterSpacing: 0.25,
-                                fontSize: 12,
-                              ),
-                        ),
-                        const Icon(
-                          MdiIcons.chevronRight,
-                          size: 20,
-                          color: primaryColor,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+            _buildTitleContent(context, "NutriNews"),
+            const SizedBox(
+              height: 8,
             ),
+            _buildListNutriNews(),
+            const SizedBox(
+              height: 20,
+            ),
+            _buildTitleContent(context, "NutriShop"),
+            const SizedBox(
+              height: 8,
+            ),
+            _buildListNutriShop(),
             const SizedBox(
               height: 120,
             ),
@@ -240,7 +219,8 @@ class BodyHomePage extends StatelessWidget {
 
   Widget _buildCardNutriTime(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width - 32,
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: primaryBackgroundColor,
         borderRadius: const BorderRadius.all(Radius.circular(16)),
@@ -340,7 +320,8 @@ class BodyHomePage extends StatelessWidget {
 
   Widget _buildCardRingkasan(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width - 32,
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: primaryBackgroundColor,
         borderRadius: const BorderRadius.all(Radius.circular(16)),
@@ -440,6 +421,100 @@ class BodyHomePage extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildTitleContent(BuildContext context, String title) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        children: [
+          Text(
+            title,
+            style: Theme.of(context)
+                .textTheme
+                .subtitle1
+                ?.copyWith(fontWeight: FontWeight.w800),
+          ),
+          const Spacer(),
+          InkWell(
+            onTap: () {},
+            child: Row(
+              children: [
+                Text(
+                  "Selengkapnya",
+                  style: Theme.of(context).textTheme.overline?.copyWith(
+                        color: primaryColor,
+                        letterSpacing: 0.25,
+                        fontSize: 12,
+                      ),
+                ),
+                const Icon(
+                  MdiIcons.chevronRight,
+                  size: 20,
+                  color: primaryColor,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildListNutriNews() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 16,
+      ),
+      child: ListView.separated(
+        primary: false,
+        shrinkWrap: true,
+        padding: EdgeInsets.zero,
+        itemBuilder: (context, index) {
+          return const CardNutriNewsHome(
+            picture:
+                'https://s3.theasianparent.com/cdn-cgi/image/height=250/tap-assets-prod/wp-content/uploads/sites/6/2013/03/healthy-foods.jpg',
+            title:
+                'Tak Perlu Minum Obat, Cukup Konsumsi 5 Makanan Penghilang Bau Mulut',
+            time: '2 jam lalu',
+            show: '1080 dilihat',
+          );
+        },
+        separatorBuilder: (context, index) {
+          return const SizedBox(
+            height: 8,
+          );
+        },
+        itemCount: 3,
+      ),
+    );
+  }
+
+  Widget _buildListNutriShop() {
+    return SizedBox(
+      height: 190,
+      child: ListView.separated(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16,
+        ),
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          return const CardNutriShopHome(
+            picture:
+                'https://images.pexels.com/photos/3766180/pexels-photo-3766180.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+            category: 'Minuman',
+            title: 'Air Jeruk',
+            price: 30000,
+          );
+        },
+        separatorBuilder: (context, index) {
+          return const SizedBox(
+            width: 8,
+          );
+        },
+        itemCount: 5,
       ),
     );
   }
