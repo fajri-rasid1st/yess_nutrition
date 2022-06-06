@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:yess_nutrition/common/utils/routes.dart';
+import 'package:yess_nutrition/domain/entities/user_entity.dart';
+import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_out_notifier.dart';
 
 class HomePage extends StatefulWidget {
-  final String title;
+  final UserEntity user;
 
-  const HomePage({Key? key, required this.title}) : super(key: key);
+  const HomePage({Key? key, required this.user}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -14,7 +18,20 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: Text(widget.title),
+        child: ElevatedButton(
+          onPressed: () async {
+            await context.read<SignOutNotifier>().signOut();
+
+            if (!mounted) return;
+
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              loginRoute,
+              ((route) => false),
+            );
+          },
+          child: const Text('Log Out'),
+        ),
       ),
     );
   }

@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "82449681129",
+    "project_id": "yess-nutrition-app",
+    "storage_bucket": "yess-nutrition-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:82449681129:android:8ec73b76f45eee189b3e78",
+        "android_client_info": {
+          "package_name": "com.example.yess_nutrition"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "82449681129-ijemc330poids84kbv6nfah5ukun7sof.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.yess_nutrition",
+            "certificate_hash": "df2013975a78d4183ec4c4bf594bfb488a89600c"
+          }
+        },
+        {
+          "client_id": "82449681129-1h6b6al7i9lqlf10mchongma28bj90f2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAaFpxcmoBRBSPNGvAFaAqvRWkSoSPDCIY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "82449681129-1h6b6al7i9lqlf10mchongma28bj90f2.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "82449681129-tvj5s9tm4jlo9t9ed487iej230tt4efj.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.yessNutrition"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
