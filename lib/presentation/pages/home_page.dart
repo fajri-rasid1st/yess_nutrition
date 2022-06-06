@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
-import 'package:yess_nutrition/common/utils/state_enum.dart';
+import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/presentation/providers/bottom_navigation_bar_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_news_home.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_shop_home.dart';
@@ -13,26 +12,13 @@ import 'package:yess_nutrition/presentation/widgets/card_nutri_time_task.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_button_navigation_bar.dart';
 import 'package:yess_nutrition/presentation/widgets/large_circular_progress.dart';
 import 'package:yess_nutrition/presentation/widgets/small_circular_progress.dart';
-
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-=======
-import 'package:provider/provider.dart';
-import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
-import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_out_notifier.dart';
 
 class HomePage extends StatefulWidget {
   final UserEntity user;
 
   const HomePage({Key? key, required this.user}) : super(key: key);
->>>>>>> 6fb69a623258b7825c8ccda92a0d1e009ffdddcb
 
-class _HomePageState extends State<HomePage> {
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -41,13 +27,12 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-<<<<<<< HEAD
       body: Stack(
         children: [
           Consumer<BottomNavigationBarNotifier>(
               builder: (context, result, child) {
             if (result.selectedMenu == MenuNavBar.Home) {
-              return const BodyHomePage();
+              return BodyHomePage(user: widget.user);
             } else if (result.selectedMenu == MenuNavBar.NutriTime) {
               return const Center(
                 child: Text("Ini Halaman NutriTime"),
@@ -77,20 +62,22 @@ class _HomePageState extends State<HomePage> {
 }
 
 class BodyHomePage extends StatelessWidget {
-  const BodyHomePage({Key? key}) : super(key: key);
+  final UserEntity user;
+
+  const BodyHomePage({Key? key, required this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       fit: StackFit.expand,
       children: <Widget>[
-        _buildHeaderHomePage(context),
+        _buildHeaderHomePage(context, user),
         _buildContentHomePage(context)
       ],
     );
   }
 
-  Widget _buildHeaderHomePage(BuildContext context) {
+  Widget _buildHeaderHomePage(BuildContext context, UserEntity user) {
     return Stack(
       alignment: AlignmentDirectional.topStart,
       clipBehavior: Clip.none,
@@ -130,9 +117,9 @@ class BodyHomePage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Text(
-                          "Hai, Brandon!",
-                          style: TextStyle(
+                        Text(
+                          'Hai, ${user.name}!',
+                          style: const TextStyle(
                             color: primaryBackgroundColor,
                             fontSize: 20,
                             fontWeight: FontWeight.w800,
@@ -533,23 +520,6 @@ class BodyHomePage extends StatelessWidget {
           );
         },
         itemCount: 5,
-=======
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () async {
-            await context.read<SignOutNotifier>().signOut();
-
-            if (!mounted) return;
-
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              loginRoute,
-              ((route) => false),
-            );
-          },
-          child: const Text('Log Out'),
-        ),
->>>>>>> 6fb69a623258b7825c8ccda92a0d1e009ffdddcb
       ),
     );
   }

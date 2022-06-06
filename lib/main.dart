@@ -2,20 +2,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-<<<<<<< HEAD
-=======
 import 'package:provider/single_child_widget.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
 import 'package:yess_nutrition/presentation/pages/additional_info_page.dart';
->>>>>>> 6fb69a623258b7825c8ccda92a0d1e009ffdddcb
 import 'package:yess_nutrition/presentation/pages/forgot_password_page.dart';
 import 'package:yess_nutrition/presentation/pages/home_page.dart';
 import 'package:yess_nutrition/presentation/pages/login_page.dart';
 import 'package:yess_nutrition/presentation/pages/auth_page.dart';
 import 'package:yess_nutrition/presentation/pages/register_page.dart';
-<<<<<<< HEAD
 import 'package:yess_nutrition/presentation/providers/bottom_navigation_bar_notifier.dart';
-=======
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/delete_user_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/reset_password_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_in_notifier.dart';
@@ -27,19 +22,13 @@ import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/c
 import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/delete_user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/read_user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/update_user_data_notifier.dart';
->>>>>>> 6fb69a623258b7825c8ccda92a0d1e009ffdddcb
 import 'common/styles/color_scheme.dart';
 import 'common/styles/text_style.dart';
 import 'common/utils/routes.dart';
 import 'firebase_options.dart';
-<<<<<<< HEAD
-import 'package:yess_nutrition/injection.dart' as di;
-=======
 import 'injection.dart' as di;
->>>>>>> 6fb69a623258b7825c8ccda92a0d1e009ffdddcb
 
 void main() async {
-  di.init();
   WidgetsFlutterBinding.ensureInitialized();
 
   // Prevent landscape orientation
@@ -69,12 +58,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-<<<<<<< HEAD
-      providers: [
-        ChangeNotifierProvider(
-          create: (_) => di.locator<BottomNavigationBarNotifier>(),
-=======
       providers: <SingleChildWidget>[
+        ChangeNotifierProvider<BottomNavigationBarNotifier>(
+          create: (_) => di.locator<BottomNavigationBarNotifier>(),
+        ),
         ChangeNotifierProvider<GetUserNotifier>(
           create: (_) => di.locator<GetUserNotifier>(),
         ),
@@ -107,7 +94,6 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<DeleteUserDataNotifier>(
           create: (_) => di.locator<DeleteUserDataNotifier>(),
->>>>>>> 6fb69a623258b7825c8ccda92a0d1e009ffdddcb
         ),
       ],
       child: MaterialApp(
@@ -121,11 +107,7 @@ class MyApp extends StatelessWidget {
           scaffoldBackgroundColor: scaffoldBackgroundColor,
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-<<<<<<< HEAD
-        home: const HomePage(),
-=======
         home: const AuthPage(),
->>>>>>> 6fb69a623258b7825c8ccda92a0d1e009ffdddcb
         onGenerateRoute: (settings) {
           switch (settings.name) {
             case loginRoute:
@@ -140,29 +122,6 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(
                 builder: (_) => const ForgotPasswordPage(),
               );
-<<<<<<< HEAD
-            case homePageRoute:
-              return MaterialPageRoute(
-                builder: (_) => const HomePage(),
-              );
-            default:
-              return MaterialPageRoute(
-                builder: (_) {
-                  return const Scaffold(
-                    body: Center(
-                      child: Text('Page not found'),
-                    ),
-                  );
-                },
-              );
-=======
-            case additionalInfoRoute:
-              final user = settings.arguments as UserEntity;
-
-              return MaterialPageRoute(
-                builder: (_) => AdditionalInfoPage(user: user),
-                settings: settings,
-              );
             case homeRoute:
               final user = settings.arguments as UserEntity;
 
@@ -170,9 +129,15 @@ class MyApp extends StatelessWidget {
                 builder: (_) => HomePage(user: user),
                 settings: settings,
               );
+            case additionalInfoRoute:
+              final user = settings.arguments as UserEntity;
+
+              return MaterialPageRoute(
+                builder: (_) => AdditionalInfoPage(user: user),
+                settings: settings,
+              );
             default:
               return null;
->>>>>>> 6fb69a623258b7825c8ccda92a0d1e009ffdddcb
           }
         },
       ),

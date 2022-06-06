@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-import 'package:get_it/get_it.dart';
-import 'package:yess_nutrition/presentation/providers/bottom_navigation_bar_notifier.dart';
-=======
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -24,6 +20,7 @@ import 'package:yess_nutrition/domain/usecases/firestore_usecases/create_user_da
 import 'package:yess_nutrition/domain/usecases/firestore_usecases/delete_user_data.dart';
 import 'package:yess_nutrition/domain/usecases/firestore_usecases/read_user_data.dart';
 import 'package:yess_nutrition/domain/usecases/firestore_usecases/update_user_data.dart';
+import 'package:yess_nutrition/presentation/providers/bottom_navigation_bar_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/delete_user_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/reset_password_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_in_notifier.dart';
@@ -35,14 +32,10 @@ import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/c
 import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/delete_user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/read_user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/update_user_data_notifier.dart';
->>>>>>> 6fb69a623258b7825c8ccda92a0d1e009ffdddcb
 
 final locator = GetIt.instance;
 
 void init() {
-<<<<<<< HEAD
-  locator.registerLazySingleton(() => BottomNavigationBarNotifier());
-=======
   // Auth provider
   locator.registerFactory(
     () => GetUserNotifier(getUserUseCase: locator()),
@@ -78,6 +71,11 @@ void init() {
   );
   locator.registerFactory(
     () => DeleteUserDataNotifier(deleteUserDataUseCase: locator()),
+  );
+
+  // Widget provider
+  locator.registerFactory(
+    () => BottomNavigationBarNotifier(),
   );
 
   // Auth usecases
@@ -119,5 +117,4 @@ void init() {
   locator.registerLazySingleton(() => FirebaseFirestore.instance);
   locator.registerLazySingleton(() => FirebaseStorage.instance);
   locator.registerLazySingleton(() => GoogleSignIn());
->>>>>>> 6fb69a623258b7825c8ccda92a0d1e009ffdddcb
 }

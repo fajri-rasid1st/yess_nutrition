@@ -78,13 +78,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.16.0"
-  countup:
-    dependency: "direct main"
-    description:
-      name: countup
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.4"
   crypto:
     dependency: transitive
     description:
@@ -316,7 +309,7 @@ packages:
     source: hosted
     version: "0.10.1+2"
   http:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: http
       url: "https://pub.dartlang.org"
@@ -337,7 +330,7 @@ packages:
     source: hosted
     version: "3.2.0"
   intl:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: intl
       url: "https://pub.dartlang.org"
@@ -378,13 +371,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.4"
-  material_design_icons_flutter:
-    dependency: "direct main"
-    description:
-      name: material_design_icons_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "5.0.6595"
   meta:
     dependency: transitive
     description:
@@ -469,13 +455,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
-  percent_indicator:
-    dependency: "direct main"
-    description:
-      name: percent_indicator
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.2.2"
   petitparser:
     dependency: transitive
     description:
@@ -511,8 +490,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "6.0.3"
-<<<<<<< HEAD
-=======
   quiver:
     dependency: transitive
     description:
@@ -520,7 +497,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.1.0"
->>>>>>> 6fb69a623258b7825c8ccda92a0d1e009ffdddcb
   sky_engine:
     dependency: transitive
     description: flutter

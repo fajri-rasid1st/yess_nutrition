@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:yess_nutrition/common/utils/state_enum.dart';
+import 'package:yess_nutrition/common/utils/enum_state.dart';
 
 class BottomNavigationBarNotifier extends ChangeNotifier {
   MenuNavBar _selectedMenu = MenuNavBar.Home;
