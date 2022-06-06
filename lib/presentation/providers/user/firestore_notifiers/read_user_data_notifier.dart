@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
-import 'package:yess_nutrition/domain/entities/user_entity.dart';
+import 'package:yess_nutrition/domain/entities/user_data_entity.dart';
 import 'package:yess_nutrition/domain/usecases/firestore_usecases/read_user_data.dart';
 
 class ReadUserDataNotifier extends ChangeNotifier {
@@ -11,14 +11,14 @@ class ReadUserDataNotifier extends ChangeNotifier {
   UserState _state = UserState.empty;
   UserState get state => _state;
 
-  late Stream<UserEntity> _user;
-  Stream<UserEntity> get user => _user;
+  late UserDataEntity _userData;
+  UserDataEntity get userData => _userData;
 
   String _error = '';
   String get error => _error;
 
-  void readUserData(String uid) {
-    final result = readUserDataUseCase.execute(uid);
+  Future<void> readUserData(String uid) async {
+    final result = await readUserDataUseCase.execute(uid);
 
     result.fold(
       (failure) {
@@ -27,7 +27,7 @@ class ReadUserDataNotifier extends ChangeNotifier {
         notifyListeners();
       },
       (user) {
-        _user = user;
+        _userData = user;
         _state = UserState.success;
         notifyListeners();
       },

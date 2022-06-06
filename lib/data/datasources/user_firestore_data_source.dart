@@ -1,15 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:yess_nutrition/common/utils/exception.dart';
-import 'package:yess_nutrition/data/models/user_model.dart';
+import 'package:yess_nutrition/data/models/user_data_model.dart';
 
 abstract class UserFirestoreDataSource {
-  Future<void> createUserData(UserModel user);
+  Future<void> createUserData(UserDataModel userData);
 
-  Stream<UserModel> readUserData(String uid);
+  Future<UserDataModel> readUserData(String uid);
 
-  Future<void> updateUserData(UserModel user);
+  Future<void> updateUserData(UserDataModel userData);
 
-  Future<void> deleteUserData(UserModel user);
+  Future<void> deleteUserData(String uid);
 }
 
 class UserFirestoreDataSourceImpl implements UserFirestoreDataSource {
@@ -18,44 +18,50 @@ class UserFirestoreDataSourceImpl implements UserFirestoreDataSource {
   UserFirestoreDataSourceImpl({required this.firebaseFirestore});
 
   @override
-  Future<void> createUserData(UserModel user) async {
+  Future<void> createUserData(UserDataModel userData) async {
     try {
-      final reference = firebaseFirestore.collection('users').doc(user.uid);
+      final reference = firebaseFirestore.collection('users').doc(userData.uid);
 
-      final userDocument = user.toDocument();
+      final userDocument = userData.toDocument();
 
       await reference.set(userDocument);
     } catch (e) {
-      throw FirestoreException('Something went wrong');
+      throw FirestoreException('failed to create user data');
     }
   }
 
   @override
-  Stream<UserModel> readUserData(String uid) {
+  Future<UserDataModel> readUserData(String uid) async {
     try {
       final reference = firebaseFirestore.collection('users').doc(uid);
 
-      final snapshots = reference.snapshots();
+      final snapshot = await reference.get();
 
-      final userStream = snapshots.map((snapshot) {
-        return UserModel.fromDocument(snapshot.data()!);
-      });
-
-      return userStream;
+      return UserDataModel.fromDocument(snapshot.data()!);
     } catch (e) {
-      throw FirestoreException('Something went wrong');
+      throw FirestoreException('failed to read user data');
     }
   }
 
   @override
-  Future<void> updateUserData(UserModel user) {
-    // TODO: implement updateUserData
-    throw UnimplementedError();
+  Future<void> updateUserData(UserDataModel userData) async {
+    try {
+      final reference = firebaseFirestore.collection('users').doc(userData.uid);
+
+      await reference.update(userData.toDocument());
+    } catch (e) {
+      throw FirestoreException('failded to update user data');
+    }
   }
 
   @override
-  Future<void> deleteUserData(UserModel user) {
-    // TODO: implement deleteUserData
-    throw UnimplementedError();
+  Future<void> deleteUserData(String uid) async {
+    try {
+      final reference = firebaseFirestore.collection('users').doc(uid);
+
+      await reference.delete();
+    } catch (e) {
+      throw FirestoreException('failded to delete user data');
+    }
   }
 }

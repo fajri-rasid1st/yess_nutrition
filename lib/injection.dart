@@ -15,7 +15,9 @@ import 'package:yess_nutrition/domain/usecases/auth_usecases/sign_in.dart';
 import 'package:yess_nutrition/domain/usecases/auth_usecases/sign_out.dart';
 import 'package:yess_nutrition/domain/usecases/auth_usecases/sign_up.dart';
 import 'package:yess_nutrition/domain/usecases/firestore_usecases/create_user_data.dart';
+import 'package:yess_nutrition/domain/usecases/firestore_usecases/delete_user_data.dart';
 import 'package:yess_nutrition/domain/usecases/firestore_usecases/read_user_data.dart';
+import 'package:yess_nutrition/domain/usecases/firestore_usecases/update_user_data.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/delete_user_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/reset_password_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_in_notifier.dart';
@@ -23,7 +25,9 @@ import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_o
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_up_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/get_user_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/create_user_data_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/delete_user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/read_user_data_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/update_user_data_notifier.dart';
 
 final locator = GetIt.instance;
 
@@ -55,6 +59,12 @@ void init() {
   locator.registerFactory(
     () => ReadUserDataNotifier(readUserDataUseCase: locator()),
   );
+  locator.registerFactory(
+    () => UpdateUserDataNotifier(updateUserDataUseCase: locator()),
+  );
+  locator.registerFactory(
+    () => DeleteUserDataNotifier(deleteUserDataUseCase: locator()),
+  );
 
   // Auth usecases
   locator.registerLazySingleton(() => GetUser(locator()));
@@ -67,6 +77,8 @@ void init() {
   // Firestore usecases
   locator.registerLazySingleton(() => CreateUserData(locator()));
   locator.registerLazySingleton(() => ReadUserData(locator()));
+  locator.registerLazySingleton(() => UpdateUserData(locator()));
+  locator.registerLazySingleton(() => DeleteUserData(locator()));
 
   // Repositories
   locator.registerLazySingleton<UserAuthRepository>(

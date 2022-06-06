@@ -47,7 +47,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final signInNotifier = Provider.of<SignInNotifier>(context);
 
     return Scaffold(
       backgroundColor: primaryBackgroundColor,
@@ -115,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  _buildSubmitButton(context, signInNotifier),
+                  _buildSubmitButton(context),
                   const SizedBox(height: 10),
                   const Center(
                     child: Text(
@@ -201,30 +200,25 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  SizedBox _buildSubmitButton(
-    BuildContext context,
-    SignInNotifier signInNotifier,
-  ) {
+  SizedBox _buildSubmitButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () => _onPressedSubmitButton(context, signInNotifier),
+        onPressed: () => _onPressedSubmitButton(context),
         style: elevatedButtonStyle,
         child: const Text('Masuk'),
       ),
     );
   }
 
-  Future<void> _onPressedSubmitButton(
-    BuildContext context,
-    SignInNotifier signInNotifier,
-  ) async {
+  Future<void> _onPressedSubmitButton(BuildContext context) async {
     FocusScope.of(context).unfocus();
 
     _formKey.currentState!.save();
 
     if (_formKey.currentState!.validate()) {
       final value = _formKey.currentState!.value;
+      final signInNotifier = context.read<SignInNotifier>();
 
       // show loading when sign in is currently on process
       showDialog(
@@ -241,13 +235,19 @@ class _LoginPageState extends State<LoginPage> {
       if (signInNotifier.state == UserState.error) {
         final snackBar = createSnackBar(signInNotifier.error);
 
+        // close the loading indicator
+        Navigator.pop(context);
+
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
           ..showSnackBar(snackBar);
-      }
+      } else {
+        // close the loading indicator
+        Navigator.pop(context);
 
-      // remove dialog
-      Navigator.popUntil(context, (route) => route.isFirst);
+        // navigate to home page
+        Navigator.pushReplacementNamed(context, homeRoute);
+      }
     }
   }
 

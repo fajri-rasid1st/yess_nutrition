@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/button_style.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
+import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/snack_bar.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_up_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/create_user_data_notifier.dart';
@@ -54,8 +55,6 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final signUpNotifier = Provider.of<SignUpNotifier>(context);
-    final createUserDataNotifier = Provider.of<CreateUserDataNotifier>(context);
 
     return Scaffold(
       backgroundColor: primaryBackgroundColor,
@@ -121,11 +120,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         const SizedBox(height: 20),
                         _buildConfirmPasswordField(),
                         const SizedBox(height: 16),
-                        _buildSubmitButton(
-                          context,
-                          signUpNotifier,
-                          createUserDataNotifier,
-                        ),
+                        _buildSubmitButton(context),
                       ],
                     ),
                   ),
@@ -254,36 +249,26 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  SizedBox _buildSubmitButton(
-    BuildContext context,
-    SignUpNotifier signUpNotifier,
-    CreateUserDataNotifier createUserDataNotifier,
-  ) {
+  SizedBox _buildSubmitButton(BuildContext context) {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () => _onPressedSubmitButton(
-          context,
-          signUpNotifier,
-          createUserDataNotifier,
-        ),
+        onPressed: () => _onPressedSubmitButton(context),
         style: elevatedButtonStyle,
         child: const Text('Daftar Sekarang'),
       ),
     );
   }
 
-  Future<void> _onPressedSubmitButton(
-    BuildContext context,
-    SignUpNotifier signUpNotifier,
-    CreateUserDataNotifier createUserDataNotifier,
-  ) async {
+  Future<void> _onPressedSubmitButton(BuildContext context) async {
     FocusScope.of(context).unfocus();
 
     _formKey.currentState!.save();
 
     if (_formKey.currentState!.validate()) {
       final value = _formKey.currentState!.value;
+      final signUpNotifier = context.read<SignUpNotifier>();
+      final createUserDataNotifier = context.read<CreateUserDataNotifier>();
 
       // show loading when sign up is currently on process
       showDialog(
@@ -300,20 +285,29 @@ class _RegisterPageState extends State<RegisterPage> {
       if (signUpNotifier.state == UserState.error) {
         final snackBar = createSnackBar(signUpNotifier.error);
 
+        // close the loading indicator
+        Navigator.pop(context);
+
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
           ..showSnackBar(snackBar);
-
-        // just close the loading indicator
-        Navigator.pop(context);
       } else {
+        final user = signUpNotifier.user;
+
         // craete user data when sign up successfully
-        await createUserDataNotifier.createUserData(signUpNotifier.user);
+        await createUserDataNotifier.createUserData(user.toUserData());
 
         if (!mounted) return;
 
-        // navigate to first route after sign up
-        Navigator.popUntil(context, (route) => route.isFirst);
+        // close the loading indicator
+        Navigator.pop(context);
+
+        // navigate to additional information page
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          additionalInfoRoute,
+          ((route) => route.isFirst),
+        );
       }
     }
   }

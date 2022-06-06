@@ -232,18 +232,57 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
     return SizedBox(
       width: double.infinity,
       child: ElevatedButton(
-        onPressed: () {
-          FocusScope.of(context).unfocus();
-
-          _formKey.currentState!.save();
-
-          if (_formKey.currentState!.validate()) {
-            Navigator.pushReplacementNamed(context, homeRoute);
-          }
-        },
+        onPressed: () => _onPressedSubmitButton(context),
         style: elevatedButtonStyle,
         child: const Text('Lanjutkan'),
       ),
     );
+  }
+
+  Future<void> _onPressedSubmitButton(BuildContext context) async {
+    FocusScope.of(context).unfocus();
+
+    _formKey.currentState!.save();
+
+    if (_formKey.currentState!.validate()) {
+      // final value = _formKey.currentState!.value;
+      // final getUserNotifier = context.read<GetUserNotifier>();
+      // final readUserDataNotifier = context.read<ReadUserDataNotifier>();
+      // final updateUserDataNotifier = context.read<UpdateUserDataNotifier>();
+
+      Navigator.pushReplacementNamed(context, homeRoute);
+
+      // get user
+      // getUserNotifier.user.map((user) async {
+      //   if (user != null) {
+      //     // read user data
+      //     await readUserDataNotifier.readUserData(user.uid);
+
+      //     if (readUserDataNotifier.state == UserState.success) {
+      //       // get user data
+      //       final userData = readUserDataNotifier.userData;
+
+      //       // update user data
+      //       await updateUserDataNotifier.updateUserData(
+      //         userData.copyWith(
+      //           gender: value['gender'],
+      //           age: value['age'],
+      //           weight: value['weight'],
+      //           height: value['height'],
+      //         ),
+      //       );
+
+      //       // navigate to home page
+
+      //     } else {
+      //       final snackBar = createSnackBar(readUserDataNotifier.error);
+
+      //       ScaffoldMessenger.of(context)
+      //         ..hideCurrentSnackBar()
+      //         ..showSnackBar(snackBar);
+      //     }
+      //   }
+      // });
+    }
   }
 }

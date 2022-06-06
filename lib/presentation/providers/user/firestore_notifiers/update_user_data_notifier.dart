@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/domain/entities/user_data_entity.dart';
-import 'package:yess_nutrition/domain/usecases/firestore_usecases/create_user_data.dart';
+import 'package:yess_nutrition/domain/usecases/firestore_usecases/update_user_data.dart';
 
-class CreateUserDataNotifier extends ChangeNotifier {
-  final CreateUserData createUserDataUseCase;
+class UpdateUserDataNotifier extends ChangeNotifier {
+  final UpdateUserData updateUserDataUseCase;
 
-  CreateUserDataNotifier({required this.createUserDataUseCase});
+  UpdateUserDataNotifier({required this.updateUserDataUseCase});
 
   UserState _state = UserState.empty;
   UserState get state => _state;
@@ -14,8 +14,8 @@ class CreateUserDataNotifier extends ChangeNotifier {
   String _error = '';
   String get error => _error;
 
-  Future<void> createUserData(UserDataEntity userData) async {
-    final result = await createUserDataUseCase.execute(userData);
+  Future<void> updateUserData(UserDataEntity userData) async {
+    final result = await updateUserDataUseCase.execute(userData);
 
     result.fold(
       (failure) {

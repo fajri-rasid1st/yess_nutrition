@@ -16,7 +16,9 @@ import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_o
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_up_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/get_user_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/create_user_data_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/delete_user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/read_user_data_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/update_user_data_notifier.dart';
 import 'common/styles/color_scheme.dart';
 import 'common/styles/text_style.dart';
 import 'common/utils/routes.dart';
@@ -77,6 +79,12 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<ReadUserDataNotifier>(
           create: (_) => di.locator<ReadUserDataNotifier>(),
+        ),
+        ChangeNotifierProvider<UpdateUserDataNotifier>(
+          create: (_) => di.locator<UpdateUserDataNotifier>(),
+        ),
+        ChangeNotifierProvider<DeleteUserDataNotifier>(
+          create: (_) => di.locator<DeleteUserDataNotifier>(),
         ),
       ],
       child: MaterialApp(
