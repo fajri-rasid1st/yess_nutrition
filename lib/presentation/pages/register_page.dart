@@ -147,7 +147,7 @@ class _RegisterPageState extends State<RegisterPage> {
         labelText: 'Nama',
         hintText: 'Masukkan nama kamu',
         hintStyle: const TextStyle(color: secondaryTextColor),
-        prefixIcon: const Icon(Icons.person_outline),
+        prefixIcon: const Icon(Icons.person_outline_rounded),
       ),
       validator: FormBuilderValidators.compose([
         FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
@@ -191,7 +191,7 @@ class _RegisterPageState extends State<RegisterPage> {
         labelText: 'Password',
         hintText: 'Masukkan password kamu',
         hintStyle: const TextStyle(color: secondaryTextColor),
-        prefixIcon: const Icon(Icons.lock_outlined),
+        prefixIcon: const Icon(Icons.lock_outline_rounded),
         suffixIcon: IconButton(
           icon: _isPasswordInvisible
               ? const Icon(Icons.visibility_off_outlined)
@@ -227,7 +227,7 @@ class _RegisterPageState extends State<RegisterPage> {
         labelText: 'Konfirmasi Password',
         hintText: 'Masukkan password sekali lagi',
         hintStyle: const TextStyle(color: secondaryTextColor),
-        prefixIcon: const Icon(Icons.lock_outlined),
+        prefixIcon: const Icon(Icons.lock_outline_rounded),
         suffixIcon: IconButton(
           icon: _isConfirmPasswordInvisible
               ? const Icon(Icons.visibility_off_outlined)
