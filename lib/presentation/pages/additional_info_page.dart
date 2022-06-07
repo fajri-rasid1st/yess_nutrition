@@ -3,11 +3,10 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
-import 'package:yess_nutrition/common/styles/button_style.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
-import 'package:yess_nutrition/common/utils/snack_bar.dart';
+import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
 import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/read_user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/update_user_data_notifier.dart';
@@ -202,14 +201,10 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
       controller: _ageController,
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.number,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+      decoration: const InputDecoration(
         labelText: 'Umur (tahun)',
         hintText: 'Masukkan umur kamu',
-        hintStyle: const TextStyle(color: secondaryTextColor),
-        prefixIcon: const Icon(Icons.man_outlined),
+        prefixIcon: Icon(Icons.man_outlined),
       ),
       validator: FormBuilderValidators.compose([
         FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
@@ -224,14 +219,10 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
       controller: _weightController,
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.number,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+      decoration: const InputDecoration(
         labelText: 'Berat Badan (kg)',
         hintText: 'Masukkan berat badan kamu',
-        hintStyle: const TextStyle(color: secondaryTextColor),
-        prefixIcon: const Icon(Icons.monitor_weight_outlined),
+        prefixIcon: Icon(Icons.monitor_weight_outlined),
       ),
       validator: FormBuilderValidators.compose([
         FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
@@ -246,14 +237,10 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
       controller: _heightController,
       textInputAction: TextInputAction.done,
       keyboardType: TextInputType.number,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+      decoration: const InputDecoration(
         labelText: 'Tinggi Badan (cm)',
         hintText: 'Masukkan tinggi badan kamu',
-        hintStyle: const TextStyle(color: secondaryTextColor),
-        prefixIcon: const Icon(Icons.height_outlined),
+        prefixIcon: Icon(Icons.height_outlined),
       ),
       validator: FormBuilderValidators.compose([
         FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
@@ -267,7 +254,6 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () => _onPressedSubmitButton(context),
-        style: elevatedButtonStyle,
         child: const Text('Lanjutkan'),
       ),
     );
@@ -322,7 +308,7 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
           arguments: widget.user,
         );
       } else {
-        final snackBar = createSnackBar(readUserDataNotifier.error);
+        final snackBar = Utilities.createSnackBar(readUserDataNotifier.error);
 
         // close loading indicator
         Navigator.pop(context);

@@ -3,11 +3,10 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
-import 'package:yess_nutrition/common/styles/button_style.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
-import 'package:yess_nutrition/common/utils/snack_bar.dart';
+import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_up_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/create_user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
@@ -140,14 +139,10 @@ class _RegisterPageState extends State<RegisterPage> {
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.name,
       maxLength: 100,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+      decoration: const InputDecoration(
         labelText: 'Nama',
         hintText: 'Masukkan nama kamu',
-        hintStyle: const TextStyle(color: secondaryTextColor),
-        prefixIcon: const Icon(Icons.person_outline_rounded),
+        prefixIcon: Icon(Icons.person_outline_rounded),
       ),
       validator: FormBuilderValidators.compose([
         FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
@@ -161,14 +156,10 @@ class _RegisterPageState extends State<RegisterPage> {
       controller: _emailController,
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.emailAddress,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+      decoration: const InputDecoration(
         labelText: 'Email',
         hintText: 'Masukkan email kamu',
-        hintStyle: const TextStyle(color: secondaryTextColor),
-        prefixIcon: const Icon(Icons.email_outlined),
+        prefixIcon: Icon(Icons.email_outlined),
       ),
       validator: FormBuilderValidators.compose([
         FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
@@ -185,12 +176,8 @@ class _RegisterPageState extends State<RegisterPage> {
       keyboardType: TextInputType.visiblePassword,
       obscureText: _isPasswordInvisible,
       decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
         labelText: 'Password',
         hintText: 'Masukkan password kamu',
-        hintStyle: const TextStyle(color: secondaryTextColor),
         prefixIcon: const Icon(Icons.lock_outline_rounded),
         suffixIcon: IconButton(
           icon: _isPasswordInvisible
@@ -221,12 +208,8 @@ class _RegisterPageState extends State<RegisterPage> {
       keyboardType: TextInputType.visiblePassword,
       obscureText: _isConfirmPasswordInvisible,
       decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
         labelText: 'Konfirmasi Password',
         hintText: 'Masukkan password sekali lagi',
-        hintStyle: const TextStyle(color: secondaryTextColor),
         prefixIcon: const Icon(Icons.lock_outline_rounded),
         suffixIcon: IconButton(
           icon: _isConfirmPasswordInvisible
@@ -254,7 +237,6 @@ class _RegisterPageState extends State<RegisterPage> {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () => _onPressedSubmitButton(context),
-        style: elevatedButtonStyle,
         child: const Text('Daftar Sekarang'),
       ),
     );
@@ -306,7 +288,7 @@ class _RegisterPageState extends State<RegisterPage> {
           arguments: user,
         );
       } else {
-        final snackBar = createSnackBar(signUpNotifier.error);
+        final snackBar = Utilities.createSnackBar(signUpNotifier.error);
 
         // close the loading indicator
         Navigator.pop(context);

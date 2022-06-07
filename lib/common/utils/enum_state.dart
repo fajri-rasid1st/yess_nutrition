@@ -1,3 +1,5 @@
+// User state for authentication process
 enum UserState { empty, success, error }
 
-// add more enum state here
+// Request state for API process
+enum RequestState { empty, loading, success, error }

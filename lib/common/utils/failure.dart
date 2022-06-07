@@ -19,3 +19,18 @@ class AuthFailure extends Failure {
 class FirestoreFailure extends Failure {
   const FirestoreFailure(String message) : super(message);
 }
+
+/// A class that will be returned when a **Server Failure** occurs.
+class ServerFailure extends Failure {
+  const ServerFailure(String message) : super(message);
+}
+
+/// A class that will be returned when a **Connection Failure** occurs.
+class ConnectionFailure extends Failure {
+  const ConnectionFailure(String message) : super(message);
+}
+
+/// A class that will be returned when a **SSL Failure** occurs.
+class SslFailure extends Failure {
+  const SslFailure(String message) : super(message);
+}

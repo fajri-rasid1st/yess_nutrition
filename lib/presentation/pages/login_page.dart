@@ -4,11 +4,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
-import 'package:yess_nutrition/common/styles/button_style.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
-import 'package:yess_nutrition/common/utils/snack_bar.dart';
+import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_in_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_in_with_google_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/create_user_data_notifier.dart';
@@ -154,14 +153,10 @@ class _LoginPageState extends State<LoginPage> {
       controller: _emailController,
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.emailAddress,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+      decoration: const InputDecoration(
         labelText: 'Email',
         hintText: 'Masukkan email kamu',
-        hintStyle: const TextStyle(color: secondaryTextColor),
-        prefixIcon: const Icon(Icons.email_outlined),
+        prefixIcon: Icon(Icons.email_outlined),
       ),
       validator: FormBuilderValidators.compose([
         FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
@@ -178,12 +173,8 @@ class _LoginPageState extends State<LoginPage> {
       keyboardType: TextInputType.visiblePassword,
       obscureText: _isPasswordInvisible,
       decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
         labelText: 'Password',
         hintText: 'Masukkan password kamu',
-        hintStyle: const TextStyle(color: secondaryTextColor),
         prefixIcon: const Icon(Icons.lock_outline_rounded),
         suffixIcon: IconButton(
           icon: _isPasswordInvisible
@@ -207,7 +198,6 @@ class _LoginPageState extends State<LoginPage> {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () => _onPressedSubmitButton(context),
-        style: elevatedButtonStyle,
         child: const Text('Masuk'),
       ),
     );
@@ -223,7 +213,6 @@ class _LoginPageState extends State<LoginPage> {
           size: 18,
         ),
         label: const Text('Lanjutkan dengan Google'),
-        style: outlinedButtonStyle,
       ),
     );
   }
@@ -259,7 +248,7 @@ class _LoginPageState extends State<LoginPage> {
         // navigate to home page
         Navigator.pushReplacementNamed(context, homeRoute, arguments: user);
       } else {
-        final snackBar = createSnackBar(signInNotifier.error);
+        final snackBar = Utilities.createSnackBar(signInNotifier.error);
 
         // close the loading indicator
         Navigator.pop(context);
@@ -294,7 +283,7 @@ class _LoginPageState extends State<LoginPage> {
       // navigate to home page
       Navigator.pushReplacementNamed(context, homeRoute, arguments: user);
     } else {
-      final snackBar = createSnackBar(googleSignInNotifier.error);
+      final snackBar = Utilities.createSnackBar(googleSignInNotifier.error);
 
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()

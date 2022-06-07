@@ -3,7 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:yess_nutrition/common/styles/button_style.dart';
+import 'package:yess_nutrition/common/styles/color_scheme.dart';
+import 'package:yess_nutrition/common/styles/input_style.dart';
+import 'package:yess_nutrition/common/styles/text_style.dart';
+import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
+import 'package:yess_nutrition/firebase_options.dart';
 import 'package:yess_nutrition/presentation/pages/additional_info_page.dart';
 import 'package:yess_nutrition/presentation/pages/forgot_password_page.dart';
 import 'package:yess_nutrition/presentation/pages/home_page.dart';
@@ -21,10 +27,6 @@ import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/c
 import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/delete_user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/read_user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/update_user_data_notifier.dart';
-import 'common/styles/color_scheme.dart';
-import 'common/styles/text_style.dart';
-import 'common/utils/routes.dart';
-import 'firebase_options.dart';
 import 'injection.dart' as di;
 
 void main() async {
@@ -97,10 +99,17 @@ class MyApp extends StatelessWidget {
         title: 'Yess Nutrition',
         theme: ThemeData(
           fontFamily: 'Plus Jakarta Sans',
-          colorScheme: myColorScheme,
-          textTheme: myTextTheme,
+          colorScheme: colorScheme,
+          textTheme: textTheme,
           dividerColor: dividerColor,
           scaffoldBackgroundColor: scaffoldBackgroundColor,
+          inputDecorationTheme: inputDecorationTheme,
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: elevatedButtonStyle,
+          ),
+          outlinedButtonTheme: OutlinedButtonThemeData(
+            style: outlinedButtonStyle,
+          ),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: const AuthPage(),

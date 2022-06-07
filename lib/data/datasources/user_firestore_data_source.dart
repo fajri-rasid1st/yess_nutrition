@@ -50,7 +50,7 @@ class UserFirestoreDataSourceImpl implements UserFirestoreDataSource {
 
       await reference.update(userData.toDocument());
     } catch (e) {
-      throw FirestoreException('failded to update user data');
+      throw FirestoreException('failed to update user data');
     }
   }
 
@@ -61,7 +61,7 @@ class UserFirestoreDataSourceImpl implements UserFirestoreDataSource {
 
       await reference.delete();
     } catch (e) {
-      throw FirestoreException('failded to delete user data');
+      throw FirestoreException('failed to delete user data');
     }
   }
 }

@@ -11,8 +11,8 @@ const secondaryTextColor = Color(0XFF9C9DB9);
 const dividerColor = Color(0XFFD2D1E1);
 const errorColor = Color(0XFFF9877B);
 
-// Color Scheme
-final myColorScheme = ColorScheme.fromSeed(
+// Color scheme
+final colorScheme = ColorScheme.fromSeed(
   seedColor: primaryColor,
   brightness: Brightness.light,
   primary: primaryColor,

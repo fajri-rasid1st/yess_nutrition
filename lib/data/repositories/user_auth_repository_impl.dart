@@ -62,7 +62,7 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
         case 'invalid-email':
           return const Left(AuthFailure('Email tidak valid'));
         case 'email-already-in-use':
-          return const Left(AuthFailure('Email tersebut telah digunakan'));
+          return const Left(AuthFailure('Email telah digunakan'));
         case 'weak-password':
           return const Left(AuthFailure('Password tidak valid'));
         default:
@@ -93,7 +93,7 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
         case 'invalid-email':
           return const Left(AuthFailure('Email tidak valid'));
         case 'user-not-found':
-          return const Left(AuthFailure('Email tersebut tidak terdaftar'));
+          return const Left(AuthFailure('Email tidak terdaftar'));
         default:
           return Left(AuthFailure(e.message ?? e.code));
       }

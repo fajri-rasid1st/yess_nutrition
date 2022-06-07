@@ -3,10 +3,9 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
-import 'package:yess_nutrition/common/styles/button_style.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
-import 'package:yess_nutrition/common/utils/snack_bar.dart';
+import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/reset_password_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
@@ -117,14 +116,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       controller: _emailController,
       textInputAction: TextInputAction.done,
       keyboardType: TextInputType.emailAddress,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+      decoration: const InputDecoration(
         labelText: 'Email',
         hintText: 'Masukkan email kamu',
-        hintStyle: const TextStyle(color: secondaryTextColor),
-        prefixIcon: const Icon(Icons.email_outlined),
+        prefixIcon: Icon(Icons.email_outlined),
       ),
       validator: FormBuilderValidators.compose([
         FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
@@ -138,7 +133,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () => _onPressedSubmitButton(context),
-        style: elevatedButtonStyle,
         child: const Text('Kirim Email Konfirmasi'),
       ),
     );
@@ -165,7 +159,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
       if (!mounted) return;
 
       if (resetPasswordNotifier.state == UserState.success) {
-        final succeessSnackBar = createSnackBar(resetPasswordNotifier.success);
+        final succeessSnackBar =
+            Utilities.createSnackBar(resetPasswordNotifier.success);
 
         ScaffoldMessenger.of(context)
           ..hideCurrentSnackBar()
@@ -174,7 +169,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         // navigate to first route after email sended
         Navigator.popUntil(context, (route) => route.isFirst);
       } else {
-        final errorSnackBar = createSnackBar(resetPasswordNotifier.error);
+        final errorSnackBar =
+            Utilities.createSnackBar(resetPasswordNotifier.error);
 
         // close the loading indicator
         Navigator.pop(context);
