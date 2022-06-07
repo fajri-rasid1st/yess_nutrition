@@ -5,6 +5,7 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
+import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/presentation/providers/bottom_navigation_bar_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_news_home.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_shop_home.dart';
@@ -51,9 +52,11 @@ class _HomePageState extends State<HomePage> {
               );
             }
           }),
-          const Positioned(
+          Positioned(
             bottom: 0,
-            child: CustomButtonNavigationBar(),
+            child: CustomButtonNavigationBar(
+              onTapCircleButton: () {},
+            ),
           ),
         ],
       ),
@@ -140,30 +143,21 @@ class BodyHomePage extends StatelessWidget {
                   ],
                 ),
                 const Spacer(),
-                InkWell(
-                  onTap: () {
-                    const snackBar = SnackBar(
-                      content: Text('Yay! A SnackBar!'),
-                    );
-
-                    // Find the ScaffoldMessenger in the widget tree
-                    // and use it to show a SnackBar.
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                  },
-                  child: Container(
-                    width: 44,
-                    height: 44,
-                    decoration: const BoxDecoration(
-                      color: primaryColor,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(12),
-                      ),
-                    ),
-                    child: const Icon(
+                Container(
+                  decoration: BoxDecoration(
+                    color: primaryColor,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: IconButton(
+                    onPressed: () {
+                      Navigator.pushNamed(context, profileRoute);
+                    },
+                    icon: const Icon(
                       Icons.settings_outlined,
                       color: primaryBackgroundColor,
-                      size: 22,
+                      size: 28,
                     ),
+                    tooltip: 'Pengaturan',
                   ),
                 ),
               ],

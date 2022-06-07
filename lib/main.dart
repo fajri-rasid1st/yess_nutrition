@@ -9,6 +9,7 @@ import 'package:yess_nutrition/presentation/pages/forgot_password_page.dart';
 import 'package:yess_nutrition/presentation/pages/home_page.dart';
 import 'package:yess_nutrition/presentation/pages/login_page.dart';
 import 'package:yess_nutrition/presentation/pages/auth_page.dart';
+import 'package:yess_nutrition/presentation/pages/profile_page.dart';
 import 'package:yess_nutrition/presentation/pages/register_page.dart';
 import 'package:yess_nutrition/presentation/providers/bottom_navigation_bar_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/delete_user_notifier.dart';
@@ -128,6 +129,10 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(
                 builder: (_) => HomePage(user: user),
                 settings: settings,
+              );
+            case profileRoute:
+              return MaterialPageRoute(
+                builder: (_) => const ProfilePage(),
               );
             case additionalInfoRoute:
               final user = settings.arguments as UserEntity;

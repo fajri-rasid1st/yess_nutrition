@@ -7,7 +7,12 @@ import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/presentation/providers/bottom_navigation_bar_notifier.dart';
 
 class CustomButtonNavigationBar extends StatefulWidget {
-  const CustomButtonNavigationBar({Key? key}) : super(key: key);
+  final VoidCallback onTapCircleButton;
+
+  const CustomButtonNavigationBar({
+    Key? key,
+    required this.onTapCircleButton,
+  }) : super(key: key);
 
   @override
   State<CustomButtonNavigationBar> createState() =>
@@ -30,18 +35,19 @@ class _CustomButtonNavigationBarState extends State<CustomButtonNavigationBar> {
             width: MediaQuery.of(context).size.width,
             clipBehavior: Clip.hardEdge,
             decoration: BoxDecoration(
-                color: primaryBackgroundColor,
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: secondaryColor.withOpacity(0.4),
-                    offset: const Offset(0.0, -4.0),
-                    blurRadius: 20,
-                  )
-                ]),
+              color: primaryBackgroundColor,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: secondaryColor.withOpacity(0.4),
+                  offset: const Offset(0.0, -4.0),
+                  blurRadius: 20,
+                )
+              ],
+            ),
             child: Row(
               children: <Widget>[
                 buildNavBarItem(
@@ -71,36 +77,39 @@ class _CustomButtonNavigationBarState extends State<CustomButtonNavigationBar> {
               ],
             ),
           ),
-          Container(
-            height: 76,
-            width: 76,
-            margin: const EdgeInsets.only(bottom: 20),
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.all(Radius.circular(200)),
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color(0XFF8B80F8),
-                  Color(0XFF5C51C6),
+          GestureDetector(
+            onTap: widget.onTapCircleButton,
+            child: Container(
+              height: 76,
+              width: 76,
+              margin: const EdgeInsets.only(bottom: 20),
+              decoration: const BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(200)),
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    Color(0XFF8B80F8),
+                    Color(0XFF5C51C6),
+                  ],
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: secondaryColor,
+                    offset: Offset(0.0, 8.0),
+                    blurRadius: 10,
+                  )
                 ],
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: secondaryColor,
-                  offset: Offset(0.0, 8.0),
-                  blurRadius: 10,
-                )
-              ],
-            ),
-            padding: const EdgeInsets.only(
-              left: 22,
-              right: 19,
-              top: 5,
-            ),
-            child: SvgPicture.asset(
-              'assets/svg/nutri_check.svg',
-              fit: BoxFit.fitWidth,
+              padding: const EdgeInsets.only(
+                left: 22,
+                right: 19,
+                top: 5,
+              ),
+              child: SvgPicture.asset(
+                'assets/svg/nutri_check.svg',
+                fit: BoxFit.fitWidth,
+              ),
             ),
           ),
         ],
@@ -113,7 +122,7 @@ class _CustomButtonNavigationBarState extends State<CustomButtonNavigationBar> {
     IconData iconActivated,
     MenuNavBar menu,
   ) {
-    return InkWell(
+    return GestureDetector(
       onTap: () {
         Provider.of<BottomNavigationBarNotifier>(context, listen: false)
             .changeMenu(menu);
