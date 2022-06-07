@@ -184,7 +184,7 @@ class _LoginPageState extends State<LoginPage> {
         labelText: 'Password',
         hintText: 'Masukkan password kamu',
         hintStyle: const TextStyle(color: secondaryTextColor),
-        prefixIcon: const Icon(Icons.lock_outlined),
+        prefixIcon: const Icon(Icons.lock_outline_rounded),
         suffixIcon: IconButton(
           icon: _isPasswordInvisible
               ? const Icon(Icons.visibility_off_outlined)

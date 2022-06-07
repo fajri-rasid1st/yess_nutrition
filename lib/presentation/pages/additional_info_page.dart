@@ -11,7 +11,6 @@ import 'package:yess_nutrition/common/utils/snack_bar.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
 import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/read_user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/update_user_data_notifier.dart';
-import 'package:yess_nutrition/presentation/widgets/clickable_text.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
 class AdditionalInfoPage extends StatefulWidget {
@@ -50,62 +49,89 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: primaryBackgroundColor,
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            SafeArea(
-              child: Align(
-                alignment: Alignment.topRight,
-                child: ClickableText(
-                  onTap: () {
-                    Navigator.pushReplacementNamed(context, homeRoute);
-                  },
-                  text: 'Lewati',
+    return WillPopScope(
+      onWillPop: () {
+        Navigator.pushNamedAndRemoveUntil(
+          context,
+          homeRoute,
+          ((route) => false),
+          arguments: widget.user,
+        );
+
+        return Future.value(true);
+      },
+      child: Scaffold(
+        backgroundColor: primaryBackgroundColor,
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SafeArea(
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: secondaryColor,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          homeRoute,
+                          ((route) => false),
+                          arguments: widget.user,
+                        );
+                      },
+                      icon: const Icon(
+                        Icons.close_rounded,
+                        color: primaryColor,
+                        size: 32,
+                      ),
+                      tooltip: 'Close',
+                    ),
+                  ),
                 ),
               ),
-            ),
-            Center(
-              child: SvgPicture.asset(
+              const SizedBox(height: 32),
+              SvgPicture.asset(
                 'assets/svg/reading_list_cuate.svg',
-                width: 240,
+                width: 200,
                 fit: BoxFit.fitWidth,
               ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Lengkapi Data Anda',
-              style: Theme.of(context)
-                  .textTheme
-                  .headline4!
-                  .copyWith(color: primaryColor),
-            ),
-            const SizedBox(height: 4),
-            const Text(
-              'Untuk memastikan kecukupan gizi anda, kami menyarankan untuk mengisi form berikut.',
-              style: TextStyle(color: secondaryTextColor),
-            ),
-            const SizedBox(height: 24),
-            FormBuilder(
-              key: _formKey,
-              child: Column(
-                children: <Widget>[
-                  _buildChoiceChip(),
-                  const SizedBox(height: 20),
-                  _buildAgeField(),
-                  const SizedBox(height: 20),
-                  _buildWeightField(),
-                  const SizedBox(height: 20),
-                  _buildHeightField(),
-                  const SizedBox(height: 16),
-                  _buildSubmitButton(context),
-                ],
+              const SizedBox(height: 24),
+              Text(
+                'Lengkapi Data Anda',
+                style: Theme.of(context)
+                    .textTheme
+                    .headline4!
+                    .copyWith(color: primaryColor),
               ),
-            ),
-          ],
+              const SizedBox(height: 4),
+              const Text(
+                'Untuk memastikan kecukupan gizi anda, kami menyarankan untuk mengisi form berikut.',
+                style: TextStyle(color: secondaryTextColor),
+              ),
+              const SizedBox(height: 24),
+              FormBuilder(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    _buildChoiceChip(),
+                    const SizedBox(height: 20),
+                    _buildAgeField(),
+                    const SizedBox(height: 20),
+                    _buildWeightField(),
+                    const SizedBox(height: 20),
+                    _buildHeightField(),
+                    const SizedBox(height: 16),
+                    _buildSubmitButton(context),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -290,9 +316,10 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
         Navigator.pop(context);
 
         // navigate to home page
-        Navigator.pushReplacementNamed(
+        Navigator.pushNamedAndRemoveUntil(
           context,
           homeRoute,
+          ((route) => false),
           arguments: widget.user,
         );
       } else {
