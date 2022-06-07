@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
-import 'package:yess_nutrition/domain/usecases/auth_usecases/sign_in_with_google.dart';
+import 'package:yess_nutrition/domain/usecases/user/auth_usecases/sign_in_with_google.dart';
 
 class SignInWithGoogleNotifier extends ChangeNotifier {
   final SignInWithGoogle signInWithGoogleUseCase;

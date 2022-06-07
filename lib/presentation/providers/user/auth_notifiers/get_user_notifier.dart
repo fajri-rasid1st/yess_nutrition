@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
-import 'package:yess_nutrition/domain/usecases/auth_usecases/get_user.dart';
+import 'package:yess_nutrition/domain/usecases/user/auth_usecases/get_user.dart';
 
 class GetUserNotifier extends ChangeNotifier {
   final GetUser getUserUseCase;

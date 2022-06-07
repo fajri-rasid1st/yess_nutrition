@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
-import 'package:yess_nutrition/domain/usecases/auth_usecases/sign_out.dart';
+import 'package:yess_nutrition/domain/usecases/user/auth_usecases/sign_out.dart';
 
 class SignOutNotifier extends ChangeNotifier {
   final SignOut signOutUseCase;

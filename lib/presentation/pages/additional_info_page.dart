@@ -87,7 +87,6 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
                       icon: const Icon(
                         Icons.close_rounded,
                         color: primaryColor,
-                        size: 32,
                       ),
                       tooltip: 'Close',
                     ),

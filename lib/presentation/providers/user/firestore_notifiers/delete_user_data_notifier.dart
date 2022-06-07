@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
-import 'package:yess_nutrition/domain/usecases/firestore_usecases/delete_user_data.dart';
+import 'package:yess_nutrition/domain/usecases/user/firestore_usecases/delete_user_data.dart';
 
 class DeleteUserDataNotifier extends ChangeNotifier {
   final DeleteUserData deleteUserDataUseCase;

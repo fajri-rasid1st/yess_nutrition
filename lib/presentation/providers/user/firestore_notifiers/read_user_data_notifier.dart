@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/domain/entities/user_data_entity.dart';
-import 'package:yess_nutrition/domain/usecases/firestore_usecases/read_user_data.dart';
+import 'package:yess_nutrition/domain/usecases/user/firestore_usecases/read_user_data.dart';
 
 class ReadUserDataNotifier extends ChangeNotifier {
   final ReadUserData readUserDataUseCase;

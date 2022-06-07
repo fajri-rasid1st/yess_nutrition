@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
-import 'package:yess_nutrition/domain/usecases/auth_usecases/sign_in.dart';
+import 'package:yess_nutrition/domain/usecases/user/auth_usecases/sign_in.dart';
 
 class SignInNotifier extends ChangeNotifier {
   final SignIn signInUseCase;

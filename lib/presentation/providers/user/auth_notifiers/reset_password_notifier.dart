@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
-import 'package:yess_nutrition/domain/usecases/auth_usecases/reset_password.dart';
+import 'package:yess_nutrition/domain/usecases/user/auth_usecases/reset_password.dart';
 
 class ResetPasswordNotifier extends ChangeNotifier {
   final ResetPassword resetPasswordUseCase;
