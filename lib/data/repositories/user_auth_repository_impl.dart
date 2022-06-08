@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter/services.dart';
 import 'package:yess_nutrition/common/utils/failure.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:yess_nutrition/data/datasources/user_auth_data_source.dart';
@@ -42,6 +43,8 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
           return const Left(AuthFailure('Email belum terdaftar'));
         case 'wrong-password':
           return const Left(AuthFailure('Password yang anda masukkan salah'));
+        case 'network-request-failed':
+          return const Left(AuthFailure('Koneksi bermasalah. Coba lagi.'));
         default:
           return Left(AuthFailure(e.message ?? e.code));
       }
@@ -65,6 +68,8 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
           return const Left(AuthFailure('Email telah digunakan'));
         case 'weak-password':
           return const Left(AuthFailure('Password tidak valid'));
+        case 'network-request-failed':
+          return const Left(AuthFailure('Koneksi bermasalah. Coba lagi.'));
         default:
           return Left(AuthFailure(e.message ?? e.code));
       }
@@ -94,6 +99,8 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
           return const Left(AuthFailure('Email tidak valid'));
         case 'user-not-found':
           return const Left(AuthFailure('Email tidak terdaftar'));
+        case 'network-request-failed':
+          return const Left(AuthFailure('Koneksi bermasalah. Coba lagi.'));
         default:
           return Left(AuthFailure(e.message ?? e.code));
       }
@@ -119,6 +126,13 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
       return Right(result?.toEntity());
     } on FirebaseAuthException catch (e) {
       return Left(AuthFailure(e.message ?? e.code));
+    } on PlatformException catch (e) {
+      switch (e.code) {
+        case 'network_error':
+          return const Left(AuthFailure('Koneksi bermasalah. Coba lagi.'));
+        default:
+          return Left(AuthFailure(e.message ?? e.code));
+      }
     }
   }
 }

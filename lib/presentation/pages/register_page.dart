@@ -105,6 +105,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   const SizedBox(height: 24),
                   FormBuilder(
                     key: _formKey,
+                    autoFocusOnValidationFailure: true,
                     child: Column(
                       children: <Widget>[
                         _buildNameField(),

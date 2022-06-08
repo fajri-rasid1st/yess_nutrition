@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:yess_nutrition/data/models/user_model.dart';
 
@@ -122,6 +123,8 @@ class UserAuthDataSourceImpl implements UserAuthDataSource {
       return UserModel.fromUserCredential(userCredential.user!);
     } on FirebaseAuthException catch (e) {
       throw FirebaseAuthException(code: e.code);
+    } on PlatformException catch (e) {
+      throw PlatformException(code: e.code);
     }
   }
 }

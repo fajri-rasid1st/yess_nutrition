@@ -97,6 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 24),
                   FormBuilder(
                     key: _formKey,
+                    autoFocusOnValidationFailure: true,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
