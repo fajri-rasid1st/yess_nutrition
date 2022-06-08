@@ -6,3 +6,4 @@ const forgotPasswordRoute = '/forgot-password';
 const additionalInfoRoute = '/add-info';
 const homeRoute = '/home';
 const profileRoute = '/profile';
+const updateProfileRoute = '/profile/update';
