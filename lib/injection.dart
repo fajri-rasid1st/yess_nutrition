@@ -3,12 +3,24 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:yess_nutrition/common/utils/http_ssl_pinning.dart';
+import 'package:yess_nutrition/data/datasources/databases/news_database.dart';
+import 'package:yess_nutrition/data/datasources/news_local_data_source.dart';
+import 'package:yess_nutrition/data/datasources/news_remote_data_source.dart';
 import 'package:yess_nutrition/data/datasources/user_auth_data_source.dart';
 import 'package:yess_nutrition/data/datasources/user_firestore_data_source.dart';
+import 'package:yess_nutrition/data/repositories/news_repository_impl.dart';
 import 'package:yess_nutrition/data/repositories/user_auth_repository_impl.dart';
 import 'package:yess_nutrition/data/repositories/user_firestore_repository_impl.dart';
+import 'package:yess_nutrition/domain/repositories/news_repository.dart';
 import 'package:yess_nutrition/domain/repositories/user_auth_repository.dart';
 import 'package:yess_nutrition/domain/repositories/user_firestore_repository.dart';
+import 'package:yess_nutrition/domain/usecases/news_usecases/create_bookmark.dart';
+import 'package:yess_nutrition/domain/usecases/news_usecases/delete_bookmark.dart';
+import 'package:yess_nutrition/domain/usecases/news_usecases/get_bookmark_status.dart';
+import 'package:yess_nutrition/domain/usecases/news_usecases/get_bookmarks.dart';
+import 'package:yess_nutrition/domain/usecases/news_usecases/get_news.dart';
+import 'package:yess_nutrition/domain/usecases/news_usecases/search_news.dart';
 import 'package:yess_nutrition/domain/usecases/user/auth_usecases/delete_user.dart';
 import 'package:yess_nutrition/domain/usecases/user/auth_usecases/get_user.dart';
 import 'package:yess_nutrition/domain/usecases/user/auth_usecases/reset_password.dart';
@@ -87,12 +99,26 @@ void init() {
   locator.registerLazySingleton(() => UpdateUserData(locator()));
   locator.registerLazySingleton(() => DeleteUserData(locator()));
 
+  // News usecases
+  locator.registerLazySingleton(() => CreateBookmark(locator()));
+  locator.registerLazySingleton(() => DeleteBookmark(locator()));
+  locator.registerLazySingleton(() => GetBookmarkStatus(locator()));
+  locator.registerLazySingleton(() => GetBookmarks(locator()));
+  locator.registerLazySingleton(() => GetNews(locator()));
+  locator.registerLazySingleton(() => SearchNews(locator()));
+
   // Repositories
   locator.registerLazySingleton<UserAuthRepository>(
     () => UserAuthRepositoryImpl(userAuthDataSource: locator()),
   );
   locator.registerLazySingleton<UserFirestoreRepository>(
     () => UserFirestoreRepositoryImpl(userFirestoreDataSource: locator()),
+  );
+  locator.registerLazySingleton<NewsRepository>(
+    () => NewsRepositoryImpl(
+      newsLocalDataSource: locator(),
+      newsRemoteDataSource: locator(),
+    ),
   );
 
   // Data sources
@@ -105,10 +131,22 @@ void init() {
   locator.registerLazySingleton<UserFirestoreDataSource>(
     () => UserFirestoreDataSourceImpl(firebaseFirestore: locator()),
   );
+  locator.registerLazySingleton<NewsLocalDataSource>(
+    () => NewsLocalDataSourceImpl(newsDatabase: locator()),
+  );
+  locator.registerLazySingleton<NewsRemoteDataSource>(
+    () => NewsRemoteDataSourceImpl(client: locator()),
+  );
 
-  // External
+  // Databases
+  locator.registerLazySingleton<NewsDatabase>(() => NewsDatabase());
+
+  // Services
   locator.registerLazySingleton(() => FirebaseAuth.instance);
   locator.registerLazySingleton(() => FirebaseFirestore.instance);
   locator.registerLazySingleton(() => FirebaseStorage.instance);
   locator.registerLazySingleton(() => GoogleSignIn());
+
+  // client w/ SSL pinning certified
+  locator.registerLazySingleton(() => HttpSslPinning.client);
 }

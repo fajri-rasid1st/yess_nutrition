@@ -7,6 +7,7 @@ import 'package:yess_nutrition/common/styles/button_style.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/styles/input_style.dart';
 import 'package:yess_nutrition/common/styles/text_style.dart';
+import 'package:yess_nutrition/common/utils/http_ssl_pinning.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
 import 'package:yess_nutrition/firebase_options.dart';
@@ -47,6 +48,9 @@ void main() async {
 
   // Initialize firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Initialize ssl pinning
+  await HttpSslPinning.init();
 
   // Initialize service locator
   di.init();

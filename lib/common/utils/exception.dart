@@ -1,4 +1,12 @@
 /// Exception class that will be thrown when there is a problem
+/// related to the firestore.
+class FirestoreException implements Exception {
+  final String message;
+
+  FirestoreException(this.message);
+}
+
+/// Exception class that will be thrown when there is a problem
 /// related to the server.
 class ServerException implements Exception {
   final String message;
@@ -7,9 +15,9 @@ class ServerException implements Exception {
 }
 
 /// Exception class that will be thrown when there is a problem
-/// related to the firestore.
-class FirestoreException implements Exception {
+/// related to the database.
+class DatabaseException implements Exception {
   final String message;
 
-  FirestoreException(this.message);
+  DatabaseException(this.message);
 }

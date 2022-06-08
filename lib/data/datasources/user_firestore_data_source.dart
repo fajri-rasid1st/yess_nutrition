@@ -26,7 +26,7 @@ class UserFirestoreDataSourceImpl implements UserFirestoreDataSource {
 
       await reference.set(userDocument);
     } catch (e) {
-      throw FirestoreException('failed to create user data');
+      throw FirestoreException(e.toString());
     }
   }
 
@@ -39,7 +39,7 @@ class UserFirestoreDataSourceImpl implements UserFirestoreDataSource {
 
       return UserDataModel.fromDocument(snapshot.data()!);
     } catch (e) {
-      throw FirestoreException('failed to read user data');
+      throw FirestoreException(e.toString());
     }
   }
 
@@ -50,7 +50,7 @@ class UserFirestoreDataSourceImpl implements UserFirestoreDataSource {
 
       await reference.update(userData.toDocument());
     } catch (e) {
-      throw FirestoreException('failed to update user data');
+      throw FirestoreException(e.toString());
     }
   }
 
@@ -61,7 +61,7 @@ class UserFirestoreDataSourceImpl implements UserFirestoreDataSource {
 
       await reference.delete();
     } catch (e) {
-      throw FirestoreException('failed to delete user data');
+      throw FirestoreException(e.toString());
     }
   }
 }
