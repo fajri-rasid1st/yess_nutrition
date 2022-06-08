@@ -16,6 +16,7 @@ import 'package:yess_nutrition/presentation/pages/home_page.dart';
 import 'package:yess_nutrition/presentation/pages/login_page.dart';
 import 'package:yess_nutrition/presentation/pages/auth_page.dart';
 import 'package:yess_nutrition/presentation/pages/register_page.dart';
+import 'package:yess_nutrition/presentation/providers/input_password_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/delete_user_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/reset_password_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_in_notifier.dart';
@@ -92,6 +93,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<DeleteUserDataNotifier>(
           create: (_) => di.locator<DeleteUserDataNotifier>(),
+        ),
+        ChangeNotifierProvider<InputPasswordNotifier>(
+          create: (_) => InputPasswordNotifier(),
         ),
       ],
       child: MaterialApp(

@@ -8,6 +8,7 @@ import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
+import 'package:yess_nutrition/presentation/providers/input_password_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_in_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_in_with_google_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/create_user_data_notifier.dart';
@@ -22,8 +23,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  bool _isPasswordInvisible = true;
-
   late final GlobalKey<FormBuilderState> _formKey;
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
@@ -103,7 +102,7 @@ class _LoginPageState extends State<LoginPage> {
                       children: <Widget>[
                         _buildEmailField(),
                         const SizedBox(height: 20),
-                        _buildPasswordField(),
+                        _buildPasswordField(context),
                         const SizedBox(height: 8),
                         ClickableText(
                           onTap: () {
@@ -165,25 +164,26 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  FormBuilderTextField _buildPasswordField() {
+  FormBuilderTextField _buildPasswordField(BuildContext context) {
+    final passwordNotifier = context.watch<InputPasswordNotifier>();
+    final isVisible = passwordNotifier.isSignInPasswordVisible;
+
     return FormBuilderTextField(
       name: 'password',
       controller: _passwordController,
       textInputAction: TextInputAction.done,
       keyboardType: TextInputType.visiblePassword,
-      obscureText: _isPasswordInvisible,
+      obscureText: !isVisible,
       decoration: InputDecoration(
         labelText: 'Password',
         hintText: 'Masukkan password kamu',
         prefixIcon: const Icon(Icons.lock_outline_rounded),
         suffixIcon: IconButton(
-          icon: _isPasswordInvisible
-              ? const Icon(Icons.visibility_off_outlined)
-              : const Icon(Icons.visibility_outlined),
+          icon: isVisible
+              ? const Icon(Icons.visibility_outlined)
+              : const Icon(Icons.visibility_off_outlined),
           onPressed: () {
-            setState(() {
-              _isPasswordInvisible = !_isPasswordInvisible;
-            });
+            passwordNotifier.isSignInPasswordVisible = !isVisible;
           },
         ),
       ),

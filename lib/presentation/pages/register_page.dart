@@ -7,6 +7,7 @@ import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
+import 'package:yess_nutrition/presentation/providers/input_password_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_up_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/create_user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
@@ -19,9 +20,6 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  bool _isPasswordInvisible = true;
-  bool _isConfirmPasswordInvisible = true;
-
   late final GlobalKey<FormBuilderState> _formKey;
   late final TextEditingController _nameController;
   late final TextEditingController _emailController;
@@ -35,8 +33,6 @@ class _RegisterPageState extends State<RegisterPage> {
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
     _confirmPasswordController = TextEditingController();
-
-    _passwordController.addListener(() => setState(() {}));
 
     super.initState();
   }
@@ -115,9 +111,9 @@ class _RegisterPageState extends State<RegisterPage> {
                         const SizedBox(height: 20),
                         _buildEmailField(),
                         const SizedBox(height: 20),
-                        _buildPasswordField(),
+                        _buildPasswordField(context),
                         const SizedBox(height: 20),
-                        _buildConfirmPasswordField(),
+                        _buildConfirmPasswordField(context),
                         const SizedBox(height: 16),
                         _buildSubmitButton(context),
                       ],
@@ -168,25 +164,26 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  FormBuilderTextField _buildPasswordField() {
+  FormBuilderTextField _buildPasswordField(BuildContext context) {
+    final passwordNotifier = context.watch<InputPasswordNotifier>();
+    final isVisible = passwordNotifier.isSignUpPasswordVisible;
+
     return FormBuilderTextField(
       name: 'password',
       controller: _passwordController,
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.visiblePassword,
-      obscureText: _isPasswordInvisible,
+      obscureText: !isVisible,
       decoration: InputDecoration(
         labelText: 'Password',
         hintText: 'Masukkan password kamu',
         prefixIcon: const Icon(Icons.lock_outline_rounded),
         suffixIcon: IconButton(
-          icon: _isPasswordInvisible
-              ? const Icon(Icons.visibility_off_outlined)
-              : const Icon(Icons.visibility_outlined),
+          icon: isVisible
+              ? const Icon(Icons.visibility_outlined)
+              : const Icon(Icons.visibility_off_outlined),
           onPressed: () {
-            setState(() {
-              _isPasswordInvisible = !_isPasswordInvisible;
-            });
+            passwordNotifier.isSignUpPasswordVisible = !isVisible;
           },
         ),
       ),
@@ -197,35 +194,39 @@ class _RegisterPageState extends State<RegisterPage> {
           errorText: 'Password min. 8 karakter dengan 1 angka dan huruf.',
         ),
       ]),
+      onChanged: (value) {
+        passwordNotifier.signUpPasswordValue = value ?? '';
+      },
     );
   }
 
-  FormBuilderTextField _buildConfirmPasswordField() {
+  FormBuilderTextField _buildConfirmPasswordField(BuildContext context) {
+    final passwordNotifier = context.watch<InputPasswordNotifier>();
+    final isVisible = passwordNotifier.isSignUpConfirmPasswordVisible;
+
     return FormBuilderTextField(
       name: 'confirm_password',
       controller: _confirmPasswordController,
       textInputAction: TextInputAction.done,
       keyboardType: TextInputType.visiblePassword,
-      obscureText: _isConfirmPasswordInvisible,
+      obscureText: !isVisible,
       decoration: InputDecoration(
         labelText: 'Konfirmasi Password',
         hintText: 'Masukkan password sekali lagi',
         prefixIcon: const Icon(Icons.lock_outline_rounded),
         suffixIcon: IconButton(
-          icon: _isConfirmPasswordInvisible
-              ? const Icon(Icons.visibility_off_outlined)
-              : const Icon(Icons.visibility_outlined),
+          icon: isVisible
+              ? const Icon(Icons.visibility_outlined)
+              : const Icon(Icons.visibility_off_outlined),
           onPressed: () {
-            setState(() {
-              _isConfirmPasswordInvisible = !_isConfirmPasswordInvisible;
-            });
+            passwordNotifier.isSignUpConfirmPasswordVisible = !isVisible;
           },
         ),
       ),
       validator: FormBuilderValidators.compose([
         FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
         FormBuilderValidators.equal<String>(
-          _passwordController.text,
+          passwordNotifier.signUpPasswordValue,
           errorText: 'Harus sama dengan password kamu.',
         ),
       ]),
