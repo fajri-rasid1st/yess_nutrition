@@ -48,40 +48,52 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: <SingleChildWidget>[
-        ChangeNotifierProvider<GetUserNotifier>(
+        ChangeNotifierProvider(
           create: (_) => di.locator<GetUserNotifier>(),
         ),
-        ChangeNotifierProvider<SignInNotifier>(
+        ChangeNotifierProvider(
           create: (_) => di.locator<SignInNotifier>(),
         ),
-        ChangeNotifierProvider<SignInWithGoogleNotifier>(
+        ChangeNotifierProvider(
           create: (_) => di.locator<SignInWithGoogleNotifier>(),
         ),
-        ChangeNotifierProvider<SignUpNotifier>(
+        ChangeNotifierProvider(
           create: (_) => di.locator<SignUpNotifier>(),
         ),
-        ChangeNotifierProvider<SignOutNotifier>(
+        ChangeNotifierProvider(
           create: (_) => di.locator<SignOutNotifier>(),
         ),
-        ChangeNotifierProvider<ResetPasswordNotifier>(
+        ChangeNotifierProvider(
           create: (_) => di.locator<ResetPasswordNotifier>(),
         ),
-        ChangeNotifierProvider<DeleteUserNotifier>(
+        ChangeNotifierProvider(
           create: (_) => di.locator<DeleteUserNotifier>(),
         ),
-        ChangeNotifierProvider<CreateUserDataNotifier>(
+        ChangeNotifierProvider(
           create: (_) => di.locator<CreateUserDataNotifier>(),
         ),
-        ChangeNotifierProvider<ReadUserDataNotifier>(
+        ChangeNotifierProvider(
           create: (_) => di.locator<ReadUserDataNotifier>(),
         ),
-        ChangeNotifierProvider<UpdateUserDataNotifier>(
+        ChangeNotifierProvider(
           create: (_) => di.locator<UpdateUserDataNotifier>(),
         ),
-        ChangeNotifierProvider<DeleteUserDataNotifier>(
+        ChangeNotifierProvider(
           create: (_) => di.locator<DeleteUserDataNotifier>(),
         ),
-        ChangeNotifierProvider<InputPasswordNotifier>(
+        ChangeNotifierProvider(
+          create: (_) => di.locator<BookmarkNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<GetBookmarksNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<GetNewsNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<SearchNewsNotifier>(),
+        ),
+        ChangeNotifierProvider(
           create: (_) => InputPasswordNotifier(),
         ),
       ],
@@ -103,7 +115,7 @@ class MyApp extends StatelessWidget {
           ),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: const AuthPage(),
+        home: const Wrapper(),
         onGenerateRoute: (settings) {
           switch (settings.name) {
             case loginRoute:
@@ -131,6 +143,14 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(
                 builder: (_) => HomePage(user: user),
                 settings: settings,
+              );
+            case newsDetailRoute:
+              return MaterialPageRoute(
+                builder: (_) => const NewsDetailPage(),
+              );
+            case newsBookmarksRoute:
+              return MaterialPageRoute(
+                builder: (_) => const NewsBookmarksPage(),
               );
             default:
               return null;

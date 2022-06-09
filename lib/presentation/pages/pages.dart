@@ -1,7 +1,4 @@
-export 'additional_info_page.dart';
-export 'auth_page.dart';
-export 'forgot_password_page.dart';
+export 'auth_pages/auth_pages.dart';
 export 'home_page.dart';
-export 'login_page.dart';
-export 'nutri_news_page.dart';
-export 'register_page.dart';
+export 'news_pages/news_pages.dart';
+export 'wrapper.dart';

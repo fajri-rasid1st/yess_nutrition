@@ -5,4 +5,5 @@ const registerRoute = '/register';
 const forgotPasswordRoute = '/forgot-password';
 const additionalInfoRoute = '/add-info';
 const homeRoute = '/home';
-const nutriNewsRoute = '/nutri-news';
+const newsDetailRoute = '/news-detail';
+const newsBookmarksRoute = '/news-bookmarks';

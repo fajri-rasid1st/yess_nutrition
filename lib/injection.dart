@@ -14,7 +14,7 @@ import 'presentation/providers/providers.dart';
 final locator = GetIt.instance;
 
 void init() {
-  // Auth provider
+  // Auth providers
   locator.registerFactory(
     () => GetUserNotifier(getUserUseCase: locator()),
   );
@@ -37,7 +37,7 @@ void init() {
     () => DeleteUserNotifier(deleteUserUseCase: locator()),
   );
 
-  // Firestore provider
+  // Firestore providers
   locator.registerFactory(
     () => CreateUserDataNotifier(createUserDataUseCase: locator()),
   );
@@ -49,6 +49,24 @@ void init() {
   );
   locator.registerFactory(
     () => DeleteUserDataNotifier(deleteUserDataUseCase: locator()),
+  );
+
+  // News providers
+  locator.registerFactory(
+    () => BookmarkNotifier(
+      createBookmarkUseCase: locator(),
+      deleteBookmarkUseCase: locator(),
+      getBookmarkStatusUseCase: locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => GetBookmarksNotifier(getBookmarksUseCase: locator()),
+  );
+  locator.registerFactory(
+    () => GetNewsNotifier(getNewsUseCase: locator()),
+  );
+  locator.registerFactory(
+    () => SearchNewsNotifier(searchNewsUseCase: locator()),
   );
 
   // Auth usecases
