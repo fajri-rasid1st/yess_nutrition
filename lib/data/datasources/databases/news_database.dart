@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:path/path.dart';
 import 'package:sqflite_sqlcipher/sqflite.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
-import 'package:yess_nutrition/data/models/news_table.dart';
+import 'package:yess_nutrition/data/models/news_models/news_table.dart';
 
 class NewsDatabase {
   static NewsDatabase? _newsDatabase;

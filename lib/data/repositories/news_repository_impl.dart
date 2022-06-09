@@ -2,9 +2,9 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:yess_nutrition/common/utils/exception.dart';
 import 'package:yess_nutrition/common/utils/failure.dart';
-import 'package:yess_nutrition/data/datasources/news_local_data_source.dart';
-import 'package:yess_nutrition/data/datasources/news_remote_data_source.dart';
-import 'package:yess_nutrition/data/models/news_table.dart';
+import 'package:yess_nutrition/data/datasources/news_datasources/news_local_data_source.dart';
+import 'package:yess_nutrition/data/datasources/news_datasources/news_remote_data_source.dart';
+import 'package:yess_nutrition/data/models/news_models/news_table.dart';
 import 'package:yess_nutrition/domain/entities/news_entity.dart';
 import 'package:yess_nutrition/domain/repositories/news_repository.dart';
 

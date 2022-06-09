@@ -8,8 +8,8 @@ import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/presentation/providers/input_password_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_up_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/create_user_data_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/auth_notifiers/sign_up_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/firestore_notifiers/create_user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
 class RegisterPage extends StatefulWidget {

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
-import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_out_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/auth_notifiers/sign_out_notifier.dart';
 
 class HomePage extends StatefulWidget {
   final UserEntity user;
