@@ -23,13 +23,13 @@ class ResetPasswordNotifier extends ChangeNotifier {
       (failure) {
         _error = failure.message;
         _state = UserState.error;
-        notifyListeners();
       },
       (_) {
         _success = 'Tautan untuk mengubah password telah dikirim ke email anda';
         _state = UserState.success;
-        notifyListeners();
       },
     );
+
+    notifyListeners();
   }
 }

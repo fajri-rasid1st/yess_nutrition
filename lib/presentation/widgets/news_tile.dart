@@ -63,7 +63,7 @@ class NewsTile extends StatelessWidget {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 6),
                       Row(
                         children: <Widget>[
                           const Icon(

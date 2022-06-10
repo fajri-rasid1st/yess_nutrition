@@ -20,12 +20,12 @@ class DeleteUserDataNotifier extends ChangeNotifier {
       (failure) {
         _error = failure.message;
         _state = UserState.error;
-        notifyListeners();
       },
       (_) {
         _state = UserState.success;
-        notifyListeners();
       },
     );
+
+    notifyListeners();
   }
 }

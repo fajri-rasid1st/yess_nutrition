@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
-import 'package:yess_nutrition/domain/entities/news_entity.dart';
 import 'package:yess_nutrition/presentation/providers/fab_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/get_news_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_information.dart';
@@ -26,7 +26,7 @@ class _NewsPageState extends State<NewsPage> {
     _scrollController = ScrollController();
 
     Future.microtask(() {
-      Provider.of<GetNewsNotifier>(context, listen: false).getNews(10, 1);
+      Provider.of<GetNewsNotifier>(context, listen: false).getNews(page: 1);
     });
 
     super.initState();
@@ -44,6 +44,7 @@ class _NewsPageState extends State<NewsPage> {
     return Consumer<FabNotifier>(
       builder: (context, fabProvider, child) {
         return Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: primaryBackgroundColor,
           body: _buildBody(fabProvider),
           floatingActionButton: _buildFab(fabProvider),
@@ -56,39 +57,11 @@ class _NewsPageState extends State<NewsPage> {
   NotificationListener _buildBody(FabNotifier fabProvider) {
     return NotificationListener<UserScrollNotification>(
       onNotification: (notification) {
-        // get the scroll position in pixel
-        final scrollPosition = _scrollController.position.pixels;
-
-        // if scroll position bigger than 240 (toolbar height),...
-        if (scrollPosition > 240) {
-          // if user scroll to top,...
-          if (notification.direction == ScrollDirection.forward) {
-            // check if fab is visible, ...
-            if (!fabProvider.isFabVisible) {
-              // show the fab.
-              fabProvider.isFabVisible = true;
-            }
-          }
-        } else {
-          // if scroll position less than 240, check if fab is visible...
-          if (fabProvider.isFabVisible) {
-            // remove the fab.
-            fabProvider.isFabVisible = false;
-          }
-        }
-
-        // if user scroll to bottom, always remove the fab.
-        if (notification.direction == ScrollDirection.reverse) {
-          if (fabProvider.isFabVisible) {
-            fabProvider.isFabVisible = false;
-          }
-        }
-
-        return true;
+        return onScrollNotification(notification, fabProvider);
       },
       child: NestedScrollView(
         controller: _scrollController,
-        headerSliverBuilder: ((context, innerBoxIsScrolled) {
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
             SliverAppBar(
               backgroundColor: primaryBackgroundColor,
@@ -148,20 +121,23 @@ class _NewsPageState extends State<NewsPage> {
               ),
             ),
           ];
-        }),
+        },
         body: Consumer<GetNewsNotifier>(
           builder: (context, newsProvider, child) {
             if (newsProvider.state == RequestState.loading) {
               return const LoadingIndicator();
             } else if (newsProvider.state == RequestState.success) {
-              return _buildNewsList(newsProvider.news);
+              return _buildNewsList(newsProvider);
             }
 
-            return CustomInformation(
-              key: const Key('error_message'),
-              imgPath: 'assets/svg/error_robot_cuate.svg',
-              title: newsProvider.message,
-              subtitle: 'Silahkan coba beberapa saat lagi.',
+            return SingleChildScrollView(
+              physics: const NeverScrollableScrollPhysics(),
+              child: CustomInformation(
+                key: const Key('error_message'),
+                imgPath: 'assets/svg/error_robot_cuate.svg',
+                title: newsProvider.message,
+                subtitle: 'Silahkan coba beberapa saat lagi.',
+              ),
             );
           },
         ),
@@ -194,11 +170,68 @@ class _NewsPageState extends State<NewsPage> {
         : null;
   }
 
-  ListView _buildNewsList(List<NewsEntity> news) {
+  ListView _buildNewsList(GetNewsNotifier newsNotifier) {
     return ListView.separated(
-      itemBuilder: (context, index) => NewsTile(news: news[index]),
+      padding: const EdgeInsets.all(0),
+      itemCount: newsNotifier.hasMoreData
+          ? newsNotifier.news.length + 1
+          : newsNotifier.news.length,
+      itemBuilder: (context, index) {
+        if (index >= newsNotifier.news.length) {
+          if (!newsNotifier.isLoading) {
+            newsNotifier.getMoreNews();
+          }
+
+          return const Padding(
+            padding: EdgeInsets.symmetric(vertical: 16),
+            child: Center(
+              child: SpinKitThreeBounce(
+                color: secondaryColor,
+                size: 24,
+              ),
+            ),
+          );
+        }
+
+        return NewsTile(news: newsNotifier.news[index]);
+      },
       separatorBuilder: (context, index) => const Divider(height: 1),
-      itemCount: news.length,
     );
+  }
+
+  bool onScrollNotification(
+    UserScrollNotification notification,
+    FabNotifier fabProvider,
+  ) {
+    // get the scroll position in pixel
+    final scrollPosition = _scrollController.position.pixels;
+
+    // if scroll position bigger than 256
+    // (256 refers to toolbar height + margin bottom of search field)
+    if (scrollPosition > 256) {
+      // if user scroll to top,...
+      if (notification.direction == ScrollDirection.forward) {
+        // check if fab is visible, ...
+        if (!fabProvider.isFabVisible) {
+          // show the fab.
+          fabProvider.isFabVisible = true;
+        }
+      }
+    } else {
+      // if scroll position less than 256, check if fab is visible...
+      if (fabProvider.isFabVisible) {
+        // remove the fab.
+        fabProvider.isFabVisible = false;
+      }
+    }
+
+    // if user scroll to bottom, always remove the fab.
+    if (notification.direction == ScrollDirection.reverse) {
+      if (fabProvider.isFabVisible) {
+        fabProvider.isFabVisible = false;
+      }
+    }
+
+    return true;
   }
 }

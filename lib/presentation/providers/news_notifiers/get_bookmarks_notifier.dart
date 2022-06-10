@@ -11,7 +11,7 @@ class GetBookmarksNotifier extends ChangeNotifier {
   RequestState _state = RequestState.empty;
   RequestState get state => _state;
 
-  late List<NewsEntity> _bookmarks;
+  List<NewsEntity> _bookmarks = <NewsEntity>[];
   List<NewsEntity> get bookmarks => _bookmarks;
 
   String _message = '';
@@ -27,13 +27,13 @@ class GetBookmarksNotifier extends ChangeNotifier {
       (failure) {
         _message = failure.message;
         _state = RequestState.error;
-        notifyListeners();
       },
       (bookmarks) {
         _bookmarks = bookmarks;
         _state = RequestState.success;
-        notifyListeners();
       },
     );
+
+    notifyListeners();
   }
 }

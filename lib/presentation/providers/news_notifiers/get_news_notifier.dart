@@ -11,29 +11,64 @@ class GetNewsNotifier extends ChangeNotifier {
   RequestState _state = RequestState.empty;
   RequestState get state => _state;
 
-  List<NewsEntity> _news = <NewsEntity>[];
-  List<NewsEntity> get news => _news;
-
   String _message = '';
   String get message => _message;
 
-  Future<void> getNews(int pageSize, int page) async {
-    _state = RequestState.loading;
-    notifyListeners();
+  List<NewsEntity> _news = <NewsEntity>[];
+  List<NewsEntity> get news => _news;
 
-    final result = await getNewsUseCase.execute(pageSize, page);
+  int _currentPageLoad = 0;
+  int get currentPageLoad => _currentPageLoad;
+
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
+  bool _hasMoreData = true;
+  bool get hasMoreData => _hasMoreData;
+
+  Future<void> getNews({required int page}) async {
+    _state = RequestState.loading;
+     notifyListeners();
+
+    final result = await getNewsUseCase.execute(10, page);
 
     result.fold(
       (failure) {
         _message = failure.message;
         _state = RequestState.error;
-        notifyListeners();
       },
       (news) {
         _news = news;
+        _currentPageLoad = page;
         _state = RequestState.success;
-        notifyListeners();
       },
     );
+
+    notifyListeners();
+  }
+
+  Future<void> getMoreNews() async {
+    _currentPageLoad++;
+
+    _isLoading = true;
+
+    final result = await getNewsUseCase.execute(10, _currentPageLoad);
+
+    _isLoading = false;
+
+    result.fold(
+      (_) {
+        _hasMoreData = false;
+      },
+      (news) {
+        if (news.isEmpty) {
+          _hasMoreData = false;
+        } else {
+          _news.addAll(news);
+        }
+      },
+    );
+
+    notifyListeners();
   }
 }

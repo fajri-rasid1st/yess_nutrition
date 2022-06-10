@@ -11,7 +11,7 @@ class SearchNewsNotifier extends ChangeNotifier {
   RequestState _state = RequestState.empty;
   RequestState get state => _state;
 
-  late List<NewsEntity> _results;
+  List<NewsEntity> _results = <NewsEntity>[];
   List<NewsEntity> get results => _results;
 
   String _message = '';
@@ -27,13 +27,13 @@ class SearchNewsNotifier extends ChangeNotifier {
       (failure) {
         _message = failure.message;
         _state = RequestState.error;
-        notifyListeners();
       },
       (results) {
         _results = results;
         _state = RequestState.success;
-        notifyListeners();
       },
     );
+
+    notifyListeners();
   }
 }

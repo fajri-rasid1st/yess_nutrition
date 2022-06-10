@@ -24,19 +24,18 @@ class SignInWithGoogleNotifier extends ChangeNotifier {
       (failure) {
         _error = failure.message;
         _state = UserState.error;
-        notifyListeners();
       },
       (user) {
         if (user != null) {
           _user = user;
           _state = UserState.success;
-          notifyListeners();
         } else {
           _error = 'Sign in failed. No account selected.';
           _state = UserState.error;
-          notifyListeners();
         }
       },
     );
+
+    notifyListeners();
   }
 }

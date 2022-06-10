@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 
 class InputPasswordNotifier extends ChangeNotifier {
   bool _isSignInPasswordVisible = false;
-  bool _isSignUpPasswordVisible = false;
-  bool _isSignUpConfirmPasswordVisible = false;
-  String _signUpPasswordValue = '';
-
   bool get isSignInPasswordVisible => _isSignInPasswordVisible;
+
+  bool _isSignUpPasswordVisible = false;
   bool get isSignUpPasswordVisible => _isSignUpPasswordVisible;
+
+  bool _isSignUpConfirmPasswordVisible = false;
   bool get isSignUpConfirmPasswordVisible => _isSignUpConfirmPasswordVisible;
+
+  String _signUpPasswordValue = '';
   String get signUpPasswordValue => _signUpPasswordValue;
 
   set isSignInPasswordVisible(bool value) {

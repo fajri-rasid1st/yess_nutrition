@@ -53,7 +53,7 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
         Navigator.pushNamedAndRemoveUntil(
           context,
           homeRoute,
-          ((route) => false),
+          (route) => false,
           arguments: widget.user,
         );
 
@@ -79,7 +79,7 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
                         Navigator.pushNamedAndRemoveUntil(
                           context,
                           homeRoute,
-                          ((route) => false),
+                          (route) => false,
                           arguments: widget.user,
                         );
                       },
@@ -304,7 +304,7 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
         Navigator.pushNamedAndRemoveUntil(
           context,
           homeRoute,
-          ((route) => false),
+          (route) => false,
           arguments: widget.user,
         );
       } else {

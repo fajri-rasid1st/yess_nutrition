@@ -24,13 +24,13 @@ class SignInNotifier extends ChangeNotifier {
       (failure) {
         _error = failure.message;
         _state = UserState.error;
-        notifyListeners();
       },
       (user) {
         _user = user;
         _state = UserState.success;
-        notifyListeners();
       },
     );
+
+    notifyListeners();
   }
 }
