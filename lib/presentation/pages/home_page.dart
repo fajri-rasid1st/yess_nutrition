@@ -1,50 +1,55 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:yess_nutrition/common/utils/state_enum.dart';
-import 'package:yess_nutrition/presentation/providers/bottom_navigation_bar_notifier.dart';
-import 'package:yess_nutrition/presentation/widgets/custom_button_navigation_bar.dart';
-
-import 'nutri_time_page.dart';
+import 'package:yess_nutrition/common/utils/routes.dart';
+import 'package:yess_nutrition/domain/entities/user_entity.dart';
+import 'package:yess_nutrition/presentation/pages/news_pages/news_page.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/auth_notifiers/sign_out_notifier.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final UserEntity user;
+
+  const HomePage({Key? key, required this.user}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  late MenuNavBar _selectedPage;
-
   @override
   Widget build(BuildContext context) {
-    _selectedPage =
-        Provider.of<BottomNavigationBarNotifier>(context, listen: false)
-            .selectedMenu;
     return Scaffold(
-      bottomNavigationBar: CustomButtonNavigationBar(),
-      body: Consumer<BottomNavigationBarNotifier>(
-          builder: (context, result, child) {
-        if (result.selectedMenu == MenuNavBar.Home) {
-          return const Center(
-            child: Text("Ini Halaman Home"),
-          );
-        } else if (result.selectedMenu == MenuNavBar.NutriTime) {
-          return NutriTimePage();
-        } else if (result.selectedMenu == MenuNavBar.NutriNews) {
-          return const Center(
-            child: Text("Ini Halaman NutriNews"),
-          );
-        } else if (result.selectedMenu == MenuNavBar.NutriShop) {
-          return const Center(
-            child: Text("Ini Halaman NutriShop"),
-          );
-        } else {
-          return const Center(
-            child: Text("Halaman tidak ditemukan"),
-          );
-        }
-      }),
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  await context.read<SignOutNotifier>().signOut();
+
+                  if (!mounted) return;
+
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    loginRoute,
+                    ((route) => false),
+                  );
+                },
+                child: const Text('Log Out'),
+              ),
+              OutlinedButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const NewsPage()),
+                  );
+                },
+                child: const Text('News Page'),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

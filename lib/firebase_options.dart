@@ -63,6 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '82449681129',
     projectId: 'yess-nutrition-app',
     storageBucket: 'yess-nutrition-app.appspot.com',
+    androidClientId: '82449681129-ijemc330poids84kbv6nfah5ukun7sof.apps.googleusercontent.com',
     iosClientId: '82449681129-tvj5s9tm4jlo9t9ed487iej230tt4efj.apps.googleusercontent.com',
     iosBundleId: 'com.example.yessNutrition',
   );

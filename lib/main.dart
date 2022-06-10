@@ -2,35 +2,45 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:yess_nutrition/presentation/pages/forgot_password_page.dart';
-import 'package:yess_nutrition/presentation/pages/home_page.dart';
-import 'package:yess_nutrition/presentation/pages/login_page.dart';
-import 'package:yess_nutrition/presentation/pages/register_page.dart';
 import 'package:yess_nutrition/presentation/providers/bottom_navigation_bar_notifier.dart';
-import 'common/styles/color_scheme.dart';
-import 'common/styles/text_style.dart';
+import 'package:provider/single_child_widget.dart';
+import 'package:yess_nutrition/presentation/providers/fab_notifier.dart';
+
+import 'common/styles/styles.dart';
+import 'common/utils/http_ssl_pinning.dart';
 import 'common/utils/routes.dart';
+import 'domain/entities/user_entity.dart';
+import 'presentation/pages/pages.dart';
+import 'presentation/providers/providers.dart';
+
 import 'firebase_options.dart';
-import 'package:yess_nutrition/injection.dart' as di;
+import 'injection.dart' as di;
 
 void main() async {
   di.init();
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Untuk mencegah orientasi landscape
+  // Prevent landscape orientation
   SystemChrome.setPreferredOrientations(<DeviceOrientation>[
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
 
-  // Mengganti warna status bar dan navigasi
+  // Change status bar and navigation color
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarIconBrightness: Brightness.light,
     systemNavigationBarColor: primaryBackgroundColor,
     systemNavigationBarIconBrightness: Brightness.dark,
   ));
 
-  // Inisialisasi firebase
+  // Initialize firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  // Initialize ssl pinning
+  await HttpSslPinning.init();
+
+  // Initialize service locator
+  di.init();
 
   runApp(const MyApp());
 }
@@ -44,6 +54,57 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(
           create: (_) => di.locator<BottomNavigationBarNotifier>(),
+      providers: <SingleChildWidget>[
+        ChangeNotifierProvider(
+          create: (_) => di.locator<GetUserNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<SignInNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<SignInWithGoogleNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<SignUpNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<SignOutNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<ResetPasswordNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<DeleteUserNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<CreateUserDataNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<ReadUserDataNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<UpdateUserDataNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<DeleteUserDataNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<BookmarkNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<GetBookmarksNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<GetNewsNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<SearchNewsNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => InputPasswordNotifier(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => FabNotifier(),
         ),
       ],
       child: MaterialApp(
@@ -51,13 +112,20 @@ class MyApp extends StatelessWidget {
         title: 'Yess Nutrition',
         theme: ThemeData(
           fontFamily: 'Plus Jakarta Sans',
-          colorScheme: myColorScheme,
-          textTheme: myTextTheme,
+          colorScheme: colorScheme,
+          textTheme: textTheme,
           dividerColor: dividerColor,
           scaffoldBackgroundColor: scaffoldBackgroundColor,
+          inputDecorationTheme: inputDecorationTheme,
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: elevatedButtonStyle,
+          ),
+          outlinedButtonTheme: OutlinedButtonThemeData(
+            style: outlinedButtonStyle,
+          ),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: const HomePage(),
+        home: const Wrapper(),
         onGenerateRoute: (settings) {
           switch (settings.name) {
             case loginRoute:
@@ -72,20 +140,30 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(
                 builder: (_) => const ForgotPasswordPage(),
               );
-            case homePageRoute:
+            case additionalInfoRoute:
+              final user = settings.arguments as UserEntity;
+
               return MaterialPageRoute(
-                builder: (_) => const HomePage(),
+                builder: (_) => AdditionalInfoPage(user: user),
+                settings: settings,
+              );
+            case homeRoute:
+              final user = settings.arguments as UserEntity;
+
+              return MaterialPageRoute(
+                builder: (_) => HomePage(user: user),
+                settings: settings,
+              );
+            case newsDetailRoute:
+              return MaterialPageRoute(
+                builder: (_) => const NewsDetailPage(),
+              );
+            case newsBookmarksRoute:
+              return MaterialPageRoute(
+                builder: (_) => const NewsBookmarksPage(),
               );
             default:
-              return MaterialPageRoute(
-                builder: (_) {
-                  return const Scaffold(
-                    body: Center(
-                      child: Text('Page not found'),
-                    ),
-                  );
-                },
-              );
+              return null;
           }
         },
       ),
