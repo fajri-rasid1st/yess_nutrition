@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:yess_nutrition/presentation/providers/bottom_navigation_bar_notifier.dart';
 import 'package:provider/single_child_widget.dart';
 import 'package:yess_nutrition/presentation/providers/fab_notifier.dart';
 
@@ -16,6 +17,7 @@ import 'firebase_options.dart';
 import 'injection.dart' as di;
 
 void main() async {
+  di.init();
   WidgetsFlutterBinding.ensureInitialized();
 
   // Prevent landscape orientation
@@ -49,6 +51,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => di.locator<BottomNavigationBarNotifier>(),
       providers: <SingleChildWidget>[
         ChangeNotifierProvider(
           create: (_) => di.locator<GetUserNotifier>(),
