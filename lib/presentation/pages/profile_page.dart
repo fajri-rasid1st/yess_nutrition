@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
+import 'package:yess_nutrition/domain/entities/user_entity.dart';
+import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_out_notifier.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  final UserEntity user;
+
+  const ProfilePage({Key? key, required this.user}) : super(key: key);
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -261,7 +266,17 @@ class _ProfilePageState extends State<ProfilePage> {
                     _buildListTileProfile(
                       MdiIcons.logout,
                       "Keluar",
-                      () {},
+                      () async {
+                        await context.read<SignOutNotifier>().signOut();
+
+                        if (!mounted) return;
+
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          loginRoute,
+                          ((route) => false),
+                        );
+                      },
                     ),
                   ],
                 ),

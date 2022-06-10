@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
@@ -44,10 +43,7 @@ class CardNutriTimeTask extends StatelessWidget {
                 ),
                 Text(
                   "06:30 Wita",
-                  style: Theme.of(context)
-                      .textTheme
-                      .overline
-                      ?.copyWith(
+                  style: Theme.of(context).textTheme.overline?.copyWith(
                         color: secondaryTextColor,
                         letterSpacing: 0.5,
                       ),
@@ -69,10 +65,7 @@ class CardNutriTimeTask extends StatelessWidget {
             ),
             Text(
               "200 ml",
-              style: Theme.of(context)
-                  .textTheme
-                  .caption
-                  ?.copyWith(
+              style: Theme.of(context).textTheme.caption?.copyWith(
                     color: primaryColor,
                   ),
             ),

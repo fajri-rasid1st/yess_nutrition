@@ -32,17 +32,17 @@ class _HomePageState extends State<HomePage> {
         children: [
           Consumer<BottomNavigationBarNotifier>(
               builder: (context, result, child) {
-            if (result.selectedMenu == MenuNavBar.Home) {
+            if (result.selectedMenu == MenuNavBar.home) {
               return BodyHomePage(user: widget.user);
-            } else if (result.selectedMenu == MenuNavBar.NutriTime) {
+            } else if (result.selectedMenu == MenuNavBar.nutriTime) {
               return const Center(
                 child: Text("Ini Halaman NutriTime"),
               );
-            } else if (result.selectedMenu == MenuNavBar.NutriNews) {
+            } else if (result.selectedMenu == MenuNavBar.nutriNews) {
               return const Center(
                 child: Text("Ini Halaman NutriNews"),
               );
-            } else if (result.selectedMenu == MenuNavBar.NutriShop) {
+            } else if (result.selectedMenu == MenuNavBar.nutriShop) {
               return const Center(
                 child: Text("Ini Halaman NutriShop"),
               );
@@ -150,7 +150,11 @@ class BodyHomePage extends StatelessWidget {
                   ),
                   child: IconButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, profileRoute);
+                      Navigator.pushNamed(
+                        context,
+                        profileRoute,
+                        arguments: user,
+                      );
                     },
                     icon: const Icon(
                       Icons.settings_outlined,

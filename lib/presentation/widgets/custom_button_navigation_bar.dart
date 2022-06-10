@@ -53,12 +53,12 @@ class _CustomButtonNavigationBarState extends State<CustomButtonNavigationBar> {
                 buildNavBarItem(
                   MdiIcons.homeOutline,
                   MdiIcons.home,
-                  MenuNavBar.Home,
+                  MenuNavBar.home,
                 ),
                 buildNavBarItem(
                   MdiIcons.timerOutline,
                   MdiIcons.timer,
-                  MenuNavBar.NutriTime,
+                  MenuNavBar.nutriTime,
                 ),
                 SizedBox(
                   height: 66,
@@ -67,12 +67,12 @@ class _CustomButtonNavigationBarState extends State<CustomButtonNavigationBar> {
                 buildNavBarItem(
                   MdiIcons.newspaperVariantOutline,
                   MdiIcons.newspaperVariant,
-                  MenuNavBar.NutriNews,
+                  MenuNavBar.nutriNews,
                 ),
                 buildNavBarItem(
                   MdiIcons.shoppingOutline,
                   MdiIcons.shopping,
-                  MenuNavBar.NutriShop,
+                  MenuNavBar.nutriShop,
                 ),
               ],
             ),

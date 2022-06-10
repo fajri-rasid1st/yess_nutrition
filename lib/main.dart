@@ -132,8 +132,10 @@ class MyApp extends StatelessWidget {
                 settings: settings,
               );
             case profileRoute:
+              final user = settings.arguments as UserEntity;
+
               return MaterialPageRoute(
-                builder: (_) => const ProfilePage(),
+                builder: (_) => ProfilePage(user: user),
               );
             case updateProfileRoute:
               return MaterialPageRoute(

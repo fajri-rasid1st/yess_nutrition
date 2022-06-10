@@ -1,8 +1,6 @@
 import 'package:countup/countup.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
-import 'package:yess_nutrition/common/styles/color_scheme.dart';
 
 class LargeCircularProgress extends StatelessWidget {
   final Color backgroundColor, progressColor;
