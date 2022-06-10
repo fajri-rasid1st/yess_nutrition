@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:yess_nutrition/common/constans.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
+import 'package:yess_nutrition/common/utils/constants.dart';
 
 class ProductCard extends StatelessWidget {
   // const ProductCard({
