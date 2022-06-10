@@ -23,7 +23,8 @@ class HttpSslPinning {
     final securityContext = SecurityContext();
 
     try {
-      final sslCert = await rootBundle.load('certificates/news-api-cert.pem');
+      final sslCert =
+          await rootBundle.load('certificates/sni-cloudflaressl-com.pem');
 
       securityContext.setTrustedCertificatesBytes(sslCert.buffer.asInt8List());
     } on TlsException catch (e) {

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:yess_nutrition/presentation/providers/fab_notifier.dart';
 
 import 'common/styles/styles.dart';
 import 'common/utils/http_ssl_pinning.dart';
@@ -25,6 +26,7 @@ void main() async {
 
   // Change status bar and navigation color
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarIconBrightness: Brightness.light,
     systemNavigationBarColor: primaryBackgroundColor,
     systemNavigationBarIconBrightness: Brightness.dark,
   ));
@@ -95,6 +97,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => InputPasswordNotifier(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => FabNotifier(),
         ),
       ],
       child: MaterialApp(

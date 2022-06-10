@@ -11,7 +11,7 @@ class GetNewsNotifier extends ChangeNotifier {
   RequestState _state = RequestState.empty;
   RequestState get state => _state;
 
-  late List<NewsEntity> _news;
+  List<NewsEntity> _news = <NewsEntity>[];
   List<NewsEntity> get news => _news;
 
   String _message = '';

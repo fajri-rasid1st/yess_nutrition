@@ -112,9 +112,9 @@ class _RegisterPageState extends State<RegisterPage> {
                         const SizedBox(height: 20),
                         _buildEmailField(),
                         const SizedBox(height: 20),
-                        _buildPasswordField(context),
+                        _buildPasswordField(),
                         const SizedBox(height: 20),
-                        _buildConfirmPasswordField(context),
+                        _buildConfirmPasswordField(),
                         const SizedBox(height: 16),
                         _buildSubmitButton(context),
                       ],
@@ -165,72 +165,78 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  FormBuilderTextField _buildPasswordField(BuildContext context) {
-    final passwordNotifier = context.watch<InputPasswordNotifier>();
-    final isVisible = passwordNotifier.isSignUpPasswordVisible;
+  Consumer<InputPasswordNotifier> _buildPasswordField() {
+    return Consumer<InputPasswordNotifier>(
+      builder: (context, provider, child) {
+        final isVisible = provider.isSignUpPasswordVisible;
 
-    return FormBuilderTextField(
-      name: 'password',
-      controller: _passwordController,
-      textInputAction: TextInputAction.next,
-      keyboardType: TextInputType.visiblePassword,
-      obscureText: !isVisible,
-      decoration: InputDecoration(
-        labelText: 'Password',
-        hintText: 'Masukkan password kamu',
-        prefixIcon: const Icon(Icons.lock_outline_rounded),
-        suffixIcon: IconButton(
-          icon: isVisible
-              ? const Icon(Icons.visibility_outlined)
-              : const Icon(Icons.visibility_off_outlined),
-          onPressed: () {
-            passwordNotifier.isSignUpPasswordVisible = !isVisible;
-          },
-        ),
-      ),
-      validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
-        FormBuilderValidators.match(
-          r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$',
-          errorText: 'Password min. 8 karakter dengan 1 angka dan huruf.',
-        ),
-      ]),
-      onChanged: (value) {
-        passwordNotifier.signUpPasswordValue = value ?? '';
+        return FormBuilderTextField(
+          name: 'password',
+          controller: _passwordController,
+          textInputAction: TextInputAction.next,
+          keyboardType: TextInputType.visiblePassword,
+          obscureText: !isVisible,
+          decoration: InputDecoration(
+            labelText: 'Password',
+            hintText: 'Masukkan password kamu',
+            prefixIcon: const Icon(Icons.lock_outline_rounded),
+            suffixIcon: IconButton(
+              icon: isVisible
+                  ? const Icon(Icons.visibility_outlined)
+                  : const Icon(Icons.visibility_off_outlined),
+              onPressed: () => provider.isSignUpPasswordVisible = !isVisible,
+            ),
+          ),
+          validator: FormBuilderValidators.compose([
+            FormBuilderValidators.required(
+              errorText: 'Bagian ini harus diisi.',
+            ),
+            FormBuilderValidators.match(
+              r'^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$',
+              errorText: 'Password min. 8 karakter dengan 1 angka dan huruf.',
+            ),
+          ]),
+          onChanged: (value) => provider.signUpPasswordValue = value ?? '',
+        );
       },
     );
   }
 
-  FormBuilderTextField _buildConfirmPasswordField(BuildContext context) {
-    final passwordNotifier = context.watch<InputPasswordNotifier>();
-    final isVisible = passwordNotifier.isSignUpConfirmPasswordVisible;
+  Consumer<InputPasswordNotifier> _buildConfirmPasswordField() {
+    return Consumer<InputPasswordNotifier>(
+      builder: (context, provider, child) {
+        final isVisible = provider.isSignUpConfirmPasswordVisible;
 
-    return FormBuilderTextField(
-      name: 'confirm_password',
-      controller: _confirmPasswordController,
-      textInputAction: TextInputAction.done,
-      keyboardType: TextInputType.visiblePassword,
-      obscureText: !isVisible,
-      decoration: InputDecoration(
-        labelText: 'Konfirmasi Password',
-        hintText: 'Masukkan password sekali lagi',
-        prefixIcon: const Icon(Icons.lock_outline_rounded),
-        suffixIcon: IconButton(
-          icon: isVisible
-              ? const Icon(Icons.visibility_outlined)
-              : const Icon(Icons.visibility_off_outlined),
-          onPressed: () {
-            passwordNotifier.isSignUpConfirmPasswordVisible = !isVisible;
-          },
-        ),
-      ),
-      validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
-        FormBuilderValidators.equal<String>(
-          passwordNotifier.signUpPasswordValue,
-          errorText: 'Harus sama dengan password kamu.',
-        ),
-      ]),
+        return FormBuilderTextField(
+          name: 'confirm_password',
+          controller: _confirmPasswordController,
+          textInputAction: TextInputAction.done,
+          keyboardType: TextInputType.visiblePassword,
+          obscureText: !isVisible,
+          decoration: InputDecoration(
+            labelText: 'Konfirmasi Password',
+            hintText: 'Masukkan password sekali lagi',
+            prefixIcon: const Icon(Icons.lock_outline_rounded),
+            suffixIcon: IconButton(
+              icon: isVisible
+                  ? const Icon(Icons.visibility_outlined)
+                  : const Icon(Icons.visibility_off_outlined),
+              onPressed: () {
+                provider.isSignUpConfirmPasswordVisible = !isVisible;
+              },
+            ),
+          ),
+          validator: FormBuilderValidators.compose([
+            FormBuilderValidators.required(
+              errorText: 'Bagian ini harus diisi.',
+            ),
+            FormBuilderValidators.equal<String>(
+              provider.signUpPasswordValue,
+              errorText: 'Harus sama dengan password kamu.',
+            ),
+          ]),
+        );
+      },
     );
   }
 

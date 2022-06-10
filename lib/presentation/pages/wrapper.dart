@@ -11,7 +11,7 @@ class Wrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final userNotifier = Provider.of<GetUserNotifier>(context);
+    final userNotifier = context.watch<GetUserNotifier>();
 
     return StreamBuilder<UserEntity?>(
       stream: userNotifier.user,

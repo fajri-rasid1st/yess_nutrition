@@ -103,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
                       children: <Widget>[
                         _buildEmailField(),
                         const SizedBox(height: 20),
-                        _buildPasswordField(context),
+                        _buildPasswordField(),
                         const SizedBox(height: 8),
                         ClickableText(
                           onTap: () {
@@ -165,32 +165,35 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  FormBuilderTextField _buildPasswordField(BuildContext context) {
-    final passwordNotifier = context.watch<InputPasswordNotifier>();
-    final isVisible = passwordNotifier.isSignInPasswordVisible;
+  Consumer<InputPasswordNotifier> _buildPasswordField() {
+    return Consumer<InputPasswordNotifier>(
+      builder: (context, provider, child) {
+        final isVisible = provider.isSignInPasswordVisible;
 
-    return FormBuilderTextField(
-      name: 'password',
-      controller: _passwordController,
-      textInputAction: TextInputAction.done,
-      keyboardType: TextInputType.visiblePassword,
-      obscureText: !isVisible,
-      decoration: InputDecoration(
-        labelText: 'Password',
-        hintText: 'Masukkan password kamu',
-        prefixIcon: const Icon(Icons.lock_outline_rounded),
-        suffixIcon: IconButton(
-          icon: isVisible
-              ? const Icon(Icons.visibility_outlined)
-              : const Icon(Icons.visibility_off_outlined),
-          onPressed: () {
-            passwordNotifier.isSignInPasswordVisible = !isVisible;
-          },
-        ),
-      ),
-      validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
-      ]),
+        return FormBuilderTextField(
+          name: 'password',
+          controller: _passwordController,
+          textInputAction: TextInputAction.done,
+          keyboardType: TextInputType.visiblePassword,
+          obscureText: !isVisible,
+          decoration: InputDecoration(
+            labelText: 'Password',
+            hintText: 'Masukkan password kamu',
+            prefixIcon: const Icon(Icons.lock_outline_rounded),
+            suffixIcon: IconButton(
+              icon: isVisible
+                  ? const Icon(Icons.visibility_outlined)
+                  : const Icon(Icons.visibility_off_outlined),
+              onPressed: () => provider.isSignInPasswordVisible = !isVisible,
+            ),
+          ),
+          validator: FormBuilderValidators.compose([
+            FormBuilderValidators.required(
+              errorText: 'Bagian ini harus diisi.',
+            ),
+          ]),
+        );
+      },
     );
   }
 
