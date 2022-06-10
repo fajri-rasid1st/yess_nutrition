@@ -7,6 +7,7 @@ import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/presentation/providers/bottom_navigation_bar_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/read_user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_news_home.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_shop_home.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_time_task.dart';
@@ -25,6 +26,14 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(() =>
+        Provider.of<ReadUserDataNotifier>(context, listen: false)
+            .readUserData(widget.user.uid));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,101 +83,109 @@ class BodyHomePage extends StatelessWidget {
     return Stack(
       fit: StackFit.expand,
       children: <Widget>[
-        _buildHeaderHomePage(context, user),
+        _buildHeaderHomePage(context),
         _buildContentHomePage(context)
       ],
     );
   }
 
-  Widget _buildHeaderHomePage(BuildContext context, UserEntity user) {
-    return Stack(
-      alignment: AlignmentDirectional.topStart,
-      clipBehavior: Clip.none,
-      children: <Widget>[
-        SvgPicture.asset(
-          'assets/svg/header_background.svg',
-          alignment: Alignment.topCenter,
-          fit: BoxFit.fitWidth,
-          width: double.infinity,
-        ),
-        SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 36,
-            ),
-            child: Row(
-              children: [
-                Row(
-                  children: [
-                    Container(
-                      width: 50,
-                      height: 50,
-                      margin: const EdgeInsets.only(right: 12),
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(8),
-                        ),
-                      ),
-                      clipBehavior: Clip.hardEdge,
-                      child: Image.asset(
-                        'assets/img/test_avatar.png',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          'Hai, ${user.name}!',
-                          style: const TextStyle(
-                            color: primaryBackgroundColor,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800,
+  Widget _buildHeaderHomePage(BuildContext context) {
+    return Consumer<ReadUserDataNotifier>(
+      builder: (context, result, child) {
+        if (result.state == UserState.success) {
+          return Stack(
+            alignment: AlignmentDirectional.topStart,
+            clipBehavior: Clip.none,
+            children: <Widget>[
+              SvgPicture.asset(
+                'assets/svg/header_background.svg',
+                alignment: Alignment.topCenter,
+                fit: BoxFit.fitWidth,
+                width: double.infinity,
+              ),
+              SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 36,
+                  ),
+                  child: Row(
+                    children: [
+                      Row(
+                        children: [
+                          Container(
+                            width: 50,
+                            height: 50,
+                            margin: const EdgeInsets.only(right: 12),
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8),
+                              ),
+                            ),
+                            clipBehavior: Clip.hardEdge,
+                            child: Image.asset(
+                              'assets/img/test_avatar.png',
+                              fit: BoxFit.cover,
+                            ),
                           ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Hai, ${result.userData.name}!',
+                                style: const TextStyle(
+                                  color: primaryBackgroundColor,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 4,
+                              ),
+                              Text(
+                                "Selamat Datang",
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .caption
+                                    ?.copyWith(color: primaryBackgroundColor),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      const Spacer(),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: primaryColor,
+                          borderRadius: BorderRadius.circular(12),
                         ),
-                        const SizedBox(
-                          height: 4,
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.pushNamed(
+                              context,
+                              profileRoute,
+                              arguments: result.userData,
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.settings_outlined,
+                            color: primaryBackgroundColor,
+                            size: 28,
+                          ),
+                          tooltip: 'Pengaturan',
                         ),
-                        Text(
-                          "Selamat Datang",
-                          style: Theme.of(context)
-                              .textTheme
-                              .caption
-                              ?.copyWith(color: primaryBackgroundColor),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                Container(
-                  decoration: BoxDecoration(
-                    color: primaryColor,
-                    borderRadius: BorderRadius.circular(12),
+                      ),
+                    ],
                   ),
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.pushNamed(
-                        context,
-                        profileRoute,
-                        arguments: user,
-                      );
-                    },
-                    icon: const Icon(
-                      Icons.settings_outlined,
-                      color: primaryBackgroundColor,
-                      size: 28,
-                    ),
-                    tooltip: 'Pengaturan',
-                  ),
                 ),
-              ],
-            ),
-          ),
-        ),
-      ],
+              ),
+            ],
+          );
+        } else {
+          return Text("Loading");
+        }
+      },
     );
   }
 
