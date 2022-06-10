@@ -1,7 +1,8 @@
 import 'package:dartz/dartz.dart';
-import 'package:yess_nutrition/common/utils/failure.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:yess_nutrition/data/datasources/user_auth_data_source.dart';
+import 'package:flutter/services.dart';
+import 'package:yess_nutrition/common/utils/failure.dart';
+import 'package:yess_nutrition/data/datasources/user_datasources/user_auth_data_source.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
 import 'package:yess_nutrition/domain/repositories/user_auth_repository.dart';
 
@@ -42,6 +43,8 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
           return const Left(AuthFailure('Email belum terdaftar'));
         case 'wrong-password':
           return const Left(AuthFailure('Password yang anda masukkan salah'));
+        case 'network-request-failed':
+          return const Left(AuthFailure('Koneksi bermasalah. Coba lagi.'));
         default:
           return Left(AuthFailure(e.message ?? e.code));
       }
@@ -62,9 +65,11 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
         case 'invalid-email':
           return const Left(AuthFailure('Email tidak valid'));
         case 'email-already-in-use':
-          return const Left(AuthFailure('Email tersebut telah digunakan'));
+          return const Left(AuthFailure('Email telah digunakan'));
         case 'weak-password':
           return const Left(AuthFailure('Password tidak valid'));
+        case 'network-request-failed':
+          return const Left(AuthFailure('Koneksi bermasalah. Coba lagi.'));
         default:
           return Left(AuthFailure(e.message ?? e.code));
       }
@@ -93,7 +98,9 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
         case 'invalid-email':
           return const Left(AuthFailure('Email tidak valid'));
         case 'user-not-found':
-          return const Left(AuthFailure('Email tersebut tidak terdaftar'));
+          return const Left(AuthFailure('Email tidak terdaftar'));
+        case 'network-request-failed':
+          return const Left(AuthFailure('Koneksi bermasalah. Coba lagi.'));
         default:
           return Left(AuthFailure(e.message ?? e.code));
       }
@@ -108,6 +115,24 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
       return Right(result);
     } on FirebaseAuthException catch (e) {
       return Left(AuthFailure(e.message ?? e.code));
+    }
+  }
+
+  @override
+  Future<Either<AuthFailure, UserEntity?>> signInWithGoogle() async {
+    try {
+      final result = await userAuthDataSource.signInWithGoogle();
+
+      return Right(result?.toEntity());
+    } on FirebaseAuthException catch (e) {
+      return Left(AuthFailure(e.message ?? e.code));
+    } on PlatformException catch (e) {
+      switch (e.code) {
+        case 'network_error':
+          return const Left(AuthFailure('Koneksi bermasalah. Coba lagi.'));
+        default:
+          return Left(AuthFailure(e.message ?? e.code));
+      }
     }
   }
 }
