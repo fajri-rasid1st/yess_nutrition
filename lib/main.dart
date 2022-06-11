@@ -95,6 +95,9 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<SearchNewsNotifier>(),
         ),
         ChangeNotifierProvider(
+          create: (_) => BottomNavigationBarNotifier(),
+        ),
+        ChangeNotifierProvider(
           create: (_) => InputPasswordNotifier(),
         ),
         ChangeNotifierProvider(
@@ -134,18 +137,28 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(
                 builder: (_) => const ForgotPasswordPage(),
               );
-            case additionalInfoRoute:
-              final user = settings.arguments as UserEntity;
-
-              return MaterialPageRoute(
-                builder: (_) => AdditionalInfoPage(user: user),
-                settings: settings,
-              );
             case homeRoute:
               final user = settings.arguments as UserEntity;
 
               return MaterialPageRoute(
                 builder: (_) => HomePage(user: user),
+                settings: settings,
+              );
+            case profileRoute:
+              final userData = settings.arguments as UserDataEntity;
+
+              return MaterialPageRoute(
+                builder: (_) => ProfilePage(userData: userData),
+              );
+            case updateProfileRoute:
+              return MaterialPageRoute(
+                builder: (_) => const UpdateProfilePage(),
+              );
+            case additionalInfoRoute:
+              final user = settings.arguments as UserEntity;
+
+              return MaterialPageRoute(
+                builder: (_) => AdditionalInfoPage(user: user),
                 settings: settings,
               );
             case newsDetailRoute:
