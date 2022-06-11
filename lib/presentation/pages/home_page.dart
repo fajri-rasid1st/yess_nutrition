@@ -61,7 +61,9 @@ class HomePage extends StatelessWidget {
                       ),
                       clipBehavior: Clip.hardEdge,
                       child: Image.asset(
-                        'assets/img/test_avatar.png',
+                        userData.imgUrl.isNotEmpty
+                            ? userData.imgUrl
+                            : 'assets/img/default_user_pict.png',
                         fit: BoxFit.cover,
                       ),
                     ),

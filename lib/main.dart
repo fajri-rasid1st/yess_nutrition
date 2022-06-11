@@ -158,8 +158,10 @@ class MyApp extends StatelessWidget {
                 settings: settings,
               );
             case updateProfileRoute:
+              final userData = settings.arguments as UserDataEntity;
+
               return MaterialPageRoute(
-                builder: (_) => const UpdateProfilePage(),
+                builder: (_) => UpdateProfilePage(userData: userData),
               );
             case newsDetailRoute:
               return MaterialPageRoute(

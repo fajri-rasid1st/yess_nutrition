@@ -4,9 +4,12 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:yess_nutrition/common/styles/button_style.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
+import 'package:yess_nutrition/domain/entities/entities.dart';
 
 class UpdateProfilePage extends StatefulWidget {
-  const UpdateProfilePage({Key? key}) : super(key: key);
+  final UserDataEntity userData;
+
+  const UpdateProfilePage({Key? key, required this.userData}) : super(key: key);
 
   @override
   State<UpdateProfilePage> createState() => _UpdateProfilePageState();
@@ -18,6 +21,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   late final TextEditingController _ageController;
   late final TextEditingController _weightController;
   late final TextEditingController _heightController;
+  late Widget _profilePicture;
 
   @override
   void initState() {
@@ -26,6 +30,22 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     _ageController = TextEditingController();
     _weightController = TextEditingController();
     _heightController = TextEditingController();
+
+    _nameController.text = widget.userData.name;
+    _emailController.text = widget.userData.email;
+    _ageController.text = widget.userData.age.toString();
+    _weightController.text = widget.userData.weight.toString();
+    _heightController.text = widget.userData.height.toString();
+
+    _profilePicture = widget.userData.imgUrl.isNotEmpty
+        ? Image.network(
+            widget.userData.imgUrl,
+            fit: BoxFit.cover,
+          )
+        : Image.asset(
+            'assets/img/default_user_pict.png',
+            fit: BoxFit.cover,
+          );
 
     super.initState();
   }
@@ -138,10 +158,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                           color: secondaryColor,
                         ),
                         clipBehavior: Clip.hardEdge,
-                        child: Image.asset(
-                          'assets/img/test_avatar.png',
-                          fit: BoxFit.cover,
-                        ),
+                        child: _profilePicture,
                       ),
                       Container(
                         margin: const EdgeInsets.only(top: 105),
@@ -219,6 +236,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       name: 'gender',
       pressElevation: 0,
       spacing: 8,
+      initialValue: widget.userData.gender,
       backgroundColor: scaffoldBackgroundColor,
       selectedColor: secondaryColor,
       decoration: const InputDecoration(
