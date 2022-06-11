@@ -4,7 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
-import 'package:yess_nutrition/presentation/providers/fab_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/news_fab_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/get_news_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_information.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
@@ -20,10 +20,12 @@ class NewsPage extends StatefulWidget {
 
 class _NewsPageState extends State<NewsPage> {
   late final ScrollController _scrollController;
+  late final TextEditingController _searchController;
 
   @override
   void initState() {
     _scrollController = ScrollController();
+    _searchController = TextEditingController();
 
     Future.microtask(() {
       Provider.of<GetNewsNotifier>(context, listen: false).getNews(page: 1);
@@ -35,13 +37,14 @@ class _NewsPageState extends State<NewsPage> {
   @override
   void dispose() {
     _scrollController.dispose();
+    _searchController.dispose();
 
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<FabNotifier>(
+    return Consumer<NewsFabNotifier>(
       builder: (context, fabProvider, child) {
         return Scaffold(
           resizeToAvoidBottomInset: false,
@@ -54,7 +57,7 @@ class _NewsPageState extends State<NewsPage> {
     );
   }
 
-  NotificationListener _buildBody(FabNotifier fabProvider) {
+  NotificationListener _buildBody(NewsFabNotifier fabProvider) {
     return NotificationListener<UserScrollNotification>(
       onNotification: (notification) {
         return onScrollNotification(notification, fabProvider);
@@ -109,11 +112,19 @@ class _NewsPageState extends State<NewsPage> {
                       'Cari tahu berita dan artikel kesehatan di sini.',
                       style: Theme.of(context).textTheme.bodyText2,
                     ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
                       child: SearchField(
+                        controller: _searchController,
                         query: '',
                         hintText: 'Cari judul artikel atau berita...',
+                        onTap: () {
+                          _scrollController.animateTo(
+                            0,
+                            duration: const Duration(milliseconds: 500),
+                            curve: Curves.easeOut,
+                          );
+                        },
                       ),
                     ),
                   ],
@@ -145,7 +156,7 @@ class _NewsPageState extends State<NewsPage> {
     );
   }
 
-  Padding? _buildFab(FabNotifier fabProvider) {
+  Padding? _buildFab(NewsFabNotifier fabProvider) {
     return fabProvider.isFabVisible
         ? Padding(
             padding: const EdgeInsets.all(16),
@@ -162,7 +173,12 @@ class _NewsPageState extends State<NewsPage> {
                 size: 20,
               ),
               onPressed: () {
-                _scrollController.jumpTo(0);
+                _scrollController.animateTo(
+                  0,
+                  duration: const Duration(milliseconds: 1000),
+                  curve: Curves.easeOut,
+                );
+
                 fabProvider.isFabVisible = false;
               },
             ),
@@ -201,7 +217,7 @@ class _NewsPageState extends State<NewsPage> {
 
   bool onScrollNotification(
     UserScrollNotification notification,
-    FabNotifier fabProvider,
+    NewsFabNotifier fabProvider,
   ) {
     // get the scroll position in pixel
     final scrollPosition = _scrollController.position.pixels;

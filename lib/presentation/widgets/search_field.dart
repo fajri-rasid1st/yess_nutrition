@@ -5,14 +5,18 @@ class SearchField extends StatelessWidget {
   final TextEditingController? controller;
   final String query;
   final String hintText;
+  final VoidCallback? onTap;
   final ValueChanged<String>? onChanged;
+  final ValueSetter<String>? onSubmitted;
 
   const SearchField({
     Key? key,
     this.controller,
     required this.query,
     required this.hintText,
+    this.onTap,
     this.onChanged,
+    this.onSubmitted,
   }) : super(key: key);
 
   @override
@@ -39,7 +43,9 @@ class SearchField extends StatelessWidget {
                   onPressed: () => controller?.clear(),
                 ),
         ),
+        onTap: onTap,
         onChanged: onChanged,
+        onSubmitted: onSubmitted,
       ),
     );
   }
