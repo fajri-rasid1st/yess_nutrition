@@ -15,6 +15,8 @@ import 'package:yess_nutrition/presentation/widgets/custom_button_navigation_bar
 import 'package:yess_nutrition/presentation/widgets/large_circular_progress.dart';
 import 'package:yess_nutrition/presentation/widgets/small_circular_progress.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
+import 'package:yess_nutrition/presentation/pages/news_pages/news_page.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/auth_notifiers/sign_out_notifier.dart';
 
 class HomePage extends StatefulWidget {
   final UserEntity user;
@@ -518,6 +520,37 @@ class BodyHomePage extends StatelessWidget {
       child: ListView.separated(
         padding: const EdgeInsets.symmetric(
           horizontal: 16,
+=======
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () async {
+                  await context.read<SignOutNotifier>().signOut();
+
+                  if (!mounted) return;
+
+                  Navigator.pushNamedAndRemoveUntil(
+                    context,
+                    loginRoute,
+                    ((route) => false),
+                  );
+                },
+                child: const Text('Log Out'),
+              ),
+              OutlinedButton(
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(builder: (context) => const NewsPage()),
+                  );
+                },
+                child: const Text('News Page'),
+              ),
+            ],
+          ),
         ),
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {

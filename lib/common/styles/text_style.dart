@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:yess_nutrition/common/styles/color_scheme.dart';
 
-import 'color_scheme.dart';
-
-// Text Theme
+// Text theme
 // Based on: https://material.io/design/typography/the-type-system.html#type-scale
-final myTextTheme = TextTheme(
+final textTheme = TextTheme(
   headline1: GoogleFonts.plusJakartaSans(
     fontSize: 94,
     fontWeight: FontWeight.w300,

@@ -3,40 +3,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:yess_nutrition/data/datasources/user_auth_data_source.dart';
-import 'package:yess_nutrition/data/datasources/user_firestore_data_source.dart';
-import 'package:yess_nutrition/data/repositories/user_auth_repository_impl.dart';
-import 'package:yess_nutrition/data/repositories/user_firestore_repository_impl.dart';
-import 'package:yess_nutrition/domain/repositories/user_auth_repository.dart';
-import 'package:yess_nutrition/domain/repositories/user_firestore_repository.dart';
-import 'package:yess_nutrition/domain/usecases/auth_usecases/delete_user.dart';
-import 'package:yess_nutrition/domain/usecases/auth_usecases/get_user.dart';
-import 'package:yess_nutrition/domain/usecases/auth_usecases/reset_password.dart';
-import 'package:yess_nutrition/domain/usecases/auth_usecases/sign_in.dart';
-import 'package:yess_nutrition/domain/usecases/auth_usecases/sign_in_with_google.dart';
-import 'package:yess_nutrition/domain/usecases/auth_usecases/sign_out.dart';
-import 'package:yess_nutrition/domain/usecases/auth_usecases/sign_up.dart';
-import 'package:yess_nutrition/domain/usecases/firestore_usecases/create_user_data.dart';
-import 'package:yess_nutrition/domain/usecases/firestore_usecases/delete_user_data.dart';
-import 'package:yess_nutrition/domain/usecases/firestore_usecases/read_user_data.dart';
-import 'package:yess_nutrition/domain/usecases/firestore_usecases/update_user_data.dart';
-import 'package:yess_nutrition/presentation/providers/bottom_navigation_bar_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/delete_user_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/reset_password_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_in_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_in_with_google_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_out_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_up_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/get_user_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/create_user_data_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/delete_user_data_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/read_user_data_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/update_user_data_notifier.dart';
+
+import 'common/utils/http_ssl_pinning.dart';
+import 'data/datasources/datasources.dart';
+import 'data/repositories/repositories.dart';
+import 'domain/repositories/repositories.dart';
+import 'domain/usecases/usecases.dart';
+import 'presentation/providers/providers.dart';
 
 final locator = GetIt.instance;
 
 void init() {
-  // Auth provider
+  // Auth providers
   locator.registerFactory(
     () => GetUserNotifier(getUserUseCase: locator()),
   );
@@ -59,7 +37,7 @@ void init() {
     () => DeleteUserNotifier(deleteUserUseCase: locator()),
   );
 
-  // Firestore provider
+  // Firestore providers
   locator.registerFactory(
     () => CreateUserDataNotifier(createUserDataUseCase: locator()),
   );
@@ -72,10 +50,23 @@ void init() {
   locator.registerFactory(
     () => DeleteUserDataNotifier(deleteUserDataUseCase: locator()),
   );
-
-  // Widget provider
+  
+  // News providers
   locator.registerFactory(
-    () => BottomNavigationBarNotifier(),
+    () => BookmarkNotifier(
+      createBookmarkUseCase: locator(),
+      deleteBookmarkUseCase: locator(),
+      getBookmarkStatusUseCase: locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => GetBookmarksNotifier(getBookmarksUseCase: locator()),
+  );
+  locator.registerFactory(
+    () => GetNewsNotifier(getNewsUseCase: locator()),
+  );
+  locator.registerFactory(
+    () => SearchNewsNotifier(searchNewsUseCase: locator()),
   );
 
   // Auth usecases
@@ -93,12 +84,26 @@ void init() {
   locator.registerLazySingleton(() => UpdateUserData(locator()));
   locator.registerLazySingleton(() => DeleteUserData(locator()));
 
+  // News usecases
+  locator.registerLazySingleton(() => CreateBookmark(locator()));
+  locator.registerLazySingleton(() => DeleteBookmark(locator()));
+  locator.registerLazySingleton(() => GetBookmarkStatus(locator()));
+  locator.registerLazySingleton(() => GetBookmarks(locator()));
+  locator.registerLazySingleton(() => GetNews(locator()));
+  locator.registerLazySingleton(() => SearchNews(locator()));
+
   // Repositories
   locator.registerLazySingleton<UserAuthRepository>(
     () => UserAuthRepositoryImpl(userAuthDataSource: locator()),
   );
   locator.registerLazySingleton<UserFirestoreRepository>(
     () => UserFirestoreRepositoryImpl(userFirestoreDataSource: locator()),
+  );
+  locator.registerLazySingleton<NewsRepository>(
+    () => NewsRepositoryImpl(
+      newsLocalDataSource: locator(),
+      newsRemoteDataSource: locator(),
+    ),
   );
 
   // Data sources
@@ -111,10 +116,22 @@ void init() {
   locator.registerLazySingleton<UserFirestoreDataSource>(
     () => UserFirestoreDataSourceImpl(firebaseFirestore: locator()),
   );
+  locator.registerLazySingleton<NewsLocalDataSource>(
+    () => NewsLocalDataSourceImpl(newsDatabase: locator()),
+  );
+  locator.registerLazySingleton<NewsRemoteDataSource>(
+    () => NewsRemoteDataSourceImpl(client: locator()),
+  );
 
-  // External
+  // Databases
+  locator.registerLazySingleton<NewsDatabase>(() => NewsDatabase());
+
+  // Services
   locator.registerLazySingleton(() => FirebaseAuth.instance);
   locator.registerLazySingleton(() => FirebaseFirestore.instance);
   locator.registerLazySingleton(() => FirebaseStorage.instance);
   locator.registerLazySingleton(() => GoogleSignIn());
+
+  // client w/ SSL pinning certified
+  locator.registerLazySingleton(() => HttpSslPinning.client);
 }
