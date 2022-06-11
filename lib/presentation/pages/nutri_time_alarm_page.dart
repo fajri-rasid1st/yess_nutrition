@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_alarm_clock/flutter_alarm_clock.dart';
-import 'package:yess_nutrition/common/styles/color_scheme.dart';
-import 'package:yess_nutrition/presentation/pages/nutri_time_add_waktu_makan.dart';
-
-import 'nutri_time_page.dart';
 
 class AlarmNutriTime extends StatelessWidget {
+  const AlarmNutriTime({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:yess_nutrition/presentation/pages/nutri_time_page.dart';
 
 import 'nutri_time_alarm_page.dart';
 
 class AddWaktuMakanPage extends StatelessWidget {
+  const AddWaktuMakanPage({Key? key}) : super(key: key);
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(

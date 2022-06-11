@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/data/models/data_menu_makan_nutritime.dart';
-import 'package:yess_nutrition/presentation/pages/home_page.dart';
-
+import 'package:yess_nutrition/presentation/pages/nutri_time_add_food_page.dart';
 import 'nutri_time_add_waktu_makan.dart';
-import 'nutri_time_alarm_page.dart';
 
 class NutriTimePage extends StatefulWidget {
+  const NutriTimePage({Key? key}) : super(key: key);
+
   @override
   State<NutriTimePage> createState() => _NutriTimePagePageState();
 }
@@ -71,7 +71,12 @@ class _NutriTimePagePageState extends State<NutriTimePage> {
                     itemBuilder: (context, index) {
                       final DataMenuMakan menuMakan = dataWaktuMakan[index];
                       return InkWell(
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) {
+                            return AddFood();
+                          }));
+                        },
                         child: Card(
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
