@@ -68,8 +68,8 @@ class _NewsPageState extends State<NewsPage> {
           return [
             SliverAppBar(
               backgroundColor: primaryBackgroundColor,
-              toolbarHeight: 240,
-              expandedHeight: 240,
+              toolbarHeight: 230,
+              expandedHeight: 230,
               actions: <Widget>[
                 SafeArea(
                   child: Padding(
@@ -135,21 +135,21 @@ class _NewsPageState extends State<NewsPage> {
         },
         body: Consumer<GetNewsNotifier>(
           builder: (context, newsProvider, child) {
-            if (newsProvider.state == RequestState.loading) {
-              return const LoadingIndicator();
-            } else if (newsProvider.state == RequestState.success) {
+            if (newsProvider.state == RequestState.success) {
               return _buildNewsList(newsProvider);
+            } else if (newsProvider.state == RequestState.error) {
+              return SingleChildScrollView(
+                physics: const NeverScrollableScrollPhysics(),
+                child: CustomInformation(
+                  key: const Key('error_message'),
+                  imgPath: 'assets/svg/error_robot_cuate.svg',
+                  title: newsProvider.message,
+                  subtitle: 'Silahkan coba beberapa saat lagi.',
+                ),
+              );
             }
 
-            return SingleChildScrollView(
-              physics: const NeverScrollableScrollPhysics(),
-              child: CustomInformation(
-                key: const Key('error_message'),
-                imgPath: 'assets/svg/error_robot_cuate.svg',
-                title: newsProvider.message,
-                subtitle: 'Silahkan coba beberapa saat lagi.',
-              ),
-            );
+            return const LoadingIndicator();
           },
         ),
       ),
@@ -188,7 +188,7 @@ class _NewsPageState extends State<NewsPage> {
 
   ListView _buildNewsList(GetNewsNotifier newsNotifier) {
     return ListView.separated(
-      padding: const EdgeInsets.all(0),
+      padding: const EdgeInsets.only(bottom: 56),
       itemCount: newsNotifier.hasMoreData
           ? newsNotifier.news.length + 1
           : newsNotifier.news.length,
@@ -199,11 +199,11 @@ class _NewsPageState extends State<NewsPage> {
           }
 
           return const Padding(
-            padding: EdgeInsets.symmetric(vertical: 16),
+            padding: EdgeInsets.only(top: 24, bottom: 48),
             child: Center(
               child: SpinKitThreeBounce(
                 color: secondaryColor,
-                size: 24,
+                size: 30,
               ),
             ),
           );
@@ -222,9 +222,9 @@ class _NewsPageState extends State<NewsPage> {
     // get the scroll position in pixel
     final scrollPosition = _scrollController.position.pixels;
 
-    // if scroll position bigger than 256
-    // (256 refers to toolbar height + margin bottom of search field)
-    if (scrollPosition > 256) {
+    // if scroll position bigger than 246
+    // (246 refers to toolbar height + margin bottom of search field)
+    if (scrollPosition > 246) {
       // if user scroll to top,...
       if (notification.direction == ScrollDirection.forward) {
         // check if fab is visible, ...
@@ -234,7 +234,7 @@ class _NewsPageState extends State<NewsPage> {
         }
       }
     } else {
-      // if scroll position less than 256, check if fab is visible...
+      // if scroll position less than 246, check if fab is visible...
       if (fabProvider.isFabVisible) {
         // remove the fab.
         fabProvider.isFabVisible = false;

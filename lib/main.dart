@@ -7,12 +7,11 @@ import 'package:provider/single_child_widget.dart';
 import 'common/styles/styles.dart';
 import 'common/utils/http_ssl_pinning.dart';
 import 'common/utils/routes.dart';
-import 'domain/entities/user_entity.dart';
-import 'presentation/pages/pages.dart';
-import 'presentation/providers/providers.dart';
-
+import 'domain/entities/entities.dart';
 import 'firebase_options.dart';
 import 'injection.dart' as di;
+import 'presentation/pages/pages.dart';
+import 'presentation/providers/providers.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -137,11 +136,18 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(
                 builder: (_) => const ForgotPasswordPage(),
               );
-            case homeRoute:
+            case additionalInfoRoute:
               final user = settings.arguments as UserEntity;
 
               return MaterialPageRoute(
-                builder: (_) => HomePage(user: user),
+                builder: (_) => AdditionalInfoPage(user: user),
+                settings: settings,
+              );
+            case mainRoute:
+              final user = settings.arguments as UserEntity;
+
+              return MaterialPageRoute(
+                builder: (_) => MainPage(user: user),
                 settings: settings,
               );
             case profileRoute:
@@ -149,17 +155,11 @@ class MyApp extends StatelessWidget {
 
               return MaterialPageRoute(
                 builder: (_) => ProfilePage(userData: userData),
+                settings: settings,
               );
             case updateProfileRoute:
               return MaterialPageRoute(
                 builder: (_) => const UpdateProfilePage(),
-              );
-            case additionalInfoRoute:
-              final user = settings.arguments as UserEntity;
-
-              return MaterialPageRoute(
-                builder: (_) => AdditionalInfoPage(user: user),
-                settings: settings,
               );
             case newsDetailRoute:
               return MaterialPageRoute(

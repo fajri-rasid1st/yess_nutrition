@@ -7,7 +7,7 @@ import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
-import 'package:yess_nutrition/domain/entities/user_entity.dart';
+import 'package:yess_nutrition/domain/entities/entities.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/firestore_notifiers/read_user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/firestore_notifiers/update_user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
@@ -52,7 +52,7 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
       onWillPop: () {
         Navigator.pushNamedAndRemoveUntil(
           context,
-          homeRoute,
+          mainRoute,
           (route) => false,
           arguments: widget.user,
         );
@@ -78,7 +78,7 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
                       onPressed: () {
                         Navigator.pushNamedAndRemoveUntil(
                           context,
-                          homeRoute,
+                          mainRoute,
                           (route) => false,
                           arguments: widget.user,
                         );
@@ -285,30 +285,33 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
         // get user data
         final userData = readUserDataNotifier.userData;
 
-        // update user data
-        await updateUserDataNotifier.updateUserData(
-          userData.copyWith(
-            gender: value['gender'],
-            age: int.tryParse(value['age']),
-            weight: int.tryParse(value['weight']),
-            height: int.tryParse(value['height']),
-          ),
+        // updated user data
+        final updatedUserData = userData.copyWith(
+          gender: value['gender'],
+          age: int.tryParse(value['age']),
+          weight: int.tryParse(value['weight']),
+          height: int.tryParse(value['height']),
         );
+
+        // update user data on firestore
+        await updateUserDataNotifier.updateUserData(updatedUserData);
 
         if (!mounted) return;
 
-        // close loading indicator
-        Navigator.pop(context);
+        if (updateUserDataNotifier.state == UserState.success) {
+          // close loading indicator
+          Navigator.pop(context);
 
-        // navigate to home page
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          homeRoute,
-          (route) => false,
-          arguments: widget.user,
-        );
+          // navigate to main page
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            mainRoute,
+            (route) => false,
+            arguments: widget.user,
+          );
+        }
       } else {
-        final snackBar = Utilities.createSnackBar(readUserDataNotifier.error);
+        final snackBar = Utilities.createSnackBar(updateUserDataNotifier.error);
 
         // close loading indicator
         Navigator.pop(context);

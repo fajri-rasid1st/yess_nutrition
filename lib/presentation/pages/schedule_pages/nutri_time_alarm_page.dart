@@ -29,7 +29,7 @@ class _AlarmNutriTimePageState extends State<AlarmNutriTimePage> {
           icon: const Icon(
             Icons.arrow_back_ios,
             size: 20.0,
-            color: Colors.white,
+            color: primaryBackgroundColor,
           ),
           onPressed: () {},
         ),
@@ -50,7 +50,7 @@ class _AlarmNutriTimePageState extends State<AlarmNutriTimePage> {
             const SizedBox(height: 15),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+              children: <Widget>[
                 Container(
                   height: 40,
                   width: 60,

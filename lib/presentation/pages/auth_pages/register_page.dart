@@ -276,7 +276,7 @@ class _RegisterPageState extends State<RegisterPage> {
         // get user
         final user = signUpNotifier.user;
 
-        // get user data
+        // convert user entity to user data entity
         final userData = user.toUserData();
 
         // craete user data when sign up successfully
@@ -286,15 +286,17 @@ class _RegisterPageState extends State<RegisterPage> {
 
         if (!mounted) return;
 
-        // close the loading indicator
-        Navigator.pop(context);
+        if (createUserDataNotifier.state == UserState.success) {
+          // close the loading indicator
+          Navigator.pop(context);
 
-        // navigate to additional information page
-        Navigator.pushReplacementNamed(
-          context,
-          additionalInfoRoute,
-          arguments: user,
-        );
+          // navigate to additional information page
+          Navigator.pushReplacementNamed(
+            context,
+            additionalInfoRoute,
+            arguments: user,
+          );
+        }
       } else {
         final snackBar = Utilities.createSnackBar(signUpNotifier.error);
 

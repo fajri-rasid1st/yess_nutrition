@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
-import 'package:yess_nutrition/common/utils/price_format.dart';
+import 'package:yess_nutrition/common/utils/utilities.dart';
 
 class CardNutriShopHome extends StatelessWidget {
   final String picture;
@@ -25,7 +25,7 @@ class CardNutriShopHome extends StatelessWidget {
       decoration: BoxDecoration(
         color: primaryBackgroundColor,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
+        boxShadow: <BoxShadow>[
           BoxShadow(
             offset: const Offset(0, 2),
             blurRadius: 4,
@@ -35,7 +35,7 @@ class CardNutriShopHome extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+        children: <Widget>[
           Container(
             width: 110,
             height: 110,
@@ -48,9 +48,7 @@ class CardNutriShopHome extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          const SizedBox(
-            height: 8,
-          ),
+          const SizedBox(height: 8),
           Text(
             category,
             style: const TextStyle(
@@ -66,11 +64,9 @@ class CardNutriShopHome extends StatelessWidget {
                   color: primaryTextColor,
                 ),
           ),
-          const SizedBox(
-            height: 4,
-          ),
+          const SizedBox(height: 4),
           Row(
-            children: [
+            children: <Widget>[
               Text(
                 "Rp.",
                 style: Theme.of(context).textTheme.bodyText2?.copyWith(
@@ -80,7 +76,7 @@ class CardNutriShopHome extends StatelessWidget {
                     ),
               ),
               Text(
-                CurrencyFormat.convertToIdr(price, 0),
+                Utilities.numberToIdr(price, 0),
                 style: Theme.of(context).textTheme.bodyText2?.copyWith(
                       fontWeight: FontWeight.w900,
                       color: errorColor,

@@ -28,7 +28,7 @@ class GetNewsNotifier extends ChangeNotifier {
 
   Future<void> getNews({required int page}) async {
     _state = RequestState.loading;
-     notifyListeners();
+    notifyListeners();
 
     final result = await getNewsUseCase.execute(10, page);
 
@@ -40,6 +40,8 @@ class GetNewsNotifier extends ChangeNotifier {
       (news) {
         _news = news;
         _currentPageLoad = page;
+        _hasMoreData = true;
+
         _state = RequestState.success;
       },
     );

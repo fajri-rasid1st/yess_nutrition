@@ -13,104 +13,111 @@ class NutriTimePage extends StatefulWidget {
 class _NutriTimePagePageState extends State<NutriTimePage> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        children: [
-          const SizedBox(height: 24),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  size: 20.0,
-                  color: primaryColor,
+    return Scaffold(
+      body: Center(
+        child: Column(
+          children: <Widget>[
+            const SizedBox(height: 24),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                    size: 20.0,
+                    color: primaryColor,
+                  ),
+                  onPressed: () {},
                 ),
-                onPressed: () {},
-              ),
-              const Text(
-                'NutriTime',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
+                const Text(
+                  'NutriTime',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              IconButton(
-                icon: const Icon(
-                  Icons.notification_add_outlined,
-                  color: Color(0XFF7165E3),
-                ),
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const AddWaktuMakanPage(),
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-          Container(
-            margin: const EdgeInsets.only(top: 10.0, left: 10.0),
-            child: Row(children: const [
-              Text(
-                'Waktu Makan',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ]),
-          ),
-          Row(
-            children: [
-              Expanded(
-                  child: SizedBox(
-                height: MediaQuery.of(context).size.height * 0.55,
-                child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  itemBuilder: (context, index) {
-                    final DataMenuMakan menuMakan = dataWaktuMakan[index];
-                    return InkWell(
-                      onTap: () {},
-                      child: Card(
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              flex: 2,
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      menuMakan.waktuMakan,
-                                      style: const TextStyle(
-                                        fontSize: 16.0,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Text(menuMakan.info),
-                                  ],
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
+                IconButton(
+                  icon: const Icon(
+                    Icons.notification_add_outlined,
+                    color: primaryColor,
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AddWaktuMakanPage(),
                       ),
                     );
                   },
-                  itemCount: dataWaktuMakan.length,
                 ),
-              ))
-            ],
-          ),
-        ],
+              ],
+            ),
+            Container(
+              margin: const EdgeInsets.only(top: 10.0, left: 10.0),
+              child: Row(
+                children: const <Text>[
+                  Text(
+                    'Waktu Makan',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.55,
+                    child: ListView.builder(
+                      scrollDirection: Axis.vertical,
+                      itemBuilder: (context, index) {
+                        final DataMenuMakan menuMakan = dataWaktuMakan[index];
+
+                        return InkWell(
+                          onTap: () {},
+                          child: Card(
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Expanded(
+                                  flex: 2,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text(
+                                          menuMakan.waktuMakan,
+                                          style: const TextStyle(
+                                            fontSize: 16.0,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          height: 10,
+                                        ),
+                                        Text(menuMakan.info),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                      itemCount: dataWaktuMakan.length,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

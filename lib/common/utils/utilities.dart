@@ -2,9 +2,10 @@ import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:intl/intl.dart';
 
 class Utilities {
-  /// Function to create snack bar
+  /// Function to create snack bar with [message] as text that will be displayed
   static SnackBar createSnackBar(String message) {
     return SnackBar(
       content: Text(message, style: GoogleFonts.plusJakartaSans()),
@@ -14,7 +15,7 @@ class Utilities {
     );
   }
 
-  /// Function to encrypt text with Salsa20 engine
+  /// Function to encrypt [text] with Salsa20 engine
   static String encryptText(String text) {
     final key = encrypt.Key.fromLength(32);
     final iv = encrypt.IV.fromLength(8);
@@ -25,10 +26,21 @@ class Utilities {
     return encrypted.base64;
   }
 
-  // Function to change date format to time ago format
-  static String getTimeAgo(String dateFormat) {
+  /// Function to convert [dateFormat] to time ago format
+  static String dateFormatToTimeAgo(String dateFormat) {
     timeago.setLocaleMessages('id', timeago.IdMessages());
 
     return timeago.format(DateTime.parse(dateFormat), locale: 'id');
+  }
+
+  /// Convert [number] according to [decimalDigit]
+  static String numberToIdr(dynamic number, int decimalDigit) {
+    NumberFormat currencyFormatter = NumberFormat.currency(
+      locale: 'id',
+      symbol: '',
+      decimalDigits: decimalDigit,
+    );
+
+    return currencyFormatter.format(number);
   }
 }

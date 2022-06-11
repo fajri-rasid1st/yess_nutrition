@@ -106,13 +106,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.16.0"
-  countup:
-    dependency: "direct main"
-    description:
-      name: countup
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.4"
   convert:
     dependency: transitive
     description:
@@ -120,6 +113,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.2"
+  countup:
+    dependency: "direct main"
+    description:
+      name: countup
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.4"
   crypto:
     dependency: transitive
     description:
@@ -560,13 +560,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.1.0"
-  percent_indicator:
-    dependency: "direct main"
-    description:
-      name: percent_indicator
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "4.2.2"
   pedantic:
     dependency: transitive
     description:
@@ -574,6 +567,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.11.1"
+  percent_indicator:
+    dependency: "direct main"
+    description:
+      name: percent_indicator
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.2.2"
   petitparser:
     dependency: transitive
     description:
@@ -705,13 +705,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.9"
-  transformer_page_view:
-    dependency: transitive
-    description:
-      name: transformer_page_view
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.6"
   timeago:
     dependency: "direct main"
     description:
@@ -719,6 +712,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.2.2"
+  transformer_page_view:
+    dependency: transitive
+    description:
+      name: transformer_page_view
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.6"
   typed_data:
     dependency: transitive
     description:

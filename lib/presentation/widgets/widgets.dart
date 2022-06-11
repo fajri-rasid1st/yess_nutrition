@@ -1,6 +1,12 @@
+export 'card_nutri_news_home.dart';
+export 'card_nutri_shop_home.dart';
+export 'card_nutri_time_task.dart';
 export 'clickable_text.dart';
+export 'custom_bottom_navigation_bar.dart';
 export 'custom_information.dart';
 export 'custom_network_image.dart';
+export 'large_circular_progress.dart';
 export 'loading_indicator.dart';
 export 'news_tile.dart';
 export 'search_field.dart';
+export 'small_circular_progress.dart';

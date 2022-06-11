@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/domain/entities/user_data_entity.dart';
-import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_out_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/auth_notifiers/sign_out_notifier.dart';
 
 class ProfilePage extends StatefulWidget {
   final UserDataEntity userData;
@@ -25,11 +25,11 @@ class _ProfilePageState extends State<ProfilePage> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
-            children: [
+            children: <Widget>[
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Row(
-                  children: [
+                  children: <Widget>[
                     Container(
                       decoration: BoxDecoration(
                         color: secondaryColor,
@@ -56,15 +56,11 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      width: 45,
-                    ),
+                    const SizedBox(width: 45),
                   ],
                 ),
               ),
-              const SizedBox(
-                height: 36,
-              ),
+              const SizedBox(height: 36),
               Container(
                 width: 130,
                 height: 130,
@@ -78,12 +74,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   fit: BoxFit.cover,
                 ),
               ),
-              const SizedBox(
-                height: 20,
-              ),
+              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: const <Widget>[
                   Text(
                     "Brandon Salim",
                     style: TextStyle(
@@ -92,9 +86,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       fontWeight: FontWeight.w800,
                     ),
                   ),
-                  SizedBox(
-                    width: 2,
-                  ),
+                  SizedBox(width: 2),
                   Icon(
                     MdiIcons.genderMale,
                     size: 24,
@@ -102,9 +94,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ],
               ),
-              const SizedBox(
-                height: 4,
-              ),
+              const SizedBox(height: 4),
               const Text(
                 "12 Tahun",
                 style: TextStyle(
@@ -113,9 +103,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              const SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 10),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 48),
                 child: Text(
@@ -128,9 +116,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 16,
-              ),
+              const SizedBox(height: 16),
               ElevatedButton.icon(
                 onPressed: () {
                   Navigator.pushNamed(context, updateProfileRoute);
@@ -155,9 +141,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 56,
-              ),
+              const SizedBox(height: 56),
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(
@@ -170,7 +154,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     topLeft: Radius.circular(24),
                     topRight: Radius.circular(24),
                   ),
-                  boxShadow: [
+                  boxShadow: <BoxShadow>[
                     BoxShadow(
                       color: secondaryColor.withOpacity(0.4),
                       offset: const Offset(0.0, -4.0),
@@ -179,9 +163,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   ],
                 ),
                 child: Column(
-                  children: [
+                  children: <Widget>[
                     Row(
-                      children: [
+                      children: <Widget>[
                         Container(
                           width: 46,
                           height: 46,
@@ -195,12 +179,10 @@ class _ProfilePageState extends State<ProfilePage> {
                             color: primaryColor,
                           ),
                         ),
-                        const SizedBox(
-                          width: 12,
-                        ),
+                        const SizedBox(width: 12),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
+                          children: const <Widget>[
                             Text(
                               "Pemberitahuan",
                               style: TextStyle(
@@ -209,9 +191,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 color: primaryTextColor,
                               ),
                             ),
-                            SizedBox(
-                              height: 4,
-                            ),
+                            SizedBox(height: 4),
                             Text(
                               "Hidup atau matikan pemberitahuan",
                               style: TextStyle(
@@ -238,31 +218,23 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                       ],
                     ),
-                    const SizedBox(
-                      height: 16,
-                    ),
+                    const SizedBox(height: 16),
                     _buildListTileProfile(
                       MdiIcons.lockOutline,
                       "Ubah Password",
                       () {},
                     ),
-                    const SizedBox(
-                      height: 16,
-                    ),
+                    const SizedBox(height: 16),
                     Divider(
                       color: dividerColor.withOpacity(0.6),
                     ),
-                    const SizedBox(
-                      height: 16,
-                    ),
+                    const SizedBox(height: 16),
                     _buildListTileProfile(
                       MdiIcons.informationOutline,
                       "Informasi",
                       () {},
                     ),
-                    const SizedBox(
-                      height: 16,
-                    ),
+                    const SizedBox(height: 16),
                     _buildListTileProfile(
                       MdiIcons.logout,
                       "Keluar",
@@ -274,7 +246,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         Navigator.pushNamedAndRemoveUntil(
                           context,
                           loginRoute,
-                          ((route) => false),
+                          (route) => false,
                         );
                       },
                     ),
@@ -289,11 +261,14 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   GestureDetector _buildListTileProfile(
-      IconData icon, String title, VoidCallback onTap) {
+    IconData icon,
+    String title,
+    VoidCallback onTap,
+  ) {
     return GestureDetector(
       onTap: onTap,
       child: Row(
-        children: [
+        children: <Widget>[
           Container(
             width: 46,
             height: 46,
@@ -307,9 +282,7 @@ class _ProfilePageState extends State<ProfilePage> {
               color: primaryColor,
             ),
           ),
-          const SizedBox(
-            width: 12,
-          ),
+          const SizedBox(width: 12),
           Text(
             title,
             style: const TextStyle(

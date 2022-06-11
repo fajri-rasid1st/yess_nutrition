@@ -6,7 +6,7 @@ class BottomNavigationBarNotifier extends ChangeNotifier {
 
   MenuNavBar get selectedMenu => _selectedMenu;
 
-  void changeMenu(MenuNavBar menu) {
+  set selectedMenu(MenuNavBar menu) {
     _selectedMenu = menu;
     notifyListeners();
   }

@@ -249,8 +249,8 @@ class _LoginPageState extends State<LoginPage> {
         // close the loading indicator
         Navigator.pop(context);
 
-        // navigate to home page
-        Navigator.pushReplacementNamed(context, homeRoute, arguments: user);
+        // navigate to main page
+        Navigator.pushReplacementNamed(context, mainRoute, arguments: user);
       } else {
         final snackBar = Utilities.createSnackBar(signInNotifier.error);
 
@@ -276,7 +276,7 @@ class _LoginPageState extends State<LoginPage> {
       // get user
       final user = googleSignInNotifier.user;
 
-      // get user data
+      // convert user entity to user data entity
       final userData = user.toUserData();
 
       // craete user data when sign in successfully
@@ -284,8 +284,10 @@ class _LoginPageState extends State<LoginPage> {
 
       if (!mounted) return;
 
-      // navigate to home page
-      Navigator.pushReplacementNamed(context, homeRoute, arguments: user);
+      if (createUserDataNotifier.state == UserState.success) {
+        // navigate to main page
+        Navigator.pushReplacementNamed(context, mainRoute, arguments: user);
+      }
     } else {
       final snackBar = Utilities.createSnackBar(googleSignInNotifier.error);
 

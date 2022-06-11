@@ -10,6 +10,7 @@ class UserDataModel extends Equatable {
   final int? age;
   final int? weight;
   final int? height;
+  final String? bio;
 
   const UserDataModel({
     required this.uid,
@@ -20,6 +21,7 @@ class UserDataModel extends Equatable {
     this.age,
     this.weight,
     this.height,
+    this.bio,
   });
 
   factory UserDataModel.fromEntity(UserDataEntity userData) {
@@ -32,6 +34,7 @@ class UserDataModel extends Equatable {
       age: userData.age,
       weight: userData.weight,
       height: userData.height,
+      bio: userData.bio,
     );
   }
 
@@ -45,6 +48,7 @@ class UserDataModel extends Equatable {
       age: userData['age'],
       weight: userData['weight'],
       height: userData['height'],
+      bio: userData['bio'],
     );
   }
 
@@ -58,6 +62,7 @@ class UserDataModel extends Equatable {
       age: age ?? 0,
       weight: weight ?? 0,
       height: height ?? 0,
+      bio: bio ?? '',
     );
   }
 
@@ -71,6 +76,7 @@ class UserDataModel extends Equatable {
       'age': age ?? 0,
       'weight': weight ?? 0,
       'height': height ?? 0,
+      'bio': bio ?? '',
     };
   }
 
@@ -84,5 +90,6 @@ class UserDataModel extends Equatable {
         age,
         weight,
         height,
+        bio,
       ];
 }

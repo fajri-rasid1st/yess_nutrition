@@ -53,7 +53,7 @@ class NewsTile extends StatelessWidget {
                           const SizedBox(width: 4),
                           Expanded(
                             child: Text(
-                              Utilities.getTimeAgo(news.publishedAt),
+                              Utilities.dateFormatToTimeAgo(news.publishedAt),
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context)
                                   .textTheme

@@ -50,7 +50,7 @@ void init() {
   locator.registerFactory(
     () => DeleteUserDataNotifier(deleteUserDataUseCase: locator()),
   );
-  
+
   // News providers
   locator.registerFactory(
     () => BookmarkNotifier(

@@ -21,12 +21,13 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
 
   @override
   void initState() {
-    super.initState();
     _nameController = TextEditingController();
     _emailController = TextEditingController();
     _ageController = TextEditingController();
     _weightController = TextEditingController();
     _heightController = TextEditingController();
+
+    super.initState();
   }
 
   @override
@@ -36,6 +37,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     _ageController.dispose();
     _weightController.dispose();
     _heightController.dispose();
+
     super.dispose();
   }
 
@@ -76,15 +78,11 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      width: 45,
-                    ),
+                    const SizedBox(width: 45),
                   ],
                 ),
               ),
-              const SizedBox(
-                height: 30,
-              ),
+              const SizedBox(height: 30),
               Stack(
                 alignment: AlignmentDirectional.topCenter,
                 children: [

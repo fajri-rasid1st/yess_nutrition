@@ -25,15 +25,15 @@ class CardNutriNewsHome extends StatelessWidget {
       decoration: BoxDecoration(
           color: primaryBackgroundColor,
           borderRadius: BorderRadius.circular(12),
-          boxShadow: [
+          boxShadow: <BoxShadow>[
             BoxShadow(
               offset: const Offset(0, 2),
               blurRadius: 4,
-              color: const Color(0XFF000000).withOpacity(0.05),
+              color: Colors.black.withOpacity(0.05),
             ),
           ]),
       child: Row(
-        children: [
+        children: <Widget>[
           Container(
             width: 68,
             height: 68,
@@ -41,14 +41,12 @@ class CardNutriNewsHome extends StatelessWidget {
             clipBehavior: Clip.hardEdge,
             child: Image.network(picture, fit: BoxFit.cover),
           ),
-          const SizedBox(
-            width: 8,
-          ),
+          const SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+              children: <Widget>[
                 Text(
                   title,
                   overflow: TextOverflow.ellipsis,
@@ -57,22 +55,18 @@ class CardNutriNewsHome extends StatelessWidget {
                         color: primaryTextColor,
                       ),
                 ),
-                const SizedBox(
-                  height: 8,
-                ),
+                const SizedBox(height: 8),
                 Row(
-                  children: [
+                  children: <Widget>[
                     Expanded(
                       child: Row(
-                        children: [
+                        children: <Widget>[
                           Icon(
                             MdiIcons.clockOutline,
                             size: 12,
                             color: secondaryTextColor.withOpacity(0.7),
                           ),
-                          const SizedBox(
-                            width: 2,
-                          ),
+                          const SizedBox(width: 2),
                           Text(
                             time,
                             style: Theme.of(context)
@@ -89,15 +83,13 @@ class CardNutriNewsHome extends StatelessWidget {
                     ),
                     Expanded(
                       child: Row(
-                        children: [
+                        children: <Widget>[
                           Icon(
                             MdiIcons.eyeOutline,
                             size: 12,
                             color: secondaryTextColor.withOpacity(0.7),
                           ),
-                          const SizedBox(
-                            width: 2,
-                          ),
+                          const SizedBox(width: 2),
                           Text(
                             show,
                             style: Theme.of(context)
