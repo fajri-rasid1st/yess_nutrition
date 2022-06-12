@@ -1,8 +1,8 @@
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:timeago/timeago.dart' as timeago;
 import 'package:intl/intl.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class Utilities {
   /// Function to create snack bar with [message] as text that will be displayed

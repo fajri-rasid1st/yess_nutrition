@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 
 class BottomNavigationBarNotifier extends ChangeNotifier {

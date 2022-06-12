@@ -6,6 +6,7 @@ import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/presentation/providers/news_fab_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/get_news_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/news_notifiers/search_news_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_information.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 import 'package:yess_nutrition/presentation/widgets/news_tile.dart';
@@ -44,28 +45,32 @@ class _NewsPageState extends State<NewsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<NewsFabNotifier>(
-      builder: (context, fabProvider, child) {
+    return Consumer3<NewsFabNotifier, GetNewsNotifier, SearchNewsNotifier>(
+      builder: (context, fabNotifier, newsNotifier, searchNotifier, child) {
         return Scaffold(
           resizeToAvoidBottomInset: false,
           backgroundColor: primaryBackgroundColor,
-          body: _buildBody(fabProvider),
-          floatingActionButton: _buildFab(fabProvider),
+          body: _buildBody(fabNotifier, newsNotifier, searchNotifier),
+          floatingActionButton: _buildFab(fabNotifier),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerTop,
         );
       },
     );
   }
 
-  NotificationListener _buildBody(NewsFabNotifier fabProvider) {
+  NotificationListener _buildBody(
+    NewsFabNotifier fabNotifier,
+    GetNewsNotifier newsNotifier,
+    SearchNewsNotifier searchNotifier,
+  ) {
     return NotificationListener<UserScrollNotification>(
       onNotification: (notification) {
-        return onScrollNotification(notification, fabProvider);
+        return onScrollNotification(notification, fabNotifier);
       },
       child: NestedScrollView(
         controller: _scrollController,
         headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [
+          return <Widget>[
             SliverAppBar(
               backgroundColor: primaryBackgroundColor,
               toolbarHeight: 230,
@@ -114,18 +119,7 @@ class _NewsPageState extends State<NewsPage> {
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      child: SearchField(
-                        controller: _searchController,
-                        query: '',
-                        hintText: 'Cari judul artikel atau berita...',
-                        onTap: () {
-                          _scrollController.animateTo(
-                            0,
-                            duration: const Duration(milliseconds: 500),
-                            curve: Curves.easeOut,
-                          );
-                        },
-                      ),
+                      child: _buildSearchField(searchNotifier),
                     ),
                   ],
                 ),
@@ -133,20 +127,30 @@ class _NewsPageState extends State<NewsPage> {
             ),
           ];
         },
-        body: Consumer<GetNewsNotifier>(
-          builder: (context, newsProvider, child) {
-            if (newsProvider.state == RequestState.success) {
-              return _buildNewsList(newsProvider);
-            } else if (newsProvider.state == RequestState.error) {
-              return SingleChildScrollView(
-                physics: const NeverScrollableScrollPhysics(),
-                child: CustomInformation(
-                  key: const Key('error_message'),
-                  imgPath: 'assets/svg/error_robot_cuate.svg',
-                  title: newsProvider.message,
-                  subtitle: 'Silahkan coba beberapa saat lagi.',
-                ),
-              );
+        body: Builder(
+          builder: (context) {
+            final onChangedQuery = searchNotifier.onChangedQuery;
+            final onSubmittedQuery = searchNotifier.onSubmittedQuery;
+
+            final isOnChangedQueryEmpty = onChangedQuery.isEmpty;
+            final isOnSubmittedQueryEmpty = onSubmittedQuery.isEmpty;
+
+            final isTyping = onChangedQuery != onSubmittedQuery;
+
+            if (isOnChangedQueryEmpty || isOnSubmittedQueryEmpty || isTyping) {
+              if (newsNotifier.state == RequestState.success) {
+                return _buildNewsList(newsNotifier);
+              } else if (newsNotifier.state == RequestState.error) {
+                return _buildErrorInformation(newsNotifier: newsNotifier);
+              }
+            } else {
+              if (searchNotifier.state == RequestState.success) {
+                return searchNotifier.results.isEmpty
+                    ? _buildSearchedEmptyResult()
+                    : _buildSearchedNewsList(searchNotifier);
+              } else if (searchNotifier.state == RequestState.error) {
+                return _buildErrorInformation(searchNotifier: searchNotifier);
+              }
             }
 
             return const LoadingIndicator();
@@ -156,10 +160,10 @@ class _NewsPageState extends State<NewsPage> {
     );
   }
 
-  Padding? _buildFab(NewsFabNotifier fabProvider) {
-    return fabProvider.isFabVisible
+  Padding? _buildFab(NewsFabNotifier fabNotifier) {
+    return fabNotifier.isFabVisible
         ? Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.only(top: 32),
             child: FloatingActionButton.extended(
               elevation: 2,
               highlightElevation: 4,
@@ -173,22 +177,40 @@ class _NewsPageState extends State<NewsPage> {
                 size: 20,
               ),
               onPressed: () {
-                _scrollController.animateTo(
-                  0,
-                  duration: const Duration(milliseconds: 1000),
-                  curve: Curves.easeOut,
-                );
-
-                fabProvider.isFabVisible = false;
+                _scrollController.jumpTo(0);
+                fabNotifier.isFabVisible = false;
               },
             ),
           )
         : null;
   }
 
+  SearchField _buildSearchField(SearchNewsNotifier newsNotifier) {
+    return SearchField(
+      controller: _searchController,
+      query: newsNotifier.onChangedQuery,
+      hintText: 'Cari judul artikel atau berita...',
+      onTap: () {
+        _scrollController.animateTo(
+          0,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      },
+      onChanged: (value) {
+        newsNotifier.onChangedQuery = value.trim();
+      },
+      onSubmitted: (value) {
+        if (value.trim().isNotEmpty) {
+          newsNotifier.searchNews(page: 1, query: value);
+        }
+      },
+    );
+  }
+
   ListView _buildNewsList(GetNewsNotifier newsNotifier) {
     return ListView.separated(
-      padding: const EdgeInsets.only(bottom: 56),
+      padding: const EdgeInsets.only(bottom: 64),
       itemCount: newsNotifier.hasMoreData
           ? newsNotifier.news.length + 1
           : newsNotifier.news.length,
@@ -215,9 +237,68 @@ class _NewsPageState extends State<NewsPage> {
     );
   }
 
+  ListView _buildSearchedNewsList(SearchNewsNotifier searchNotifier) {
+    return ListView.separated(
+      padding: const EdgeInsets.only(bottom: 64),
+      itemCount: searchNotifier.hasMoreData
+          ? searchNotifier.results.length + 1
+          : searchNotifier.results.length,
+      itemBuilder: (context, index) {
+        if (index >= searchNotifier.results.length) {
+          if (!searchNotifier.isLoading) {
+            searchNotifier.searchMoreNews();
+          }
+
+          return const Padding(
+            padding: EdgeInsets.only(top: 24, bottom: 48),
+            child: Center(
+              child: SpinKitThreeBounce(
+                color: secondaryColor,
+                size: 30,
+              ),
+            ),
+          );
+        }
+
+        return NewsTile(news: searchNotifier.results[index]);
+      },
+      separatorBuilder: (context, index) => const Divider(height: 1),
+    );
+  }
+
+  SingleChildScrollView _buildSearchedEmptyResult() {
+    return const SingleChildScrollView(
+      physics: NeverScrollableScrollPhysics(),
+      child: CustomInformation(
+        key: Key('query_not_found'),
+        imgPath: 'assets/svg/not_found_cuate.svg',
+        title: 'Hasil tidak ditemukan',
+        subtitle: 'Coba masukkan kata kunci yang lain.',
+      ),
+    );
+  }
+
+  SingleChildScrollView _buildErrorInformation({
+    GetNewsNotifier? newsNotifier,
+    SearchNewsNotifier? searchNotifier,
+  }) {
+    final title =
+        newsNotifier != null ? newsNotifier.message : searchNotifier!.message;
+
+    return SingleChildScrollView(
+      physics: const NeverScrollableScrollPhysics(),
+      child: CustomInformation(
+        key: const Key('error_message'),
+        imgPath: 'assets/svg/error_robot_cuate.svg',
+        title: title,
+        subtitle: 'Silahkan coba beberapa saat lagi.',
+      ),
+    );
+  }
+
   bool onScrollNotification(
     UserScrollNotification notification,
-    NewsFabNotifier fabProvider,
+    NewsFabNotifier fabNotifier,
   ) {
     // get the scroll position in pixel
     final scrollPosition = _scrollController.position.pixels;
@@ -228,23 +309,23 @@ class _NewsPageState extends State<NewsPage> {
       // if user scroll to top,...
       if (notification.direction == ScrollDirection.forward) {
         // check if fab is visible, ...
-        if (!fabProvider.isFabVisible) {
+        if (!fabNotifier.isFabVisible) {
           // show the fab.
-          fabProvider.isFabVisible = true;
+          fabNotifier.isFabVisible = true;
         }
       }
     } else {
       // if scroll position less than 246, check if fab is visible...
-      if (fabProvider.isFabVisible) {
+      if (fabNotifier.isFabVisible) {
         // remove the fab.
-        fabProvider.isFabVisible = false;
+        fabNotifier.isFabVisible = false;
       }
     }
 
     // if user scroll to bottom, always remove the fab.
     if (notification.direction == ScrollDirection.reverse) {
-      if (fabProvider.isFabVisible) {
-        fabProvider.isFabVisible = false;
+      if (fabNotifier.isFabVisible) {
+        fabNotifier.isFabVisible = false;
       }
     }
 

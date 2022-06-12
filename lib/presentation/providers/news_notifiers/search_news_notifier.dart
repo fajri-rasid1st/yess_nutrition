@@ -11,17 +11,37 @@ class SearchNewsNotifier extends ChangeNotifier {
   RequestState _state = RequestState.empty;
   RequestState get state => _state;
 
-  List<NewsEntity> _results = <NewsEntity>[];
-  List<NewsEntity> get results => _results;
-
   String _message = '';
   String get message => _message;
 
-  Future<void> searchNews(int pageSize, int page, String query) async {
+  List<NewsEntity> _results = <NewsEntity>[];
+  List<NewsEntity> get results => _results;
+
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
+  bool _hasMoreData = false;
+  bool get hasMoreData => _hasMoreData;
+
+  int _currentPageLoad = 0;
+
+  String _onChangedQuery = '';
+  String get onChangedQuery => _onChangedQuery;
+
+  set onChangedQuery(String value) {
+    _onChangedQuery = value;
+    notifyListeners();
+  }
+
+  String _onSubmittedQuery = '';
+  String get onSubmittedQuery => _onSubmittedQuery;
+
+  Future<void> searchNews({required int page, required String query}) async {
+    _onSubmittedQuery = query;
     _state = RequestState.loading;
     notifyListeners();
 
-    final result = await searchNewsUseCase.execute(pageSize, page, query);
+    final result = await searchNewsUseCase.execute(10, page, query);
 
     result.fold(
       (failure) {
@@ -29,8 +49,42 @@ class SearchNewsNotifier extends ChangeNotifier {
         _state = RequestState.error;
       },
       (results) {
+        if (results.isNotEmpty) {
+          _currentPageLoad = page;
+          _hasMoreData = true;
+        }
+
         _results = results;
         _state = RequestState.success;
+      },
+    );
+
+    notifyListeners();
+  }
+
+  Future<void> searchMoreNews() async {
+    _currentPageLoad++;
+
+    _isLoading = true;
+
+    final result = await searchNewsUseCase.execute(
+      10,
+      _currentPageLoad,
+      _onSubmittedQuery,
+    );
+
+    _isLoading = false;
+
+    result.fold(
+      (_) {
+        _hasMoreData = false;
+      },
+      (results) {
+        if (results.isEmpty) {
+          _hasMoreData = false;
+        } else {
+          _results.addAll(results);
+        }
       },
     );
 

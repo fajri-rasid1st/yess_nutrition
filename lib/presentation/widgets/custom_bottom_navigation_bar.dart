@@ -11,8 +11,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
   const CustomBottomNavigationBar({
     Key? key,
-    required this.onTapCircleButton,
     required this.notifier,
+    required this.onTapCircleButton,
   }) : super(key: key);
 
   @override
@@ -31,9 +31,9 @@ class CustomBottomNavigationBar extends StatelessWidget {
             ),
             boxShadow: <BoxShadow>[
               BoxShadow(
-                color: secondaryColor.withOpacity(0.5),
+                color: secondaryColor.withOpacity(0.6),
                 offset: const Offset(0.0, -4.0),
-                blurRadius: 20,
+                blurRadius: 24,
               )
             ],
           ),
@@ -112,8 +112,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
   GestureDetector buildNavBarItem(
     BuildContext context,
-    IconData icon,
-    IconData iconActive,
+    IconData unselectedIcon,
+    IconData selectedIcon,
     MenuNavBar menu,
   ) {
     return GestureDetector(
@@ -122,7 +122,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
         width: MediaQuery.of(context).size.width / 5,
         height: kBottomNavigationBarHeight + 8,
         child: Icon(
-          menu == notifier.selectedMenu ? iconActive : icon,
+          menu == notifier.selectedMenu ? selectedIcon : unselectedIcon,
           color: menu == notifier.selectedMenu ? primaryColor : secondaryColor,
           size: 28,
         ),

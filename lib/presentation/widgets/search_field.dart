@@ -29,6 +29,7 @@ class SearchField extends StatelessWidget {
       child: TextField(
         controller: controller,
         textInputAction: TextInputAction.search,
+        textCapitalization: TextCapitalization.words,
         decoration: InputDecoration(
           border: InputBorder.none,
           contentPadding: const EdgeInsets.only(top: 14),
@@ -40,7 +41,11 @@ class SearchField extends StatelessWidget {
               : IconButton(
                   icon: const Icon(Icons.close_rounded),
                   color: primaryTextColor,
-                  onPressed: () => controller?.clear(),
+                  onPressed: () {
+                    controller?.clear();
+
+                    if (onChanged != null) onChanged!('');
+                  },
                 ),
         ),
         onTap: onTap,

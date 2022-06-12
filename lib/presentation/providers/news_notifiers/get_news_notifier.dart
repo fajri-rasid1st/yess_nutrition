@@ -17,14 +17,13 @@ class GetNewsNotifier extends ChangeNotifier {
   List<NewsEntity> _news = <NewsEntity>[];
   List<NewsEntity> get news => _news;
 
-  int _currentPageLoad = 0;
-  int get currentPageLoad => _currentPageLoad;
-
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  bool _hasMoreData = true;
+  bool _hasMoreData = false;
   bool get hasMoreData => _hasMoreData;
+
+  int _currentPageLoad = 0;
 
   Future<void> getNews({required int page}) async {
     _state = RequestState.loading;
