@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:yess_nutrition/common/constans.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
-import 'package:yess_nutrition/models/categories.dart';
+import 'package:yess_nutrition/common/utils/constants.dart';
+import 'package:yess_nutrition/data/models/categories.dart';
 
 class Categories extends StatelessWidget {
   const Categories({

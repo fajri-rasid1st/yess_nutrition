@@ -177,9 +177,16 @@ class _AddFoodState extends State<AddFood> {
                                   ),
                                   Text('Kalori'),
                                   SizedBox(
-                                    width: 230,
+                                    width: 235,
                                   ),
-                                  Text('307kkal'),
+                                  Expanded(
+                                    child: Text(
+                                      '307kkal',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.visible,
+                                      softWrap: false,
+                                    ),
+                                  ),
                                 ],
                               ),
                               Row(
@@ -202,7 +209,13 @@ class _AddFoodState extends State<AddFood> {
                                   SizedBox(
                                     width: 220,
                                   ),
-                                  Text('15g'),
+                                  Expanded(
+                                      child: Text(
+                                    '15g',
+                                    maxLines: 1,
+                                    overflow: TextOverflow.visible,
+                                    softWrap: false,
+                                  )),
                                 ],
                               ),
                               Row(
@@ -225,7 +238,14 @@ class _AddFoodState extends State<AddFood> {
                                   SizedBox(
                                     width: 250,
                                   ),
-                                  Text('16g'),
+                                  Expanded(
+                                    child: Text(
+                                      '16g',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.visible,
+                                      softWrap: false,
+                                    ),
+                                  ),
                                 ],
                               ),
                               Row(
@@ -248,7 +268,14 @@ class _AddFoodState extends State<AddFood> {
                                   SizedBox(
                                     width: 250,
                                   ),
-                                  Text('20g'),
+                                  Expanded(
+                                    child: Text(
+                                      '20g',
+                                      maxLines: 1,
+                                      overflow: TextOverflow.visible,
+                                      softWrap: false,
+                                    ),
+                                  ),
                                 ],
                               ),
                               SizedBox(
