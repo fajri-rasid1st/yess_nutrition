@@ -43,4 +43,10 @@ class Utilities {
 
     return currencyFormatter.format(number);
   }
+
+  static String dateFormatToMMMddy(String dateFormat) {
+    return dateFormat.isEmpty
+        ? '?'
+        : DateFormat('MMM dd, y').format(DateTime.parse(dateFormat));
+  }
 }

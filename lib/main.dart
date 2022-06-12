@@ -102,6 +102,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => NewsFabNotifier(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => NewsWebViewNotifier(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -162,8 +165,18 @@ class MyApp extends StatelessWidget {
                 builder: (_) => const UpdateProfilePage(),
               );
             case newsDetailRoute:
+              final news = settings.arguments as NewsEntity;
+
               return MaterialPageRoute(
-                builder: (_) => const NewsDetailPage(),
+                builder: (_) => NewsDetailPage(news: news),
+                settings: settings,
+              );
+            case newsWebViewRoute:
+              final url = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => NewsWebViewPage(url: url),
+                settings: settings,
               );
             case newsBookmarksRoute:
               return MaterialPageRoute(
