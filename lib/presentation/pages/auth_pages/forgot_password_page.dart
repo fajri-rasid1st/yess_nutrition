@@ -22,17 +22,17 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   @override
   void initState() {
+    super.initState();
+
     _formKey = GlobalKey<FormBuilderState>();
     _emailController = TextEditingController();
-
-    super.initState();
   }
 
   @override
   void dispose() {
-    _emailController.dispose();
-
     super.dispose();
+
+    _emailController.dispose();
   }
 
   @override

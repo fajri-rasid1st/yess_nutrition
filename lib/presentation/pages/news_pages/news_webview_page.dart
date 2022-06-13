@@ -20,9 +20,9 @@ class _NewsWebViewPageState extends State<NewsWebViewPage> {
 
   @override
   void initState() {
-    if (Platform.isAndroid) WebView.platform = AndroidWebView();
-
     super.initState();
+
+    if (Platform.isAndroid) WebView.platform = AndroidWebView();
   }
 
   @override
@@ -52,7 +52,7 @@ class _NewsWebViewPageState extends State<NewsWebViewPage> {
           IconButton(
             onPressed: () => _webViewController.reload(),
             icon: const Icon(
-              Icons.refresh_outlined,
+              Icons.refresh_rounded,
               color: primaryColor,
             ),
             tooltip: 'Reload',
@@ -71,7 +71,7 @@ class _NewsWebViewPageState extends State<NewsWebViewPage> {
               });
             },
             icon: const Icon(
-              Icons.cached_outlined,
+              Icons.cached_rounded,
               color: primaryColor,
             ),
             tooltip: 'Clear Cache',

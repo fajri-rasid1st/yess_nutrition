@@ -29,21 +29,21 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
 
   @override
   void initState() {
+    super.initState();
+
     _formKey = GlobalKey<FormBuilderState>();
     _ageController = TextEditingController();
     _weightController = TextEditingController();
     _heightController = TextEditingController();
-
-    super.initState();
   }
 
   @override
   void dispose() {
+    super.dispose();
+
     _ageController.dispose();
     _weightController.dispose();
     _heightController.dispose();
-
-    super.dispose();
   }
 
   @override

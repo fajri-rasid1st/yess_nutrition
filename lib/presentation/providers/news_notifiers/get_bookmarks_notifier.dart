@@ -18,9 +18,6 @@ class GetBookmarksNotifier extends ChangeNotifier {
   String get message => _message;
 
   Future<void> getBookmarks() async {
-    _state = RequestState.loading;
-    notifyListeners();
-
     final result = await getBookmarksUseCase.execute();
 
     result.fold(

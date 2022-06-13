@@ -3,12 +3,18 @@ import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/news_entity.dart';
+import 'package:yess_nutrition/presentation/pages/news_pages/news_detail_page.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_network_image.dart';
 
 class NewsTile extends StatelessWidget {
   final NewsEntity news;
+  final String heroTag;
 
-  const NewsTile({Key? key, required this.news}) : super(key: key);
+  const NewsTile({
+    Key? key,
+    required this.news,
+    required this.heroTag,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +27,7 @@ class NewsTile extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Hero(
-                  tag: news.urlToImage,
+                  tag: heroTag,
                   transitionOnUserGestures: true,
                   child: CustomNetworkImage(
                     width: 100,
@@ -100,7 +106,7 @@ class NewsTile extends StatelessWidget {
               onTap: () => Navigator.pushNamed(
                 context,
                 newsDetailRoute,
-                arguments: news,
+                arguments: NewsDetailPageArgs(news, heroTag),
               ),
             ),
           ),

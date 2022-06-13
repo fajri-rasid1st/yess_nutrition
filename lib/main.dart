@@ -122,9 +122,15 @@ class MyApp extends StatelessWidget {
           outlinedButtonTheme: OutlinedButtonThemeData(
             style: outlinedButtonStyle,
           ),
+          pageTransitionsTheme: const PageTransitionsTheme(
+            builders: {
+              TargetPlatform.android: FadeUpwardsPageTransitionsBuilder()
+            },
+          ),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: const Wrapper(),
+        navigatorObservers: [routeObserver],
         onGenerateRoute: (settings) {
           switch (settings.name) {
             case loginRoute:
@@ -165,10 +171,13 @@ class MyApp extends StatelessWidget {
                 builder: (_) => const UpdateProfilePage(),
               );
             case newsDetailRoute:
-              final news = settings.arguments as NewsEntity;
+              final arguments = settings.arguments as NewsDetailPageArgs;
 
               return MaterialPageRoute(
-                builder: (_) => NewsDetailPage(news: news),
+                builder: (_) => NewsDetailPage(
+                  news: arguments.news,
+                  heroTag: arguments.heroTag,
+                ),
                 settings: settings,
               );
             case newsWebViewRoute:

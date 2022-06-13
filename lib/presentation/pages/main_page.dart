@@ -23,12 +23,12 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   @override
   void initState() {
+    super.initState();
+
     Future.microtask(() {
       Provider.of<ReadUserDataNotifier>(context, listen: false)
           .readUserData(widget.user.uid);
     });
-
-    super.initState();
   }
 
   @override
