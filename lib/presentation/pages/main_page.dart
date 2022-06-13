@@ -8,6 +8,7 @@ import 'package:yess_nutrition/presentation/pages/schedule_pages/nutri_time_page
 import 'package:yess_nutrition/presentation/providers/common_notifiers/bottom_navigation_bar_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/firestore_notifiers/read_user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_bottom_navigation_bar.dart';
+import 'package:yess_nutrition/presentation/widgets/custom_floating_action_button.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
 class MainPage extends StatefulWidget {
@@ -35,34 +36,32 @@ class _MainPageState extends State<MainPage> {
     return Consumer2<BottomNavigationBarNotifier, ReadUserDataNotifier>(
       builder: (context, navbar, user, child) {
         if (user.state == UserState.success) {
-          return Stack(
-            children: <Widget>[
-              Builder(
-                builder: (context) {
-                  switch (navbar.selectedMenu) {
-                    case MenuNavBar.home:
-                      return HomePage(userData: user.userData);
-                    case MenuNavBar.nutriTime:
-                      return const NutriTimePage();
-                    case MenuNavBar.nutriNews:
-                      return const NewsPage();
-                    case MenuNavBar.nutriShop:
-                      return const Scaffold(
-                        body: Center(
-                          child: Text('NutriShop Page'),
-                        ),
-                      );
-                  }
-                },
-              ),
-              Positioned(
-                bottom: 0,
-                child: CustomBottomNavigationBar(
-                  notifier: navbar,
-                  onTapCircleButton: () {},
-                ),
-              ),
-            ],
+          return Scaffold(
+            backgroundColor: navbar.backgroundColor,
+            body: Builder(
+              builder: (context) {
+                switch (navbar.selectedMenu) {
+                  case MenuNavBar.home:
+                    return HomePage(userData: user.userData);
+                  case MenuNavBar.nutriTime:
+                    return const NutriTimePage();
+                  case MenuNavBar.nutriNews:
+                    return const NewsPage();
+                  case MenuNavBar.nutriShop:
+                    return const Scaffold(
+                      body: Center(child: Text('NutriShop Page')),
+                    );
+                }
+              },
+            ),
+            bottomNavigationBar: CustomBottomNavigationBar(
+              notifier: navbar,
+            ),
+            floatingActionButton: CustomFloatingActionButton(
+              onPressed: () {},
+            ),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
           );
         }
 

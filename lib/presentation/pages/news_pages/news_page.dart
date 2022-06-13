@@ -7,6 +7,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
+import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/news_entity.dart';
 import 'package:yess_nutrition/presentation/providers/common_notifiers/news_fab_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/get_news_notifier.dart';
@@ -215,7 +216,6 @@ class _NewsPageState extends State<NewsPage> {
   SlidableAutoCloseBehavior _buildNewsList(GetNewsNotifier newsNotifier) {
     return SlidableAutoCloseBehavior(
       child: ListView.separated(
-        padding: const EdgeInsets.only(bottom: 64),
         itemCount: newsNotifier.hasMoreData
             ? newsNotifier.news.length + 1
             : newsNotifier.news.length,
@@ -238,7 +238,6 @@ class _NewsPageState extends State<NewsPage> {
   SlidableAutoCloseBehavior _buildSearchList(SearchNewsNotifier newsNotifier) {
     return SlidableAutoCloseBehavior(
       child: ListView.separated(
-        padding: const EdgeInsets.only(bottom: 64),
         itemCount: newsNotifier.hasMoreData
             ? newsNotifier.results.length + 1
             : newsNotifier.results.length,
@@ -282,7 +281,11 @@ class _NewsPageState extends State<NewsPage> {
             backgroundColor: secondaryColor,
           ),
           SlidableAction(
-            onPressed: (context) {},
+            onPressed: (context) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                Utilities.createSnackBar('Test'),
+              );
+            },
             icon: Icons.bookmark_add_outlined,
             foregroundColor: primaryTextColor,
             backgroundColor: scaffoldBackgroundColor,
@@ -295,7 +298,7 @@ class _NewsPageState extends State<NewsPage> {
 
   Padding _buildBottomLoading() {
     return const Padding(
-      padding: EdgeInsets.only(top: 24, bottom: 48),
+      padding: EdgeInsets.only(top: 12, bottom: 40),
       child: Center(
         child: SpinKitThreeBounce(
           color: secondaryColor,
