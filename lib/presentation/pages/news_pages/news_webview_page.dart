@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
-import 'package:yess_nutrition/presentation/providers/news_webview_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/news_notifiers/news_webview_notifier.dart';
 
 class NewsWebViewPage extends StatefulWidget {
   final String url;
