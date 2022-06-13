@@ -5,7 +5,7 @@ import 'package:yess_nutrition/domain/entities/user_entity.dart';
 import 'package:yess_nutrition/presentation/pages/home_page.dart';
 import 'package:yess_nutrition/presentation/pages/news_pages/news_page.dart';
 import 'package:yess_nutrition/presentation/pages/schedule_pages/nutri_time_page.dart';
-import 'package:yess_nutrition/presentation/providers/bottom_navigation_bar_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/common_notifiers/bottom_navigation_bar_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/firestore_notifiers/read_user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_bottom_navigation_bar.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';

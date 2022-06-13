@@ -8,8 +8,8 @@ import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/domain/entities/news_entity.dart';
-import 'package:yess_nutrition/presentation/providers/news_notifiers/news_fab_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/get_news_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/common_notifiers/news_fab_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/search_news_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_information.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
@@ -332,6 +332,11 @@ class _NewsPageState extends State<NewsPage> {
         imgPath: 'assets/svg/error_robot_cuate.svg',
         title: title,
         subtitle: 'Silahkan coba beberapa saat lagi.',
+        child: ElevatedButton.icon(
+          onPressed: () {},
+          icon: const Icon(Icons.refresh_outlined),
+          label: const Text('Coba lagi'),
+        ),
       ),
     );
   }

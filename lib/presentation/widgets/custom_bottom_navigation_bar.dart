@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
-import 'package:yess_nutrition/presentation/providers/bottom_navigation_bar_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/common_notifiers/bottom_navigation_bar_notifier.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final BottomNavigationBarNotifier notifier;
