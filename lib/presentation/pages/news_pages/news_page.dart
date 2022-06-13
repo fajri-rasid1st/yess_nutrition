@@ -8,8 +8,8 @@ import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/domain/entities/news_entity.dart';
-import 'package:yess_nutrition/presentation/providers/news_notifiers/get_news_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/common_notifiers/news_fab_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/news_notifiers/get_news_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/search_news_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_information.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
@@ -145,15 +145,15 @@ class _NewsPageState extends State<NewsPage> {
               if (newsNotifier.state == RequestState.success) {
                 return _buildNewsList(newsNotifier);
               } else if (newsNotifier.state == RequestState.error) {
-                return _buildErrorInformation(newsNotifier: newsNotifier);
+                return _buildNewsError(newsNotifier);
               }
             } else {
               if (searchNotifier.state == RequestState.success) {
                 return searchNotifier.results.isEmpty
-                    ? _buildSearchedEmptyResult()
-                    : _buildSearchedNewsList(searchNotifier);
+                    ? _buildSearchEmpty()
+                    : _buildSearchList(searchNotifier);
               } else if (searchNotifier.state == RequestState.error) {
-                return _buildErrorInformation(searchNotifier: searchNotifier);
+                return _buildSearchError(searchNotifier);
               }
             }
 
@@ -235,25 +235,23 @@ class _NewsPageState extends State<NewsPage> {
     );
   }
 
-  SlidableAutoCloseBehavior _buildSearchedNewsList(
-    SearchNewsNotifier searchNotifier,
-  ) {
+  SlidableAutoCloseBehavior _buildSearchList(SearchNewsNotifier newsNotifier) {
     return SlidableAutoCloseBehavior(
       child: ListView.separated(
         padding: const EdgeInsets.only(bottom: 64),
-        itemCount: searchNotifier.hasMoreData
-            ? searchNotifier.results.length + 1
-            : searchNotifier.results.length,
+        itemCount: newsNotifier.hasMoreData
+            ? newsNotifier.results.length + 1
+            : newsNotifier.results.length,
         itemBuilder: (context, index) {
-          if (index >= searchNotifier.results.length) {
-            if (!searchNotifier.isLoading) {
-              searchNotifier.searchMoreNews();
+          if (index >= newsNotifier.results.length) {
+            if (!newsNotifier.isLoading) {
+              newsNotifier.searchMoreNews();
             }
 
             return _buildBottomLoading();
           }
 
-          return _buildSlidableListTile(searchNotifier.results[index]);
+          return _buildSlidableListTile(newsNotifier.results[index]);
         },
         separatorBuilder: (context, index) => const Divider(height: 1),
       ),
@@ -307,7 +305,85 @@ class _NewsPageState extends State<NewsPage> {
     );
   }
 
-  SingleChildScrollView _buildSearchedEmptyResult() {
+  SingleChildScrollView _buildNewsError(GetNewsNotifier newsNotifier) {
+    return SingleChildScrollView(
+      physics: const NeverScrollableScrollPhysics(),
+      child: CustomInformation(
+        key: const Key('error_message'),
+        imgPath: 'assets/svg/error_robot_cuate.svg',
+        title: newsNotifier.message,
+        subtitle: 'Silahkan coba beberapa saat lagi.',
+        child: ElevatedButton.icon(
+          onPressed: newsNotifier.isReload
+              ? null
+              : () {
+                  newsNotifier.isReload = true;
+
+                  Future.wait([
+                    Future.delayed(const Duration(seconds: 1)),
+                    newsNotifier.refresh(),
+                  ]).then((_) {
+                    newsNotifier.isReload = false;
+                  });
+                },
+          icon: newsNotifier.isReload
+              ? const SizedBox(
+                  width: 18,
+                  height: 18,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: secondaryTextColor,
+                  ),
+                )
+              : const Icon(Icons.refresh_outlined),
+          label: newsNotifier.isReload
+              ? const Text('Tunggu sebentar...')
+              : const Text('Coba lagi'),
+        ),
+      ),
+    );
+  }
+
+  SingleChildScrollView _buildSearchError(SearchNewsNotifier newsNotifier) {
+    return SingleChildScrollView(
+      physics: const NeverScrollableScrollPhysics(),
+      child: CustomInformation(
+        key: const Key('error_message'),
+        imgPath: 'assets/svg/error_robot_cuate.svg',
+        title: newsNotifier.message,
+        subtitle: 'Silahkan coba beberapa saat lagi.',
+        child: ElevatedButton.icon(
+          onPressed: newsNotifier.isReload
+              ? null
+              : () {
+                  newsNotifier.isReload = true;
+
+                  Future.wait([
+                    Future.delayed(const Duration(seconds: 1)),
+                    newsNotifier.refresh(),
+                  ]).then((_) {
+                    newsNotifier.isReload = false;
+                  });
+                },
+          icon: newsNotifier.isReload
+              ? const SizedBox(
+                  width: 18,
+                  height: 18,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: secondaryTextColor,
+                  ),
+                )
+              : const Icon(Icons.refresh_outlined),
+          label: newsNotifier.isReload
+              ? const Text('Tunggu sebentar...')
+              : const Text('Coba lagi'),
+        ),
+      ),
+    );
+  }
+
+  SingleChildScrollView _buildSearchEmpty() {
     return const SingleChildScrollView(
       physics: NeverScrollableScrollPhysics(),
       child: CustomInformation(
@@ -315,28 +391,6 @@ class _NewsPageState extends State<NewsPage> {
         imgPath: 'assets/svg/not_found_cuate.svg',
         title: 'Hasil tidak ditemukan',
         subtitle: 'Coba masukkan kata kunci yang lain.',
-      ),
-    );
-  }
-
-  SingleChildScrollView _buildErrorInformation({
-    GetNewsNotifier? newsNotifier,
-    SearchNewsNotifier? searchNotifier,
-  }) {
-    final title = newsNotifier?.message ?? searchNotifier!.message;
-
-    return SingleChildScrollView(
-      physics: const NeverScrollableScrollPhysics(),
-      child: CustomInformation(
-        key: const Key('error_message'),
-        imgPath: 'assets/svg/error_robot_cuate.svg',
-        title: title,
-        subtitle: 'Silahkan coba beberapa saat lagi.',
-        child: ElevatedButton.icon(
-          onPressed: () {},
-          icon: const Icon(Icons.refresh_outlined),
-          label: const Text('Coba lagi'),
-        ),
       ),
     );
   }

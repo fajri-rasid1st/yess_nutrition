@@ -79,7 +79,7 @@ class _NewsWebViewPageState extends State<NewsWebViewPage> {
         ],
       ),
       body: Consumer<NewsWebViewNotifier>(
-        builder: (context, webview, child) {
+        builder: (context, webViewNotifier, child) {
           return Stack(
             alignment: AlignmentDirectional.topCenter,
             children: <Widget>[
@@ -89,26 +89,13 @@ class _NewsWebViewPageState extends State<NewsWebViewPage> {
                 onWebViewCreated: (controller) {
                   _webViewController = controller;
                 },
-                onPageStarted: (url) {
-                  Future.delayed(const Duration(milliseconds: 500), () {
-                    // remove header if exist
-                    _webViewController.runJavascript(
-                      "document.getElementsByTagName('header')[0].style.display='none'",
-                    );
-
-                    // remove footer if exist
-                    _webViewController.runJavascript(
-                      "document.getElementsByTagName('footer')[0].style.display='none'",
-                    );
-                  });
-                },
                 onProgress: (progress) {
-                  webview.progress = progress / 100;
+                  webViewNotifier.progress = progress / 100;
                 },
               ),
-              if (webview.progress != 1) ...[
+              if (webViewNotifier.progress != 1) ...[
                 LinearProgressIndicator(
-                  value: webview.progress,
+                  value: webViewNotifier.progress,
                   color: secondaryBackgroundColor,
                   backgroundColor: secondaryColor,
                 )

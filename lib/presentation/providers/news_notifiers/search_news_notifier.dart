@@ -23,7 +23,14 @@ class SearchNewsNotifier extends ChangeNotifier {
   bool _hasMoreData = false;
   bool get hasMoreData => _hasMoreData;
 
-  int _currentPageLoad = 0;
+  bool _isReload = false;
+  bool get isReload => _isReload;
+
+  set isReload(bool value) {
+    _isReload = value;
+
+    notifyListeners();
+  }
 
   String _onChangedQuery = '';
   String get onChangedQuery => _onChangedQuery;
@@ -36,12 +43,16 @@ class SearchNewsNotifier extends ChangeNotifier {
   String _onSubmittedQuery = '';
   String get onSubmittedQuery => _onSubmittedQuery;
 
+  int _currentPageLoad = 0;
+
   Future<void> searchNews({required int page, required String query}) async {
     _onSubmittedQuery = query;
     _state = RequestState.loading;
     notifyListeners();
 
     final result = await searchNewsUseCase.execute(10, page, query);
+
+    _currentPageLoad = page;
 
     result.fold(
       (failure) {
@@ -50,7 +61,6 @@ class SearchNewsNotifier extends ChangeNotifier {
       },
       (results) {
         if (results.isNotEmpty) {
-          _currentPageLoad = page;
           _hasMoreData = true;
         }
 
@@ -85,6 +95,31 @@ class SearchNewsNotifier extends ChangeNotifier {
         } else {
           _results.addAll(results);
         }
+      },
+    );
+
+    notifyListeners();
+  }
+
+  Future<void> refresh() async {
+    final result = await searchNewsUseCase.execute(
+      10,
+      _currentPageLoad,
+      _onSubmittedQuery,
+    );
+
+    result.fold(
+      (failure) {
+        _message = failure.message;
+        _state = RequestState.error;
+      },
+      (results) {
+        if (results.isNotEmpty) {
+          _hasMoreData = true;
+        }
+
+        _results = results;
+        _state = RequestState.success;
       },
     );
 

@@ -23,6 +23,14 @@ class GetNewsNotifier extends ChangeNotifier {
   bool _hasMoreData = false;
   bool get hasMoreData => _hasMoreData;
 
+  bool _isReload = false;
+  bool get isReload => _isReload;
+
+  set isReload(bool value) {
+    _isReload = value;
+    notifyListeners();
+  }
+
   int _currentPageLoad = 0;
 
   Future<void> getNews({required int page}) async {
@@ -31,6 +39,8 @@ class GetNewsNotifier extends ChangeNotifier {
 
     final result = await getNewsUseCase.execute(10, page);
 
+    _currentPageLoad = page;
+
     result.fold(
       (failure) {
         _message = failure.message;
@@ -38,9 +48,7 @@ class GetNewsNotifier extends ChangeNotifier {
       },
       (news) {
         _news = news;
-        _currentPageLoad = page;
         _hasMoreData = true;
-
         _state = RequestState.success;
       },
     );
@@ -67,6 +75,24 @@ class GetNewsNotifier extends ChangeNotifier {
         } else {
           _news.addAll(news);
         }
+      },
+    );
+
+    notifyListeners();
+  }
+
+  Future<void> refresh() async {
+    final result = await getNewsUseCase.execute(10, _currentPageLoad);
+
+    result.fold(
+      (failure) {
+        _message = failure.message;
+        _state = RequestState.error;
+      },
+      (news) {
+        _news = news;
+        _hasMoreData = true;
+        _state = RequestState.success;
       },
     );
 
