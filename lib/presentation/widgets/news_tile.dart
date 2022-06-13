@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
+import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/news_entity.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_network_image.dart';
@@ -20,7 +21,8 @@ class NewsTile extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Hero(
-                  tag: news.url,
+                  tag: news.urlToImage,
+                  transitionOnUserGestures: true,
                   child: CustomNetworkImage(
                     width: 100,
                     height: 100,
@@ -95,7 +97,11 @@ class NewsTile extends StatelessWidget {
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              onTap: () {},
+              onTap: () => Navigator.pushNamed(
+                context,
+                newsDetailRoute,
+                arguments: news,
+              ),
             ),
           ),
         ),

@@ -8,4 +8,5 @@ const mainRoute = '/main';
 const profileRoute = '/profile';
 const updateProfileRoute = '/profile/update';
 const newsDetailRoute = '/news-detail';
+const newsWebViewRoute = '/news-webview';
 const newsBookmarksRoute = '/news-bookmarks';

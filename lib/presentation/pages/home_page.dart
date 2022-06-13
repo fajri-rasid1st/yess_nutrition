@@ -4,7 +4,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
-import 'package:yess_nutrition/domain/entities/entities.dart';
+import 'package:yess_nutrition/domain/entities/user_data_entity.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_news_home.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_shop_home.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_time_task.dart';

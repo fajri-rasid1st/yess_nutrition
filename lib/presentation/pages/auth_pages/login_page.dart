@@ -8,12 +8,13 @@ import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
-import 'package:yess_nutrition/presentation/providers/input_password_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/common_notifiers/input_password_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/auth_notifiers/sign_in_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/auth_notifiers/sign_in_with_google_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/firestore_notifiers/create_user_data_notifier.dart';
-import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/firestore_notifiers/read_user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/clickable_text.dart';
+import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -266,6 +267,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _onPressedGoogleSignInButton(BuildContext context) async {
     final googleSignInNotifier = context.read<SignInWithGoogleNotifier>();
+    final readUserDataNotifier = context.read<ReadUserDataNotifier>();
     final createUserDataNotifier = context.read<CreateUserDataNotifier>();
 
     await googleSignInNotifier.signInWithGoogle();
@@ -276,17 +278,28 @@ class _LoginPageState extends State<LoginPage> {
       // get user
       final user = googleSignInNotifier.user;
 
-      // convert user entity to user data entity
-      final userData = user.toUserData();
-
-      // craete user data when sign in successfully
-      await createUserDataNotifier.createUserData(userData);
+      // first, check if this user already have user data
+      await readUserDataNotifier.readUserData(user.uid);
 
       if (!mounted) return;
 
-      if (createUserDataNotifier.state == UserState.success) {
+      // if success, that's mean the user is already have user data
+      if (readUserDataNotifier.state == UserState.success) {
         // navigate to main page
         Navigator.pushReplacementNamed(context, mainRoute, arguments: user);
+      } else {
+        // convert user entity to user data entity
+        final userData = user.toUserData();
+
+        // craete user data when sign in successfully
+        await createUserDataNotifier.createUserData(userData);
+
+        if (!mounted) return;
+
+        if (createUserDataNotifier.state == UserState.success) {
+          // navigate to main page
+          Navigator.pushReplacementNamed(context, mainRoute, arguments: user);
+        }
       }
     } else {
       final snackBar = Utilities.createSnackBar(googleSignInNotifier.error);
