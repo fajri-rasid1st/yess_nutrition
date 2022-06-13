@@ -30,18 +30,21 @@ class _NewsWebViewPageState extends State<NewsWebViewPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: primaryBackgroundColor,
-        elevation: 2,
+        elevation: 0.8,
+        toolbarHeight: 64,
+        centerTitle: true,
         title: const Text(
           'NutriNews',
-          style: TextStyle(color: primaryColor),
+          style: TextStyle(
+            color: primaryColor,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        centerTitle: true,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: const Icon(
             Icons.close_rounded,
             color: primaryColor,
-            size: 26,
           ),
           tooltip: 'Close',
         ),
@@ -51,7 +54,6 @@ class _NewsWebViewPageState extends State<NewsWebViewPage> {
             icon: const Icon(
               Icons.refresh_outlined,
               color: primaryColor,
-              size: 26,
             ),
             tooltip: 'Reload',
           ),
@@ -64,12 +66,12 @@ class _NewsWebViewPageState extends State<NewsWebViewPage> {
                 ScaffoldMessenger.of(context)
                   ..hideCurrentSnackBar()
                   ..showSnackBar(
-                    Utilities.createSnackBar('Cache berhasil dihapus.'),
+                    Utilities.createSnackBar('Cache berhasil dihapus'),
                   );
               });
             },
             icon: const Icon(
-              Icons.cleaning_services_rounded,
+              Icons.cached_outlined,
               color: primaryColor,
             ),
             tooltip: 'Clear Cache',
@@ -78,23 +80,17 @@ class _NewsWebViewPageState extends State<NewsWebViewPage> {
       ),
       body: Consumer<NewsWebViewNotifier>(
         builder: (context, webview, child) {
-          return Column(
+          return Stack(
+            alignment: AlignmentDirectional.topCenter,
             children: <Widget>[
-              if (webview.progress != 1) ...[
-                LinearProgressIndicator(
-                  value: webview.progress,
-                  color: secondaryBackgroundColor,
-                  backgroundColor: secondaryColor,
-                )
-              ],
-              Expanded(
-                child: WebView(
-                  initialUrl: widget.url,
-                  javascriptMode: JavascriptMode.disabled,
-                  onWebViewCreated: (controller) {
-                    _webViewController = controller;
-                  },
-                  onPageStarted: (url) {
+              WebView(
+                initialUrl: widget.url,
+                javascriptMode: JavascriptMode.disabled,
+                onWebViewCreated: (controller) {
+                  _webViewController = controller;
+                },
+                onPageStarted: (url) {
+                  Future.delayed(const Duration(milliseconds: 500), () {
                     // remove header if exist
                     _webViewController.runJavascript(
                       "document.getElementsByTagName('header')[0].style.display='none'",
@@ -104,12 +100,19 @@ class _NewsWebViewPageState extends State<NewsWebViewPage> {
                     _webViewController.runJavascript(
                       "document.getElementsByTagName('footer')[0].style.display='none'",
                     );
-                  },
-                  onProgress: (progress) {
-                    webview.progress = progress / 100;
-                  },
-                ),
+                  });
+                },
+                onProgress: (progress) {
+                  webview.progress = progress / 100;
+                },
               ),
+              if (webview.progress != 1) ...[
+                LinearProgressIndicator(
+                  value: webview.progress,
+                  color: secondaryBackgroundColor,
+                  backgroundColor: secondaryColor,
+                )
+              ],
             ],
           );
         },

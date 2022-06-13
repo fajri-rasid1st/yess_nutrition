@@ -220,15 +220,7 @@ class _NewsPageState extends State<NewsPage> {
             newsNotifier.getMoreNews();
           }
 
-          return const Padding(
-            padding: EdgeInsets.only(top: 24, bottom: 48),
-            child: Center(
-              child: SpinKitThreeBounce(
-                color: secondaryColor,
-                size: 30,
-              ),
-            ),
-          );
+          return _buildBottomLoading();
         }
 
         return NewsTile(news: newsNotifier.news[index]);
@@ -249,20 +241,24 @@ class _NewsPageState extends State<NewsPage> {
             searchNotifier.searchMoreNews();
           }
 
-          return const Padding(
-            padding: EdgeInsets.only(top: 24, bottom: 48),
-            child: Center(
-              child: SpinKitThreeBounce(
-                color: secondaryColor,
-                size: 30,
-              ),
-            ),
-          );
+          return _buildBottomLoading();
         }
 
         return NewsTile(news: searchNotifier.results[index]);
       },
       separatorBuilder: (context, index) => const Divider(height: 1),
+    );
+  }
+
+  Padding _buildBottomLoading() {
+    return const Padding(
+      padding: EdgeInsets.only(top: 24, bottom: 48),
+      child: Center(
+        child: SpinKitThreeBounce(
+          color: secondaryColor,
+          size: 30,
+        ),
+      ),
     );
   }
 
@@ -282,8 +278,7 @@ class _NewsPageState extends State<NewsPage> {
     GetNewsNotifier? newsNotifier,
     SearchNewsNotifier? searchNotifier,
   }) {
-    final title =
-        newsNotifier != null ? newsNotifier.message : searchNotifier!.message;
+    final title = newsNotifier?.message ?? searchNotifier!.message;
 
     return SingleChildScrollView(
       physics: const NeverScrollableScrollPhysics(),
