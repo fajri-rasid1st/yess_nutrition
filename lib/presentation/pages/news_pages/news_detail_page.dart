@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
@@ -28,8 +29,21 @@ class NewsDetailPage extends StatelessWidget {
         ),
         actions: <Widget>[
           IconButton(
+            onPressed: () async {
+              await Share.share('Hai, coba deh cek ini\n\n${news.url}');
+            },
+            icon: const Icon(
+              Icons.share_rounded,
+              size: 22,
+            ),
+            tooltip: 'Share',
+          ),
+          IconButton(
             onPressed: () {},
-            icon: const Icon(Icons.bookmarks_outlined),
+            icon: const Icon(
+              Icons.bookmark_border_rounded,
+              size: 26,
+            ),
             tooltip: 'Bookmarks',
           ),
         ],

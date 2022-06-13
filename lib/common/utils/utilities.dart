@@ -33,7 +33,7 @@ class Utilities {
     return timeago.format(DateTime.parse(dateFormat), locale: 'id');
   }
 
-  /// Convert [number] according to [decimalDigit]
+  /// Function to convert [number] according to [decimalDigit]
   static String numberToIdr(dynamic number, int decimalDigit) {
     NumberFormat currencyFormatter = NumberFormat.currency(
       locale: 'id',
@@ -44,6 +44,7 @@ class Utilities {
     return currencyFormatter.format(number);
   }
 
+  /// Function to format [dateFormat] to MMM dd, y pattern
   static String dateFormatToMMMddy(String dateFormat) {
     return dateFormat.isEmpty
         ? '?'

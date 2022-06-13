@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
+import 'package:yess_nutrition/common/utils/routes.dart';
+import 'package:yess_nutrition/domain/entities/news_entity.dart';
 import 'package:yess_nutrition/presentation/providers/news_fab_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/get_news_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/search_news_notifier.dart';
@@ -208,45 +212,86 @@ class _NewsPageState extends State<NewsPage> {
     );
   }
 
-  ListView _buildNewsList(GetNewsNotifier newsNotifier) {
-    return ListView.separated(
-      padding: const EdgeInsets.only(bottom: 64),
-      itemCount: newsNotifier.hasMoreData
-          ? newsNotifier.news.length + 1
-          : newsNotifier.news.length,
-      itemBuilder: (context, index) {
-        if (index >= newsNotifier.news.length) {
-          if (!newsNotifier.isLoading) {
-            newsNotifier.getMoreNews();
+  SlidableAutoCloseBehavior _buildNewsList(GetNewsNotifier newsNotifier) {
+    return SlidableAutoCloseBehavior(
+      child: ListView.separated(
+        padding: const EdgeInsets.only(bottom: 64),
+        itemCount: newsNotifier.hasMoreData
+            ? newsNotifier.news.length + 1
+            : newsNotifier.news.length,
+        itemBuilder: (context, index) {
+          if (index >= newsNotifier.news.length) {
+            if (!newsNotifier.isLoading) {
+              newsNotifier.getMoreNews();
+            }
+
+            return _buildBottomLoading();
           }
 
-          return _buildBottomLoading();
-        }
-
-        return NewsTile(news: newsNotifier.news[index]);
-      },
-      separatorBuilder: (context, index) => const Divider(height: 1),
+          return _buildSlidableListTile(newsNotifier.news[index]);
+        },
+        separatorBuilder: (context, index) => const Divider(height: 1),
+      ),
     );
   }
 
-  ListView _buildSearchedNewsList(SearchNewsNotifier searchNotifier) {
-    return ListView.separated(
-      padding: const EdgeInsets.only(bottom: 64),
-      itemCount: searchNotifier.hasMoreData
-          ? searchNotifier.results.length + 1
-          : searchNotifier.results.length,
-      itemBuilder: (context, index) {
-        if (index >= searchNotifier.results.length) {
-          if (!searchNotifier.isLoading) {
-            searchNotifier.searchMoreNews();
+  SlidableAutoCloseBehavior _buildSearchedNewsList(
+    SearchNewsNotifier searchNotifier,
+  ) {
+    return SlidableAutoCloseBehavior(
+      child: ListView.separated(
+        padding: const EdgeInsets.only(bottom: 64),
+        itemCount: searchNotifier.hasMoreData
+            ? searchNotifier.results.length + 1
+            : searchNotifier.results.length,
+        itemBuilder: (context, index) {
+          if (index >= searchNotifier.results.length) {
+            if (!searchNotifier.isLoading) {
+              searchNotifier.searchMoreNews();
+            }
+
+            return _buildBottomLoading();
           }
 
-          return _buildBottomLoading();
-        }
+          return _buildSlidableListTile(searchNotifier.results[index]);
+        },
+        separatorBuilder: (context, index) => const Divider(height: 1),
+      ),
+    );
+  }
 
-        return NewsTile(news: searchNotifier.results[index]);
-      },
-      separatorBuilder: (context, index) => const Divider(height: 1),
+  Slidable _buildSlidableListTile(NewsEntity news) {
+    return Slidable(
+      groupTag: 0,
+      startActionPane: ActionPane(
+        extentRatio: 0.6,
+        motion: const ScrollMotion(),
+        children: <Widget>[
+          SlidableAction(
+            onPressed: (context) {
+              Navigator.pushNamed(context, newsDetailRoute, arguments: news);
+            },
+            icon: Icons.open_in_new_rounded,
+            foregroundColor: primaryBackgroundColor,
+            backgroundColor: secondaryBackgroundColor,
+          ),
+          SlidableAction(
+            onPressed: (context) async {
+              await Share.share('Hai, coba deh cek ini\n\n${news.url}');
+            },
+            icon: Icons.share_rounded,
+            foregroundColor: primaryColor,
+            backgroundColor: secondaryColor,
+          ),
+          SlidableAction(
+            onPressed: (context) {},
+            icon: Icons.bookmark_add_outlined,
+            foregroundColor: primaryTextColor,
+            backgroundColor: scaffoldBackgroundColor,
+          ),
+        ],
+      ),
+      child: NewsTile(news: news),
     );
   }
 
