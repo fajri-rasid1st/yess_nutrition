@@ -4,7 +4,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:yess_nutrition/common/utils/exception.dart';
 
 abstract class UserStorageDataSource {
-  Future<void> uploadProfilePicture(String path, String name);
+  Future<String> uploadProfilePicture(String path, String name);
 }
 
 class UserStorageDataSourceImpl implements UserStorageDataSource {
@@ -13,11 +13,13 @@ class UserStorageDataSourceImpl implements UserStorageDataSource {
   UserStorageDataSourceImpl({required this.firebaseStorage});
 
   @override
-  Future<void> uploadProfilePicture(String path, String name) async {
+  Future<String> uploadProfilePicture(String path, String name) async {
     File file = File(path);
 
     try {
-      await firebaseStorage.ref('profile_picture/$name').putFile(file);
+      final upload =
+          await firebaseStorage.ref('profile_picture/$name').putFile(file);
+      return upload.ref.getDownloadURL();
     } catch (e) {
       throw StorageException(e.toString());
     }

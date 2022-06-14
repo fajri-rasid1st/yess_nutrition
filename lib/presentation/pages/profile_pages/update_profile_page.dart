@@ -1,5 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
@@ -28,7 +35,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   late final TextEditingController _ageController;
   late final TextEditingController _weightController;
   late final TextEditingController _heightController;
-  late Widget _profilePicture;
+  // late Widget _profilePicture;
 
   @override
   void initState() {
@@ -45,15 +52,15 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     _weightController.text = widget.userData.weight.toString();
     _heightController.text = widget.userData.height.toString();
 
-    _profilePicture = widget.userData.imgUrl.isNotEmpty
-        ? Image.network(
-            widget.userData.imgUrl,
-            fit: BoxFit.cover,
-          )
-        : Image.asset(
-            'assets/img/default_user_pict.png',
-            fit: BoxFit.cover,
-          );
+    // _profilePicture = widget.userData.imgUrl.isNotEmpty
+    //     ? Image.network(
+    //         widget.userData.imgUrl,
+    //         fit: BoxFit.cover,
+    //       )
+    //     : Image.asset(
+    //         'assets/img/default_user_pict.png',
+    //         fit: BoxFit.cover,
+    //       );
 
     super.initState();
   }
@@ -169,7 +176,15 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                           color: secondaryColor,
                         ),
                         clipBehavior: Clip.hardEdge,
-                        child: _profilePicture,
+                        child: widget.userData.imgUrl.isEmpty
+                            ? Image.asset(
+                                'assets/img/default_user_pict.png',
+                                fit: BoxFit.cover,
+                              )
+                            : Image.network(
+                                widget.userData.imgUrl,
+                                fit: BoxFit.cover,
+                              ),
                       ),
                       Container(
                         margin: const EdgeInsets.only(top: 105),
@@ -178,7 +193,8 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: IconButton(
-                          onPressed: () => Navigator.pop(context),
+                          onPressed: () =>
+                              _onPressedProfilePictureButton(context),
                           icon: const Icon(
                             MdiIcons.cameraPlusOutline,
                             color: primaryBackgroundColor,
@@ -426,11 +442,13 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
           // close loading indicator
           Navigator.pop(context);
 
-          // navigate to main page
-          Navigator.pushNamedAndRemoveUntil(
+          // Close Update Profile Page
+          Navigator.pop(context);
+
+          // Reload Profile Page
+          Navigator.pushReplacementNamed(
             context,
             profileRoute,
-            (route) => false,
             arguments: widget.userData.uid,
           );
         }
@@ -444,6 +462,143 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
           ..hideCurrentSnackBar()
           ..showSnackBar(snackBar);
       }
+    }
+  }
+
+  Future<void> _onPressedProfilePictureButton(BuildContext context) async {
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: false,
+      builder: (context) => BottomSheet(
+        onClosing: () {},
+        builder: (context) => Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(MdiIcons.cameraOutline),
+              title: const Text('Ambil Gambar'),
+              onTap: () {
+                Navigator.pop(context);
+                _pickImage(ImageSource.camera);
+              },
+            ),
+            ListTile(
+              leading: const Icon(MdiIcons.fileImageOutline),
+              title: const Text('Pilih File Gambar'),
+              onTap: () {
+                Navigator.pop(context);
+                _pickImage(ImageSource.gallery);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    final ImagePicker picker = ImagePicker();
+
+    final pickedFile = await picker.pickImage(
+      source: source,
+      imageQuality: 50,
+    );
+
+    if (pickedFile == null) {
+      return;
+    }
+
+    var file = await ImageCropper().cropImage(
+      sourcePath: pickedFile.path,
+      aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+    );
+
+    if (file == null) {
+      return;
+    }
+
+    var filecrop = await compressImage(file.path, 35);
+
+    await _uploadFile(filecrop.path);
+  }
+
+  Future<File> compressImage(String path, int quality) async {
+    final newPath = p.join((await getTemporaryDirectory()).path,
+        '${widget.userData.uid}${p.extension(path)}');
+
+    final result = await FlutterImageCompress.compressAndGetFile(
+      path,
+      newPath,
+      quality: quality,
+    );
+
+    return result!;
+  }
+
+  Future<void> _uploadFile(String path) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const LoadingIndicator(),
+    );
+
+    final uploadProfilePictureNotifier =
+        context.read<UploadProfilePictureNotifier>();
+
+    await uploadProfilePictureNotifier.uploadProfilePicture(
+        path, p.basename(path));
+
+    if (!mounted) return;
+
+    if (uploadProfilePictureNotifier.state == UserState.success) {
+      final readUserDataNotifier = context.read<ReadUserDataNotifier>();
+      final updateUserDataNotifier = context.read<UpdateUserDataNotifier>();
+      String url = uploadProfilePictureNotifier.downloadURL;
+
+      // read user data
+      await readUserDataNotifier.readUserData(widget.userData.uid);
+
+      if (!mounted) return;
+
+      if (readUserDataNotifier.state == UserState.success) {
+        // get user data
+        final userData = readUserDataNotifier.userData;
+
+        // updated user data
+        final updatedUserData = userData.copyWith(
+          imgUrl: url,
+        );
+
+        // update user data on firestore
+        await updateUserDataNotifier.updateUserData(updatedUserData);
+
+        if (!mounted) return;
+
+        if (updateUserDataNotifier.state == UserState.success) {
+          // close loading indicator
+          Navigator.pop(context);
+
+          // Close Update Profile Page
+          Navigator.pop(context, true);
+
+          // Reload Profile Page
+          Navigator.pushReplacementNamed(
+            context,
+            profileRoute,
+            arguments: widget.userData.uid,
+          );
+        }
+      }
+    } else {
+      final snackBar =
+          Utilities.createSnackBar(uploadProfilePictureNotifier.error);
+
+      // close loading indicator
+      Navigator.pop(context);
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackBar);
     }
   }
 }

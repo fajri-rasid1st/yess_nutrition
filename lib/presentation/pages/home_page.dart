@@ -60,19 +60,22 @@ class HomePage extends StatelessWidget {
                         ),
                       ),
                       clipBehavior: Clip.hardEdge,
-                      child: Image.asset(
-                        userData.imgUrl.isNotEmpty
-                            ? userData.imgUrl
-                            : 'assets/img/default_user_pict.png',
-                        fit: BoxFit.cover,
-                      ),
+                      child: userData.imgUrl.isEmpty
+                          ? Image.asset(
+                              'assets/img/default_user_pict.png',
+                              fit: BoxFit.cover,
+                            )
+                          : Image.network(
+                              userData.imgUrl,
+                              fit: BoxFit.cover,
+                            ),
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Text(
-                          'Hai, ${userData.name}!',
+                          'Hai, ${userData.name}',
                           style: const TextStyle(
                             color: primaryBackgroundColor,
                             fontSize: 20,

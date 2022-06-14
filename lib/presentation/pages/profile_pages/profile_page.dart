@@ -83,12 +83,15 @@ class _ProfilePageState extends State<ProfilePage> {
                         color: secondaryColor,
                       ),
                       clipBehavior: Clip.hardEdge,
-                      child: Image.asset(
-                        user.userData.imgUrl.isNotEmpty
-                            ? user.userData.imgUrl
-                            : 'assets/img/default_user_pict.png',
-                        fit: BoxFit.cover,
-                      ),
+                      child: user.userData.imgUrl.isEmpty
+                          ? Image.asset(
+                              'assets/img/default_user_pict.png',
+                              fit: BoxFit.cover,
+                            )
+                          : Image.network(
+                              user.userData.imgUrl,
+                              fit: BoxFit.cover,
+                            ),
                     ),
                     const SizedBox(height: 20),
                     Row(

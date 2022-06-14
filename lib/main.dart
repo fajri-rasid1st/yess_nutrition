@@ -94,6 +94,9 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<SearchNewsNotifier>(),
         ),
         ChangeNotifierProvider(
+          create: (_) => di.locator<UploadProfilePictureNotifier>(),
+        ),
+        ChangeNotifierProvider(
           create: (_) => BottomNavigationBarNotifier(),
         ),
         ChangeNotifierProvider(

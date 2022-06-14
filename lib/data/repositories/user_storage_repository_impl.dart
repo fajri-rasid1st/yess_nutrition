@@ -10,13 +10,13 @@ class UserStorageRepositoryImpl implements UserStorageRepository {
   UserStorageRepositoryImpl({required this.userStorageDataSource});
 
   @override
-  Future<Either<StorageFailure, void>> uploadProfilePicture(
+  Future<Either<StorageFailure, String>> uploadProfilePicture(
       String path, String name) async {
     try {
       final result =
           await userStorageDataSource.uploadProfilePicture(path, name);
 
-      return Right(result);
+      return Right(result.toString());
     } on StorageException {
       return const Left(StorageFailure('Terjadi kesalahan. Coba lagi.'));
     }

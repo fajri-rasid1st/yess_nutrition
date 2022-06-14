@@ -51,6 +51,11 @@ void init() {
     () => DeleteUserDataNotifier(deleteUserDataUseCase: locator()),
   );
 
+  // Storage providers
+  locator.registerFactory(
+    () => UploadProfilePictureNotifier(uploadProfilePictureUseCase: locator()),
+  );
+
   // News providers
   locator.registerFactory(
     () => BookmarkNotifier(
@@ -84,6 +89,9 @@ void init() {
   locator.registerLazySingleton(() => UpdateUserData(locator()));
   locator.registerLazySingleton(() => DeleteUserData(locator()));
 
+  // Storage usecases
+  locator.registerLazySingleton(() => UploadProfilePicture(locator()));
+
   // News usecases
   locator.registerLazySingleton(() => CreateBookmark(locator()));
   locator.registerLazySingleton(() => DeleteBookmark(locator()));
@@ -98,6 +106,9 @@ void init() {
   );
   locator.registerLazySingleton<UserFirestoreRepository>(
     () => UserFirestoreRepositoryImpl(userFirestoreDataSource: locator()),
+  );
+  locator.registerLazySingleton<UserStorageRepository>(
+    () => UserStorageRepositoryImpl(userStorageDataSource: locator()),
   );
   locator.registerLazySingleton<NewsRepository>(
     () => NewsRepositoryImpl(
@@ -115,6 +126,9 @@ void init() {
   );
   locator.registerLazySingleton<UserFirestoreDataSource>(
     () => UserFirestoreDataSourceImpl(firebaseFirestore: locator()),
+  );
+  locator.registerLazySingleton<UserStorageDataSource>(
+    () => UserStorageDataSourceImpl(firebaseStorage: locator()),
   );
   locator.registerLazySingleton<NewsLocalDataSource>(
     () => NewsLocalDataSourceImpl(newsDatabase: locator()),
