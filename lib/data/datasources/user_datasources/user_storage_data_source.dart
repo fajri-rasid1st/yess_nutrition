@@ -1,10 +1,10 @@
+import 'dart:io';
+
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:yess_nutrition/common/utils/exception.dart';
 
 abstract class UserStorageDataSource {
-  /* create abstract method that required for user storage process
-  *  e.g: uploadImage, deleteImage, etc
-  *  See documentation: https://firebase.flutter.dev/docs/storage/start
-  */
+  Future<void> uploadProfilePicture(String path, String name);
 }
 
 class UserStorageDataSourceImpl implements UserStorageDataSource {
@@ -12,5 +12,14 @@ class UserStorageDataSourceImpl implements UserStorageDataSource {
 
   UserStorageDataSourceImpl({required this.firebaseStorage});
 
-  // implement methods
+  @override
+  Future<void> uploadProfilePicture(String path, String name) async {
+    File file = File(path);
+
+    try {
+      await firebaseStorage.ref('profile_picture/$name').putFile(file);
+    } catch (e) {
+      throw StorageException(e.toString());
+    }
+  }
 }

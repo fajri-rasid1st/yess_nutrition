@@ -5,14 +5,13 @@ import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
-import 'package:yess_nutrition/domain/entities/user_data_entity.dart';
 import 'package:yess_nutrition/presentation/providers/providers.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
 class ProfilePage extends StatefulWidget {
-  final UserDataEntity userData;
+  final String uid;
 
-  const ProfilePage({Key? key, required this.userData}) : super(key: key);
+  const ProfilePage({Key? key, required this.uid}) : super(key: key);
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -25,7 +24,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     Future.microtask(() {
       Provider.of<ReadUserDataNotifier>(context, listen: false)
-          .readUserData(widget.userData.uid);
+          .readUserData(widget.uid);
     });
 
     super.initState();

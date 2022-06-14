@@ -102,7 +102,7 @@ class HomePage extends StatelessWidget {
                       Navigator.pushNamed(
                         context,
                         profileRoute,
-                        arguments: userData,
+                        arguments: userData.uid,
                       );
                     },
                     icon: const Icon(
