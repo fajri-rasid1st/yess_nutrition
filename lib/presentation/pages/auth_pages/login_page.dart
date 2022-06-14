@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
+import 'package:yess_nutrition/common/utils/constants.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
@@ -40,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void dispose() {
     super.dispose();
-    
+
     _emailController.dispose();
     _passwordController.dispose();
   }
@@ -125,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  _buildGoogleSignInButton(context),
+                  _buildGoogleSignInButton(),
                   const SizedBox(height: 28),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -208,17 +209,34 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  SizedBox _buildGoogleSignInButton(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      child: OutlinedButton.icon(
-        onPressed: () => _onPressedGoogleSignInButton(context),
-        icon: const FaIcon(
-          FontAwesomeIcons.google,
-          size: 18,
-        ),
-        label: const Text('Lanjutkan dengan Google'),
-      ),
+  Consumer3<SignInWithGoogleNotifier, ReadUserDataNotifier,
+      CreateUserDataNotifier> _buildGoogleSignInButton() {
+    return Consumer3<SignInWithGoogleNotifier, ReadUserDataNotifier,
+        CreateUserDataNotifier>(
+      builder: (
+        context,
+        signInWithGoogleNotifier,
+        readUserDataNotifier,
+        createUserDataNotifier,
+        child,
+      ) {
+        return SizedBox(
+          width: double.infinity,
+          child: OutlinedButton.icon(
+            onPressed: () => _onPressedGoogleSignInButton(
+              context,
+              signInWithGoogleNotifier,
+              readUserDataNotifier,
+              createUserDataNotifier,
+            ),
+            icon: const FaIcon(
+              FontAwesomeIcons.google,
+              size: 18,
+            ),
+            label: const Text('Lanjutkan dengan Google'),
+          ),
+        );
+      },
     );
   }
 
@@ -265,29 +283,35 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  Future<void> _onPressedGoogleSignInButton(BuildContext context) async {
-    final googleSignInNotifier = context.read<SignInWithGoogleNotifier>();
-    final readUserDataNotifier = context.read<ReadUserDataNotifier>();
-    final createUserDataNotifier = context.read<CreateUserDataNotifier>();
-
-    await googleSignInNotifier.signInWithGoogle();
+  Future<void> _onPressedGoogleSignInButton(
+    BuildContext context,
+    SignInWithGoogleNotifier signInWithGoogleNotifier,
+    ReadUserDataNotifier readUserDataNotifier,
+    CreateUserDataNotifier createUserDataNotifier,
+  ) async {
+    await signInWithGoogleNotifier.signInWithGoogle();
 
     if (!mounted) return;
 
-    if (googleSignInNotifier.state == UserState.success) {
-      // get user
-      final user = googleSignInNotifier.user;
+    if (signInWithGoogleNotifier.state == UserState.error) {
+      final snackBar = Utilities.createSnackBar(signInWithGoogleNotifier.error);
 
-      // first, check if this user already have user data
-      await readUserDataNotifier.readUserData(user.uid);
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackBar);
+    }
 
-      if (!mounted) return;
+    // get user
+    final user = signInWithGoogleNotifier.user;
 
-      // if success, that's mean the user is already have user data
-      if (readUserDataNotifier.state == UserState.success) {
-        // navigate to main page
-        Navigator.pushReplacementNamed(context, mainRoute, arguments: user);
-      } else {
+    // first, check if this user already have user data
+    await readUserDataNotifier.readUserData(user.uid);
+
+    if (!mounted) return;
+
+    if (readUserDataNotifier.state == UserState.success) {
+      // if user data in firestore equal to user data empty
+      if (readUserDataNotifier.userData == userDataEmpty) {
         // convert user entity to user data entity
         final userData = user.toUserData();
 
@@ -300,13 +324,10 @@ class _LoginPageState extends State<LoginPage> {
           // navigate to main page
           Navigator.pushReplacementNamed(context, mainRoute, arguments: user);
         }
+      } else {
+        // navigate to main page
+        Navigator.pushReplacementNamed(context, mainRoute, arguments: user);
       }
-    } else {
-      final snackBar = Utilities.createSnackBar(googleSignInNotifier.error);
-
-      ScaffoldMessenger.of(context)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(snackBar);
     }
   }
 }

@@ -22,7 +22,7 @@ class UserFirestoreRepositoryImpl implements UserFirestoreRepository {
 
       return Right(result);
     } on FirestoreException {
-      return const Left(FirestoreFailure('Terjadi kesalahan. Coba lagi.'));
+      return const Left(FirestoreFailure('Oops, terjadi kesalahan'));
     }
   }
 
@@ -34,7 +34,7 @@ class UserFirestoreRepositoryImpl implements UserFirestoreRepository {
 
       return Right(result.toEntity());
     } on FirestoreException {
-      return const Left(FirestoreFailure('Terjadi kesalahan. Coba lagi.'));
+      return const Left(FirestoreFailure('Oops, terjadi kesalahan'));
     }
   }
 
@@ -49,7 +49,7 @@ class UserFirestoreRepositoryImpl implements UserFirestoreRepository {
 
       return Right(result);
     } on FirestoreException {
-      return const Left(FirestoreFailure('Terjadi kesalahan. Coba lagi.'));
+      return const Left(FirestoreFailure('Oops, terjadi kesalahan'));
     }
   }
 
@@ -60,7 +60,7 @@ class UserFirestoreRepositoryImpl implements UserFirestoreRepository {
 
       return Right(result);
     } on FirestoreException {
-      return const Left(FirestoreFailure('Terjadi kesalahan. Coba lagi.'));
+      return const Left(FirestoreFailure('Oops, terjadi kesalahan'));
     }
   }
 }

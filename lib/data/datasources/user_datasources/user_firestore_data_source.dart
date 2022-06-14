@@ -37,7 +37,7 @@ class UserFirestoreDataSourceImpl implements UserFirestoreDataSource {
 
       final snapshot = await reference.get();
 
-      return UserDataModel.fromDocument(snapshot.data()!);
+      return UserDataModel.fromDocument(snapshot.data() ?? {});
     } catch (e) {
       throw FirestoreException(e.toString());
     }

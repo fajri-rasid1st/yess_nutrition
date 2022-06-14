@@ -291,11 +291,13 @@ class _NewsPageState extends State<NewsPage> {
           ),
           SlidableAction(
             onPressed: (context) async {
-              await context.read<BookmarkNotifier>().getBookmarkStatus(news);
+              final bookmarkNotifier = context.read<BookmarkNotifier>();
+
+              await bookmarkNotifier.getBookmarkStatus(news);
 
               if (!mounted) return;
 
-              final isExist = context.read<BookmarkNotifier>().isExist;
+              final isExist = bookmarkNotifier.isExist;
 
               if (isExist) {
                 const message = 'Sudah ada di daftar bookmarks anda';
@@ -305,11 +307,11 @@ class _NewsPageState extends State<NewsPage> {
                   ..hideCurrentSnackBar()
                   ..showSnackBar(snackBar);
               } else {
-                await context.read<BookmarkNotifier>().createBookmark(news);
+                await bookmarkNotifier.createBookmark(news);
 
                 if (!mounted) return;
 
-                final message = context.read<BookmarkNotifier>().message;
+                final message = bookmarkNotifier.message;
                 final snackBar = Utilities.createSnackBar(message);
 
                 ScaffoldMessenger.of(context)
@@ -369,7 +371,7 @@ class _NewsPageState extends State<NewsPage> {
                   height: 18,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    color: secondaryTextColor,
+                    color: dividerColor,
                   ),
                 )
               : const Icon(Icons.refresh_rounded),
@@ -408,7 +410,7 @@ class _NewsPageState extends State<NewsPage> {
                   height: 18,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    color: secondaryTextColor,
+                    color: dividerColor,
                   ),
                 )
               : const Icon(Icons.refresh_rounded),

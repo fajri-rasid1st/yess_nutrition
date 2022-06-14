@@ -160,10 +160,10 @@ class MyApp extends StatelessWidget {
                 settings: settings,
               );
             case profileRoute:
-              final userData = settings.arguments as UserDataEntity;
+              final user = settings.arguments as UserEntity;
 
               return MaterialPageRoute(
-                builder: (_) => ProfilePage(userData: userData),
+                builder: (_) => ProfilePage(user: user),
                 settings: settings,
               );
             case updateProfileRoute:
@@ -182,7 +182,7 @@ class MyApp extends StatelessWidget {
               );
             case newsWebViewRoute:
               final url = settings.arguments as String;
-
+              
               return MaterialPageRoute(
                 builder: (_) => NewsWebViewPage(url: url),
                 settings: settings,

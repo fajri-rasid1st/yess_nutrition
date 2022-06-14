@@ -103,7 +103,7 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
           } else if (bookmarksNotifier.state == RequestState.error) {
             return CustomInformation(
               key: const Key('error_message'),
-              imgPath: 'assets/svg/not_found_cuate.svg',
+              imgPath: 'assets/svg/feeling-sorry-cuate.svg',
               title: bookmarksNotifier.message,
               subtitle: 'Silahkan kembali beberapa saat lagi.',
             );
@@ -156,11 +156,13 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
           ),
           SlidableAction(
             onPressed: (context) async {
-              await context.read<BookmarkNotifier>().deleteBookmark(news);
+              final bookmarkNotifier = context.read<BookmarkNotifier>();
+
+              await bookmarkNotifier.deleteBookmark(news);
 
               if (!mounted) return;
 
-              final message = context.read<BookmarkNotifier>().message;
+              final message = bookmarkNotifier.message;
               final snackBar = Utilities.createSnackBar(message);
 
               ScaffoldMessenger.of(context)

@@ -4,7 +4,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
-import 'package:yess_nutrition/domain/entities/user_data_entity.dart';
+import 'package:yess_nutrition/domain/entities/user_entity.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_news_home.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_shop_home.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_time_task.dart';
@@ -12,9 +12,9 @@ import 'package:yess_nutrition/presentation/widgets/large_circular_progress.dart
 import 'package:yess_nutrition/presentation/widgets/small_circular_progress.dart';
 
 class HomePage extends StatelessWidget {
-  final UserDataEntity userData;
+  final UserEntity user;
 
-  const HomePage({Key? key, required this.userData}) : super(key: key);
+  const HomePage({Key? key, required this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +70,7 @@ class HomePage extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Text(
-                          'Hai, ${userData.name}!',
+                          'Hai, ${user.name}!',
                           style: const TextStyle(
                             color: primaryBackgroundColor,
                             fontSize: 20,
@@ -100,7 +100,7 @@ class HomePage extends StatelessWidget {
                       Navigator.pushNamed(
                         context,
                         profileRoute,
-                        arguments: userData,
+                        arguments: user,
                       );
                     },
                     icon: const Icon(
