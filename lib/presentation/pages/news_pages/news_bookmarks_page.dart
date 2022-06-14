@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
+import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/news_entity.dart';
@@ -157,19 +158,18 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
           SlidableAction(
             onPressed: (context) async {
               final bookmarkNotifier = context.read<BookmarkNotifier>();
+              final getBookmarksNotifier = context.read<GetBookmarksNotifier>();
 
               await bookmarkNotifier.deleteBookmark(news);
-
-              if (!mounted) return;
 
               final message = bookmarkNotifier.message;
               final snackBar = Utilities.createSnackBar(message);
 
-              ScaffoldMessenger.of(context)
+              scaffoldMessengerKey.currentState!
                 ..hideCurrentSnackBar()
                 ..showSnackBar(snackBar);
 
-              await context.read<GetBookmarksNotifier>().getBookmarks();
+              await getBookmarksNotifier.getBookmarks();
             },
             icon: Icons.bookmark_remove_outlined,
             foregroundColor: primaryTextColor,

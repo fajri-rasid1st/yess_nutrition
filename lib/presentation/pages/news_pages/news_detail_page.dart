@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
+import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/news_entity.dart';
@@ -72,12 +73,10 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                     await bookmarkNotifier.createBookmark(widget.news);
                   }
 
-                  if (!mounted) return;
-
                   final message = bookmarkNotifier.message;
                   final snackBar = Utilities.createSnackBar(message);
 
-                  ScaffoldMessenger.of(context)
+                  scaffoldMessengerKey.currentState!
                     ..hideCurrentSnackBar()
                     ..showSnackBar(snackBar);
                 },
@@ -184,14 +183,14 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                     child: Text(
                       widget.news.content,
                       style: const TextStyle(color: secondaryTextColor),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                     child: SizedBox(
                       width: double.infinity,
                       child: OutlinedButton.icon(

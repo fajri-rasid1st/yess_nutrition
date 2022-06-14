@@ -6,8 +6,9 @@ import 'package:provider/single_child_widget.dart';
 
 import 'common/styles/styles.dart';
 import 'common/utils/http_ssl_pinning.dart';
+import 'common/utils/keys.dart';
 import 'common/utils/routes.dart';
-import 'domain/entities/entities.dart';
+import 'domain/entities/user_entity.dart';
 import 'firebase_options.dart';
 import 'injection.dart' as di;
 import 'presentation/pages/pages.dart';
@@ -82,6 +83,9 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<DeleteUserDataNotifier>(),
         ),
         ChangeNotifierProvider(
+          create: (_) => di.locator<UserStatusNotifier>(),
+        ),
+        ChangeNotifierProvider(
           create: (_) => di.locator<BookmarkNotifier>(),
         ),
         ChangeNotifierProvider(
@@ -130,6 +134,8 @@ class MyApp extends StatelessWidget {
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
         home: const Wrapper(),
+        navigatorKey: navigatorKey,
+        scaffoldMessengerKey: scaffoldMessengerKey,
         navigatorObservers: [routeObserver],
         onGenerateRoute: (settings) {
           switch (settings.name) {
@@ -182,7 +188,7 @@ class MyApp extends StatelessWidget {
               );
             case newsWebViewRoute:
               final url = settings.arguments as String;
-              
+
               return MaterialPageRoute(
                 builder: (_) => NewsWebViewPage(url: url),
                 settings: settings,

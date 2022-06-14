@@ -5,6 +5,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
+import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/auth_notifiers/reset_password_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
@@ -156,26 +157,24 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
       await resetPasswordNotifier.resetPassword(value['email']);
 
-      if (!mounted) return;
-
       if (resetPasswordNotifier.state == UserState.success) {
         final succeessSnackBar =
             Utilities.createSnackBar(resetPasswordNotifier.success);
 
-        ScaffoldMessenger.of(context)
+        scaffoldMessengerKey.currentState!
           ..hideCurrentSnackBar()
           ..showSnackBar(succeessSnackBar);
 
         // navigate to first route after email sended
-        Navigator.popUntil(context, (route) => route.isFirst);
+        navigatorKey.currentState!.popUntil((route) => route.isFirst);
       } else {
         final errorSnackBar =
             Utilities.createSnackBar(resetPasswordNotifier.error);
 
         // close the loading indicator
-        Navigator.pop(context);
+        navigatorKey.currentState!.pop();
 
-        ScaffoldMessenger.of(context)
+        scaffoldMessengerKey.currentState!
           ..hideCurrentSnackBar()
           ..showSnackBar(errorSnackBar);
       }

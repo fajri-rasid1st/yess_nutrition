@@ -63,4 +63,15 @@ class UserFirestoreRepositoryImpl implements UserFirestoreRepository {
       return const Left(FirestoreFailure('Oops, terjadi kesalahan'));
     }
   }
+
+  @override
+  Future<Either<FirestoreFailure, bool>> isNewUser(String uid) async {
+    try {
+      final result = await userFirestoreDataSource.isNewUser(uid);
+
+      return Right(result);
+    } on FirestoreException {
+      return const Left(FirestoreFailure('Oops, terjadi kesalahan'));
+    }
+  }
 }

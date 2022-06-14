@@ -5,15 +5,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
-import 'package:yess_nutrition/common/utils/constants.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
+import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/presentation/providers/common_notifiers/input_password_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/auth_notifiers/sign_in_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/auth_notifiers/sign_in_with_google_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/firestore_notifiers/create_user_data_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user_notifiers/firestore_notifiers/read_user_data_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/firestore_notifiers/user_status_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/clickable_text.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
@@ -126,7 +126,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   const SizedBox(height: 10),
-                  _buildGoogleSignInButton(),
+                  _buildGoogleSignInButton(context),
                   const SizedBox(height: 28),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -209,34 +209,17 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Consumer3<SignInWithGoogleNotifier, ReadUserDataNotifier,
-      CreateUserDataNotifier> _buildGoogleSignInButton() {
-    return Consumer3<SignInWithGoogleNotifier, ReadUserDataNotifier,
-        CreateUserDataNotifier>(
-      builder: (
-        context,
-        signInWithGoogleNotifier,
-        readUserDataNotifier,
-        createUserDataNotifier,
-        child,
-      ) {
-        return SizedBox(
-          width: double.infinity,
-          child: OutlinedButton.icon(
-            onPressed: () => _onPressedGoogleSignInButton(
-              context,
-              signInWithGoogleNotifier,
-              readUserDataNotifier,
-              createUserDataNotifier,
-            ),
-            icon: const FaIcon(
-              FontAwesomeIcons.google,
-              size: 18,
-            ),
-            label: const Text('Lanjutkan dengan Google'),
-          ),
-        );
-      },
+  SizedBox _buildGoogleSignInButton(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        onPressed: () => _onPressedGoogleSignInButton(context),
+        icon: const FaIcon(
+          FontAwesomeIcons.google,
+          size: 18,
+        ),
+        label: const Text('Lanjutkan dengan Google'),
+      ),
     );
   }
 
@@ -259,74 +242,75 @@ class _LoginPageState extends State<LoginPage> {
       // sign in process
       await signInNotifier.signIn(value['email'], value['password']);
 
-      if (!mounted) return;
-
       if (signInNotifier.state == UserState.success) {
         // get user
         final user = signInNotifier.user;
 
         // close the loading indicator
-        Navigator.pop(context);
+        navigatorKey.currentState!.pop();
 
         // navigate to main page
-        Navigator.pushReplacementNamed(context, mainRoute, arguments: user);
+        navigatorKey.currentState!.pushReplacementNamed(
+          mainRoute,
+          arguments: user,
+        );
       } else {
         final snackBar = Utilities.createSnackBar(signInNotifier.error);
 
         // close the loading indicator
-        Navigator.pop(context);
+        navigatorKey.currentState!.pop();
 
-        ScaffoldMessenger.of(context)
+        scaffoldMessengerKey.currentState!
           ..hideCurrentSnackBar()
           ..showSnackBar(snackBar);
       }
     }
   }
 
-  Future<void> _onPressedGoogleSignInButton(
-    BuildContext context,
-    SignInWithGoogleNotifier signInWithGoogleNotifier,
-    ReadUserDataNotifier readUserDataNotifier,
-    CreateUserDataNotifier createUserDataNotifier,
-  ) async {
-    await signInWithGoogleNotifier.signInWithGoogle();
+  Future<void> _onPressedGoogleSignInButton(BuildContext context) async {
+    final googleSignInNotifier = context.read<SignInWithGoogleNotifier>();
+    final userStatusNotifier = context.read<UserStatusNotifier>();
+    final createUserDataNotifier = context.read<CreateUserDataNotifier>();
 
-    if (!mounted) return;
+    await googleSignInNotifier.signInWithGoogle();
 
-    if (signInWithGoogleNotifier.state == UserState.error) {
-      final snackBar = Utilities.createSnackBar(signInWithGoogleNotifier.error);
+    if (googleSignInNotifier.state == UserState.error) {
+      final snackBar = Utilities.createSnackBar(googleSignInNotifier.error);
 
-      ScaffoldMessenger.of(context)
+      scaffoldMessengerKey.currentState!
         ..hideCurrentSnackBar()
         ..showSnackBar(snackBar);
     }
 
     // get user
-    final user = signInWithGoogleNotifier.user;
+    final user = googleSignInNotifier.user;
 
-    // first, check if this user already have user data
-    await readUserDataNotifier.readUserData(user.uid);
+    if (user != null) {
+      // first, check if this user already in database
+      await userStatusNotifier.getUserStatus(user.uid);
 
-    if (!mounted) return;
+      if (userStatusNotifier.state == UserState.success) {
+        if (userStatusNotifier.isNewUser) {
+          // convert user entity to user data entity
+          final userData = user.toUserData();
 
-    if (readUserDataNotifier.state == UserState.success) {
-      // if user data in firestore equal to user data empty
-      if (readUserDataNotifier.userData == userDataEmpty) {
-        // convert user entity to user data entity
-        final userData = user.toUserData();
+          // craete user data
+          await createUserDataNotifier.createUserData(userData);
 
-        // craete user data when sign in successfully
-        await createUserDataNotifier.createUserData(userData);
-
-        if (!mounted) return;
-
-        if (createUserDataNotifier.state == UserState.success) {
+          if (createUserDataNotifier.state == UserState.success) {
+            // navigate to main page
+            navigatorKey.currentState!.pushReplacementNamed(
+              mainRoute,
+              arguments: user,
+            );
+          }
+        } else {
           // navigate to main page
-          Navigator.pushReplacementNamed(context, mainRoute, arguments: user);
+          navigatorKey.currentState!.pushReplacementNamed(
+            mainRoute,
+            arguments: user,
+          );
         }
-      } else {
-        // navigate to main page
-        Navigator.pushReplacementNamed(context, mainRoute, arguments: user);
       }
     }
   }

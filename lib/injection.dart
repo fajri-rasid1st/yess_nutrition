@@ -50,6 +50,9 @@ void init() {
   locator.registerFactory(
     () => DeleteUserDataNotifier(deleteUserDataUseCase: locator()),
   );
+  locator.registerFactory(
+    () => UserStatusNotifier(getUserStatusUseCase: locator()),
+  );
 
   // News providers
   locator.registerFactory(
@@ -83,6 +86,7 @@ void init() {
   locator.registerLazySingleton(() => ReadUserData(locator()));
   locator.registerLazySingleton(() => UpdateUserData(locator()));
   locator.registerLazySingleton(() => DeleteUserData(locator()));
+  locator.registerLazySingleton(() => GetUserStatus(locator()));
 
   // News usecases
   locator.registerLazySingleton(() => CreateBookmark(locator()));
