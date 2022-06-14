@@ -48,53 +48,57 @@ class HomePage extends StatelessWidget {
             ),
             child: Row(
               children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Container(
-                      width: 50,
-                      height: 50,
-                      margin: const EdgeInsets.only(right: 12),
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(8),
-                        ),
-                      ),
-                      clipBehavior: Clip.hardEdge,
-                      child: userData.imgUrl.isEmpty
-                          ? Image.asset(
-                              'assets/img/default_user_pict.png',
-                              fit: BoxFit.cover,
-                            )
-                          : Image.network(
-                              userData.imgUrl,
-                              fit: BoxFit.cover,
-                            ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Text(
-                          'Hai, ${userData.name}',
-                          style: const TextStyle(
-                            color: primaryBackgroundColor,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800,
+                Expanded(
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                        width: 50,
+                        height: 50,
+                        margin: const EdgeInsets.only(right: 12),
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(8),
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          "Selamat Datang",
-                          style: Theme.of(context)
-                              .textTheme
-                              .caption
-                              ?.copyWith(color: primaryBackgroundColor),
+                        clipBehavior: Clip.hardEdge,
+                        child: userData.imgUrl.isEmpty
+                            ? Image.asset(
+                                'assets/img/default_user_pict.png',
+                                fit: BoxFit.cover,
+                              )
+                            : Image.network(
+                                userData.imgUrl,
+                                fit: BoxFit.cover,
+                              ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text(
+                              'Hai, ${userData.name}',
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: primaryBackgroundColor,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              "Selamat Datang",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .caption
+                                  ?.copyWith(color: primaryBackgroundColor),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
-                const Spacer(),
                 Container(
                   decoration: BoxDecoration(
                     color: primaryColor,
