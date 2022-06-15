@@ -56,6 +56,26 @@ class GetNewsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> getNewsByCount({required int count}) async {
+    _state = RequestState.loading;
+    notifyListeners();
+
+    final result = await getNewsUseCase.execute(count, 1);
+
+    result.fold(
+      (failure) {
+        _message = failure.message;
+        _state = RequestState.error;
+      },
+      (news) {
+        _news = news;
+        _state = RequestState.success;
+      },
+    );
+
+    notifyListeners();
+  }
+
   Future<void> getMoreNews() async {
     _currentPageLoad++;
 
@@ -92,26 +112,6 @@ class GetNewsNotifier extends ChangeNotifier {
       (news) {
         _news = news;
         _hasMoreData = true;
-        _state = RequestState.success;
-      },
-    );
-
-    notifyListeners();
-  }
-
-  Future<void> getNewsByCount({required int count}) async {
-    _state = RequestState.loading;
-    notifyListeners();
-
-    final result = await getNewsUseCase.execute(count, 1);
-
-    result.fold(
-      (failure) {
-        _message = failure.message;
-        _state = RequestState.error;
-      },
-      (news) {
-        _news = news;
         _state = RequestState.success;
       },
     );

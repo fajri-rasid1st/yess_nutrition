@@ -2,7 +2,7 @@
     package="com.example.yess_nutrition">
 
     <application
-        android:label="yess_nutrition"
+        android:label="Yess Nutrition"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 
