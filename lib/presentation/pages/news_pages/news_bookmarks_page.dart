@@ -78,7 +78,7 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
         ),
         actions: <Widget>[
           IconButton(
-            onPressed: context.read<BookmarksNotifier>().bookmarks.isEmpty
+            onPressed: context.watch<BookmarksNotifier>().bookmarks.isEmpty
                 ? null
                 : () => showConfirmDialog(context),
             icon: const Icon(
