@@ -10,7 +10,7 @@ import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/news_entity.dart';
 import 'package:yess_nutrition/presentation/pages/news_pages/news_detail_page.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/bookmark_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/news_notifiers/get_bookmarks_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/news_notifiers/bookmarks_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_information.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 import 'package:yess_nutrition/presentation/widgets/news_tile.dart';
@@ -28,7 +28,7 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
     super.initState();
 
     Future.microtask(() {
-      Provider.of<GetBookmarksNotifier>(context, listen: false).getBookmarks();
+      Provider.of<BookmarksNotifier>(context, listen: false).getBookmarks();
     });
   }
 
@@ -41,7 +41,7 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
 
   @override
   void didPopNext() {
-    Provider.of<GetBookmarksNotifier>(context, listen: false).getBookmarks();
+    Provider.of<BookmarksNotifier>(context, listen: false).getBookmarks();
   }
 
   @override
@@ -71,24 +71,26 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
           onPressed: () => Navigator.pop(context),
           icon: const Icon(
             Icons.chevron_left_rounded,
-            color: primaryColor,
             size: 32,
           ),
+          color: primaryColor,
           tooltip: 'Back',
         ),
         actions: <Widget>[
           IconButton(
-            onPressed: () {},
+            onPressed: context.read<BookmarksNotifier>().bookmarks.isEmpty
+                ? null
+                : () => showConfirmDialog(context),
             icon: const Icon(
               Icons.clear_all_rounded,
-              color: primaryColor,
               size: 28,
             ),
+            color: primaryColor,
             tooltip: 'Clear All',
           ),
         ],
       ),
-      body: Consumer<GetBookmarksNotifier>(
+      body: Consumer<BookmarksNotifier>(
         builder: (context, bookmarksNotifier, child) {
           if (bookmarksNotifier.state == RequestState.success) {
             if (bookmarksNotifier.bookmarks.isEmpty) {
@@ -157,19 +159,7 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
           ),
           SlidableAction(
             onPressed: (context) async {
-              final bookmarkNotifier = context.read<BookmarkNotifier>();
-              final getBookmarksNotifier = context.read<GetBookmarksNotifier>();
-
-              await bookmarkNotifier.deleteBookmark(news);
-
-              final message = bookmarkNotifier.message;
-              final snackBar = Utilities.createSnackBar(message);
-
-              scaffoldMessengerKey.currentState!
-                ..hideCurrentSnackBar()
-                ..showSnackBar(snackBar);
-
-              await getBookmarksNotifier.getBookmarks();
+              await deleteBookmark(context, news);
             },
             icon: Icons.bookmark_remove_outlined,
             foregroundColor: primaryTextColor,
@@ -182,5 +172,111 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
         heroTag: 'bookmark:${news.url}',
       ),
     );
+  }
+
+  Future<void> showConfirmDialog(BuildContext context) async {
+    showGeneralDialog(
+      context: context,
+      barrierLabel: '',
+      barrierDismissible: true,
+      transitionBuilder: (context, animStart, animEnd, child) {
+        final curvedValue = Curves.ease.transform(animStart.value) - 3.75;
+
+        return Transform(
+          transform: Matrix4.translationValues(0, (curvedValue * -100), 0),
+          child: Opacity(
+            opacity: animStart.value,
+            child: Dialog(
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      'Hapus semua daftar bookmarks?',
+                      maxLines: 2,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle1!
+                          .copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        TextButton(
+                          onPressed: () async {
+                            await clearBookmarks(context);
+
+                            navigatorKey.currentState!.pop();
+                          },
+                          child: const Text(
+                            'Hapus',
+                            style: TextStyle(color: primaryColor),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                          child: VerticalDivider(
+                            width: 1,
+                            thickness: 1,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text(
+                            'Batal',
+                            style: TextStyle(color: primaryColor),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 250),
+      pageBuilder: (context, animStart, animEnd) => const SizedBox(),
+    );
+  }
+
+  Future<void> deleteBookmark(BuildContext context, NewsEntity news) async {
+    final bookmarkNotifier = context.read<BookmarkNotifier>();
+    final bookmarksNotifier = context.read<BookmarksNotifier>();
+
+    await bookmarkNotifier.deleteBookmark(news);
+
+    final message = bookmarkNotifier.message;
+    final snackBar = Utilities.createSnackBar(message);
+
+    scaffoldMessengerKey.currentState!
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
+
+    await bookmarksNotifier.getBookmarks();
+  }
+
+  Future<void> clearBookmarks(BuildContext context) async {
+    final bookmarksNotifier = context.read<BookmarksNotifier>();
+
+    await bookmarksNotifier.clearBookmarks();
+
+    final message = bookmarksNotifier.message;
+    final snackBar = Utilities.createSnackBar(message);
+
+    scaffoldMessengerKey.currentState!
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
+
+    await bookmarksNotifier.getBookmarks();
   }
 }

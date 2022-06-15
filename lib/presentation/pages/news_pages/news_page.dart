@@ -99,10 +99,8 @@ class _NewsPageState extends State<NewsPage> {
                             context,
                             newsBookmarksRoute,
                           ),
-                          icon: const Icon(
-                            Icons.bookmarks_outlined,
-                            color: primaryColor,
-                          ),
+                          icon: const Icon(Icons.bookmarks_outlined),
+                          color: primaryColor,
                           tooltip: 'Bookmarks',
                         ),
                       ),

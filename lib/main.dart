@@ -89,7 +89,7 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<BookmarkNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<GetBookmarksNotifier>(),
+          create: (_) => di.locator<BookmarksNotifier>(),
         ),
         ChangeNotifierProvider(
           create: (_) => di.locator<GetNewsNotifier>(),
@@ -126,6 +126,9 @@ class MyApp extends StatelessWidget {
           outlinedButtonTheme: OutlinedButtonThemeData(
             style: outlinedButtonStyle,
           ),
+          textButtonTheme: TextButtonThemeData(
+            style: textButtonStyle,
+          ),
           pageTransitionsTheme: const PageTransitionsTheme(
             builders: {
               TargetPlatform.android: FadeUpwardsPageTransitionsBuilder()
@@ -133,10 +136,10 @@ class MyApp extends StatelessWidget {
           ),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: const Wrapper(),
         navigatorKey: navigatorKey,
         scaffoldMessengerKey: scaffoldMessengerKey,
         navigatorObservers: [routeObserver],
+        home: const Wrapper(),
         onGenerateRoute: (settings) {
           switch (settings.name) {
             case loginRoute:

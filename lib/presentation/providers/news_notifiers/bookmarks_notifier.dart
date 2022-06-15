@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/domain/entities/news_entity.dart';
+import 'package:yess_nutrition/domain/usecases/news_usecases/clear_bookmarks.dart';
 import 'package:yess_nutrition/domain/usecases/news_usecases/get_bookmarks.dart';
 
-class GetBookmarksNotifier extends ChangeNotifier {
+class BookmarksNotifier extends ChangeNotifier {
   final GetBookmarks getBookmarksUseCase;
+  final ClearBookmarks clearBookmarksUseCase;
 
-  GetBookmarksNotifier({required this.getBookmarksUseCase});
+  BookmarksNotifier({
+    required this.getBookmarksUseCase,
+    required this.clearBookmarksUseCase,
+  });
 
   RequestState _state = RequestState.empty;
   RequestState get state => _state;
@@ -29,6 +34,17 @@ class GetBookmarksNotifier extends ChangeNotifier {
         _bookmarks = bookmarks;
         _state = RequestState.success;
       },
+    );
+
+    notifyListeners();
+  }
+
+  Future<void> clearBookmarks() async {
+    final result = await clearBookmarksUseCase.execute();
+
+    result.fold(
+      (failure) => _message = failure.message,
+      (success) => _message = success,
     );
 
     notifyListeners();

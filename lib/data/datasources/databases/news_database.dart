@@ -99,4 +99,11 @@ class NewsDatabase {
 
     return count;
   }
+
+  /// delete all news from bookmarks table
+  Future<int> clearBookmarks() async {
+    final db = await database;
+
+    return await db.delete(newsBookmarksTable);
+  }
 }

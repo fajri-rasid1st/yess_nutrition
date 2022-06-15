@@ -63,7 +63,10 @@ void init() {
     ),
   );
   locator.registerFactory(
-    () => GetBookmarksNotifier(getBookmarksUseCase: locator()),
+    () => BookmarksNotifier(
+      getBookmarksUseCase: locator(),
+      clearBookmarksUseCase: locator(),
+    ),
   );
   locator.registerFactory(
     () => GetNewsNotifier(getNewsUseCase: locator()),
@@ -93,6 +96,7 @@ void init() {
   locator.registerLazySingleton(() => DeleteBookmark(locator()));
   locator.registerLazySingleton(() => GetBookmarkStatus(locator()));
   locator.registerLazySingleton(() => GetBookmarks(locator()));
+  locator.registerLazySingleton(() => ClearBookmarks(locator()));
   locator.registerLazySingleton(() => GetNews(locator()));
   locator.registerLazySingleton(() => SearchNews(locator()));
 

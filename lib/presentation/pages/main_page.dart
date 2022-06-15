@@ -19,7 +19,6 @@ class MainPage extends StatelessWidget {
     return Consumer<BottomNavigationBarNotifier>(
       builder: (context, navBar, child) {
         return Scaffold(
-          backgroundColor: navBar.backgroundColor,
           body: Builder(
             builder: (context) {
               switch (navBar.selectedMenu) {
@@ -36,6 +35,7 @@ class MainPage extends StatelessWidget {
               }
             },
           ),
+          backgroundColor: navBar.backgroundColor,
           bottomNavigationBar: CustomBottomNavigationBar(notifier: navBar),
           floatingActionButton: CustomFloatingActionButton(onPressed: () {}),
           floatingActionButtonLocation:

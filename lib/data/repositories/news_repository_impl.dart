@@ -68,6 +68,17 @@ class NewsRepositoryImpl implements NewsRepository {
   }
 
   @override
+  Future<Either<Failure, String>> clearBookmarks() async {
+    try {
+      final result = await newsLocalDataSource.clearBookmarks();
+
+      return Right(result);
+    } on DatabaseException {
+      return const Left(DatabaseFailure('Gagal menghapus bookmarks'));
+    }
+  }
+
+  @override
   Future<Either<Failure, List<NewsEntity>>> getNews(
     int pageSize,
     int page,

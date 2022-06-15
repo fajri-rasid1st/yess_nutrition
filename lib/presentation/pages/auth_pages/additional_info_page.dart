@@ -84,10 +84,8 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
                           arguments: widget.user,
                         );
                       },
-                      icon: const Icon(
-                        Icons.close_rounded,
-                        color: primaryColor,
-                      ),
+                      icon: const Icon(Icons.close_rounded),
+                      color: primaryColor,
                       tooltip: 'Close',
                     ),
                   ),

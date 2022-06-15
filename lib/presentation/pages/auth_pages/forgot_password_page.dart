@@ -64,9 +64,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                         onPressed: () => Navigator.pop(context),
                         icon: const Icon(
                           Icons.chevron_left_rounded,
-                          color: primaryBackgroundColor,
                           size: 32,
                         ),
+                        color: primaryBackgroundColor,
                         tooltip: 'Back',
                       ),
                     ),
