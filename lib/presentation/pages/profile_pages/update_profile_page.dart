@@ -1,15 +1,14 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as p;
-import 'package:provider/provider.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:path/path.dart' as p;
+import 'package:path_provider/path_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/button_style.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
@@ -553,7 +552,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     if (uploadProfilePictureNotifier.state == UserState.success) {
       final readUserDataNotifier = context.read<ReadUserDataNotifier>();
       final updateUserDataNotifier = context.read<UpdateUserDataNotifier>();
-      String url = uploadProfilePictureNotifier.downloadURL;
+      String url = uploadProfilePictureNotifier.downloadUrl;
 
       // read user data
       await readUserDataNotifier.readUserData(widget.userData.uid);

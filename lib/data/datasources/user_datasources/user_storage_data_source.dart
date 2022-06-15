@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:yess_nutrition/common/utils/exception.dart';
 
@@ -19,6 +18,7 @@ class UserStorageDataSourceImpl implements UserStorageDataSource {
     try {
       final upload =
           await firebaseStorage.ref('profile_picture/$name').putFile(file);
+
       return upload.ref.getDownloadURL();
     } catch (e) {
       throw StorageException(e.toString());

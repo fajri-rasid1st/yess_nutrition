@@ -8,7 +8,7 @@ import 'common/styles/styles.dart';
 import 'common/utils/http_ssl_pinning.dart';
 import 'common/utils/keys.dart';
 import 'common/utils/routes.dart';
-import 'domain/entities/user_entity.dart';
+import 'domain/entities/entities.dart';
 import 'firebase_options.dart';
 import 'injection.dart' as di;
 import 'presentation/pages/pages.dart';
@@ -173,7 +173,7 @@ class MyApp extends StatelessWidget {
               );
             case profileRoute:
               final uid = settings.arguments as String;
-              
+
               return MaterialPageRoute(
                 builder: (_) => ProfilePage(uid: uid),
                 settings: settings,

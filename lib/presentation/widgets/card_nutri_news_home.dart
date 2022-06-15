@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
-import 'package:yess_nutrition/domain/entities/entities.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
+import 'package:yess_nutrition/domain/entities/entities.dart';
 
 class CardNutriNewsHome extends StatelessWidget {
   final NewsEntity news;

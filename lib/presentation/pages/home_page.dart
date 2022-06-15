@@ -6,10 +6,9 @@ import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
-import 'package:yess_nutrition/domain/entities/user_data_entity.dart';
+import 'package:yess_nutrition/domain/entities/user_entity.dart';
 import 'package:yess_nutrition/presentation/providers/common_notifiers/bottom_navigation_bar_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/get_news_notifier.dart';
-import 'package:yess_nutrition/domain/entities/user_entity.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_news_home.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_shop_home.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_time_task.dart';
@@ -17,7 +16,7 @@ import 'package:yess_nutrition/presentation/widgets/large_circular_progress.dart
 import 'package:yess_nutrition/presentation/widgets/small_circular_progress.dart';
 
 class HomePage extends StatefulWidget {
-  final UserDataEntity userData;
+  final UserEntity user;
 
   const HomePage({Key? key, required this.user}) : super(key: key);
 
@@ -78,34 +77,16 @@ class _HomePageState extends State<HomePage> {
                         decoration: const BoxDecoration(
                           borderRadius: BorderRadius.all(
                             Radius.circular(8),
-                        ),
-                      ),
-                      clipBehavior: Clip.hardEdge,
-                      child: Image.asset(
-                        'assets/img/test_avatar.png',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Text(
-                          'Hai, ${user.name}!',
-                          style: const TextStyle(
-                            color: primaryBackgroundColor,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800,
                           ),
                         ),
                         clipBehavior: Clip.hardEdge,
-                        child: widget.userData.imgUrl.isEmpty
+                        child: widget.user.imgUrl.isEmpty
                             ? Image.asset(
                                 'assets/img/default_user_pict.png',
                                 fit: BoxFit.cover,
                               )
                             : Image.network(
-                                widget.userData.imgUrl,
+                                widget.user.imgUrl,
                                 fit: BoxFit.cover,
                               ),
                       ),
@@ -115,7 +96,7 @@ class _HomePageState extends State<HomePage> {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             Text(
-                              'Hai, ${widget.userData.name}',
+                              'Hai, ${widget.user.name}',
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 color: primaryBackgroundColor,
@@ -147,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                       Navigator.pushNamed(
                         context,
                         profileRoute,
-                        arguments: widget.userData.uid,
+                        arguments: widget.user.uid,
                       );
                     },
                     icon: const Icon(

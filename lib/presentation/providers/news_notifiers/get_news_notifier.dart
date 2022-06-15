@@ -112,7 +112,6 @@ class GetNewsNotifier extends ChangeNotifier {
       },
       (news) {
         _news = news;
-        _hasMoreData = true;
         _state = RequestState.success;
       },
     );

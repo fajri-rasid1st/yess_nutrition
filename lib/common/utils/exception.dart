@@ -7,7 +7,7 @@ class FirestoreException implements Exception {
 }
 
 /// Exception class that will be thrown when there is a problem
-/// related to the firestore.
+/// related to the firebase storage.
 class StorageException implements Exception {
   final String message;
 

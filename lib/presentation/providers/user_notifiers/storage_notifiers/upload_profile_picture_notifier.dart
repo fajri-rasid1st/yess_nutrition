@@ -10,11 +10,11 @@ class UploadProfilePictureNotifier extends ChangeNotifier {
   UserState _state = UserState.empty;
   UserState get state => _state;
 
+  late String _downloadUrl;
+  String get downloadUrl => _downloadUrl;
+
   String _error = '';
   String get error => _error;
-
-  late String _downloadURL;
-  String get downloadURL => _downloadURL;
 
   Future<void> uploadProfilePicture(String path, String name) async {
     final result = await uploadProfilePictureUseCase.execute(path, name);
@@ -25,8 +25,8 @@ class UploadProfilePictureNotifier extends ChangeNotifier {
         _state = UserState.error;
       },
       (url) {
+        _downloadUrl = url;
         _state = UserState.success;
-        _downloadURL = url;
       },
     );
 
