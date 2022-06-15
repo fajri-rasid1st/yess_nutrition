@@ -5,6 +5,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
+import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
@@ -29,21 +30,21 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
 
   @override
   void initState() {
+    super.initState();
+
     _formKey = GlobalKey<FormBuilderState>();
     _ageController = TextEditingController();
     _weightController = TextEditingController();
     _heightController = TextEditingController();
-
-    super.initState();
   }
 
   @override
   void dispose() {
+    super.dispose();
+
     _ageController.dispose();
     _weightController.dispose();
     _heightController.dispose();
-
-    super.dispose();
   }
 
   @override
@@ -83,10 +84,8 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
                           arguments: widget.user,
                         );
                       },
-                      icon: const Icon(
-                        Icons.close_rounded,
-                        color: primaryColor,
-                      ),
+                      icon: const Icon(Icons.close_rounded),
+                      color: primaryColor,
                       tooltip: 'Close',
                     ),
                   ),
@@ -279,8 +278,6 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
       // read user data
       await readUserDataNotifier.readUserData(widget.user.uid);
 
-      if (!mounted) return;
-
       if (readUserDataNotifier.state == UserState.success) {
         // get user data
         final userData = readUserDataNotifier.userData;
@@ -296,15 +293,12 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
         // update user data on firestore
         await updateUserDataNotifier.updateUserData(updatedUserData);
 
-        if (!mounted) return;
-
         if (updateUserDataNotifier.state == UserState.success) {
           // close loading indicator
-          Navigator.pop(context);
+          navigatorKey.currentState!.pop();
 
           // navigate to main page
-          Navigator.pushNamedAndRemoveUntil(
-            context,
+          navigatorKey.currentState!.pushNamedAndRemoveUntil(
             mainRoute,
             (route) => false,
             arguments: widget.user,
@@ -314,9 +308,9 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
         final snackBar = Utilities.createSnackBar(updateUserDataNotifier.error);
 
         // close loading indicator
-        Navigator.pop(context);
+        navigatorKey.currentState!.pop();
 
-        ScaffoldMessenger.of(context)
+        scaffoldMessengerKey.currentState!
           ..hideCurrentSnackBar()
           ..showSnackBar(snackBar);
       }

@@ -9,6 +9,7 @@ import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/domain/entities/user_data_entity.dart';
 import 'package:yess_nutrition/presentation/providers/common_notifiers/bottom_navigation_bar_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/get_news_notifier.dart';
+import 'package:yess_nutrition/domain/entities/user_entity.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_news_home.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_shop_home.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_time_task.dart';
@@ -18,7 +19,7 @@ import 'package:yess_nutrition/presentation/widgets/small_circular_progress.dart
 class HomePage extends StatefulWidget {
   final UserDataEntity userData;
 
-  const HomePage({Key? key, required this.userData}) : super(key: key);
+  const HomePage({Key? key, required this.user}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -77,6 +78,24 @@ class _HomePageState extends State<HomePage> {
                         decoration: const BoxDecoration(
                           borderRadius: BorderRadius.all(
                             Radius.circular(8),
+                        ),
+                      ),
+                      clipBehavior: Clip.hardEdge,
+                      child: Image.asset(
+                        'assets/img/test_avatar.png',
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Text(
+                          'Hai, ${user.name}!',
+                          style: const TextStyle(
+                            color: primaryBackgroundColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w800,
                           ),
                         ),
                         clipBehavior: Clip.hardEdge,

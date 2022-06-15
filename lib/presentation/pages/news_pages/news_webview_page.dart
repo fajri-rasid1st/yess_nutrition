@@ -20,9 +20,9 @@ class _NewsWebViewPageState extends State<NewsWebViewPage> {
 
   @override
   void initState() {
-    if (Platform.isAndroid) WebView.platform = AndroidWebView();
-
     super.initState();
+
+    if (Platform.isAndroid) WebView.platform = AndroidWebView();
   }
 
   @override
@@ -42,19 +42,15 @@ class _NewsWebViewPageState extends State<NewsWebViewPage> {
         ),
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
-          icon: const Icon(
-            Icons.close_rounded,
-            color: primaryColor,
-          ),
+          icon: const Icon(Icons.close_rounded),
+          color: primaryColor,
           tooltip: 'Close',
         ),
         actions: <Widget>[
           IconButton(
             onPressed: () => _webViewController.reload(),
-            icon: const Icon(
-              Icons.refresh_outlined,
-              color: primaryColor,
-            ),
+            icon: const Icon(Icons.refresh_rounded),
+            color: primaryColor,
             tooltip: 'Reload',
           ),
           IconButton(
@@ -70,10 +66,8 @@ class _NewsWebViewPageState extends State<NewsWebViewPage> {
                   );
               });
             },
-            icon: const Icon(
-              Icons.cached_outlined,
-              color: primaryColor,
-            ),
+            icon: const Icon(Icons.cached_rounded),
+            color: primaryColor,
             tooltip: 'Clear Cache',
           ),
         ],

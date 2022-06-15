@@ -13,3 +13,9 @@ final outlinedButtonStyle = OutlinedButton.styleFrom(
     borderRadius: BorderRadius.circular(8),
   ),
 );
+
+final textButtonStyle = TextButton.styleFrom(
+  shape: RoundedRectangleBorder(
+    borderRadius: BorderRadius.circular(8),
+  ),
+);

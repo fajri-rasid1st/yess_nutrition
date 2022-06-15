@@ -6,8 +6,9 @@ import 'package:provider/single_child_widget.dart';
 
 import 'common/styles/styles.dart';
 import 'common/utils/http_ssl_pinning.dart';
+import 'common/utils/keys.dart';
 import 'common/utils/routes.dart';
-import 'domain/entities/entities.dart';
+import 'domain/entities/user_entity.dart';
 import 'firebase_options.dart';
 import 'injection.dart' as di;
 import 'presentation/pages/pages.dart';
@@ -82,10 +83,13 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<DeleteUserDataNotifier>(),
         ),
         ChangeNotifierProvider(
+          create: (_) => di.locator<UserStatusNotifier>(),
+        ),
+        ChangeNotifierProvider(
           create: (_) => di.locator<BookmarkNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<GetBookmarksNotifier>(),
+          create: (_) => di.locator<BookmarksNotifier>(),
         ),
         ChangeNotifierProvider(
           create: (_) => di.locator<GetNewsNotifier>(),
@@ -125,8 +129,19 @@ class MyApp extends StatelessWidget {
           outlinedButtonTheme: OutlinedButtonThemeData(
             style: outlinedButtonStyle,
           ),
+          textButtonTheme: TextButtonThemeData(
+            style: textButtonStyle,
+          ),
+          pageTransitionsTheme: const PageTransitionsTheme(
+            builders: {
+              TargetPlatform.android: FadeUpwardsPageTransitionsBuilder()
+            },
+          ),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
+        navigatorKey: navigatorKey,
+        scaffoldMessengerKey: scaffoldMessengerKey,
+        navigatorObservers: [routeObserver],
         home: const Wrapper(),
         onGenerateRoute: (settings) {
           switch (settings.name) {
@@ -158,7 +173,7 @@ class MyApp extends StatelessWidget {
               );
             case profileRoute:
               final uid = settings.arguments as String;
-
+              
               return MaterialPageRoute(
                 builder: (_) => ProfilePage(uid: uid),
                 settings: settings,
@@ -170,10 +185,13 @@ class MyApp extends StatelessWidget {
                 builder: (_) => UpdateProfilePage(userData: userData),
               );
             case newsDetailRoute:
-              final news = settings.arguments as NewsEntity;
+              final arguments = settings.arguments as NewsDetailPageArgs;
 
               return MaterialPageRoute(
-                builder: (_) => NewsDetailPage(news: news),
+                builder: (_) => NewsDetailPage(
+                  news: arguments.news,
+                  heroTag: arguments.heroTag,
+                ),
                 settings: settings,
               );
             case newsWebViewRoute:

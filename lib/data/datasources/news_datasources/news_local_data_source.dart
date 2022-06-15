@@ -10,6 +10,8 @@ abstract class NewsLocalDataSource {
   Future<bool> isBookmarkExist(NewsTable news);
 
   Future<String> deleteBookmark(NewsTable news);
+
+  Future<String> clearBookmarks();
 }
 
 class NewsLocalDataSourceImpl implements NewsLocalDataSource {
@@ -22,7 +24,7 @@ class NewsLocalDataSourceImpl implements NewsLocalDataSource {
     try {
       await newsDatabase.createBookmark(news);
 
-      return 'Berita ditambahkan ke Bookmarks.';
+      return 'Artikel ditambahkan ke Bookmarks.';
     } catch (e) {
       throw DatabaseException(e.toString());
     }
@@ -55,7 +57,18 @@ class NewsLocalDataSourceImpl implements NewsLocalDataSource {
     try {
       await newsDatabase.deleteBookmark(news);
 
-      return 'Berita dihapus dari Bookmarks.';
+      return 'Artikel dihapus dari Bookmarks.';
+    } catch (e) {
+      throw DatabaseException(e.toString());
+    }
+  }
+
+  @override
+  Future<String> clearBookmarks() async {
+    try {
+      await newsDatabase.clearBookmarks();
+
+      return 'Semua artikel berhasil dihapus.';
     } catch (e) {
       throw DatabaseException(e.toString());
     }

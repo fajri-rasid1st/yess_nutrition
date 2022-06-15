@@ -50,6 +50,9 @@ void init() {
   locator.registerFactory(
     () => DeleteUserDataNotifier(deleteUserDataUseCase: locator()),
   );
+  locator.registerFactory(
+    () => UserStatusNotifier(getUserStatusUseCase: locator()),
+  );
 
   // Storage providers
   locator.registerFactory(
@@ -65,7 +68,10 @@ void init() {
     ),
   );
   locator.registerFactory(
-    () => GetBookmarksNotifier(getBookmarksUseCase: locator()),
+    () => BookmarksNotifier(
+      getBookmarksUseCase: locator(),
+      clearBookmarksUseCase: locator(),
+    ),
   );
   locator.registerFactory(
     () => GetNewsNotifier(getNewsUseCase: locator()),
@@ -88,6 +94,7 @@ void init() {
   locator.registerLazySingleton(() => ReadUserData(locator()));
   locator.registerLazySingleton(() => UpdateUserData(locator()));
   locator.registerLazySingleton(() => DeleteUserData(locator()));
+  locator.registerLazySingleton(() => GetUserStatus(locator()));
 
   // Storage usecases
   locator.registerLazySingleton(() => UploadProfilePicture(locator()));
@@ -97,6 +104,7 @@ void init() {
   locator.registerLazySingleton(() => DeleteBookmark(locator()));
   locator.registerLazySingleton(() => GetBookmarkStatus(locator()));
   locator.registerLazySingleton(() => GetBookmarks(locator()));
+  locator.registerLazySingleton(() => ClearBookmarks(locator()));
   locator.registerLazySingleton(() => GetNews(locator()));
   locator.registerLazySingleton(() => SearchNews(locator()));
 

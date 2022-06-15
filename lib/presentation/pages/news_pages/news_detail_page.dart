@@ -1,15 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
+import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/news_entity.dart';
+import 'package:yess_nutrition/presentation/providers/news_notifiers/bookmark_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_network_image.dart';
 
-class NewsDetailPage extends StatelessWidget {
+class NewsDetailPage extends StatefulWidget {
   final NewsEntity news;
+  final String heroTag;
 
-  const NewsDetailPage({Key? key, required this.news}) : super(key: key);
+  const NewsDetailPage({
+    Key? key,
+    required this.news,
+    required this.heroTag,
+  }) : super(key: key);
+
+  @override
+  State<NewsDetailPage> createState() => _NewsDetailPageState();
+}
+
+class _NewsDetailPageState extends State<NewsDetailPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() {
+      Provider.of<BookmarkNotifier>(context, listen: false)
+          .getBookmarkStatus(widget.news);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +53,7 @@ class NewsDetailPage extends StatelessWidget {
         actions: <Widget>[
           IconButton(
             onPressed: () async {
-              await Share.share('Hai, coba deh cek ini\n\n${news.url}');
+              await Share.share('Hai, coba deh cek ini\n\n${widget.news.url}');
             },
             icon: const Icon(
               Icons.share_rounded,
@@ -38,13 +61,34 @@ class NewsDetailPage extends StatelessWidget {
             ),
             tooltip: 'Share',
           ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.bookmark_border_rounded,
-              size: 26,
-            ),
-            tooltip: 'Bookmarks',
+          Consumer<BookmarkNotifier>(
+            builder: (context, bookmarkNotifier, child) {
+              final isExist = bookmarkNotifier.isExist;
+
+              return IconButton(
+                onPressed: () async {
+                  if (isExist) {
+                    await bookmarkNotifier.deleteBookmark(widget.news);
+                  } else {
+                    await bookmarkNotifier.createBookmark(widget.news);
+                  }
+
+                  final message = bookmarkNotifier.message;
+                  final snackBar = Utilities.createSnackBar(message);
+
+                  scaffoldMessengerKey.currentState!
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(snackBar);
+                },
+                icon: Icon(
+                  isExist
+                      ? Icons.bookmark_rounded
+                      : Icons.bookmark_border_rounded,
+                  size: 26,
+                ),
+                tooltip: 'Bookmarks',
+              );
+            },
           ),
         ],
       ),
@@ -54,12 +98,12 @@ class NewsDetailPage extends StatelessWidget {
             alignment: AlignmentDirectional.bottomStart,
             children: <Widget>[
               Hero(
-                tag: news.urlToImage,
+                tag: widget.heroTag,
                 transitionOnUserGestures: true,
                 child: CustomNetworkImage(
                   height: MediaQuery.of(context).size.height / 2 + 24,
                   fit: BoxFit.fitHeight,
-                  imgUrl: news.urlToImage,
+                  imgUrl: widget.news.urlToImage,
                   placeHolderSize: 100,
                 ),
               ),
@@ -80,7 +124,7 @@ class NewsDetailPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      news.title,
+                      widget.news.title,
                       maxLines: 4,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.headline5!.copyWith(
@@ -96,12 +140,12 @@ class NewsDetailPage extends StatelessWidget {
                         _buildChip(
                           context,
                           Icons.person_rounded,
-                          news.author,
+                          widget.news.author,
                         ),
                         _buildChip(
                           context,
                           Icons.access_time_rounded,
-                          Utilities.dateFormatToMMMddy(news.publishedAt),
+                          Utilities.dateFormatToMMMddy(widget.news.publishedAt),
                         ),
                       ],
                     ),
@@ -124,7 +168,7 @@ class NewsDetailPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
                     child: Text(
-                      news.source,
+                      widget.news.source,
                       style: Theme.of(context)
                           .textTheme
                           .headline6!
@@ -134,26 +178,26 @@ class NewsDetailPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
-                      news.description,
+                      widget.news.description,
                       style: const TextStyle(color: secondaryTextColor),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 20),
+                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                     child: Text(
-                      news.content,
+                      widget.news.content,
                       style: const TextStyle(color: secondaryTextColor),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                     child: SizedBox(
                       width: double.infinity,
                       child: OutlinedButton.icon(
                         onPressed: () => Navigator.pushNamed(
                           context,
                           newsWebViewRoute,
-                          arguments: news.url,
+                          arguments: widget.news.url,
                         ),
                         icon: const Icon(Icons.open_in_new_rounded),
                         label: const Text('Lihat Selengkapnya'),
@@ -199,4 +243,11 @@ class NewsDetailPage extends StatelessWidget {
       ),
     );
   }
+}
+
+class NewsDetailPageArgs {
+  final NewsEntity news;
+  final String heroTag;
+
+  NewsDetailPageArgs(this.news, this.heroTag);
 }

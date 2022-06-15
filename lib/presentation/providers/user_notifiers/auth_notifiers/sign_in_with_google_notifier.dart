@@ -11,8 +11,8 @@ class SignInWithGoogleNotifier extends ChangeNotifier {
   UserState _state = UserState.empty;
   UserState get state => _state;
 
-  late UserEntity _user;
-  UserEntity get user => _user;
+  late UserEntity? _user;
+  UserEntity? get user => _user;
 
   String _error = '';
   String get error => _error;
@@ -26,11 +26,12 @@ class SignInWithGoogleNotifier extends ChangeNotifier {
         _state = UserState.error;
       },
       (user) {
+        _user = user;
+
         if (user != null) {
-          _user = user;
           _state = UserState.success;
         } else {
-          _error = 'Sign in failed. No account selected.';
+          _error = 'Pilih setidaknya satu akun untuk melanjutkan.';
           _state = UserState.error;
         }
       },

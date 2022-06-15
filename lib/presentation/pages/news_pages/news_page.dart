@@ -6,10 +6,13 @@ import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
+import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/news_entity.dart';
+import 'package:yess_nutrition/presentation/pages/news_pages/news_detail_page.dart';
 import 'package:yess_nutrition/presentation/providers/common_notifiers/news_fab_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/news_notifiers/bookmark_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/get_news_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/search_news_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_information.dart';
@@ -30,22 +33,22 @@ class _NewsPageState extends State<NewsPage> {
 
   @override
   void initState() {
-    _scrollController = ScrollController();
-    _searchController = TextEditingController();
+    super.initState();
 
     Future.microtask(() {
       Provider.of<GetNewsNotifier>(context, listen: false).getNews(page: 1);
     });
 
-    super.initState();
+    _scrollController = ScrollController();
+    _searchController = TextEditingController();
   }
 
   @override
   void dispose() {
+    super.dispose();
+
     _scrollController.dispose();
     _searchController.dispose();
-
-    super.dispose();
   }
 
   @override
@@ -92,11 +95,12 @@ class _NewsPageState extends State<NewsPage> {
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.bookmarks_outlined,
-                            color: primaryColor,
+                          onPressed: () => Navigator.pushNamed(
+                            context,
+                            newsBookmarksRoute,
                           ),
+                          icon: const Icon(Icons.bookmarks_outlined),
+                          color: primaryColor,
                           tooltip: 'Bookmarks',
                         ),
                       ),
@@ -266,7 +270,11 @@ class _NewsPageState extends State<NewsPage> {
         children: <Widget>[
           SlidableAction(
             onPressed: (context) {
-              Navigator.pushNamed(context, newsDetailRoute, arguments: news);
+              Navigator.pushNamed(
+                context,
+                newsDetailRoute,
+                arguments: NewsDetailPageArgs(news, 'news:${news.url}'),
+              );
             },
             icon: Icons.open_in_new_rounded,
             foregroundColor: primaryBackgroundColor,
@@ -281,10 +289,30 @@ class _NewsPageState extends State<NewsPage> {
             backgroundColor: secondaryColor,
           ),
           SlidableAction(
-            onPressed: (context) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                Utilities.createSnackBar('Test'),
-              );
+            onPressed: (context) async {
+              final bookmarkNotifier = context.read<BookmarkNotifier>();
+
+              await bookmarkNotifier.getBookmarkStatus(news);
+
+              final isExist = bookmarkNotifier.isExist;
+
+              if (isExist) {
+                const message = 'Sudah ada di daftar bookmarks anda';
+                final snackBar = Utilities.createSnackBar(message);
+
+                scaffoldMessengerKey.currentState!
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(snackBar);
+              } else {
+                await bookmarkNotifier.createBookmark(news);
+
+                final message = bookmarkNotifier.message;
+                final snackBar = Utilities.createSnackBar(message);
+
+                scaffoldMessengerKey.currentState!
+                  ..hideCurrentSnackBar()
+                  ..showSnackBar(snackBar);
+              }
             },
             icon: Icons.bookmark_add_outlined,
             foregroundColor: primaryTextColor,
@@ -292,7 +320,10 @@ class _NewsPageState extends State<NewsPage> {
           ),
         ],
       ),
-      child: NewsTile(news: news),
+      child: NewsTile(
+        news: news,
+        heroTag: 'news:${news.url}',
+      ),
     );
   }
 
@@ -335,10 +366,10 @@ class _NewsPageState extends State<NewsPage> {
                   height: 18,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    color: secondaryTextColor,
+                    color: dividerColor,
                   ),
                 )
-              : const Icon(Icons.refresh_outlined),
+              : const Icon(Icons.refresh_rounded),
           label: newsNotifier.isReload
               ? const Text('Tunggu sebentar...')
               : const Text('Coba lagi'),
@@ -374,10 +405,10 @@ class _NewsPageState extends State<NewsPage> {
                   height: 18,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    color: secondaryTextColor,
+                    color: dividerColor,
                   ),
                 )
-              : const Icon(Icons.refresh_outlined),
+              : const Icon(Icons.refresh_rounded),
           label: newsNotifier.isReload
               ? const Text('Tunggu sebentar...')
               : const Text('Coba lagi'),

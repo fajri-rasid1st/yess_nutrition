@@ -10,6 +10,8 @@ abstract class UserFirestoreDataSource {
   Future<void> updateUserData(UserDataModel userData);
 
   Future<void> deleteUserData(String uid);
+
+  Future<bool> isNewUser(String uid);
 }
 
 class UserFirestoreDataSourceImpl implements UserFirestoreDataSource {
@@ -48,7 +50,9 @@ class UserFirestoreDataSourceImpl implements UserFirestoreDataSource {
     try {
       final reference = firebaseFirestore.collection('users').doc(userData.uid);
 
-      await reference.update(userData.toDocument());
+      final userDocument = userData.toDocument();
+
+      await reference.update(userDocument);
     } catch (e) {
       throw FirestoreException(e.toString());
     }
@@ -60,6 +64,22 @@ class UserFirestoreDataSourceImpl implements UserFirestoreDataSource {
       final reference = firebaseFirestore.collection('users').doc(uid);
 
       await reference.delete();
+    } catch (e) {
+      throw FirestoreException(e.toString());
+    }
+  }
+
+  @override
+  Future<bool> isNewUser(String uid) async {
+    try {
+      final result = await firebaseFirestore
+          .collection('users')
+          .where('uid', isEqualTo: uid)
+          .get();
+
+      final docs = result.docs;
+
+      return docs.isEmpty ? true : false;
     } catch (e) {
       throw FirestoreException(e.toString());
     }

@@ -35,7 +35,7 @@ class Utilities {
 
   /// Function to convert [number] according to [decimalDigit]
   static String numberToIdr(dynamic number, int decimalDigit) {
-    NumberFormat currencyFormatter = NumberFormat.currency(
+    final currencyFormatter = NumberFormat.currency(
       locale: 'id',
       symbol: '',
       decimalDigits: decimalDigit,
@@ -44,10 +44,12 @@ class Utilities {
     return currencyFormatter.format(number);
   }
 
-  /// Function to format [dateFormat] to MMM dd, y pattern
+  /// Function to format [dateFormat] to **MMM dd, y** pattern
   static String dateFormatToMMMddy(String dateFormat) {
-    return dateFormat.isEmpty
-        ? '?'
-        : DateFormat('MMM dd, y').format(DateTime.parse(dateFormat));
+    if (dateFormat.isEmpty) return '?';
+
+    final dateTime = DateTime.parse(dateFormat);
+
+    return DateFormat('MMM dd, y').format(dateTime);
   }
 }

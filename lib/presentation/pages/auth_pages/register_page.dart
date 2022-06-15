@@ -5,6 +5,7 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
+import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/presentation/providers/common_notifiers/input_password_notifier.dart';
@@ -28,23 +29,23 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   void initState() {
+    super.initState();
+
     _formKey = GlobalKey<FormBuilderState>();
     _nameController = TextEditingController();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
     _confirmPasswordController = TextEditingController();
-
-    super.initState();
   }
 
   @override
   void dispose() {
+    super.dispose();
+
     _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
-
-    super.dispose();
   }
 
   @override
@@ -75,9 +76,9 @@ class _RegisterPageState extends State<RegisterPage> {
                         onPressed: () => Navigator.pop(context),
                         icon: const Icon(
                           Icons.chevron_left_rounded,
-                          color: primaryBackgroundColor,
                           size: 32,
                         ),
+                        color: primaryBackgroundColor,
                         tooltip: 'Back',
                       ),
                     ),
@@ -270,8 +271,6 @@ class _RegisterPageState extends State<RegisterPage> {
       // sign up process
       await signUpNotifier.signUp(value['email'], value['password']);
 
-      if (!mounted) return;
-
       if (signUpNotifier.state == UserState.success) {
         // get user
         final user = signUpNotifier.user;
@@ -284,15 +283,12 @@ class _RegisterPageState extends State<RegisterPage> {
           userData.copyWith(name: value['name']),
         );
 
-        if (!mounted) return;
-
         if (createUserDataNotifier.state == UserState.success) {
           // close the loading indicator
-          Navigator.pop(context);
+          navigatorKey.currentState!.pop();
 
           // navigate to additional information page
-          Navigator.pushReplacementNamed(
-            context,
+          navigatorKey.currentState!.pushReplacementNamed(
             additionalInfoRoute,
             arguments: user,
           );
@@ -301,9 +297,9 @@ class _RegisterPageState extends State<RegisterPage> {
         final snackBar = Utilities.createSnackBar(signUpNotifier.error);
 
         // close the loading indicator
-        Navigator.pop(context);
+        navigatorKey.currentState!.pop();
 
-        ScaffoldMessenger.of(context)
+        scaffoldMessengerKey.currentState!
           ..hideCurrentSnackBar()
           ..showSnackBar(snackBar);
       }

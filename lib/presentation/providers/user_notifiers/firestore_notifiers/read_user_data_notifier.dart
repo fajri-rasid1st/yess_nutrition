@@ -25,8 +25,8 @@ class ReadUserDataNotifier extends ChangeNotifier {
         _error = failure.message;
         _state = UserState.error;
       },
-      (user) {
-        _userData = user;
+      (userData) {
+        _userData = userData;
         _state = UserState.success;
       },
     );

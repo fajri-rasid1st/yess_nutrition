@@ -11,6 +11,8 @@ abstract class NewsRepository {
 
   Future<Either<Failure, String>> deleteBookmark(NewsEntity news);
 
+  Future<Either<Failure, String>> clearBookmarks();
+
   Future<Either<Failure, List<NewsEntity>>> getNews(int pageSize, int page);
 
   Future<Either<Failure, List<NewsEntity>>> searchNews(
