@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/data/models/data_menu_makan_nutritime.dart';
+import 'package:yess_nutrition/presentation/pages/schedule_pages/nutri_time_add_food_page.dart';
 import 'package:yess_nutrition/presentation/pages/schedule_pages/nutri_time_add_waktu_makan.dart';
 
 class NutriTimePage extends StatefulWidget {
@@ -77,7 +78,12 @@ class _NutriTimePagePageState extends State<NutriTimePage> {
                         final DataMenuMakan menuMakan = dataWaktuMakan[index];
 
                         return InkWell(
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return const AddFood();
+                            }));
+                          },
                           child: Card(
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
