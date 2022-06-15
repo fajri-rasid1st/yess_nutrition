@@ -198,15 +198,19 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text(
-                      'Hapus semua daftar bookmarks?',
-                      maxLines: 2,
+                      'Konfirmasi',
                       textAlign: TextAlign.center,
                       style: Theme.of(context)
                           .textTheme
                           .subtitle1!
                           .copyWith(fontWeight: FontWeight.bold),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Hapus semua daftar bookmarks?',
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
@@ -217,8 +221,11 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
                             navigatorKey.currentState!.pop();
                           },
                           child: const Text(
-                            'Hapus',
-                            style: TextStyle(color: primaryColor),
+                            'Oke',
+                            style: TextStyle(
+                              color: primaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                         const SizedBox(
@@ -232,7 +239,10 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
                           onPressed: () => Navigator.pop(context),
                           child: const Text(
                             'Batal',
-                            style: TextStyle(color: primaryColor),
+                            style: TextStyle(
+                              color: primaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ],
