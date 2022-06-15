@@ -98,6 +98,9 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<SearchNewsNotifier>(),
         ),
         ChangeNotifierProvider(
+          create: (_) => di.locator<UploadProfilePictureNotifier>(),
+        ),
+        ChangeNotifierProvider(
           create: (_) => BottomNavigationBarNotifier(),
         ),
         ChangeNotifierProvider(
@@ -169,15 +172,17 @@ class MyApp extends StatelessWidget {
                 settings: settings,
               );
             case profileRoute:
-              final user = settings.arguments as UserEntity;
-
+              final uid = settings.arguments as String;
+              
               return MaterialPageRoute(
-                builder: (_) => ProfilePage(user: user),
+                builder: (_) => ProfilePage(uid: uid),
                 settings: settings,
               );
             case updateProfileRoute:
+              final userData = settings.arguments as UserDataEntity;
+
               return MaterialPageRoute(
-                builder: (_) => const UpdateProfilePage(),
+                builder: (_) => UpdateProfilePage(userData: userData),
               );
             case newsDetailRoute:
               final arguments = settings.arguments as NewsDetailPageArgs;
