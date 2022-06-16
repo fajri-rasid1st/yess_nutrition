@@ -205,6 +205,10 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(
                 builder: (_) => const NewsBookmarksPage(),
               );
+            case checkRoute:
+              return MaterialPageRoute(
+                builder: (_) => const CheckPage(),
+              );
             default:
               return null;
           }

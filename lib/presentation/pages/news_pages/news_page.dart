@@ -202,7 +202,7 @@ class _NewsPageState extends State<NewsPage> {
       onTap: () {
         _scrollController.animateTo(
           0,
-          duration: const Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 250),
           curve: Curves.easeOut,
         );
       },

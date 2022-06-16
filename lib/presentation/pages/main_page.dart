@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
+import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
 import 'package:yess_nutrition/presentation/pages/home_page.dart';
 import 'package:yess_nutrition/presentation/pages/news_pages/news_page.dart';
@@ -37,7 +38,9 @@ class MainPage extends StatelessWidget {
           ),
           backgroundColor: navBar.backgroundColor,
           bottomNavigationBar: CustomBottomNavigationBar(notifier: navBar),
-          floatingActionButton: CustomFloatingActionButton(onPressed: () {}),
+          floatingActionButton: CustomFloatingActionButton(
+            onPressed: () => Navigator.pushNamed(context, checkRoute),
+          ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
         );
