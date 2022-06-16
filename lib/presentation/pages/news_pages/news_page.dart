@@ -17,7 +17,7 @@ import 'package:yess_nutrition/presentation/providers/news_notifiers/get_news_no
 import 'package:yess_nutrition/presentation/providers/news_notifiers/search_news_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_information.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
-import 'package:yess_nutrition/presentation/widgets/news_tile.dart';
+import 'package:yess_nutrition/presentation/widgets/news_list_tile.dart';
 import 'package:yess_nutrition/presentation/widgets/search_field.dart';
 
 class NewsPage extends StatefulWidget {
@@ -320,7 +320,7 @@ class _NewsPageState extends State<NewsPage> {
           ),
         ],
       ),
-      child: NewsTile(
+      child: NewsListTile(
         news: news,
         heroTag: 'news:${news.url}',
       ),

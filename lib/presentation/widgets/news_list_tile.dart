@@ -6,11 +6,11 @@ import 'package:yess_nutrition/domain/entities/news_entity.dart';
 import 'package:yess_nutrition/presentation/pages/news_pages/news_detail_page.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_network_image.dart';
 
-class NewsTile extends StatelessWidget {
+class NewsListTile extends StatelessWidget {
   final NewsEntity news;
   final String heroTag;
 
-  const NewsTile({
+  const NewsListTile({
     Key? key,
     required this.news,
     required this.heroTag,

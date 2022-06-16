@@ -3,6 +3,7 @@ import 'package:yess_nutrition/common/styles/color_scheme.dart';
 
 class SearchField extends StatelessWidget {
   final TextEditingController? controller;
+  final Color backgroundColor;
   final String query;
   final String hintText;
   final VoidCallback? onTap;
@@ -12,6 +13,7 @@ class SearchField extends StatelessWidget {
   const SearchField({
     Key? key,
     this.controller,
+    this.backgroundColor = secondaryColor,
     required this.query,
     required this.hintText,
     this.onTap,
@@ -23,7 +25,7 @@ class SearchField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: secondaryColor,
+        color: backgroundColor,
         borderRadius: BorderRadius.circular(12),
       ),
       child: TextField(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
+import 'package:yess_nutrition/common/utils/routes.dart';
 
 class CheckPage extends StatelessWidget {
   const CheckPage({Key? key}) : super(key: key);
@@ -33,8 +34,8 @@ class CheckPage extends StatelessWidget {
             subtitle: '(Teks)',
             description:
                 'Mulailah mengeksplorasi kandungan nutrisi makanan atau minuman.',
-            assetName: 'assets/img/food-nutricheck.png',
-            onTap: () {},
+            assetName: 'assets/img/food_nutricheck.png',
+            onTap: () => Navigator.pushNamed(context, foodCheckRoute),
           ),
           _buildCard(
             context: context,
@@ -42,7 +43,7 @@ class CheckPage extends StatelessWidget {
             subtitle: '(Barcode)',
             description:
                 'Analisis kandungan nutrisi dari produk dengan fitur barcode scan.',
-            assetName: 'assets/img/product-nutricheck.png',
+            assetName: 'assets/img/product_nutricheck.png',
             onTap: () {},
           ),
           _buildCard(
@@ -50,7 +51,7 @@ class CheckPage extends StatelessWidget {
             title: 'Food Recipe Check',
             subtitle: '(Teks)',
             description: 'Yuk cari tahu resep dalam membuat makanan favoritmu.',
-            assetName: 'assets/img/recipe-nutricheck.png',
+            assetName: 'assets/img/recipe_nutricheck.png',
             onTap: () {},
           ),
         ],
@@ -71,9 +72,7 @@ class CheckPage extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       shadowColor: Colors.black.withOpacity(0.1),
       margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
         onTap: onTap,
         child: SizedBox(

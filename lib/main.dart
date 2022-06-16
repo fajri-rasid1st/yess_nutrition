@@ -209,6 +209,10 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(
                 builder: (_) => const CheckPage(),
               );
+            case foodCheckRoute:
+              return MaterialPageRoute(
+                builder: (_) => const FoodCheckPage(),
+              );
             default:
               return null;
           }

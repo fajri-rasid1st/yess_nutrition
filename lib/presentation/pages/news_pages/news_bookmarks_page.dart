@@ -13,7 +13,7 @@ import 'package:yess_nutrition/presentation/providers/news_notifiers/bookmark_no
 import 'package:yess_nutrition/presentation/providers/news_notifiers/bookmarks_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_information.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
-import 'package:yess_nutrition/presentation/widgets/news_tile.dart';
+import 'package:yess_nutrition/presentation/widgets/news_list_tile.dart';
 
 class NewsBookmarksPage extends StatefulWidget {
   const NewsBookmarksPage({Key? key}) : super(key: key);
@@ -96,7 +96,7 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
             if (bookmarksNotifier.bookmarks.isEmpty) {
               return const CustomInformation(
                 key: Key('bookmarks_empty'),
-                imgPath: 'assets/svg/reading-glasses-cuate.svg',
+                imgPath: 'assets/svg/reading_glasses_cuate.svg',
                 title: 'Bookmarks masih kosong',
                 subtitle: 'Bookmarks anda akan muncul di sini.',
               );
@@ -106,7 +106,7 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
           } else if (bookmarksNotifier.state == RequestState.error) {
             return CustomInformation(
               key: const Key('error_message'),
-              imgPath: 'assets/svg/feeling-sorry-cuate.svg',
+              imgPath: 'assets/svg/feeling_sorry_cuate.svg',
               title: bookmarksNotifier.message,
               subtitle: 'Silahkan kembali beberapa saat lagi.',
             );
@@ -167,7 +167,7 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
           ),
         ],
       ),
-      child: NewsTile(
+      child: NewsListTile(
         news: news,
         heroTag: 'bookmark:${news.url}',
       ),
