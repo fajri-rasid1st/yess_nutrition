@@ -8,10 +8,7 @@ class GetBookmarkStatus {
 
   GetBookmarkStatus(this._repository);
 
-  Future<Either<FirestoreFailure, bool>> execute(
-    String uid,
-    NewsEntity news,
-  ) {
-    return _repository.isBookmarkExist(uid, news);
+  Future<Either<Failure, bool>> execute(NewsEntity news) {
+    return _repository.isBookmarkExist(news);
   }
 }

@@ -22,8 +22,8 @@ class BookmarksNotifier extends ChangeNotifier {
   String _message = '';
   String get message => _message;
 
-  Future<void> getBookmarks(String uid) async {
-    final result = await getBookmarksUseCase.execute(uid);
+  Future<void> getBookmarks() async {
+    final result = await getBookmarksUseCase.execute();
 
     result.fold(
       (failure) {
@@ -39,8 +39,8 @@ class BookmarksNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> clearBookmarks(String uid) async {
-    final result = await clearBookmarksUseCase.execute(uid);
+  Future<void> clearBookmarks() async {
+    final result = await clearBookmarksUseCase.execute();
 
     result.fold(
       (failure) => _message = failure.message,

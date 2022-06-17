@@ -10,13 +10,11 @@ import 'package:yess_nutrition/presentation/providers/news_notifiers/bookmark_no
 import 'package:yess_nutrition/presentation/widgets/custom_network_image.dart';
 
 class NewsDetailPage extends StatefulWidget {
-  final String uid;
   final NewsEntity news;
   final String heroTag;
 
   const NewsDetailPage({
     Key? key,
-    required this.uid,
     required this.news,
     required this.heroTag,
   }) : super(key: key);
@@ -32,7 +30,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
 
     Future.microtask(() {
       Provider.of<BookmarkNotifier>(context, listen: false)
-          .getBookmarkStatus(widget.uid, widget.news);
+          .getBookmarkStatus(widget.news);
     });
   }
 
@@ -70,15 +68,9 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
               return IconButton(
                 onPressed: () async {
                   if (isExist) {
-                    await bookmarkNotifier.deleteBookmark(
-                      widget.uid,
-                      widget.news,
-                    );
+                    await bookmarkNotifier.deleteBookmark(widget.news);
                   } else {
-                    await bookmarkNotifier.createBookmark(
-                      widget.uid,
-                      widget.news,
-                    );
+                    await bookmarkNotifier.createBookmark(widget.news);
                   }
 
                   final message = bookmarkNotifier.message;
@@ -254,9 +246,8 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
 }
 
 class NewsDetailPageArgs {
-  final String uid;
   final NewsEntity news;
   final String heroTag;
 
-  NewsDetailPageArgs(this.uid, this.news, this.heroTag);
+  NewsDetailPageArgs(this.news, this.heroTag);
 }

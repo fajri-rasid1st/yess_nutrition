@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
-import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/news_entity.dart';
 
-class NewsDocument extends Equatable {
-  final String id;
+const newsBookmarksTable = 'news_bookmarks_table';
+
+class NewsTable extends Equatable {
   final String title;
   final String description;
   final String url;
@@ -12,10 +12,8 @@ class NewsDocument extends Equatable {
   final String content;
   final String author;
   final String source;
-  final String createdAt;
 
-  const NewsDocument({
-    required this.id,
+  const NewsTable({
     required this.title,
     required this.description,
     required this.url,
@@ -24,12 +22,10 @@ class NewsDocument extends Equatable {
     required this.content,
     required this.author,
     required this.source,
-    required this.createdAt,
   });
 
-  factory NewsDocument.fromEntity(NewsEntity news) {
-    return NewsDocument(
-      id: Utilities.generateUuidV5(news.url),
+  factory NewsTable.fromEntity(NewsEntity news) {
+    return NewsTable(
       title: news.title,
       description: news.description,
       url: news.url,
@@ -38,13 +34,11 @@ class NewsDocument extends Equatable {
       content: news.content,
       author: news.author,
       source: news.source,
-      createdAt: DateTime.now().toIso8601String(),
     );
   }
 
-  factory NewsDocument.fromDocument(Map<String, dynamic> news) {
-    return NewsDocument(
-      id: news['id'],
+  factory NewsTable.fromMap(Map<String, dynamic> news) {
+    return NewsTable(
       title: news['title'],
       description: news['description'],
       url: news['url'],
@@ -53,7 +47,6 @@ class NewsDocument extends Equatable {
       content: news['content'],
       author: news['author'],
       source: news['source'],
-      createdAt: news['createdAt'],
     );
   }
 
@@ -70,9 +63,8 @@ class NewsDocument extends Equatable {
     );
   }
 
-  Map<String, dynamic> toDocument() {
+  Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'title': title,
       'description': description,
       'url': url,
@@ -81,13 +73,11 @@ class NewsDocument extends Equatable {
       'content': content,
       'author': author,
       'source': source,
-      'createdAt': createdAt,
     };
   }
 
   @override
   List<Object> get props => [
-        id,
         title,
         description,
         url,
@@ -96,6 +86,5 @@ class NewsDocument extends Equatable {
         content,
         author,
         source,
-        createdAt,
       ];
 }

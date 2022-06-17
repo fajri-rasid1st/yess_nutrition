@@ -122,7 +122,7 @@ void init() {
   // News repositories
   locator.registerLazySingleton<NewsRepository>(
     () => NewsRepositoryImpl(
-      newsFirestoreDataSource: locator(),
+      newsLocalDataSource: locator(),
       newsRemoteDataSource: locator(),
     ),
   );
@@ -142,12 +142,15 @@ void init() {
   );
 
   // News data sources
-  locator.registerLazySingleton<NewsFirestoreDataSource>(
-    () => NewsFirestoreDataSourceImpl(firebaseFirestore: locator()),
+  locator.registerLazySingleton<NewsLocalDataSource>(
+    () => NewsLocalDataSourceImpl(newsDatabase: locator()),
   );
   locator.registerLazySingleton<NewsRemoteDataSource>(
     () => NewsRemoteDataSourceImpl(client: locator()),
   );
+
+  // Databases
+  locator.registerLazySingleton<NewsDatabase>(() => NewsDatabase());
 
   // Services
   locator.registerLazySingleton(() => FirebaseAuth.instance);

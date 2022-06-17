@@ -21,9 +21,7 @@ import 'package:yess_nutrition/presentation/widgets/news_list_tile.dart';
 import 'package:yess_nutrition/presentation/widgets/search_field.dart';
 
 class NewsPage extends StatefulWidget {
-  final String uid;
-
-  const NewsPage({Key? key, required this.uid}) : super(key: key);
+  const NewsPage({Key? key}) : super(key: key);
 
   @override
   State<NewsPage> createState() => _NewsPageState();
@@ -275,11 +273,7 @@ class _NewsPageState extends State<NewsPage> {
               Navigator.pushNamed(
                 context,
                 newsDetailRoute,
-                arguments: NewsDetailPageArgs(
-                  widget.uid,
-                  news,
-                  'news:${news.url}',
-                ),
+                arguments: NewsDetailPageArgs(news, 'news:${news.url}'),
               );
             },
             icon: Icons.open_in_new_rounded,
@@ -298,7 +292,7 @@ class _NewsPageState extends State<NewsPage> {
             onPressed: (context) async {
               final bookmarkNotifier = context.read<BookmarkNotifier>();
 
-              await bookmarkNotifier.getBookmarkStatus(widget.uid, news);
+              await bookmarkNotifier.getBookmarkStatus(news);
 
               final isExist = bookmarkNotifier.isExist;
 
@@ -310,7 +304,7 @@ class _NewsPageState extends State<NewsPage> {
                   ..hideCurrentSnackBar()
                   ..showSnackBar(snackBar);
               } else {
-                await bookmarkNotifier.createBookmark(widget.uid, news);
+                await bookmarkNotifier.createBookmark(news);
 
                 final message = bookmarkNotifier.message;
                 final snackBar = Utilities.createSnackBar(message);
@@ -327,7 +321,6 @@ class _NewsPageState extends State<NewsPage> {
         ],
       ),
       child: NewsListTile(
-        uid: widget.uid,
         news: news,
         heroTag: 'news:${news.url}',
       ),

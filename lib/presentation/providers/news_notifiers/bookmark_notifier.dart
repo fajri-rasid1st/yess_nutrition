@@ -21,30 +21,30 @@ class BookmarkNotifier extends ChangeNotifier {
   bool _isExist = false;
   bool get isExist => _isExist;
 
-  Future<void> createBookmark(String uid, NewsEntity news) async {
-    final result = await createBookmarkUseCase.execute(uid, news);
+  Future<void> createBookmark(NewsEntity news) async {
+    final result = await createBookmarkUseCase.execute(news);
 
     result.fold(
       (failure) => _message = failure.message,
       (success) => _message = success,
     );
 
-    await getBookmarkStatus(uid, news);
+    await getBookmarkStatus(news);
   }
 
-  Future<void> deleteBookmark(String uid, NewsEntity news) async {
-    final result = await deleteBookmarkUseCase.execute(uid, news);
+  Future<void> deleteBookmark(NewsEntity news) async {
+    final result = await deleteBookmarkUseCase.execute(news);
 
     result.fold(
       (failure) => _message = failure.message,
       (success) => _message = success,
     );
 
-    await getBookmarkStatus(uid, news);
+    await getBookmarkStatus(news);
   }
 
-  Future<void> getBookmarkStatus(String uid, NewsEntity news) async {
-    final result = await getBookmarkStatusUseCase.execute(uid, news);
+  Future<void> getBookmarkStatus(NewsEntity news) async {
+    final result = await getBookmarkStatusUseCase.execute(news);
 
     result.fold(
       (failure) => _message = failure.message,

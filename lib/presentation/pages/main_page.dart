@@ -28,7 +28,7 @@ class MainPage extends StatelessWidget {
                 case MenuNavBar.nutriTime:
                   return const NutriTimePage();
                 case MenuNavBar.nutriNews:
-                  return NewsPage(uid: user.uid);
+                  return const NewsPage();
                 case MenuNavBar.nutriShop:
                   return const Scaffold(
                     body: Center(child: Text('NutriShop Page')),

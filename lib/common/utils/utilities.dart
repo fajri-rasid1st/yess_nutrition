@@ -1,8 +1,8 @@
+import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:uuid/uuid.dart';
 
 class Utilities {
   /// Function to create snack bar with [message] as text that will be displayed
@@ -42,8 +42,14 @@ class Utilities {
     return DateFormat('MMM dd, y').format(dateTime);
   }
 
-  /// Function to generate [url] to uuid v5 (name-based)
-  static String generateUuidV5(String url) {
-    return const Uuid().v5(Uuid.NAMESPACE_URL, url);
+  /// Function to encrypt [text] with Salsa20 engine
+  static String encryptText(String text) {
+    final key = encrypt.Key.fromLength(32);
+    final iv = encrypt.IV.fromLength(8);
+
+    final encrypter = encrypt.Encrypter(encrypt.Salsa20(key));
+    final encrypted = encrypter.encrypt(text, iv: iv);
+
+    return encrypted.base64;
   }
 }

@@ -7,13 +7,11 @@ import 'package:yess_nutrition/presentation/pages/news_pages/news_detail_page.da
 import 'package:yess_nutrition/presentation/widgets/custom_network_image.dart';
 
 class NewsListTile extends StatelessWidget {
-  final String uid;
   final NewsEntity news;
   final String heroTag;
 
   const NewsListTile({
     Key? key,
-    required this.uid,
     required this.news,
     required this.heroTag,
   }) : super(key: key);
@@ -108,7 +106,7 @@ class NewsListTile extends StatelessWidget {
               onTap: () => Navigator.pushNamed(
                 context,
                 newsDetailRoute,
-                arguments: NewsDetailPageArgs(uid, news, heroTag),
+                arguments: NewsDetailPageArgs(news, heroTag),
               ),
             ),
           ),

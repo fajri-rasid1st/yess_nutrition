@@ -3,24 +3,15 @@ import 'package:yess_nutrition/common/utils/failure.dart';
 import 'package:yess_nutrition/domain/entities/news_entity.dart';
 
 abstract class NewsRepository {
-  Future<Either<FirestoreFailure, String>> createBookmark(
-    String uid,
-    NewsEntity news,
-  );
+  Future<Either<Failure, String>> createBookmark(NewsEntity news);
 
-  Future<Either<FirestoreFailure, List<NewsEntity>>> getBookmarks(String uid);
+  Future<Either<Failure, List<NewsEntity>>> getBookmarks();
 
-  Future<Either<FirestoreFailure, String>> deleteBookmark(
-    String uid,
-    NewsEntity news,
-  );
+  Future<Either<Failure, bool>> isBookmarkExist(NewsEntity news);
 
-  Future<Either<FirestoreFailure, String>> clearBookmarks(String uid);
+  Future<Either<Failure, String>> deleteBookmark(NewsEntity news);
 
-  Future<Either<FirestoreFailure, bool>> isBookmarkExist(
-    String uid,
-    NewsEntity news,
-  );
+  Future<Either<Failure, String>> clearBookmarks();
 
   Future<Either<Failure, List<NewsEntity>>> getNews(int pageSize, int page);
 
