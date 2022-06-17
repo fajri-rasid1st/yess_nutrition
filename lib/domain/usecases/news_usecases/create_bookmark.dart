@@ -8,7 +8,10 @@ class CreateBookmark {
 
   CreateBookmark(this._repository);
 
-  Future<Either<Failure, String>> execute(NewsEntity news) {
-    return _repository.createBookmark(news);
+  Future<Either<FirestoreFailure, String>> execute(
+    String uid,
+    NewsEntity news,
+  ) {
+    return _repository.createBookmark(uid, news);
   }
 }

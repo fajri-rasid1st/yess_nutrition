@@ -7,7 +7,7 @@ class ClearBookmarks {
 
   ClearBookmarks(this._repository);
 
-  Future<Either<Failure, String>> execute() {
-    return _repository.clearBookmarks();
+  Future<Either<FirestoreFailure, String>> execute(String uid) {
+    return _repository.clearBookmarks(uid);
   }
 }

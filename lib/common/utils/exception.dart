@@ -21,11 +21,3 @@ class ServerException implements Exception {
 
   ServerException(this.message);
 }
-
-/// Exception class that will be thrown when there is a problem
-/// related to the database.
-class DatabaseException implements Exception {
-  final String message;
-
-  DatabaseException(this.message);
-}

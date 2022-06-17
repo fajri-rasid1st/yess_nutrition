@@ -14,7 +14,7 @@ import 'presentation/providers/providers.dart';
 final locator = GetIt.instance;
 
 void init() {
-  // Auth providers
+  // User auth providers
   locator.registerFactory(
     () => GetUserNotifier(getUserUseCase: locator()),
   );
@@ -37,7 +37,7 @@ void init() {
     () => DeleteUserNotifier(deleteUserUseCase: locator()),
   );
 
-  // Firestore providers
+  // User firestore providers
   locator.registerFactory(
     () => CreateUserDataNotifier(createUserDataUseCase: locator()),
   );
@@ -54,7 +54,7 @@ void init() {
     () => UserStatusNotifier(getUserStatusUseCase: locator()),
   );
 
-  // Storage providers
+  // User storage providers
   locator.registerFactory(
     () => UploadProfilePictureNotifier(uploadProfilePictureUseCase: locator()),
   );
@@ -80,7 +80,7 @@ void init() {
     () => SearchNewsNotifier(searchNewsUseCase: locator()),
   );
 
-  // Auth usecases
+  // User auth usecases
   locator.registerLazySingleton(() => GetUser(locator()));
   locator.registerLazySingleton(() => SignIn(locator()));
   locator.registerLazySingleton(() => SignInWithGoogle(locator()));
@@ -89,14 +89,14 @@ void init() {
   locator.registerLazySingleton(() => ResetPassword(locator()));
   locator.registerLazySingleton(() => DeleteUser(locator()));
 
-  // Firestore usecases
+  // User firestore usecases
   locator.registerLazySingleton(() => CreateUserData(locator()));
   locator.registerLazySingleton(() => ReadUserData(locator()));
   locator.registerLazySingleton(() => UpdateUserData(locator()));
   locator.registerLazySingleton(() => DeleteUserData(locator()));
   locator.registerLazySingleton(() => GetUserStatus(locator()));
 
-  // Storage usecases
+  // User storage usecases
   locator.registerLazySingleton(() => UploadProfilePicture(locator()));
 
   // News usecases
@@ -108,7 +108,7 @@ void init() {
   locator.registerLazySingleton(() => GetNews(locator()));
   locator.registerLazySingleton(() => SearchNews(locator()));
 
-  // Repositories
+  // User repositories
   locator.registerLazySingleton<UserAuthRepository>(
     () => UserAuthRepositoryImpl(userAuthDataSource: locator()),
   );
@@ -118,14 +118,16 @@ void init() {
   locator.registerLazySingleton<UserStorageRepository>(
     () => UserStorageRepositoryImpl(userStorageDataSource: locator()),
   );
+
+  // News repositories
   locator.registerLazySingleton<NewsRepository>(
     () => NewsRepositoryImpl(
-      newsLocalDataSource: locator(),
+      newsFirestoreDataSource: locator(),
       newsRemoteDataSource: locator(),
     ),
   );
 
-  // Data sources
+  // User data sources
   locator.registerLazySingleton<UserAuthDataSource>(
     () => UserAuthDataSourceImpl(
       firebaseAuth: locator(),
@@ -138,15 +140,14 @@ void init() {
   locator.registerLazySingleton<UserStorageDataSource>(
     () => UserStorageDataSourceImpl(firebaseStorage: locator()),
   );
-  locator.registerLazySingleton<NewsLocalDataSource>(
-    () => NewsLocalDataSourceImpl(newsDatabase: locator()),
+
+  // News data sources
+  locator.registerLazySingleton<NewsFirestoreDataSource>(
+    () => NewsFirestoreDataSourceImpl(firebaseFirestore: locator()),
   );
   locator.registerLazySingleton<NewsRemoteDataSource>(
     () => NewsRemoteDataSourceImpl(client: locator()),
   );
-
-  // Databases
-  locator.registerLazySingleton<NewsDatabase>(() => NewsDatabase());
 
   // Services
   locator.registerLazySingleton(() => FirebaseAuth.instance);

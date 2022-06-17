@@ -2,79 +2,99 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:yess_nutrition/common/utils/exception.dart';
 import 'package:yess_nutrition/common/utils/failure.dart';
-import 'package:yess_nutrition/data/datasources/news_datasources/news_local_data_source.dart';
+import 'package:yess_nutrition/data/datasources/news_datasources/news_firestore_data_source.dart';
 import 'package:yess_nutrition/data/datasources/news_datasources/news_remote_data_source.dart';
-import 'package:yess_nutrition/data/models/news_models/news_table.dart';
+import 'package:yess_nutrition/data/models/news_models/news_document.dart';
 import 'package:yess_nutrition/domain/entities/news_entity.dart';
 import 'package:yess_nutrition/domain/repositories/news_repository.dart';
 
 class NewsRepositoryImpl implements NewsRepository {
-  final NewsLocalDataSource newsLocalDataSource;
+  final NewsFirestoreDataSource newsFirestoreDataSource;
   final NewsRemoteDataSource newsRemoteDataSource;
 
   NewsRepositoryImpl({
-    required this.newsLocalDataSource,
+    required this.newsFirestoreDataSource,
     required this.newsRemoteDataSource,
   });
 
   @override
-  Future<Either<Failure, String>> createBookmark(NewsEntity news) async {
+  Future<Either<FirestoreFailure, String>> createBookmark(
+    String uid,
+    NewsEntity news,
+  ) async {
     try {
-      final newsTable = NewsTable.fromEntity(news);
+      final newsDocument = NewsDocument.fromEntity(news);
 
-      final result = await newsLocalDataSource.createBookmark(newsTable);
+      final result = await newsFirestoreDataSource.createBookmark(
+        uid,
+        newsDocument,
+      );
 
       return Right(result);
-    } on DatabaseException {
-      return const Left(DatabaseFailure('Gagal menambah bookmark'));
+    } on FirestoreException {
+      return const Left(FirestoreFailure('Gagal menambah bookmarks'));
     }
   }
 
   @override
-  Future<Either<Failure, List<NewsEntity>>> getBookmarks() async {
+  Future<Either<FirestoreFailure, List<NewsEntity>>> getBookmarks(
+    String uid,
+  ) async {
     try {
-      final result = await newsLocalDataSource.getBookmarks();
+      final result = await newsFirestoreDataSource.getBookmarks(uid);
 
-      return Right(result.map((table) => table.toEntity()).toList());
-    } on DatabaseException {
-      return const Left(DatabaseFailure('Gagal memuat bookmarks'));
+      return Right(result.map((doc) => doc.toEntity()).toList());
+    } on FirestoreException {
+      return const Left(FirestoreFailure('Gagal memuat bookmarks'));
     }
   }
 
   @override
-  Future<Either<Failure, bool>> isBookmarkExist(NewsEntity news) async {
+  Future<Either<FirestoreFailure, String>> deleteBookmark(
+    String uid,
+    NewsEntity news,
+  ) async {
     try {
-      final newsTable = NewsTable.fromEntity(news);
+      final newsDocument = NewsDocument.fromEntity(news);
 
-      final result = await newsLocalDataSource.isBookmarkExist(newsTable);
+      final result = await newsFirestoreDataSource.deleteBookmark(
+        uid,
+        newsDocument,
+      );
 
       return Right(result);
-    } on DatabaseException {
-      return const Left(DatabaseFailure('Gagal memuat bookmark'));
+    } on FirestoreException {
+      return const Left(FirestoreFailure('Gagal menghapus bookmark'));
     }
   }
 
   @override
-  Future<Either<Failure, String>> deleteBookmark(NewsEntity news) async {
+  Future<Either<FirestoreFailure, String>> clearBookmarks(String uid) async {
     try {
-      final newsTable = NewsTable.fromEntity(news);
-
-      final result = await newsLocalDataSource.deleteBookmark(newsTable);
+      final result = await newsFirestoreDataSource.clearBookmarks(uid);
 
       return Right(result);
-    } on DatabaseException {
-      return const Left(DatabaseFailure('Gagal menghapus bookmark'));
+    } on FirestoreException {
+      return const Left(FirestoreFailure('Gagal menghapus bookmarks'));
     }
   }
 
   @override
-  Future<Either<Failure, String>> clearBookmarks() async {
+  Future<Either<FirestoreFailure, bool>> isBookmarkExist(
+    String uid,
+    NewsEntity news,
+  ) async {
     try {
-      final result = await newsLocalDataSource.clearBookmarks();
+      final newsDocument = NewsDocument.fromEntity(news);
+
+      final result = await newsFirestoreDataSource.isBookmarkExist(
+        uid,
+        newsDocument,
+      );
 
       return Right(result);
-    } on DatabaseException {
-      return const Left(DatabaseFailure('Gagal menghapus bookmarks'));
+    } on FirestoreException {
+      return const Left(FirestoreFailure('Gagal memuat bookmark'));
     }
   }
 
@@ -103,8 +123,11 @@ class NewsRepositoryImpl implements NewsRepository {
     String query,
   ) async {
     try {
-      final result =
-          await newsRemoteDataSource.searchNews(pageSize, page, query);
+      final result = await newsRemoteDataSource.searchNews(
+        pageSize,
+        page,
+        query,
+      );
 
       return Right(result.map((model) => model.toEntity()).toList());
     } on ServerException {

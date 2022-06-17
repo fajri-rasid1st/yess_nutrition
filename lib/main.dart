@@ -189,6 +189,7 @@ class MyApp extends StatelessWidget {
 
               return MaterialPageRoute(
                 builder: (_) => NewsDetailPage(
+                  uid: arguments.uid,
                   news: arguments.news,
                   heroTag: arguments.heroTag,
                 ),
@@ -202,8 +203,10 @@ class MyApp extends StatelessWidget {
                 settings: settings,
               );
             case newsBookmarksRoute:
+              final uid = settings.arguments as String;
+
               return MaterialPageRoute(
-                builder: (_) => const NewsBookmarksPage(),
+                builder: (_) => NewsBookmarksPage(uid: uid),
               );
             case checkRoute:
               return MaterialPageRoute(

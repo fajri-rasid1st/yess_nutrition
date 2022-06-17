@@ -8,7 +8,10 @@ class DeleteBookmark {
 
   DeleteBookmark(this._repository);
 
-  Future<Either<Failure, String>> execute(NewsEntity news) {
-    return _repository.deleteBookmark(news);
+  Future<Either<FirestoreFailure, String>> execute(
+    String uid,
+    NewsEntity news,
+  ) {
+    return _repository.deleteBookmark(uid, news);
   }
 }
