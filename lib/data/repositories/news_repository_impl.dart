@@ -31,9 +31,9 @@ class NewsRepositoryImpl implements NewsRepository {
   }
 
   @override
-  Future<Either<Failure, List<NewsEntity>>> getBookmarks() async {
+  Future<Either<Failure, List<NewsEntity>>> getBookmarks(String uid) async {
     try {
-      final result = await newsLocalDataSource.getBookmarks();
+      final result = await newsLocalDataSource.getBookmarks(uid);
 
       return Right(result.map((table) => table.toEntity()).toList());
     } on DatabaseException {
@@ -68,9 +68,9 @@ class NewsRepositoryImpl implements NewsRepository {
   }
 
   @override
-  Future<Either<Failure, String>> clearBookmarks() async {
+  Future<Either<Failure, String>> clearBookmarks(String uid) async {
     try {
-      final result = await newsLocalDataSource.clearBookmarks();
+      final result = await newsLocalDataSource.clearBookmarks(uid);
 
       return Right(result);
     } on DatabaseException {

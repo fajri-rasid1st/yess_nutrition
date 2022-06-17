@@ -4,6 +4,7 @@ import 'package:yess_nutrition/domain/entities/news_entity.dart';
 const newsBookmarksTable = 'news_bookmarks_table';
 
 class NewsTable extends Equatable {
+  final String uid;
   final String title;
   final String description;
   final String url;
@@ -14,6 +15,7 @@ class NewsTable extends Equatable {
   final String source;
 
   const NewsTable({
+    required this.uid,
     required this.title,
     required this.description,
     required this.url,
@@ -26,6 +28,7 @@ class NewsTable extends Equatable {
 
   factory NewsTable.fromEntity(NewsEntity news) {
     return NewsTable(
+      uid: news.uid!,
       title: news.title,
       description: news.description,
       url: news.url,
@@ -39,6 +42,7 @@ class NewsTable extends Equatable {
 
   factory NewsTable.fromMap(Map<String, dynamic> news) {
     return NewsTable(
+      uid: news['uid'],
       title: news['title'],
       description: news['description'],
       url: news['url'],
@@ -52,6 +56,7 @@ class NewsTable extends Equatable {
 
   NewsEntity toEntity() {
     return NewsEntity.bookmark(
+      uid: uid,
       title: title,
       description: description,
       url: url,
@@ -65,6 +70,7 @@ class NewsTable extends Equatable {
 
   Map<String, dynamic> toMap() {
     return {
+      'uid': uid,
       'title': title,
       'description': description,
       'url': url,
@@ -78,6 +84,7 @@ class NewsTable extends Equatable {
 
   @override
   List<Object> get props => [
+        uid,
         title,
         description,
         url,

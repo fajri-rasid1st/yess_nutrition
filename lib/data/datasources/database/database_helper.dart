@@ -4,19 +4,19 @@ import 'package:sqflite_sqlcipher/sqflite.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/data/models/news_models/news_table.dart';
 
-class NewsDatabase {
-  static NewsDatabase? _newsDatabase;
+class DatabaseHelper {
+  static DatabaseHelper? _databaseHelper;
 
-  NewsDatabase._instance() {
-    _newsDatabase = this;
+  DatabaseHelper._instance() {
+    _databaseHelper = this;
   }
 
-  factory NewsDatabase() => _newsDatabase ?? NewsDatabase._instance();
+  factory DatabaseHelper() => _databaseHelper ?? DatabaseHelper._instance();
 
   late Database _database;
 
   Future<Database> get database async {
-    _database = await _initializeDb('nutrinews.db');
+    _database = await _initializeDb('yess_nutrition.db');
 
     return _database;
   }
@@ -30,7 +30,7 @@ class NewsDatabase {
       path,
       version: 1,
       onCreate: _onCreate,
-      password: Utilities.encryptText('nutrinews.password'),
+      password: Utilities.encryptText('yess_nutrition_db'),
     );
   }
 
@@ -39,7 +39,8 @@ class NewsDatabase {
     await db.execute('''
       CREATE TABLE $newsBookmarksTable (
         _id INTEGER PRIMARY KEY AUTOINCREMENT,
-        title TEXT UNIQUE,
+        uid TEXT,
+        title TEXT,
         description TEXT,
         url TEXT UNIQUE,
         urlToImage TEXT,
@@ -59,11 +60,16 @@ class NewsDatabase {
     return id;
   }
 
-  /// get all news at bookmarks table
-  Future<List<NewsTable>> getBookmarks() async {
+  /// get all news at bookmarks table, according to [uid]
+  Future<List<NewsTable>> getBookmarks(String uid) async {
     final db = await database;
 
-    final result = await db.query(newsBookmarksTable, orderBy: '_id DESC');
+    final result = await db.query(
+      newsBookmarksTable,
+      where: 'uid = ?',
+      whereArgs: [uid],
+      orderBy: '_id DESC',
+    );
 
     final news = List<NewsTable>.from(
       result.map((bookmark) => NewsTable.fromMap(bookmark)),
@@ -78,8 +84,8 @@ class NewsDatabase {
 
     final result = await db.query(
       newsBookmarksTable,
-      where: 'title = ? AND url = ?',
-      whereArgs: [news.title, news.url],
+      where: 'uid = ? AND url = ?',
+      whereArgs: [news.uid, news.url],
     );
 
     if (result.isNotEmpty) return Future.value(true);
@@ -93,17 +99,21 @@ class NewsDatabase {
 
     final count = await db.delete(
       newsBookmarksTable,
-      where: 'title = ? AND url = ?',
-      whereArgs: [news.title, news.url],
+      where: 'uid = ? AND url = ?',
+      whereArgs: [news.uid, news.url],
     );
 
     return count;
   }
 
-  /// delete all news from bookmarks table
-  Future<int> clearBookmarks() async {
+  /// delete all news from bookmarks table, according to [uid]
+  Future<int> clearBookmarks(String uid) async {
     final db = await database;
 
-    return await db.delete(newsBookmarksTable);
+    return await db.delete(
+      newsBookmarksTable,
+      where: 'uid = ?',
+      whereArgs: [uid],
+    );
   }
 }

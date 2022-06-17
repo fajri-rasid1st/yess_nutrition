@@ -183,6 +183,7 @@ class MyApp extends StatelessWidget {
 
               return MaterialPageRoute(
                 builder: (_) => UpdateProfilePage(userData: userData),
+                settings: settings,
               );
             case newsDetailRoute:
               final arguments = settings.arguments as NewsDetailPageArgs;
@@ -202,8 +203,11 @@ class MyApp extends StatelessWidget {
                 settings: settings,
               );
             case newsBookmarksRoute:
+              final uid = settings.arguments as String;
+
               return MaterialPageRoute(
-                builder: (_) => const NewsBookmarksPage(),
+                builder: (_) => NewsBookmarksPage(uid: uid),
+                settings: settings,
               );
             case checkRoute:
               return MaterialPageRoute(

@@ -143,14 +143,14 @@ void init() {
 
   // News data sources
   locator.registerLazySingleton<NewsLocalDataSource>(
-    () => NewsLocalDataSourceImpl(newsDatabase: locator()),
+    () => NewsLocalDataSourceImpl(databaseHelper: locator()),
   );
   locator.registerLazySingleton<NewsRemoteDataSource>(
     () => NewsRemoteDataSourceImpl(client: locator()),
   );
 
   // Databases
-  locator.registerLazySingleton<NewsDatabase>(() => NewsDatabase());
+  locator.registerLazySingleton(() => DatabaseHelper());
 
   // Services
   locator.registerLazySingleton(() => FirebaseAuth.instance);

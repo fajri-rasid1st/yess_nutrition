@@ -8,7 +8,7 @@ class GetBookmarks {
 
   GetBookmarks(this._repository);
 
-  Future<Either<Failure, List<NewsEntity>>> execute() {
-    return _repository.getBookmarks();
+  Future<Either<Failure, List<NewsEntity>>> execute(String uid) {
+    return _repository.getBookmarks(uid);
   }
 }

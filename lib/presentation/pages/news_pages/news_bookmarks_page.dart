@@ -16,7 +16,9 @@ import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 import 'package:yess_nutrition/presentation/widgets/news_list_tile.dart';
 
 class NewsBookmarksPage extends StatefulWidget {
-  const NewsBookmarksPage({Key? key}) : super(key: key);
+  final String uid;
+
+  const NewsBookmarksPage({Key? key, required this.uid}) : super(key: key);
 
   @override
   State<NewsBookmarksPage> createState() => _NewsBookmarksPageState();
@@ -28,7 +30,8 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
     super.initState();
 
     Future.microtask(() {
-      Provider.of<BookmarksNotifier>(context, listen: false).getBookmarks();
+      Provider.of<BookmarksNotifier>(context, listen: false)
+          .getBookmarks(widget.uid);
     });
   }
 
@@ -41,7 +44,8 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
 
   @override
   void didPopNext() {
-    Provider.of<BookmarksNotifier>(context, listen: false).getBookmarks();
+    Provider.of<BookmarksNotifier>(context, listen: false)
+        .getBookmarks(widget.uid);
   }
 
   @override
@@ -272,13 +276,13 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
       ..hideCurrentSnackBar()
       ..showSnackBar(snackBar);
 
-    await bookmarksNotifier.getBookmarks();
+    await bookmarksNotifier.getBookmarks(widget.uid);
   }
 
   Future<void> clearBookmarks(BuildContext context) async {
     final bookmarksNotifier = context.read<BookmarksNotifier>();
 
-    await bookmarksNotifier.clearBookmarks();
+    await bookmarksNotifier.clearBookmarks(widget.uid);
 
     final message = bookmarksNotifier.message;
     final snackBar = Utilities.createSnackBar(message);
@@ -287,6 +291,6 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
       ..hideCurrentSnackBar()
       ..showSnackBar(snackBar);
 
-    await bookmarksNotifier.getBookmarks();
+    await bookmarksNotifier.getBookmarks(widget.uid);
   }
 }
