@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
-import 'package:yess_nutrition/presentation/widgets/custom_information.dart';
 import 'package:yess_nutrition/presentation/widgets/search_field.dart';
 
 class FoodCheckPage extends StatefulWidget {
@@ -11,21 +10,21 @@ class FoodCheckPage extends StatefulWidget {
 }
 
 class _FoodCheckPageState extends State<FoodCheckPage> {
-  late final TextEditingController _searchController;
   late final ScrollController _scrollController;
+  late final TextEditingController _searchController;
 
   @override
   void initState() {
-    _searchController = TextEditingController();
     _scrollController = ScrollController();
+    _searchController = TextEditingController();
 
     super.initState();
   }
 
   @override
   void dispose() {
-    _searchController.dispose();
     _scrollController.dispose();
+    _searchController.dispose();
 
     super.dispose();
   }
@@ -36,6 +35,7 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
       resizeToAvoidBottomInset: false,
       backgroundColor: primaryBackgroundColor,
       body: NestedScrollView(
+        controller: _scrollController,
         floatHeaderSlivers: true,
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return <Widget>[
@@ -83,13 +83,6 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
                         backgroundColor: primaryBackgroundColor,
                         query: '',
                         hintText: 'Masukkan nama makanan atau minuman...',
-                        onTap: () {
-                          // _scrollController.animateTo(
-                          //   0,
-                          //   duration: const Duration(milliseconds: 250),
-                          //   curve: Curves.easeOut,
-                          // );
-                        },
                         onChanged: (value) {
                           // newsNotifier.onChangedQuery = value.trim();
                         },
@@ -106,13 +99,17 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
             ),
           ];
         },
-        body: const CustomInformation(
-          key: Key('first_greeting'),
-          imgPath: 'assets/svg/pasta_cuate.svg',
-          title: 'Mau nyari apa yo?',
-          subtitle: 'Hasil pencarian anda akan muncul di sini.',
+        body: SingleChildScrollView(
+          child: Column(),
         ),
       ),
     );
   }
 }
+
+// const CustomInformation(
+//           key: Key('first_greeting'),
+//           imgPath: 'assets/svg/pasta_cuate.svg',
+//           title: 'Mau nyari apa yo?',
+//           subtitle: 'Hasil pencarian anda akan muncul di sini.',
+//         ),

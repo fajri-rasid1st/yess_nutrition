@@ -86,6 +86,12 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<UserStatusNotifier>(),
         ),
         ChangeNotifierProvider(
+          create: (_) => di.locator<UploadProfilePictureNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<SearchFoodsNotifier>(),
+        ),
+        ChangeNotifierProvider(
           create: (_) => di.locator<BookmarkNotifier>(),
         ),
         ChangeNotifierProvider(
@@ -96,9 +102,6 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => di.locator<SearchNewsNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<UploadProfilePictureNotifier>(),
         ),
         ChangeNotifierProvider(
           create: (_) => BottomNavigationBarNotifier(),

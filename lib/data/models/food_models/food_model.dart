@@ -8,6 +8,7 @@ class FoodModel extends Equatable {
   final String? label;
   final String? category;
   final String? categoryLabel;
+  final List<String>? foodContentLabel;
   final String? image;
   final NutrientsModel? nutrients;
 
@@ -16,6 +17,7 @@ class FoodModel extends Equatable {
     this.label,
     this.category,
     this.categoryLabel,
+    this.foodContentLabel,
     this.image,
     this.nutrients,
   });
@@ -26,6 +28,7 @@ class FoodModel extends Equatable {
       label: food['label'],
       category: food['category'],
       categoryLabel: food['categoryLabel'],
+      foodContentLabel: (food['foodContentLabel'] as String?)?.split('; '),
       image: food['image'],
       nutrients: NutrientsModel.fromJson(food['nutrients']),
     );
@@ -37,6 +40,7 @@ class FoodModel extends Equatable {
       'label': label,
       'category': category,
       'categoryLabel': categoryLabel,
+      'foodContentLabel': foodContentLabel?.join('; '),
       'image': image,
       'nutrients': nutrients?.toJson(),
     };
@@ -48,6 +52,7 @@ class FoodModel extends Equatable {
       label: label ?? '',
       category: category ?? '',
       categoryLabel: categoryLabel ?? '',
+      foodContentLabel: foodContentLabel ?? <String>[],
       image: image ?? '',
       nutrients: nutrients?.toEntity() ??
           const NutrientsEntity(
@@ -66,6 +71,7 @@ class FoodModel extends Equatable {
         label,
         category,
         categoryLabel,
+        foodContentLabel,
         image,
         nutrients,
       ];

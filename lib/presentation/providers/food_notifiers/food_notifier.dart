@@ -42,6 +42,7 @@ class SearchFoodsNotifier extends ChangeNotifier {
 
   Future<void> searchFoods({required String query}) async {
     _onSubmittedQuery = query;
+
     _state = RequestState.loading;
     notifyListeners();
 

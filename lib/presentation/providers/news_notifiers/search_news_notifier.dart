@@ -47,6 +47,7 @@ class SearchNewsNotifier extends ChangeNotifier {
 
   Future<void> searchNews({required int page, required String query}) async {
     _onSubmittedQuery = query;
+
     _state = RequestState.loading;
     notifyListeners();
 

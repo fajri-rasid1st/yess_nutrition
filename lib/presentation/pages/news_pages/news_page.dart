@@ -186,7 +186,7 @@ class _NewsPageState extends State<NewsPage> {
               ),
               icon: const Icon(
                 Icons.arrow_upward_rounded,
-                size: 20,
+                size: 18,
               ),
               onPressed: () {
                 _scrollController.jumpTo(0);
@@ -223,6 +223,7 @@ class _NewsPageState extends State<NewsPage> {
   SlidableAutoCloseBehavior _buildNewsList(GetNewsNotifier newsNotifier) {
     return SlidableAutoCloseBehavior(
       child: ListView.separated(
+        padding: const EdgeInsets.all(0),
         itemCount: newsNotifier.hasMoreData
             ? newsNotifier.news.length + 1
             : newsNotifier.news.length,
@@ -245,6 +246,7 @@ class _NewsPageState extends State<NewsPage> {
   SlidableAutoCloseBehavior _buildSearchList(SearchNewsNotifier newsNotifier) {
     return SlidableAutoCloseBehavior(
       child: ListView.separated(
+        padding: const EdgeInsets.all(0),
         itemCount: newsNotifier.hasMoreData
             ? newsNotifier.results.length + 1
             : newsNotifier.results.length,

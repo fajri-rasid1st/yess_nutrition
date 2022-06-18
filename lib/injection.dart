@@ -59,6 +59,11 @@ void init() {
     () => UploadProfilePictureNotifier(uploadProfilePictureUseCase: locator()),
   );
 
+  // Food providers
+  locator.registerFactory(
+    () => SearchFoodsNotifier(searchFoodsUseCase: locator()),
+  );
+
   // News providers
   locator.registerFactory(
     () => BookmarkNotifier(
@@ -99,6 +104,9 @@ void init() {
   // User storage usecases
   locator.registerLazySingleton(() => UploadProfilePicture(locator()));
 
+  // Food usecases
+  locator.registerLazySingleton(() => SearchFoods(locator()));
+
   // News usecases
   locator.registerLazySingleton(() => CreateBookmark(locator()));
   locator.registerLazySingleton(() => DeleteBookmark(locator()));
@@ -117,6 +125,11 @@ void init() {
   );
   locator.registerLazySingleton<UserStorageRepository>(
     () => UserStorageRepositoryImpl(userStorageDataSource: locator()),
+  );
+
+  // Food repositories
+  locator.registerLazySingleton<FoodRepository>(
+    () => FoodRepositoryImpl(foodRemoteDataSource: locator()),
   );
 
   // News repositories
@@ -139,6 +152,11 @@ void init() {
   );
   locator.registerLazySingleton<UserStorageDataSource>(
     () => UserStorageDataSourceImpl(firebaseStorage: locator()),
+  );
+
+  // Food data sources
+  locator.registerLazySingleton<FoodRemoteDataSource>(
+    () => FoodRemoteDataSourceImpl(client: locator()),
   );
 
   // News data sources

@@ -6,6 +6,7 @@ class FoodEntity extends Equatable {
   final String label;
   final String category;
   final String categoryLabel;
+  final List<String> foodContentLabel;
   final String image;
   final NutrientsEntity nutrients;
 
@@ -14,6 +15,7 @@ class FoodEntity extends Equatable {
     required this.label,
     required this.category,
     required this.categoryLabel,
+    required this.foodContentLabel,
     required this.image,
     required this.nutrients,
   });
@@ -24,6 +26,7 @@ class FoodEntity extends Equatable {
         label,
         category,
         categoryLabel,
+        foodContentLabel,
         image,
         nutrients,
       ];
