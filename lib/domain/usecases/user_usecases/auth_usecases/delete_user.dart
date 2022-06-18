@@ -7,7 +7,7 @@ class DeleteUser {
 
   DeleteUser(this._repository);
 
-  Future<Either<AuthFailure, void>> execute() {
+  Future<Either<Failure, void>> execute() {
     return _repository.deleteUser();
   }
 }

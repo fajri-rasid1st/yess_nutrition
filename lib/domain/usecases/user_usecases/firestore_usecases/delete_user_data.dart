@@ -7,7 +7,7 @@ class DeleteUserData {
 
   DeleteUserData(this._repository);
 
-  Future<Either<FirestoreFailure, void>> execute(String uid) {
+  Future<Either<Failure, void>> execute(String uid) {
     return _repository.deleteUserData(uid);
   }
 }

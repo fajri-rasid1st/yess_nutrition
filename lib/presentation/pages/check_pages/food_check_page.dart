@@ -84,11 +84,11 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
                         query: '',
                         hintText: 'Masukkan nama makanan atau minuman...',
                         onTap: () {
-                          _scrollController.animateTo(
-                            0,
-                            duration: const Duration(milliseconds: 250),
-                            curve: Curves.easeOut,
-                          );
+                          // _scrollController.animateTo(
+                          //   0,
+                          //   duration: const Duration(milliseconds: 250),
+                          //   curve: Curves.easeOut,
+                          // );
                         },
                         onChanged: (value) {
                           // newsNotifier.onChangedQuery = value.trim();
@@ -115,27 +115,4 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
       ),
     );
   }
-
-  // Builder _buildSliverList(BuildContext context) {
-  //   return Builder(
-  //     builder: (context) {
-  //       return CustomScrollView(
-  //         slivers: <Widget>[
-  //           SliverOverlapInjector(
-  //             handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-  //           ),
-  //           SliverPadding(
-  //             padding: const EdgeInsets.symmetric(vertical: 20),
-  //             sliver: SliverList(
-  //               delegate: SliverChildBuilderDelegate(
-  //                 (context, index) => _buildCard(context),
-  //                 childCount: 10,
-  //               ),
-  //             ),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 }

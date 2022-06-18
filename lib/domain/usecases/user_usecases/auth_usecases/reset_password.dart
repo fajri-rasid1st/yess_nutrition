@@ -7,7 +7,7 @@ class ResetPassword {
 
   ResetPassword(this._repository);
 
-  Future<Either<AuthFailure, void>> execute(String email) {
+  Future<Either<Failure, void>> execute(String email) {
     return _repository.resetPassword(email);
   }
 }

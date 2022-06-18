@@ -8,7 +8,7 @@ class GetUser {
 
   GetUser(this._repository);
 
-  Either<AuthFailure, Stream<UserEntity?>> execute() {
+  Either<Failure, Stream<UserEntity?>> execute() {
     return _repository.getUser();
   }
 }

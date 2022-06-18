@@ -7,7 +7,7 @@ class UploadProfilePicture {
 
   UploadProfilePicture(this._repository);
 
-  Future<Either<StorageFailure, String>> execute(String path, String name) {
+  Future<Either<Failure, String>> execute(String path, String name) {
     return _repository.uploadProfilePicture(path, name);
   }
 }

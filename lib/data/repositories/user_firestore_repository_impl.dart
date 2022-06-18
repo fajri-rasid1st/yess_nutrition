@@ -12,8 +12,7 @@ class UserFirestoreRepositoryImpl implements UserFirestoreRepository {
   UserFirestoreRepositoryImpl({required this.userFirestoreDataSource});
 
   @override
-  Future<Either<FirestoreFailure, void>> createUserData(
-      UserDataEntity userData) async {
+  Future<Either<Failure, void>> createUserData(UserDataEntity userData) async {
     try {
       final userDataModel = UserDataModel.fromEntity(userData);
 
@@ -27,8 +26,7 @@ class UserFirestoreRepositoryImpl implements UserFirestoreRepository {
   }
 
   @override
-  Future<Either<FirestoreFailure, UserDataEntity>> readUserData(
-      String uid) async {
+  Future<Either<Failure, UserDataEntity>> readUserData(String uid) async {
     try {
       final result = await userFirestoreDataSource.readUserData(uid);
 
@@ -39,8 +37,7 @@ class UserFirestoreRepositoryImpl implements UserFirestoreRepository {
   }
 
   @override
-  Future<Either<FirestoreFailure, void>> updateUserData(
-      UserDataEntity userData) async {
+  Future<Either<Failure, void>> updateUserData(UserDataEntity userData) async {
     try {
       final userDataModel = UserDataModel.fromEntity(userData);
 
@@ -54,7 +51,7 @@ class UserFirestoreRepositoryImpl implements UserFirestoreRepository {
   }
 
   @override
-  Future<Either<FirestoreFailure, void>> deleteUserData(String uid) async {
+  Future<Either<Failure, void>> deleteUserData(String uid) async {
     try {
       final result = await userFirestoreDataSource.deleteUserData(uid);
 
@@ -65,7 +62,7 @@ class UserFirestoreRepositoryImpl implements UserFirestoreRepository {
   }
 
   @override
-  Future<Either<FirestoreFailure, bool>> isNewUser(String uid) async {
+  Future<Either<Failure, bool>> isNewUser(String uid) async {
     try {
       final result = await userFirestoreDataSource.isNewUser(uid);
 

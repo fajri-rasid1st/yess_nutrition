@@ -8,7 +8,7 @@ class SignInWithGoogle {
 
   SignInWithGoogle(this._repository);
 
-  Future<Either<AuthFailure, UserEntity?>> execute() {
+  Future<Either<Failure, UserEntity?>> execute() {
     return _repository.signInWithGoogle();
   }
 }

@@ -7,7 +7,7 @@ class GetUserStatus {
 
   GetUserStatus(this._repository);
 
-  Future<Either<FirestoreFailure, bool>> execute(String uid) {
+  Future<Either<Failure, bool>> execute(String uid) {
     return _repository.isNewUser(uid);
   }
 }

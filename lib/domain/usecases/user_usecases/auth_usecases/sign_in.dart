@@ -8,10 +8,7 @@ class SignIn {
 
   SignIn(this._repository);
 
-  Future<Either<AuthFailure, UserEntity>> execute(
-    String email,
-    String password,
-  ) {
+  Future<Either<Failure, UserEntity>> execute(String email, String password) {
     return _repository.signIn(email, password);
   }
 }

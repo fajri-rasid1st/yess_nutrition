@@ -92,17 +92,18 @@ class CheckPage extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context)
                             .textTheme
-                            .headline6!
+                            .subtitle1!
                             .copyWith(fontWeight: FontWeight.bold),
                       ),
+                      const SizedBox(height: 4),
                       Text(
                         subtitle,
                         style: Theme.of(context)
                             .textTheme
-                            .bodyLarge!
+                            .subtitle2!
                             .copyWith(color: primaryColor),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 12),
                       Text(
                         description,
                         maxLines: 2,
@@ -115,11 +116,10 @@ class CheckPage extends StatelessWidget {
                         children: <Widget>[
                           Text(
                             'Cobain deh',
-                            style:
-                                Theme.of(context).textTheme.bodyText1!.copyWith(
-                                      color: primaryColor,
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                            style: Theme.of(context).textTheme.button!.copyWith(
+                                  color: primaryColor,
+                                  fontWeight: FontWeight.bold,
+                                ),
                           ),
                           const Padding(
                             padding: EdgeInsets.only(top: 4),

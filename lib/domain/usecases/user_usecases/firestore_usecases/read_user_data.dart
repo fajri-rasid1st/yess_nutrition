@@ -8,7 +8,7 @@ class ReadUserData {
 
   ReadUserData(this._repository);
 
-  Future<Either<FirestoreFailure, UserDataEntity>> execute(String uid) {
+  Future<Either<Failure, UserDataEntity>> execute(String uid) {
     return _repository.readUserData(uid);
   }
 }

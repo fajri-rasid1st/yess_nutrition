@@ -7,7 +7,7 @@ class SignOut {
 
   SignOut(this._repository);
 
-  Future<Either<AuthFailure, void>> execute() {
+  Future<Either<Failure, void>> execute() {
     return _repository.signOut();
   }
 }

@@ -8,7 +8,7 @@ class CreateUserData {
 
   CreateUserData(this._repository);
 
-  Future<Either<FirestoreFailure, void>> execute(UserDataEntity userData) {
+  Future<Either<Failure, void>> execute(UserDataEntity userData) {
     return _repository.createUserData(userData);
   }
 }

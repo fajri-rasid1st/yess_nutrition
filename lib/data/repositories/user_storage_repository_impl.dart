@@ -10,7 +10,7 @@ class UserStorageRepositoryImpl implements UserStorageRepository {
   UserStorageRepositoryImpl({required this.userStorageDataSource});
 
   @override
-  Future<Either<StorageFailure, String>> uploadProfilePicture(
+  Future<Either<Failure, String>> uploadProfilePicture(
     String path,
     String name,
   ) async {

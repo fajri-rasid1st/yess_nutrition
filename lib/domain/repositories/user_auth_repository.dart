@@ -3,17 +3,17 @@ import 'package:yess_nutrition/common/utils/failure.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
 
 abstract class UserAuthRepository {
-  Either<AuthFailure, Stream<UserEntity?>> getUser();
+  Either<Failure, Stream<UserEntity?>> getUser();
 
-  Future<Either<AuthFailure, UserEntity>> signIn(String email, String password);
+  Future<Either<Failure, UserEntity>> signIn(String email, String password);
 
-  Future<Either<AuthFailure, UserEntity>> signUp(String email, String password);
+  Future<Either<Failure, UserEntity>> signUp(String email, String password);
 
-  Future<Either<AuthFailure, void>> signOut();
+  Future<Either<Failure, void>> signOut();
 
-  Future<Either<AuthFailure, void>> resetPassword(String email);
+  Future<Either<Failure, void>> resetPassword(String email);
 
-  Future<Either<AuthFailure, void>> deleteUser();
+  Future<Either<Failure, void>> deleteUser();
 
-  Future<Either<AuthFailure, UserEntity?>> signInWithGoogle();
+  Future<Either<Failure, UserEntity?>> signInWithGoogle();
 }
