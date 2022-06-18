@@ -28,7 +28,6 @@ class NewsListTile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 child: Hero(
                   tag: heroTag,
-                  transitionOnUserGestures: true,
                   child: CustomNetworkImage(
                     width: 100,
                     height: 100,

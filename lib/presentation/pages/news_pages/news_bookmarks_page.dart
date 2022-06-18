@@ -185,9 +185,10 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
       barrierDismissible: true,
       transitionBuilder: (context, animStart, animEnd, child) {
         final curvedValue = Curves.ease.transform(animStart.value) - 3.75;
+        final height = (MediaQuery.of(context).size.height / 8) * -1;
 
         return Transform(
-          transform: Matrix4.translationValues(0, (curvedValue * -100), 0),
+          transform: Matrix4.translationValues(0, (curvedValue * height), 0),
           child: Opacity(
             opacity: animStart.value,
             child: Dialog(

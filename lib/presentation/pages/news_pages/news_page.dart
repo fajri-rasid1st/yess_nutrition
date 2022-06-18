@@ -100,6 +100,7 @@ class _NewsPageState extends State<NewsPage> {
                           onPressed: () => Navigator.pushNamed(
                             context,
                             newsBookmarksRoute,
+                            arguments: widget.uid,
                           ),
                           icon: const Icon(Icons.bookmarks_outlined),
                           color: primaryColor,

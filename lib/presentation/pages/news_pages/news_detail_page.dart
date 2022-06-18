@@ -99,7 +99,6 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
             children: <Widget>[
               Hero(
                 tag: widget.heroTag,
-                transitionOnUserGestures: true,
                 child: CustomNetworkImage(
                   height: MediaQuery.of(context).size.height / 2 + 24,
                   fit: BoxFit.fitHeight,

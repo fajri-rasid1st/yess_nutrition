@@ -42,7 +42,7 @@ class DatabaseHelper {
         uid TEXT,
         title TEXT,
         description TEXT,
-        url TEXT UNIQUE,
+        url TEXT,
         urlToImage TEXT,
         publishedAt TEXT,
         content TEXT,
