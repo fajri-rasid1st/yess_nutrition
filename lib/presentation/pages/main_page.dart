@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
@@ -8,6 +9,9 @@ import 'package:yess_nutrition/presentation/pages/schedule_pages/nutri_time_page
 import 'package:yess_nutrition/presentation/providers/common_notifiers/bottom_navigation_bar_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_bottom_navigation_bar.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_floating_action_button.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 class MainPage extends StatelessWidget {
   final UserEntity user;
