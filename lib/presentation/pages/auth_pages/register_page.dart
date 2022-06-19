@@ -9,8 +9,8 @@ import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/presentation/providers/common_notifiers/input_password_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user_notifiers/auth_notifiers/sign_up_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user_notifiers/firestore_notifiers/create_user_data_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/user_auth_notifiers/sign_up_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_firestore_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -259,7 +259,7 @@ class _RegisterPageState extends State<RegisterPage> {
     if (_formKey.currentState!.validate()) {
       final value = _formKey.currentState!.value;
       final signUpNotifier = context.read<SignUpNotifier>();
-      final createUserDataNotifier = context.read<CreateUserDataNotifier>();
+      final userDataNotifier = context.read<UserFirestoreNotifier>();
 
       // show loading when sign up is currently on process
       showDialog(
@@ -279,11 +279,11 @@ class _RegisterPageState extends State<RegisterPage> {
         final userData = user.toUserData();
 
         // craete user data when sign up successfully
-        await createUserDataNotifier.createUserData(
+        await userDataNotifier.createUserData(
           userData.copyWith(name: value['name']),
         );
 
-        if (createUserDataNotifier.state == UserState.success) {
+        if (userDataNotifier.state == UserState.success) {
           // close the loading indicator
           navigatorKey.currentState!.pop();
 

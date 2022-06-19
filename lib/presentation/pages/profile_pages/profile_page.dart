@@ -22,17 +22,17 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   void initState() {
+    super.initState();
+
     Future.microtask(() {
-      Provider.of<ReadUserDataNotifier>(context, listen: false)
+      Provider.of<UserFirestoreNotifier>(context, listen: false)
           .readUserData(widget.uid);
     });
-
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ReadUserDataNotifier>(
+    return Consumer<UserFirestoreNotifier>(
       builder: (context, user, child) {
         if (user.state == UserState.success) {
           return Scaffold(

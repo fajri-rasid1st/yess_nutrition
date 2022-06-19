@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
-import 'package:yess_nutrition/domain/usecases/user_usecases/auth_usecases/delete_user.dart';
+import 'package:yess_nutrition/domain/usecases/user_usecases/user_auth_usecases/sign_out.dart';
 
-class DeleteUserNotifier extends ChangeNotifier {
-  final DeleteUser deleteUserUseCase;
+class SignOutNotifier extends ChangeNotifier {
+  final SignOut signOutUseCase;
 
-  DeleteUserNotifier({required this.deleteUserUseCase});
+  SignOutNotifier({required this.signOutUseCase});
 
   UserState _state = UserState.empty;
   UserState get state => _state;
@@ -13,8 +13,8 @@ class DeleteUserNotifier extends ChangeNotifier {
   String _error = '';
   String get error => _error;
 
-  Future<void> deleteUser() async {
-    final result = await deleteUserUseCase.execute();
+  Future<void> signOut() async {
+    final result = await signOutUseCase.execute();
 
     result.fold(
       (failure) {

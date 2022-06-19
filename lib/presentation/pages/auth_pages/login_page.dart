@@ -10,10 +10,8 @@ import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/presentation/providers/common_notifiers/input_password_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user_notifiers/auth_notifiers/sign_in_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user_notifiers/auth_notifiers/sign_in_with_google_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user_notifiers/firestore_notifiers/create_user_data_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user_notifiers/firestore_notifiers/user_status_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/user_auth_notifiers/sign_in_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_firestore_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/clickable_text.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
@@ -268,14 +266,13 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _onPressedGoogleSignInButton(BuildContext context) async {
-    final googleSignInNotifier = context.read<SignInWithGoogleNotifier>();
-    final userStatusNotifier = context.read<UserStatusNotifier>();
-    final createUserDataNotifier = context.read<CreateUserDataNotifier>();
+    final signInNotifier = context.read<SignInNotifier>();
+    final userDataNotifier = context.read<UserFirestoreNotifier>();
 
-    await googleSignInNotifier.signInWithGoogle();
+    await signInNotifier.signInWithGoogle();
 
-    if (googleSignInNotifier.state == UserState.error) {
-      final snackBar = Utilities.createSnackBar(googleSignInNotifier.error);
+    if (signInNotifier.state == UserState.error) {
+      final snackBar = Utilities.createSnackBar(signInNotifier.error);
 
       scaffoldMessengerKey.currentState!
         ..hideCurrentSnackBar()
@@ -283,21 +280,21 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     // get user
-    final user = googleSignInNotifier.user;
+    final user = signInNotifier.userFromGoogle;
 
     if (user != null) {
       // first, check if this user already in database
-      await userStatusNotifier.getUserStatus(user.uid);
+      await userDataNotifier.getUserStatus(user.uid);
 
-      if (userStatusNotifier.state == UserState.success) {
-        if (userStatusNotifier.isNewUser) {
+      if (userDataNotifier.state == UserState.success) {
+        if (userDataNotifier.isNewUser) {
           // convert user entity to user data entity
           final userData = user.toUserData();
 
           // craete user data
-          await createUserDataNotifier.createUserData(userData);
+          await userDataNotifier.createUserData(userData);
 
-          if (createUserDataNotifier.state == UserState.success) {
+          if (userDataNotifier.state == UserState.success) {
             // navigate to main page
             navigatorKey.currentState!.pushReplacementNamed(
               mainRoute,

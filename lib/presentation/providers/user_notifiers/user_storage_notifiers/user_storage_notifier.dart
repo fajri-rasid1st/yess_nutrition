@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
-import 'package:yess_nutrition/domain/usecases/user_usecases/storage_usecases/storage_usecases.dart';
+import 'package:yess_nutrition/domain/usecases/user_usecases/user_storage_usecases/upload_profile_picture.dart';
 
-class UploadProfilePictureNotifier extends ChangeNotifier {
+class UserStorageNotifier extends ChangeNotifier {
   final UploadProfilePicture uploadProfilePictureUseCase;
 
-  UploadProfilePictureNotifier({required this.uploadProfilePictureUseCase});
+  UserStorageNotifier({required this.uploadProfilePictureUseCase});
 
   UserState _state = UserState.empty;
   UserState get state => _state;

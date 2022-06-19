@@ -9,8 +9,7 @@ import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
-import 'package:yess_nutrition/presentation/providers/user_notifiers/firestore_notifiers/read_user_data_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user_notifiers/firestore_notifiers/update_user_data_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_firestore_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
 class AdditionalInfoPage extends StatefulWidget {
@@ -265,8 +264,7 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
 
     if (_formKey.currentState!.validate()) {
       final value = _formKey.currentState!.value;
-      final readUserDataNotifier = context.read<ReadUserDataNotifier>();
-      final updateUserDataNotifier = context.read<UpdateUserDataNotifier>();
+      final userDataNotifier = context.read<UserFirestoreNotifier>();
 
       // show loading when on process
       showDialog(
@@ -276,11 +274,11 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
       );
 
       // read user data
-      await readUserDataNotifier.readUserData(widget.user.uid);
+      await userDataNotifier.readUserData(widget.user.uid);
 
-      if (readUserDataNotifier.state == UserState.success) {
+      if (userDataNotifier.state == UserState.success) {
         // get user data
-        final userData = readUserDataNotifier.userData;
+        final userData = userDataNotifier.userData;
 
         // updated user data
         final updatedUserData = userData.copyWith(
@@ -291,9 +289,9 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
         );
 
         // update user data on firestore
-        await updateUserDataNotifier.updateUserData(updatedUserData);
+        await userDataNotifier.updateUserData(updatedUserData);
 
-        if (updateUserDataNotifier.state == UserState.success) {
+        if (userDataNotifier.state == UserState.success) {
           // close loading indicator
           navigatorKey.currentState!.pop();
 
@@ -305,7 +303,7 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
           );
         }
       } else {
-        final snackBar = Utilities.createSnackBar(updateUserDataNotifier.error);
+        final snackBar = Utilities.createSnackBar(userDataNotifier.error);
 
         // close loading indicator
         navigatorKey.currentState!.pop();

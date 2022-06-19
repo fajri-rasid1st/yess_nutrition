@@ -56,9 +56,6 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<SignInNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<SignInWithGoogleNotifier>(),
-        ),
-        ChangeNotifierProvider(
           create: (_) => di.locator<SignUpNotifier>(),
         ),
         ChangeNotifierProvider(
@@ -71,31 +68,16 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<DeleteUserNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<CreateUserDataNotifier>(),
+          create: (_) => di.locator<UserFirestoreNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<ReadUserDataNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<UpdateUserDataNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<DeleteUserDataNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<UserStatusNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<UploadProfilePictureNotifier>(),
+          create: (_) => di.locator<UserStorageNotifier>(),
         ),
         ChangeNotifierProvider(
           create: (_) => di.locator<FoodNotifier>(),
         ),
         ChangeNotifierProvider(
           create: (_) => di.locator<BookmarkNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<BookmarksNotifier>(),
         ),
         ChangeNotifierProvider(
           create: (_) => di.locator<GetNewsNotifier>(),

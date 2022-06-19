@@ -19,10 +19,10 @@ void init() {
     () => GetUserNotifier(getUserUseCase: locator()),
   );
   locator.registerFactory(
-    () => SignInNotifier(signInUseCase: locator()),
-  );
-  locator.registerFactory(
-    () => SignInWithGoogleNotifier(signInWithGoogleUseCase: locator()),
+    () => SignInNotifier(
+      signInUseCase: locator(),
+      signInWithGoogleUseCase: locator(),
+    ),
   );
   locator.registerFactory(
     () => SignUpNotifier(signUpUseCase: locator()),
@@ -39,28 +39,24 @@ void init() {
 
   // User firestore providers
   locator.registerFactory(
-    () => CreateUserDataNotifier(createUserDataUseCase: locator()),
-  );
-  locator.registerFactory(
-    () => ReadUserDataNotifier(readUserDataUseCase: locator()),
-  );
-  locator.registerFactory(
-    () => UpdateUserDataNotifier(updateUserDataUseCase: locator()),
-  );
-  locator.registerFactory(
-    () => DeleteUserDataNotifier(deleteUserDataUseCase: locator()),
-  );
-  locator.registerFactory(
-    () => UserStatusNotifier(getUserStatusUseCase: locator()),
+    () => UserFirestoreNotifier(
+      createUserDataUseCase: locator(),
+      readUserDataUseCase: locator(),
+      updateUserDataUseCase: locator(),
+      deleteUserDataUseCase: locator(),
+      getUserStatusUseCase: locator(),
+    ),
   );
 
   // User storage providers
   locator.registerFactory(
-    () => UploadProfilePictureNotifier(uploadProfilePictureUseCase: locator()),
+    () => UserStorageNotifier(uploadProfilePictureUseCase: locator()),
   );
 
   // Food providers
-  locator.registerFactory(() => FoodNotifier(searchFoodsUseCase: locator()));
+  locator.registerFactory(
+    () => FoodNotifier(searchFoodsUseCase: locator()),
+  );
 
   // News providers
   locator.registerFactory(
@@ -68,10 +64,6 @@ void init() {
       createBookmarkUseCase: locator(),
       deleteBookmarkUseCase: locator(),
       getBookmarkStatusUseCase: locator(),
-    ),
-  );
-  locator.registerFactory(
-    () => BookmarksNotifier(
       getBookmarksUseCase: locator(),
       clearBookmarksUseCase: locator(),
     ),

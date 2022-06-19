@@ -403,8 +403,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
 
     if (_formKey.currentState!.validate()) {
       final value = _formKey.currentState!.value;
-      final readUserDataNotifier = context.read<ReadUserDataNotifier>();
-      final updateUserDataNotifier = context.read<UpdateUserDataNotifier>();
+      final userDataNotifier = context.read<UserFirestoreNotifier>();
 
       // show loading when on process
       showDialog(
@@ -414,13 +413,13 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       );
 
       // read user data
-      await readUserDataNotifier.readUserData(widget.userData.uid);
+      await userDataNotifier.readUserData(widget.userData.uid);
 
       if (!mounted) return;
 
-      if (readUserDataNotifier.state == UserState.success) {
+      if (userDataNotifier.state == UserState.success) {
         // get user data
-        final userData = readUserDataNotifier.userData;
+        final userData = userDataNotifier.userData;
 
         // updated user data
         final updatedUserData = userData.copyWith(
@@ -433,11 +432,11 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
         );
 
         // update user data on firestore
-        await updateUserDataNotifier.updateUserData(updatedUserData);
+        await userDataNotifier.updateUserData(updatedUserData);
 
         if (!mounted) return;
 
-        if (updateUserDataNotifier.state == UserState.success) {
+        if (userDataNotifier.state == UserState.success) {
           // close loading indicator
           Navigator.pop(context);
 
@@ -452,7 +451,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
           );
         }
       } else {
-        final snackBar = Utilities.createSnackBar(updateUserDataNotifier.error);
+        final snackBar = Utilities.createSnackBar(userDataNotifier.error);
 
         // close loading indicator
         Navigator.pop(context);
@@ -541,8 +540,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       builder: (context) => const LoadingIndicator(),
     );
 
-    final uploadProfilePictureNotifier =
-        context.read<UploadProfilePictureNotifier>();
+    final uploadProfilePictureNotifier = context.read<UserStorageNotifier>();
 
     await uploadProfilePictureNotifier.uploadProfilePicture(
         path, p.basename(path));
@@ -550,18 +548,18 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     if (!mounted) return;
 
     if (uploadProfilePictureNotifier.state == UserState.success) {
-      final readUserDataNotifier = context.read<ReadUserDataNotifier>();
-      final updateUserDataNotifier = context.read<UpdateUserDataNotifier>();
+      final userDataNotifier = context.read<UserFirestoreNotifier>();
+
       String url = uploadProfilePictureNotifier.downloadUrl;
 
       // read user data
-      await readUserDataNotifier.readUserData(widget.userData.uid);
+      await userDataNotifier.readUserData(widget.userData.uid);
 
       if (!mounted) return;
 
-      if (readUserDataNotifier.state == UserState.success) {
+      if (userDataNotifier.state == UserState.success) {
         // get user data
-        final userData = readUserDataNotifier.userData;
+        final userData = userDataNotifier.userData;
 
         // updated user data
         final updatedUserData = userData.copyWith(
@@ -569,11 +567,11 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
         );
 
         // update user data on firestore
-        await updateUserDataNotifier.updateUserData(updatedUserData);
+        await userDataNotifier.updateUserData(updatedUserData);
 
         if (!mounted) return;
 
-        if (updateUserDataNotifier.state == UserState.success) {
+        if (userDataNotifier.state == UserState.success) {
           // close loading indicator
           Navigator.pop(context);
 
