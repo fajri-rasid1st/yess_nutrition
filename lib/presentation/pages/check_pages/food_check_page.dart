@@ -17,23 +17,20 @@ class FoodCheckPage extends StatefulWidget {
 }
 
 class _FoodCheckPageState extends State<FoodCheckPage> {
-  late final ScrollController _scrollController;
   late final TextEditingController _searchController;
 
   @override
   void initState() {
-    _scrollController = ScrollController();
-    _searchController = TextEditingController();
-
     super.initState();
+
+    _searchController = TextEditingController();
   }
 
   @override
   void dispose() {
-    _scrollController.dispose();
-    _searchController.dispose();
-
     super.dispose();
+
+    _searchController.dispose();
   }
 
   @override
@@ -42,7 +39,6 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
       resizeToAvoidBottomInset: false,
       backgroundColor: primaryBackgroundColor,
       body: NestedScrollView(
-        controller: _scrollController,
         floatHeaderSlivers: true,
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return <Widget>[
@@ -102,17 +98,16 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
 
             if (isOnChangedQueryEmpty || isOnSubmittedQueryEmpty || isTyping) {
               return _buildFirstView();
-            } else {
-              if (foodNotifier.state == RequestState.success) {
-                final results = foodNotifier.results;
-                final hints = foodNotifier.hints;
+            }
 
-                return results.isEmpty && hints.isEmpty
-                    ? _buildSearchEmpty()
-                    : _buildSearchResults(foodNotifier);
-              } else if (foodNotifier.state == RequestState.error) {
-                return _buildSearchError(foodNotifier);
-              }
+            if (foodNotifier.state == RequestState.success) {
+              return foodNotifier.results.isEmpty && foodNotifier.hints.isEmpty
+                  ? _buildSearchEmpty()
+                  : _buildSearchResults(foodNotifier);
+            }
+
+            if (foodNotifier.state == RequestState.error) {
+              return _buildSearchError(foodNotifier);
             }
 
             return const LoadingIndicator();
@@ -122,12 +117,33 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
     );
   }
 
+  Consumer<FoodNotifier> _buildSearchField() {
+    return Consumer<FoodNotifier>(
+      builder: (context, foodNotifier, child) {
+        return SearchField(
+          controller: _searchController,
+          backgroundColor: primaryBackgroundColor,
+          query: foodNotifier.onChangedQuery,
+          hintText: 'Masukkan nama makanan atau minuman...',
+          onChanged: (value) {
+            foodNotifier.onChangedQuery = value.trim();
+          },
+          onSubmitted: (value) {
+            if (value.trim().isNotEmpty) {
+              foodNotifier.searchFoods(query: value);
+            }
+          },
+        );
+      },
+    );
+  }
+
   SingleChildScrollView _buildSearchResults(FoodNotifier foodNotifier) {
     final results = foodNotifier.results;
     final hints = foodNotifier.hints;
 
     return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.only(top: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -253,27 +269,6 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
             ? const Text('Tunggu sebentar...')
             : const Text('Coba lagi'),
       ),
-    );
-  }
-
-  Consumer<FoodNotifier> _buildSearchField() {
-    return Consumer<FoodNotifier>(
-      builder: (context, foodNotifier, child) {
-        return SearchField(
-          controller: _searchController,
-          backgroundColor: primaryBackgroundColor,
-          query: foodNotifier.onChangedQuery,
-          hintText: 'Masukkan nama makanan atau minuman...',
-          onChanged: (value) {
-            foodNotifier.onChangedQuery = value.trim();
-          },
-          onSubmitted: (value) {
-            if (value.trim().isNotEmpty) {
-              foodNotifier.searchFoods(query: value);
-            }
-          },
-        );
-      },
     );
   }
 }

@@ -36,7 +36,6 @@ class FoodNotifier extends ChangeNotifier {
 
   set isReload(bool value) {
     _isReload = value;
-
     notifyListeners();
   }
 

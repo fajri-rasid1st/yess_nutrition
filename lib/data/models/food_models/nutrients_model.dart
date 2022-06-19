@@ -38,11 +38,11 @@ class NutrientsModel extends Equatable {
 
   NutrientsEntity toEntity() {
     return NutrientsEntity(
-      calories: calories?.toDouble() ?? -1,
-      protein: protein?.toDouble() ?? -1,
-      fat: fat?.toDouble() ?? -1,
-      carbohydrate: carbohydrate?.toDouble() ?? -1,
-      fiber: fiber?.toDouble() ?? -1,
+      calories: calories?.toDouble() ?? 0,
+      protein: protein?.toDouble() ?? 0,
+      fat: fat?.toDouble() ?? 0,
+      carbohydrate: carbohydrate?.toDouble() ?? 0,
+      fiber: fiber?.toDouble() ?? 0,
     );
   }
 

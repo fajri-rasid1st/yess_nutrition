@@ -25,17 +25,17 @@ class FoodHintListTile extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
             child: CustomNetworkImage(
-              width: 60,
-              height: 60,
+              width: 64,
+              height: 64,
               fit: BoxFit.cover,
               imgUrl: food.image,
-              placeHolderSize: 36,
+              placeHolderSize: 32,
               errorIcon: Icons.fastfood_outlined,
             ),
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,10 +46,10 @@ class FoodHintListTile extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context)
                         .textTheme
-                        .subtitle1!
+                        .subtitle2!
                         .copyWith(fontWeight: FontWeight.bold),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 2),
                   Text(
                     '${food.categoryLabel}, ${food.category}',
                     maxLines: 1,

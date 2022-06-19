@@ -28,7 +28,6 @@ class SearchNewsNotifier extends ChangeNotifier {
 
   set isReload(bool value) {
     _isReload = value;
-
     notifyListeners();
   }
 

@@ -56,11 +56,11 @@ class FoodModel extends Equatable {
       image: image ?? '',
       nutrients: nutrients?.toEntity() ??
           const NutrientsEntity(
-            calories: -1,
-            protein: -1,
-            fat: -1,
-            carbohydrate: -1,
-            fiber: -1,
+            calories: 0,
+            protein: 0,
+            fat: 0,
+            carbohydrate: 0,
+            fiber: 0,
           ),
     );
   }

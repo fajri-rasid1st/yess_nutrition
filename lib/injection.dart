@@ -127,7 +127,10 @@ void init() {
 
   // Food repositories
   locator.registerLazySingleton<FoodRepository>(
-    () => FoodRepositoryImpl(foodRemoteDataSource: locator()),
+    () => FoodRepositoryImpl(
+      foodLocalDataSource: locator(),
+      foodRemoteDataSource: locator(),
+    ),
   );
 
   // News repositories
@@ -153,6 +156,9 @@ void init() {
   );
 
   // Food data sources
+  locator.registerLazySingleton<FoodLocalDataSource>(
+    () => FoodLocalDataSourceImpl(databaseHelper: locator()),
+  );
   locator.registerLazySingleton<FoodRemoteDataSource>(
     () => FoodRemoteDataSourceImpl(client: locator()),
   );

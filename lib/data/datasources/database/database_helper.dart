@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:path/path.dart';
 import 'package:sqflite_sqlcipher/sqflite.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
+import 'package:yess_nutrition/data/models/food_models/food_table.dart';
 import 'package:yess_nutrition/data/models/news_models/news_table.dart';
 
 class DatabaseHelper {
@@ -49,15 +50,26 @@ class DatabaseHelper {
         author TEXT,
         source TEXT)
         ''');
+
+    await db.execute('''
+      CREATE TABLE $foodHistoryTable (
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        uid TEXT,
+        foodId TEXT,
+        label TEXT,
+        category TEXT,
+        categoryLabel TEXT,
+        foodContentLabel TEXT,
+        image TEXT,
+        nutrients TEXT)
+        ''');
   }
 
   /// added [news] to bookmarks table
   Future<int> createBookmark(NewsTable news) async {
     final db = await database;
 
-    final id = await db.insert(newsBookmarksTable, news.toMap());
-
-    return id;
+    return await db.insert(newsBookmarksTable, news.toMap());
   }
 
   /// get all news at bookmarks table, according to [uid]
@@ -97,21 +109,66 @@ class DatabaseHelper {
   Future<int> deleteBookmark(NewsTable news) async {
     final db = await database;
 
-    final count = await db.delete(
+    return await db.delete(
       newsBookmarksTable,
       where: 'uid = ? AND url = ?',
       whereArgs: [news.uid, news.url],
     );
-
-    return count;
   }
 
-  /// delete all news from bookmarks table, according to [uid]
+  /// clear all news from bookmarks table, according to [uid]
   Future<int> clearBookmarks(String uid) async {
     final db = await database;
 
     return await db.delete(
       newsBookmarksTable,
+      where: 'uid = ?',
+      whereArgs: [uid],
+    );
+  }
+
+  /// added [food] to history table
+  Future<int> addFoodHistory(FoodTable food) async {
+    final db = await database;
+
+    return await db.insert(foodHistoryTable, food.toMap());
+  }
+
+  /// get all foods history, according to [uid]
+  Future<List<FoodTable>> getFoodHistories(String uid) async {
+    final db = await database;
+
+    final result = await db.query(
+      foodHistoryTable,
+      where: 'uid = ?',
+      whereArgs: [uid],
+      orderBy: '_id DESC',
+    );
+
+    final foods = List<FoodTable>.from(
+      result.map((food) => FoodTable.fromMap(food)),
+    );
+
+    return foods;
+  }
+
+  /// delete [food] from history table
+  Future<int> deleteFoodHistory(FoodTable food) async {
+    final db = await database;
+
+    return await db.delete(
+      foodHistoryTable,
+      where: 'uid = ? AND foodId = ?',
+      whereArgs: [food.uid, food.foodId],
+    );
+  }
+
+  /// clear all recent food history from table, according to [uid]
+  Future<int> clearFoodHistories(String uid) async {
+    final db = await database;
+
+    return await db.delete(
+      foodHistoryTable,
       where: 'uid = ?',
       whereArgs: [uid],
     );
