@@ -60,9 +60,7 @@ void init() {
   );
 
   // Food providers
-  locator.registerFactory(
-    () => SearchFoodsNotifier(searchFoodsUseCase: locator()),
-  );
+  locator.registerFactory(() => FoodNotifier(searchFoodsUseCase: locator()));
 
   // News providers
   locator.registerFactory(

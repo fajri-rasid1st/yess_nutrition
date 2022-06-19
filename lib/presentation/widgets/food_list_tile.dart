@@ -6,8 +6,13 @@ import 'package:yess_nutrition/presentation/widgets/custom_network_image.dart';
 
 class FoodListTile extends StatelessWidget {
   final FoodEntity food;
+  final VoidCallback? onPressedTimeIcon;
 
-  const FoodListTile({Key? key, required this.food}) : super(key: key);
+  const FoodListTile({
+    Key? key,
+    required this.food,
+    this.onPressedTimeIcon,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +28,10 @@ class FoodListTile extends StatelessWidget {
                 child: CustomNetworkImage(
                   width: 68,
                   height: 68,
-                  placeHolderSize: 36,
-                  imgUrl: food.image,
                   fit: BoxFit.cover,
+                  imgUrl: food.image,
+                  placeHolderSize: 36,
+                  errorIcon: Icons.fastfood_outlined,
                 ),
               ),
               Expanded(
@@ -64,7 +70,7 @@ class FoodListTile extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: IconButton(
-                  onPressed: () {},
+                  onPressed: onPressedTimeIcon,
                   icon: const Icon(MdiIcons.timerOutline),
                   color: primaryColor,
                   tooltip: 'Add to journal',
@@ -100,27 +106,27 @@ class FoodListTile extends StatelessWidget {
           _buildNutrientDetail(
             dotsColor: primaryColor,
             nutrient: 'Kalori',
-            amount: food.nutrients.calories,
+            amount: '${food.nutrients.calories.toStringAsFixed(0)} Kkal',
           ),
           _buildNutrientDetail(
             dotsColor: const Color(0XFF5ECFF2),
             nutrient: 'Karbohidrat',
-            amount: food.nutrients.carbohydrate,
+            amount: '${food.nutrients.carbohydrate.toStringAsFixed(1)} g',
           ),
           _buildNutrientDetail(
             dotsColor: const Color(0XFFEF5EF2),
             nutrient: 'Protein',
-            amount: food.nutrients.protein,
+            amount: '${food.nutrients.protein.toStringAsFixed(1)} g',
           ),
           _buildNutrientDetail(
             dotsColor: errorColor,
             nutrient: 'Lemak',
-            amount: food.nutrients.fat,
+            amount: '${food.nutrients.fat.toStringAsFixed(1)} g',
           ),
           _buildNutrientDetail(
             dotsColor: dividerColor,
             nutrient: 'Serat',
-            amount: food.nutrients.fiber,
+            amount: '${food.nutrients.fiber.toStringAsFixed(1)} g',
           ),
         ],
       ),
@@ -148,7 +154,7 @@ class FoodListTile extends StatelessWidget {
 
   Padding _buildNutrientDetail({
     required String nutrient,
-    required double amount,
+    required String amount,
     required Color dotsColor,
   }) {
     return Padding(
@@ -171,7 +177,7 @@ class FoodListTile extends StatelessWidget {
               Text(nutrient),
             ],
           ),
-          Text(amount.toStringAsFixed(1)),
+          Text(amount),
         ],
       ),
     );

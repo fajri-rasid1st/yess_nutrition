@@ -89,7 +89,7 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<UploadProfilePictureNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<SearchFoodsNotifier>(),
+          create: (_) => di.locator<FoodNotifier>(),
         ),
         ChangeNotifierProvider(
           create: (_) => di.locator<BookmarkNotifier>(),

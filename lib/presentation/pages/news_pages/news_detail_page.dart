@@ -104,6 +104,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                   fit: BoxFit.fitHeight,
                   imgUrl: widget.news.urlToImage,
                   placeHolderSize: 100,
+                  errorIcon: Icons.motion_photos_off_outlined,
                 ),
               ),
               Positioned.fill(

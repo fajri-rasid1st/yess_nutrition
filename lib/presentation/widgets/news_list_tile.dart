@@ -31,9 +31,10 @@ class NewsListTile extends StatelessWidget {
                   child: CustomNetworkImage(
                     width: 100,
                     height: 100,
-                    placeHolderSize: 50,
-                    imgUrl: news.urlToImage,
                     fit: BoxFit.cover,
+                    imgUrl: news.urlToImage,
+                    placeHolderSize: 50,
+                    errorIcon: Icons.motion_photos_off_outlined,
                   ),
                 ),
               ),
