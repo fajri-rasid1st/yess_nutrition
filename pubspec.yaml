@@ -53,6 +53,7 @@ dependencies:
     get_it: ^7.2.0
     google_fonts: ^3.0.1
     google_sign_in: ^5.3.2
+    grouped_list: ^5.1.2
     http: ^0.13.4
     image_cropper: ^2.0.3
     image_picker: ^0.8.5+3

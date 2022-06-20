@@ -13,6 +13,15 @@ class Utilities {
     return timeago.format(DateTime.parse(dateFormat), locale: 'id');
   }
 
+  /// Function to format [dateFormat] to **MMM dd, y** pattern
+  static String dateFormatToMMMddy(String dateFormat) {
+    if (dateFormat.isEmpty) return '?';
+
+    final dateTime = DateTime.parse(dateFormat);
+
+    return DateFormat('MMM dd, y').format(dateTime);
+  }
+
   /// Function to convert [number] according to [decimalDigit]
   static String numberToIdr(dynamic number, int decimalDigit) {
     final currencyFormatter = NumberFormat.currency(
@@ -22,15 +31,6 @@ class Utilities {
     );
 
     return currencyFormatter.format(number);
-  }
-
-  /// Function to format [dateFormat] to **MMM dd, y** pattern
-  static String dateFormatToMMMddy(String dateFormat) {
-    if (dateFormat.isEmpty) return '?';
-
-    final dateTime = DateTime.parse(dateFormat);
-
-    return DateFormat('MMM dd, y').format(dateTime);
   }
 
   /// Function to encrypt [text] with Salsa20 engine

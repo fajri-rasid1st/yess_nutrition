@@ -61,7 +61,8 @@ class DatabaseHelper {
         categoryLabel TEXT,
         foodContentLabel TEXT,
         image TEXT,
-        nutrients TEXT)
+        nutrients TEXT,
+        createdAt TEXT)
         ''');
   }
 
@@ -142,7 +143,7 @@ class DatabaseHelper {
       foodHistoryTable,
       where: 'uid = ?',
       whereArgs: [uid],
-      orderBy: '_id DESC',
+      orderBy: 'createdAt DESC',
     );
 
     final foods = List<FoodTable>.from(

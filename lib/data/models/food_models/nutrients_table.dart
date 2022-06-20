@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-
 import 'package:yess_nutrition/domain/entities/nutrients_entity.dart';
 
 class NutrientsTable extends Equatable {

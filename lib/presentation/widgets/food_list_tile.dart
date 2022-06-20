@@ -78,7 +78,7 @@ class FoodListTile extends StatelessWidget {
               )
             ],
           ),
-          if (food.foodContentLabel.isNotEmpty) ...[
+          if (food.foodContentLabel.join().trim().isNotEmpty) ...[
             Wrap(
               spacing: 8,
               runSpacing: 8,

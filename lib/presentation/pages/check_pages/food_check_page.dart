@@ -21,12 +21,14 @@ class FoodCheckPage extends StatefulWidget {
 }
 
 class _FoodCheckPageState extends State<FoodCheckPage> {
+  late final GlobalKey<ScaffoldState> _scaffoldKey;
   late final TextEditingController _searchController;
 
   @override
   void initState() {
     super.initState();
 
+    _scaffoldKey = GlobalKey<ScaffoldState>();
     _searchController = TextEditingController();
   }
 
@@ -40,6 +42,7 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
       backgroundColor: primaryBackgroundColor,
       body: NestedScrollView(
@@ -111,7 +114,7 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
             if (foodNotifier.state == RequestState.success) {
               return foodNotifier.results.isEmpty && foodNotifier.hints.isEmpty
                   ? _buildSearchEmpty()
-                  : _buildSearchResults(foodNotifier);
+                  : _buildSearchResults(context, foodNotifier);
             }
 
             if (foodNotifier.state == RequestState.error) {
@@ -141,9 +144,14 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
               foodNotifier.searchFoods(query: value).then((_) async {
                 // add every search results to history
                 for (var food in foodNotifier.results) {
-                  await context
+                  final foodHistory = food.copyWith(
+                    uid: widget.uid,
+                    createdAt: DateTime.now(),
+                  );
+
+                  await _scaffoldKey.currentContext!
                       .read<FoodHistoryNotifier>()
-                      .addFoodHistory(food);
+                      .addFoodHistory(foodHistory);
                 }
               });
             }
@@ -153,7 +161,10 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
     );
   }
 
-  SingleChildScrollView _buildSearchResults(FoodNotifier foodNotifier) {
+  SingleChildScrollView _buildSearchResults(
+    BuildContext context,
+    FoodNotifier foodNotifier,
+  ) {
     final results = foodNotifier.results;
     final hints = foodNotifier.hints;
 
@@ -223,9 +234,14 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
                     foodNotifier.searchFoods(query: label).then((_) async {
                       // add every search results to history
                       for (var food in foodNotifier.results) {
-                        await context
+                        final foodHistory = food.copyWith(
+                          uid: widget.uid,
+                          createdAt: DateTime.now(),
+                        );
+
+                        await _scaffoldKey.currentContext!
                             .read<FoodHistoryNotifier>()
-                            .addFoodHistory(food);
+                            .addFoodHistory(foodHistory);
                       }
                     });
                   },

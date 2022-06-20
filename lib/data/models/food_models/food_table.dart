@@ -13,6 +13,7 @@ class FoodTable extends Equatable {
   final List<String> foodContentLabel;
   final String image;
   final NutrientsTable nutrients;
+  final DateTime createdAt;
 
   const FoodTable({
     required this.uid,
@@ -23,6 +24,7 @@ class FoodTable extends Equatable {
     required this.foodContentLabel,
     required this.image,
     required this.nutrients,
+    required this.createdAt,
   });
 
   factory FoodTable.fromEntity(FoodEntity food) {
@@ -35,6 +37,7 @@ class FoodTable extends Equatable {
       foodContentLabel: food.foodContentLabel,
       image: food.image,
       nutrients: NutrientsTable.fromEntity(food.nutrients),
+      createdAt: food.createdAt!,
     );
   }
 
@@ -48,6 +51,7 @@ class FoodTable extends Equatable {
       foodContentLabel: (food['foodContentLabel'] as String).split('; '),
       image: food['image'],
       nutrients: NutrientsTable.fromString((food['nutrients'] as String)),
+      createdAt: DateTime.parse((food['createdAt'] as String)),
     );
   }
 
@@ -61,6 +65,7 @@ class FoodTable extends Equatable {
       foodContentLabel: foodContentLabel,
       image: image,
       nutrients: nutrients.toEntity(),
+      createdAt: createdAt,
     );
   }
 
@@ -74,6 +79,7 @@ class FoodTable extends Equatable {
       'foodContentLabel': foodContentLabel.join('; '),
       'image': image,
       'nutrients': nutrients.toString(),
+      'createdAt': createdAt.toIso8601String(),
     };
   }
 
@@ -87,5 +93,6 @@ class FoodTable extends Equatable {
         foodContentLabel,
         image,
         nutrients,
+        createdAt,
       ];
 }

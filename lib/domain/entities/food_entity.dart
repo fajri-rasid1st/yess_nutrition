@@ -10,6 +10,7 @@ class FoodEntity extends Equatable {
   final List<String> foodContentLabel;
   final String image;
   final NutrientsEntity nutrients;
+  final DateTime? createdAt;
 
   const FoodEntity({
     this.uid,
@@ -20,6 +21,7 @@ class FoodEntity extends Equatable {
     required this.foodContentLabel,
     required this.image,
     required this.nutrients,
+    this.createdAt,
   });
 
   const FoodEntity.history({
@@ -31,6 +33,7 @@ class FoodEntity extends Equatable {
     required this.foodContentLabel,
     required this.image,
     required this.nutrients,
+    required this.createdAt,
   });
 
   FoodEntity copyWith({
@@ -42,6 +45,7 @@ class FoodEntity extends Equatable {
     List<String>? foodContentLabel,
     String? image,
     NutrientsEntity? nutrients,
+    DateTime? createdAt,
   }) {
     return FoodEntity(
       uid: uid ?? this.uid,
@@ -52,6 +56,7 @@ class FoodEntity extends Equatable {
       foodContentLabel: foodContentLabel ?? this.foodContentLabel,
       image: image ?? this.image,
       nutrients: nutrients ?? this.nutrients,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 
@@ -65,5 +70,6 @@ class FoodEntity extends Equatable {
         foodContentLabel,
         image,
         nutrients,
+        createdAt,
       ];
 }

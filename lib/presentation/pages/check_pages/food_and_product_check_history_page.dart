@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:grouped_list/grouped_list.dart';
 import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
@@ -119,10 +120,61 @@ class _FoodAndProductCheckHistoryPageState
 
   SlidableAutoCloseBehavior _buildHistoryList(List<FoodEntity> foods) {
     return SlidableAutoCloseBehavior(
-      child: ListView.separated(
-        itemCount: foods.length,
-        itemBuilder: (context, index) => _buildSlidableListTile(foods[index]),
-        separatorBuilder: (context, index) => const Divider(height: 1),
+      child: GroupedListView<FoodEntity, DateTime>(
+        elements: foods,
+        groupBy: (food) {
+          final dateCreated = food.createdAt!;
+          return DateTime(dateCreated.year, dateCreated.month, dateCreated.day);
+        },
+        groupSeparatorBuilder: (dateCreated) {
+          return _buildSeparatorGroup(dateCreated);
+        },
+        itemBuilder: (context, food) {
+          return _buildSlidableListTile(food);
+        },
+        separator: const Divider(height: 1),
+        useStickyGroupSeparators: true,
+        floatingHeader: true,
+      ),
+    );
+  }
+
+  Padding _buildSeparatorGroup(DateTime dateCreated) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 12),
+      child: Container(
+        decoration: BoxDecoration(
+          color: scaffoldBackgroundColor,
+          borderRadius: BorderRadius.circular(100),
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+              offset: const Offset(0, 2),
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 4,
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.history_rounded,
+                color: primaryColor,
+                size: 20,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                Utilities.dateFormatToMMMddy(dateCreated.toIso8601String()),
+                style: const TextStyle(
+                  color: primaryColor,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -131,6 +183,7 @@ class _FoodAndProductCheckHistoryPageState
     return Slidable(
       groupTag: 0,
       startActionPane: ActionPane(
+        extentRatio: 0.3,
         motion: const ScrollMotion(),
         children: <Widget>[
           SlidableAction(
