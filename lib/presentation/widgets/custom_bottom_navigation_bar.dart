@@ -29,50 +29,50 @@ class CustomBottomNavigationBar extends StatelessWidget {
       ),
       child: Row(
         children: <Widget>[
-          buildNavBarItem(
+          _buildNavBarItem(
             context,
-            MdiIcons.homeOutline,
-            MdiIcons.home,
-            MenuNavBar.home,
-            scaffoldBackgroundColor,
+            selectedIcon: MdiIcons.home,
+            unselectedIcon: MdiIcons.homeOutline,
+            menu: MenuNavBar.home,
+            backgroundColor: scaffoldBackgroundColor,
           ),
-          buildNavBarItem(
+          _buildNavBarItem(
             context,
-            MdiIcons.timerOutline,
-            MdiIcons.timer,
-            MenuNavBar.nutriTime,
-            scaffoldBackgroundColor,
+            selectedIcon: MdiIcons.timer,
+            unselectedIcon: MdiIcons.timerOutline,
+            menu: MenuNavBar.nutriTime,
+            backgroundColor: scaffoldBackgroundColor,
           ),
           SizedBox(
             height: kBottomNavigationBarHeight + 8,
             width: MediaQuery.of(context).size.width / 5,
           ),
-          buildNavBarItem(
+          _buildNavBarItem(
             context,
-            MdiIcons.newspaperVariantOutline,
-            MdiIcons.newspaperVariant,
-            MenuNavBar.nutriNews,
-            primaryBackgroundColor,
+            selectedIcon: MdiIcons.newspaperVariant,
+            unselectedIcon: MdiIcons.newspaperVariantOutline,
+            menu: MenuNavBar.nutriNews,
+            backgroundColor: primaryBackgroundColor,
           ),
-          buildNavBarItem(
+          _buildNavBarItem(
             context,
-            MdiIcons.shoppingOutline,
-            MdiIcons.shopping,
-            MenuNavBar.nutriShop,
-            scaffoldBackgroundColor,
+            selectedIcon: MdiIcons.shopping,
+            unselectedIcon: MdiIcons.shoppingOutline,
+            menu: MenuNavBar.nutriShop,
+            backgroundColor: scaffoldBackgroundColor,
           ),
         ],
       ),
     );
   }
 
-  GestureDetector buildNavBarItem(
-    BuildContext context,
-    IconData unselectedIcon,
-    IconData selectedIcon,
-    MenuNavBar menu,
-    Color backgroundColor,
-  ) {
+  GestureDetector _buildNavBarItem(
+    BuildContext context, {
+    required IconData selectedIcon,
+    required IconData unselectedIcon,
+    required MenuNavBar menu,
+    required Color backgroundColor,
+  }) {
     return GestureDetector(
       onTap: () {
         notifier.selectedMenu = menu;

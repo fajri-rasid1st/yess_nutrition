@@ -101,10 +101,8 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
           builder: (context, foodNotifier, child) {
             final onChangedQuery = foodNotifier.onChangedQuery;
             final onSubmittedQuery = foodNotifier.onSubmittedQuery;
-
             final isOnChangedQueryEmpty = onChangedQuery.isEmpty;
             final isOnSubmittedQueryEmpty = onSubmittedQuery.isEmpty;
-
             final isTyping = onChangedQuery != onSubmittedQuery;
 
             if (isOnChangedQueryEmpty || isOnSubmittedQueryEmpty || isTyping) {
@@ -143,16 +141,7 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
             if (value.trim().isNotEmpty) {
               foodNotifier.searchFoods(query: value).then((_) async {
                 // add every search results to history
-                for (var food in foodNotifier.results) {
-                  final foodHistory = food.copyWith(
-                    uid: widget.uid,
-                    createdAt: DateTime.now(),
-                  );
-
-                  await _scaffoldKey.currentContext!
-                      .read<FoodHistoryNotifier>()
-                      .addFoodHistory(foodHistory);
-                }
+                await addSearchedToHistory(foodNotifier);
               });
             }
           },
@@ -233,16 +222,7 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
                     // search foods, according to item label
                     foodNotifier.searchFoods(query: label).then((_) async {
                       // add every search results to history
-                      for (var food in foodNotifier.results) {
-                        final foodHistory = food.copyWith(
-                          uid: widget.uid,
-                          createdAt: DateTime.now(),
-                        );
-
-                        await _scaffoldKey.currentContext!
-                            .read<FoodHistoryNotifier>()
-                            .addFoodHistory(foodHistory);
-                      }
+                      await addSearchedToHistory(foodNotifier);
                     });
                   },
                   onPressedTimeIcon: () {},
@@ -308,5 +288,18 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
             : const Text('Coba lagi'),
       ),
     );
+  }
+
+  Future<void> addSearchedToHistory(FoodNotifier foodNotifier) async {
+    for (var food in foodNotifier.results) {
+      final foodHistory = food.copyWith(
+        uid: widget.uid,
+        createdAt: DateTime.now(),
+      );
+
+      await _scaffoldKey.currentContext!
+          .read<FoodHistoryNotifier>()
+          .addFoodHistory(foodHistory);
+    }
   }
 }

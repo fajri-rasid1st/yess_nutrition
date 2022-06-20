@@ -18,11 +18,11 @@ class MainPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<BottomNavigationBarNotifier>(
-      builder: (context, navBar, child) {
+      builder: (context, navbar, child) {
         return Scaffold(
           body: Builder(
             builder: (context) {
-              switch (navBar.selectedMenu) {
+              switch (navbar.selectedMenu) {
                 case MenuNavBar.home:
                   return HomePage(user: user);
                 case MenuNavBar.nutriTime:
@@ -36,8 +36,8 @@ class MainPage extends StatelessWidget {
               }
             },
           ),
-          backgroundColor: navBar.backgroundColor,
-          bottomNavigationBar: CustomBottomNavigationBar(notifier: navBar),
+          backgroundColor: navbar.backgroundColor,
+          bottomNavigationBar: CustomBottomNavigationBar(notifier: navbar),
           floatingActionButton: CustomFloatingActionButton(
             onPressed: () => Navigator.pushNamed(
               context,

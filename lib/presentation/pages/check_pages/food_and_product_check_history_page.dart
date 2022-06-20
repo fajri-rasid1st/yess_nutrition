@@ -134,46 +134,28 @@ class _FoodAndProductCheckHistoryPageState
         },
         separator: const Divider(height: 1),
         useStickyGroupSeparators: true,
-        floatingHeader: true,
       ),
     );
   }
 
-  Padding _buildSeparatorGroup(DateTime dateCreated) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 12),
-      child: Container(
-        decoration: BoxDecoration(
-          color: scaffoldBackgroundColor,
-          borderRadius: BorderRadius.circular(100),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              offset: const Offset(0, 2),
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 4,
+  Container _buildSeparatorGroup(DateTime dateCreated) {
+    return Container(
+      color: scaffoldBackgroundColor,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        child: Row(
+          children: <Widget>[
+            const Icon(
+              Icons.history_rounded,
+              color: primaryColor,
+              size: 22,
+            ),
+            const SizedBox(width: 8),
+            Text(
+              Utilities.dateTimeToddMMMy(dateCreated),
+              style: const TextStyle(color: primaryColor),
             ),
           ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              const Icon(
-                Icons.history_rounded,
-                color: primaryColor,
-                size: 20,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                Utilities.dateTimeToddMMMy(dateCreated),
-                style: const TextStyle(
-                  color: primaryColor,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );

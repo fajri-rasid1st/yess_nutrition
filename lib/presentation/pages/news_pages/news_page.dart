@@ -143,10 +143,8 @@ class _NewsPageState extends State<NewsPage> {
           builder: (context) {
             final onChangedQuery = searchNotifier.onChangedQuery;
             final onSubmittedQuery = searchNotifier.onSubmittedQuery;
-
             final isOnChangedQueryEmpty = onChangedQuery.isEmpty;
             final isOnSubmittedQueryEmpty = onSubmittedQuery.isEmpty;
-
             final isTyping = onChangedQuery != onSubmittedQuery;
 
             if (isOnChangedQueryEmpty || isOnSubmittedQueryEmpty || isTyping) {
