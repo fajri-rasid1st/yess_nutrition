@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
+import 'package:yess_nutrition/common/utils/routes.dart';
+import 'package:yess_nutrition/presentation/providers/food_notifiers/food_history_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/food_notifiers/food_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_information.dart';
 import 'package:yess_nutrition/presentation/widgets/food_hint_list_tile.dart';
@@ -10,7 +12,9 @@ import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 import 'package:yess_nutrition/presentation/widgets/search_field.dart';
 
 class FoodCheckPage extends StatefulWidget {
-  const FoodCheckPage({Key? key}) : super(key: key);
+  final String uid;
+
+  const FoodCheckPage({Key? key, required this.uid}) : super(key: key);
 
   @override
   State<FoodCheckPage> createState() => _FoodCheckPageState();
@@ -69,7 +73,11 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
                   ),
                   actions: <Widget>[
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () => Navigator.pushNamed(
+                        context,
+                        foodAndProductCheckHistoryRoute,
+                        arguments: widget.uid,
+                      ),
                       icon: const Icon(Icons.history_rounded),
                       tooltip: 'History',
                     )
@@ -130,7 +138,14 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
           },
           onSubmitted: (value) {
             if (value.trim().isNotEmpty) {
-              foodNotifier.searchFoods(query: value);
+              foodNotifier.searchFoods(query: value).then((_) async {
+                // add every search results to history
+                for (var food in foodNotifier.results) {
+                  await context
+                      .read<FoodHistoryNotifier>()
+                      .addFoodHistory(food);
+                }
+              });
             }
           },
         );
@@ -205,7 +220,14 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
                     foodNotifier.onChangedQuery = label;
 
                     // search foods, according to item label
-                    foodNotifier.searchFoods(query: label);
+                    foodNotifier.searchFoods(query: label).then((_) async {
+                      // add every search results to history
+                      for (var food in foodNotifier.results) {
+                        await context
+                            .read<FoodHistoryNotifier>()
+                            .addFoodHistory(food);
+                      }
+                    });
                   },
                   onPressedTimeIcon: () {},
                 );

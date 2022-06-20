@@ -57,8 +57,22 @@ void init() {
   locator.registerFactory(
     () => FoodNotifier(searchFoodsUseCase: locator()),
   );
+  locator.registerFactory(
+    () => FoodHistoryNotifier(
+      addFoodHistoryUseCase: locator(),
+      getFoodHistoriesUseCase: locator(),
+      deleteFoodHistoryUseCase: locator(),
+      clearFoodHistoriesUseCase: locator(),
+    ),
+  );
 
   // News providers
+  locator.registerFactory(
+    () => GetNewsNotifier(getNewsUseCase: locator()),
+  );
+  locator.registerFactory(
+    () => SearchNewsNotifier(searchNewsUseCase: locator()),
+  );
   locator.registerFactory(
     () => BookmarkNotifier(
       createBookmarkUseCase: locator(),
@@ -67,12 +81,6 @@ void init() {
       getBookmarksUseCase: locator(),
       clearBookmarksUseCase: locator(),
     ),
-  );
-  locator.registerFactory(
-    () => GetNewsNotifier(getNewsUseCase: locator()),
-  );
-  locator.registerFactory(
-    () => SearchNewsNotifier(searchNewsUseCase: locator()),
   );
 
   // User auth usecases
@@ -96,15 +104,19 @@ void init() {
 
   // Food usecases
   locator.registerLazySingleton(() => SearchFoods(locator()));
+  locator.registerLazySingleton(() => AddFoodHistory(locator()));
+  locator.registerLazySingleton(() => GetFoodHistories(locator()));
+  locator.registerLazySingleton(() => DeleteFoodHistory(locator()));
+  locator.registerLazySingleton(() => ClearFoodHistories(locator()));
 
   // News usecases
+  locator.registerLazySingleton(() => GetNews(locator()));
+  locator.registerLazySingleton(() => SearchNews(locator()));
   locator.registerLazySingleton(() => CreateBookmark(locator()));
   locator.registerLazySingleton(() => DeleteBookmark(locator()));
   locator.registerLazySingleton(() => GetBookmarkStatus(locator()));
   locator.registerLazySingleton(() => GetBookmarks(locator()));
   locator.registerLazySingleton(() => ClearBookmarks(locator()));
-  locator.registerLazySingleton(() => GetNews(locator()));
-  locator.registerLazySingleton(() => SearchNews(locator()));
 
   // User repositories
   locator.registerLazySingleton<UserAuthRepository>(

@@ -39,7 +39,11 @@ class MainPage extends StatelessWidget {
           backgroundColor: navBar.backgroundColor,
           bottomNavigationBar: CustomBottomNavigationBar(notifier: navBar),
           floatingActionButton: CustomFloatingActionButton(
-            onPressed: () => Navigator.pushNamed(context, checkRoute),
+            onPressed: () => Navigator.pushNamed(
+              context,
+              checkRoute,
+              arguments: user.uid,
+            ),
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,

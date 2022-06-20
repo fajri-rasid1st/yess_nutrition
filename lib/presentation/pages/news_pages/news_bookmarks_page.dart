@@ -83,7 +83,21 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
           IconButton(
             onPressed: context.watch<BookmarkNotifier>().bookmarks.isEmpty
                 ? null
-                : () => showConfirmDialog(context),
+                : () {
+                    Utilities.showConfirmDialog(
+                      context,
+                      title: 'Konfirmasi',
+                      question: 'Hapus semua daftar bookmarks?',
+                      onPressedPrimaryAction: () {
+                        clearBookmarks(context).then((_) {
+                          Navigator.pop(context);
+                        });
+                      },
+                      onPressedSecondaryAction: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
             icon: const Icon(
               Icons.clear_all_rounded,
               size: 28,
@@ -94,9 +108,9 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
         ],
       ),
       body: Consumer<BookmarkNotifier>(
-        builder: (context, bookmarksNotifier, child) {
-          if (bookmarksNotifier.state == RequestState.success) {
-            if (bookmarksNotifier.bookmarks.isEmpty) {
+        builder: (context, bookmarkNotifier, child) {
+          if (bookmarkNotifier.state == RequestState.success) {
+            if (bookmarkNotifier.bookmarks.isEmpty) {
               return const CustomInformation(
                 key: Key('bookmarks_empty'),
                 imgPath: 'assets/svg/reading_glasses_cuate.svg',
@@ -105,12 +119,12 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
               );
             }
 
-            return _buildBookmarksList(bookmarksNotifier.bookmarks);
-          } else if (bookmarksNotifier.state == RequestState.error) {
+            return _buildBookmarksList(bookmarkNotifier.bookmarks);
+          } else if (bookmarkNotifier.state == RequestState.error) {
             return CustomInformation(
               key: const Key('error_message'),
               imgPath: 'assets/svg/feeling_sorry_cuate.svg',
-              title: bookmarksNotifier.message,
+              title: bookmarkNotifier.message,
               subtitle: 'Silahkan kembali beberapa saat lagi.',
             );
           }
@@ -177,92 +191,6 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
     );
   }
 
-  Future<void> showConfirmDialog(BuildContext context) async {
-    showGeneralDialog(
-      context: context,
-      barrierLabel: '',
-      barrierDismissible: true,
-      transitionBuilder: (context, animStart, animEnd, child) {
-        final curvedValue = Curves.ease.transform(animStart.value) - 3.75;
-        final height = (MediaQuery.of(context).size.height / 8) * -1;
-
-        return Transform(
-          transform: Matrix4.translationValues(0, (curvedValue * height), 0),
-          child: Opacity(
-            opacity: animStart.value,
-            child: Dialog(
-              elevation: 0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      'Konfirmasi',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context)
-                          .textTheme
-                          .subtitle1!
-                          .copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 16),
-                    const Text(
-                      'Hapus semua daftar bookmarks?',
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        TextButton(
-                          onPressed: () async {
-                            await clearBookmarks(context);
-
-                            navigatorKey.currentState!.pop();
-                          },
-                          child: const Text(
-                            'Oke',
-                            style: TextStyle(
-                              color: primaryColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                          child: VerticalDivider(
-                            width: 1,
-                            thickness: 1,
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text(
-                            'Batal',
-                            style: TextStyle(
-                              color: primaryColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        );
-      },
-      transitionDuration: const Duration(milliseconds: 250),
-      pageBuilder: (context, animStart, animEnd) => const SizedBox(),
-    );
-  }
-
   Future<void> deleteBookmark(BuildContext context, NewsEntity news) async {
     final bookmarkNotifier = context.read<BookmarkNotifier>();
 
@@ -279,17 +207,17 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
   }
 
   Future<void> clearBookmarks(BuildContext context) async {
-    final bookmarksNotifier = context.read<BookmarkNotifier>();
+    final bookmarkNotifier = context.read<BookmarkNotifier>();
 
-    await bookmarksNotifier.clearBookmarks(widget.uid);
+    await bookmarkNotifier.clearBookmarks(widget.uid);
 
-    final message = bookmarksNotifier.message;
+    final message = bookmarkNotifier.message;
     final snackBar = Utilities.createSnackBar(message);
 
     scaffoldMessengerKey.currentState!
       ..hideCurrentSnackBar()
       ..showSnackBar(snackBar);
 
-    await bookmarksNotifier.getBookmarks(widget.uid);
+    await bookmarkNotifier.getBookmarks(widget.uid);
   }
 }

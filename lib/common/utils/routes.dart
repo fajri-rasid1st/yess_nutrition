@@ -13,6 +13,8 @@ const newsWebViewRoute = '/news-webview';
 const newsBookmarksRoute = '/news-bookmarks';
 const checkRoute = '/check';
 const foodCheckRoute = '/check/food';
+const productCheckRoute = '/check/product';
+const foodAndProductCheckHistoryRoute = '/check/food-and-product-history';
 
 // Register the RouteObserver as a navigation observer.
 final routeObserver = RouteObserver<ModalRoute<void>>();

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:yess_nutrition/presentation/pages/check_pages/food_and_product_check_history_page.dart';
 
 import 'common/styles/styles.dart';
 import 'common/utils/http_ssl_pinning.dart';
@@ -77,13 +78,16 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<FoodNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<BookmarkNotifier>(),
+          create: (_) => di.locator<FoodHistoryNotifier>(),
         ),
         ChangeNotifierProvider(
           create: (_) => di.locator<GetNewsNotifier>(),
         ),
         ChangeNotifierProvider(
           create: (_) => di.locator<SearchNewsNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<BookmarkNotifier>(),
         ),
         ChangeNotifierProvider(
           create: (_) => BottomNavigationBarNotifier(),
@@ -130,6 +134,7 @@ class MyApp extends StatelessWidget {
         home: const Wrapper(),
         onGenerateRoute: (settings) {
           switch (settings.name) {
+            // -------------- Auth routes and pages ---------------
             case loginRoute:
               return MaterialPageRoute(
                 builder: (_) => const LoginPage(),
@@ -156,6 +161,8 @@ class MyApp extends StatelessWidget {
                 builder: (_) => MainPage(user: user),
                 settings: settings,
               );
+
+            // -------------- Profile routes and pages ---------------
             case profileRoute:
               final uid = settings.arguments as String;
 
@@ -170,6 +177,8 @@ class MyApp extends StatelessWidget {
                 builder: (_) => UpdateProfilePage(userData: userData),
                 settings: settings,
               );
+
+            // -------------- NutriNews routes and pages ---------------
             case newsDetailRoute:
               final arguments = settings.arguments as NewsDetailPageArgs;
 
@@ -194,13 +203,26 @@ class MyApp extends StatelessWidget {
                 builder: (_) => NewsBookmarksPage(uid: uid),
                 settings: settings,
               );
+
+            // -------------- NutriCheck routes and pages ---------------
             case checkRoute:
+              final uid = settings.arguments as String;
+
               return MaterialPageRoute(
-                builder: (_) => const CheckPage(),
+                builder: (_) => CheckPage(uid: uid),
+                settings: settings,
               );
             case foodCheckRoute:
+              final uid = settings.arguments as String;
+
               return MaterialPageRoute(
-                builder: (_) => const FoodCheckPage(),
+                builder: (_) => FoodCheckPage(uid: uid),
+              );
+            case foodAndProductCheckHistoryRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => FoodAndProductCheckHistoryPage(uid: uid),
               );
             default:
               return null;

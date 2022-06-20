@@ -23,8 +23,8 @@ class FoodRepositoryImpl implements FoodRepository {
       final foodTable = FoodTable.fromEntity(food);
 
       return Right(await foodLocalDataSource.addFoodHistory(foodTable));
-    } on DatabaseException {
-      return const Left(DatabaseFailure('Gagal menambahkan ke riwayat'));
+    } on DatabaseException catch (e) {
+      return Left(DatabaseFailure(e.toString()));
     }
   }
 
@@ -35,7 +35,7 @@ class FoodRepositoryImpl implements FoodRepository {
 
       return Right(result.map((table) => table.toEntity()).toList());
     } on DatabaseException {
-      return const Left(DatabaseFailure('Gagal memuat riwayat'));
+      return const Left(DatabaseFailure('Gagal memuat riwayat pencarian'));
     }
   }
 
@@ -48,7 +48,7 @@ class FoodRepositoryImpl implements FoodRepository {
 
       return Right(result);
     } on DatabaseException {
-      return const Left(DatabaseFailure('Gagal menghapus riwayat'));
+      return const Left(DatabaseFailure('Gagal menghapus riwayat pencarian'));
     }
   }
 
@@ -59,7 +59,7 @@ class FoodRepositoryImpl implements FoodRepository {
 
       return Right(result);
     } on DatabaseException {
-      return const Left(DatabaseFailure('Gagal menghapus semua riwayat'));
+      return const Left(DatabaseFailure('Gagal menghapus riwayat pencarian'));
     }
   }
 

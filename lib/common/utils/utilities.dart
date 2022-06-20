@@ -3,18 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:yess_nutrition/common/styles/color_scheme.dart';
 
 class Utilities {
-  /// Function to create snack bar with [message] as text that will be displayed
-  static SnackBar createSnackBar(String message) {
-    return SnackBar(
-      content: Text(message, style: GoogleFonts.plusJakartaSans()),
-      behavior: SnackBarBehavior.floating,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      duration: const Duration(seconds: 3),
-    );
-  }
-
   /// Function to convert [dateFormat] to time ago format
   static String dateFormatToTimeAgo(String dateFormat) {
     timeago.setLocaleMessages('id', timeago.IdMessages());
@@ -51,5 +42,104 @@ class Utilities {
     final encrypted = encrypter.encrypt(text, iv: iv);
 
     return encrypted.base64;
+  }
+
+  /// Function to create snack bar with [message] as text that will be displayed
+  static SnackBar createSnackBar(String message) {
+    return SnackBar(
+      content: Text(message, style: GoogleFonts.plusJakartaSans()),
+      behavior: SnackBarBehavior.floating,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      duration: const Duration(seconds: 3),
+    );
+  }
+
+  /// Function to show confirm dialog with two action button
+  static Future<void> showConfirmDialog(
+    BuildContext context, {
+    required String title,
+    required String question,
+    VoidCallback? onPressedPrimaryAction,
+    VoidCallback? onPressedSecondaryAction,
+  }) async {
+    showGeneralDialog(
+      context: context,
+      barrierLabel: '',
+      barrierDismissible: true,
+      transitionBuilder: (context, animStart, animEnd, child) {
+        final curvedValue = Curves.ease.transform(animStart.value) - 3.75;
+        final height = (MediaQuery.of(context).size.height / 8) * -1;
+
+        return Transform(
+          transform: Matrix4.translationValues(0, (curvedValue * height), 0),
+          child: Opacity(
+            opacity: animStart.value,
+            child: Dialog(
+              elevation: 0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      title,
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context)
+                          .textTheme
+                          .subtitle1!
+                          .copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      question,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        TextButton(
+                          onPressed: onPressedPrimaryAction,
+                          child: const Text(
+                            'Oke',
+                            style: TextStyle(
+                              color: primaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 20,
+                          child: VerticalDivider(
+                            width: 1,
+                            thickness: 1,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: onPressedSecondaryAction,
+                          child: const Text(
+                            'Batal',
+                            style: TextStyle(
+                              color: primaryColor,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+      transitionDuration: const Duration(milliseconds: 300),
+      pageBuilder: (context, animStart, animEnd) => const SizedBox(),
+    );
   }
 }

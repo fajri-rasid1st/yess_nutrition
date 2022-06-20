@@ -212,9 +212,9 @@ class _NewsPageState extends State<NewsPage> {
       onChanged: (value) {
         newsNotifier.onChangedQuery = value.trim();
       },
-      onSubmitted: (value) {
+      onSubmitted: (value) async {
         if (value.trim().isNotEmpty) {
-          newsNotifier.searchNews(page: 1, query: value);
+          await newsNotifier.searchNews(page: 1, query: value);
         }
       },
     );
