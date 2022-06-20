@@ -6,7 +6,7 @@ class NewsEntity extends Equatable {
   final String description;
   final String url;
   final String urlToImage;
-  final String publishedAt;
+  final DateTime publishedAt;
   final String content;
   final String author;
   final String source;
@@ -41,7 +41,7 @@ class NewsEntity extends Equatable {
     String? description,
     String? url,
     String? urlToImage,
-    String? publishedAt,
+    DateTime? publishedAt,
     String? content,
     String? author,
     String? source,

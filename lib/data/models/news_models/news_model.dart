@@ -6,7 +6,7 @@ class NewsModel extends Equatable {
   final String? description;
   final String? url;
   final String? urlToImage;
-  final String? publishedAt;
+  final DateTime? publishedAt;
   final String? content;
   final String? author;
   final String? source;
@@ -24,14 +24,14 @@ class NewsModel extends Equatable {
 
   factory NewsModel.fromJson(Map<String, dynamic> news) {
     return NewsModel(
-      title: news['title'],
-      description: news['description'],
-      url: news['url'],
-      urlToImage: news['urlToImage'],
-      publishedAt: news['publishedAt'],
-      content: news['content'],
-      author: news['author'],
-      source: (news['source'] as Map<String, dynamic>)['name'],
+      title: news['title'] as String?,
+      description: news['description'] as String?,
+      url: news['url'] as String?,
+      urlToImage: news['urlToImage'] as String?,
+      publishedAt: DateTime.tryParse((news['publishedAt'] as String?) ?? ''),
+      content: news['content'] as String?,
+      author: news['author'] as String?,
+      source: (news['source'] as Map<String, dynamic>)['name'] as String?,
     );
   }
 
@@ -41,7 +41,7 @@ class NewsModel extends Equatable {
       'description': description,
       'url': url,
       'urlToImage': urlToImage,
-      'publishedAt': publishedAt,
+      'publishedAt': publishedAt?.toIso8601String(),
       'content': content,
       'author': author,
       'source': source,
@@ -54,7 +54,7 @@ class NewsModel extends Equatable {
       description: description ?? '',
       url: url ?? '',
       urlToImage: urlToImage ?? '',
-      publishedAt: publishedAt ?? '',
+      publishedAt: publishedAt ?? DateTime(0),
       content: content ?? '',
       author: author ?? '',
       source: source ?? '',

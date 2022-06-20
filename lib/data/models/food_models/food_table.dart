@@ -43,15 +43,15 @@ class FoodTable extends Equatable {
 
   factory FoodTable.fromMap(Map<String, dynamic> food) {
     return FoodTable(
-      uid: food['uid'],
-      foodId: food['foodId'],
-      label: food['label'],
-      category: food['category'],
-      categoryLabel: food['categoryLabel'],
+      uid: food['uid'] as String,
+      foodId: food['foodId'] as String,
+      label: food['label'] as String,
+      category: food['category'] as String,
+      categoryLabel: food['categoryLabel'] as String,
       foodContentLabel: (food['foodContentLabel'] as String).split('; '),
-      image: food['image'],
-      nutrients: NutrientsTable.fromString((food['nutrients'] as String)),
-      createdAt: DateTime.parse((food['createdAt'] as String)),
+      image: food['image'] as String,
+      nutrients: NutrientsTable.fromString(food['nutrients'] as String),
+      createdAt: DateTime.parse(food['createdAt'] as String),
     );
   }
 

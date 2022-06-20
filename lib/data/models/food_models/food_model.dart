@@ -24,13 +24,15 @@ class FoodModel extends Equatable {
 
   factory FoodModel.fromJson(Map<String, dynamic> food) {
     return FoodModel(
-      foodId: food['foodId'],
-      label: food['label'],
-      category: food['category'],
-      categoryLabel: food['categoryLabel'],
+      foodId: food['foodId'] as String?,
+      label: food['label'] as String?,
+      category: food['category'] as String?,
+      categoryLabel: food['categoryLabel'] as String?,
       foodContentLabel: (food['foodContentLabel'] as String?)?.split('; '),
-      image: food['image'],
-      nutrients: NutrientsModel.fromJson(food['nutrients']),
+      image: food['image'] as String?,
+      nutrients: NutrientsModel.fromJson(
+        food['nutrients'] as Map<String, dynamic>,
+      ),
     );
   }
 

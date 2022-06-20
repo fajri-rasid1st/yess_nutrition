@@ -6,20 +6,18 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 
 class Utilities {
-  /// Function to convert [dateFormat] to time ago format
-  static String dateFormatToTimeAgo(String dateFormat) {
+  /// Function to convert [dateTime] to time ago string format
+  static String dateTimeToTimeAgo(DateTime dateTime) {
     timeago.setLocaleMessages('id', timeago.IdMessages());
 
-    return timeago.format(DateTime.parse(dateFormat), locale: 'id');
+    return timeago.format(dateTime, locale: 'id');
   }
 
-  /// Function to format [dateFormat] to **MMM dd, y** pattern
-  static String dateFormatToMMMddy(String dateFormat) {
-    if (dateFormat.isEmpty) return '?';
+  /// Function to format [dateTime] to **dd MMM y** string pattern
+  static String dateTimeToddMMMy(DateTime dateTime) {
+    if (dateTime.year == 0) return '?';
 
-    final dateTime = DateTime.parse(dateFormat);
-
-    return DateFormat('MMM dd, y').format(dateTime);
+    return DateFormat('dd MMM y').format(dateTime);
   }
 
   /// Function to convert [number] according to [decimalDigit]

@@ -18,11 +18,11 @@ class NutrientsModel extends Equatable {
 
   factory NutrientsModel.fromJson(Map<String, dynamic> nutrients) {
     return NutrientsModel(
-      calories: nutrients['ENERC_KCAL'],
-      protein: nutrients['PROCNT'],
-      fat: nutrients['FAT'],
-      carbohydrate: nutrients['CHOCDF'],
-      fiber: nutrients['FIBTG'],
+      calories: nutrients['ENERC_KCAL'] as num?,
+      protein: nutrients['PROCNT'] as num?,
+      fat: nutrients['FAT'] as num?,
+      carbohydrate: nutrients['CHOCDF'] as num?,
+      fiber: nutrients['FIBTG'] as num?,
     );
   }
 

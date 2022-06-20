@@ -158,7 +158,7 @@ class _FoodAndProductCheckHistoryPageState
           padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
           child: Row(
             mainAxisSize: MainAxisSize.min,
-            children: [
+            children: <Widget>[
               const Icon(
                 Icons.history_rounded,
                 color: primaryColor,
@@ -166,7 +166,7 @@ class _FoodAndProductCheckHistoryPageState
               ),
               const SizedBox(width: 8),
               Text(
-                Utilities.dateFormatToMMMddy(dateCreated.toIso8601String()),
+                Utilities.dateTimeToddMMMy(dateCreated),
                 style: const TextStyle(
                   color: primaryColor,
                   fontWeight: FontWeight.bold,

@@ -145,7 +145,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                         _buildChip(
                           context,
                           Icons.access_time_rounded,
-                          Utilities.dateFormatToMMMddy(widget.news.publishedAt),
+                          Utilities.dateTimeToddMMMy(widget.news.publishedAt),
                         ),
                       ],
                     ),

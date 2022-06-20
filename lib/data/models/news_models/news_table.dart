@@ -9,7 +9,7 @@ class NewsTable extends Equatable {
   final String description;
   final String url;
   final String urlToImage;
-  final String publishedAt;
+  final DateTime publishedAt;
   final String content;
   final String author;
   final String source;
@@ -42,15 +42,15 @@ class NewsTable extends Equatable {
 
   factory NewsTable.fromMap(Map<String, dynamic> news) {
     return NewsTable(
-      uid: news['uid'],
-      title: news['title'],
-      description: news['description'],
-      url: news['url'],
-      urlToImage: news['urlToImage'],
-      publishedAt: news['publishedAt'],
-      content: news['content'],
-      author: news['author'],
-      source: news['source'],
+      uid: news['uid'] as String,
+      title: news['title'] as String,
+      description: news['description'] as String,
+      url: news['url'] as String,
+      urlToImage: news['urlToImage'] as String,
+      publishedAt: DateTime.parse(news['publishedAt'] as String),
+      content: news['content'] as String,
+      author: news['author'] as String,
+      source: news['source'] as String,
     );
   }
 
@@ -75,7 +75,7 @@ class NewsTable extends Equatable {
       'description': description,
       'url': url,
       'urlToImage': urlToImage,
-      'publishedAt': publishedAt,
+      'publishedAt': publishedAt.toIso8601String(),
       'content': content,
       'author': author,
       'source': source,
