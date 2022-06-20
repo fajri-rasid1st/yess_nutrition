@@ -129,6 +129,9 @@ class _FoodAndProductCheckHistoryPageState
         groupSeparatorBuilder: (dateCreated) {
           return _buildSeparatorGroup(dateCreated);
         },
+        groupComparator: (dateTime1, dateTime2) {
+          return dateTime1.compareTo(dateTime2) * -1;
+        },
         itemBuilder: (context, food) {
           return _buildSlidableListTile(food);
         },

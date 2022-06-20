@@ -27,12 +27,12 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
+    super.initState();
+
     Future.microtask(() {
       Provider.of<GetNewsNotifier>(context, listen: false)
           .getNewsByCount(count: 5);
     });
-
-    super.initState();
   }
 
   @override
@@ -396,7 +396,10 @@ class _HomePageState extends State<HomePage> {
   }
 
   Padding _buildTitleContent(
-      BuildContext context, String title, VoidCallback onTap) {
+    BuildContext context,
+    String title,
+    VoidCallback onTap,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -405,8 +408,8 @@ class _HomePageState extends State<HomePage> {
             title,
             style: Theme.of(context)
                 .textTheme
-                .subtitle1
-                ?.copyWith(fontWeight: FontWeight.w800),
+                .subtitle1!
+                .copyWith(fontWeight: FontWeight.bold),
           ),
           const Spacer(),
           InkWell(
@@ -415,10 +418,9 @@ class _HomePageState extends State<HomePage> {
               children: <Widget>[
                 Text(
                   "Selengkapnya",
-                  style: Theme.of(context).textTheme.overline?.copyWith(
+                  style: Theme.of(context).textTheme.caption!.copyWith(
                         color: primaryColor,
                         letterSpacing: 0.25,
-                        fontSize: 12,
                       ),
                 ),
                 const Icon(
@@ -436,9 +438,7 @@ class _HomePageState extends State<HomePage> {
 
   Padding _buildListNutriNews() {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16,
-      ),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Consumer<GetNewsNotifier>(
         builder: (context, result, child) {
           return ListView.separated(
@@ -446,10 +446,15 @@ class _HomePageState extends State<HomePage> {
             shrinkWrap: true,
             padding: EdgeInsets.zero,
             itemBuilder: (context, index) {
-              return CardNutriNewsHome(news: result.news[index]);
+              final news = result.news[index];
+
+              return CardNutriNewsHome(
+                news: news.copyWith(uid: widget.user.uid),
+                heroTag: 'home:${news.url}',
+              );
             },
             separatorBuilder: (context, index) {
-              return const SizedBox(height: 8);
+              return const SizedBox(height: 10);
             },
             itemCount: result.news.length,
           );

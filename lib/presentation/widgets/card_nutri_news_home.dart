@@ -4,140 +4,132 @@ import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/entities.dart';
+import 'package:yess_nutrition/presentation/pages/news_pages/news_detail_page.dart';
+import 'package:yess_nutrition/presentation/widgets/widgets.dart';
 
 class CardNutriNewsHome extends StatelessWidget {
   final NewsEntity news;
+  final String heroTag;
 
   const CardNutriNewsHome({
     Key? key,
     required this.news,
+    required this.heroTag,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          width: double.infinity,
-          height: 88,
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: primaryBackgroundColor,
-            borderRadius: BorderRadius.circular(12),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                offset: const Offset(0, 2),
-                blurRadius: 4,
-                color: Colors.black.withOpacity(0.05),
-              ),
-            ],
-          ),
-          child: Row(
-            children: <Widget>[
-              Hero(
-                tag: news.urlToImage,
-                transitionOnUserGestures: true,
-                child: Container(
-                  width: 68,
-                  height: 68,
-                  decoration:
-                      BoxDecoration(borderRadius: BorderRadius.circular(6)),
-                  clipBehavior: Clip.hardEdge,
-                  child: Image.network(news.urlToImage, fit: BoxFit.cover),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: Stack(
+        children: <Widget>[
+          Container(
+            height: 88,
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: primaryBackgroundColor,
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                  offset: const Offset(0, 2),
+                  blurRadius: 4,
+                  color: Colors.black.withOpacity(0.05),
                 ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      news.title,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
-                      style: Theme.of(context).textTheme.subtitle2?.copyWith(
-                            color: primaryTextColor,
-                          ),
+              ],
+            ),
+            child: Row(
+              children: <Widget>[
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(6),
+                  child: Hero(
+                    tag: heroTag,
+                    child: CustomNetworkImage(
+                      width: 68,
+                      height: 68,
+                      fit: BoxFit.cover,
+                      imgUrl: news.urlToImage,
+                      placeHolderSize: 16,
+                      errorIcon: Icons.motion_photos_off_outlined,
                     ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Row(
-                            children: <Widget>[
-                              Icon(
-                                MdiIcons.clockOutline,
-                                size: 12,
-                                color: secondaryTextColor.withOpacity(0.7),
-                              ),
-                              const SizedBox(width: 2),
-                              Expanded(
-                                child: Text(
-                                  Utilities.dateTimeToTimeAgo(news.publishedAt),
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .overline
-                                      ?.copyWith(
-                                        fontSize: 12,
-                                        color:
-                                            secondaryTextColor.withOpacity(0.7),
-                                        letterSpacing: 0.25,
-                                      ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          child: Row(
-                            children: <Widget>[
-                              Icon(
-                                MdiIcons.newspaperVariantOutline,
-                                size: 12,
-                                color: secondaryTextColor.withOpacity(0.7),
-                              ),
-                              const SizedBox(width: 2),
-                              Expanded(
-                                child: Text(
-                                  news.source,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .overline
-                                      ?.copyWith(
-                                        fontSize: 12,
-                                        color:
-                                            secondaryTextColor.withOpacity(0.7),
-                                        letterSpacing: 0.25,
-                                      ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        news.title,
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        style: Theme.of(context)
+                            .textTheme
+                            .subtitle2!
+                            .copyWith(color: primaryTextColor),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: <Widget>[
+                          _buildSubtitleWithIcon(
+                            context,
+                            MdiIcons.clockOutline,
+                            Utilities.dateTimeToTimeAgo(news.publishedAt),
+                          ),
+                          _buildSubtitleWithIcon(
+                            context,
+                            MdiIcons.newspaperVariantOutline,
+                            news.source,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        Positioned.fill(
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () => Navigator.pushNamed(
-                context,
-                newsDetailRoute,
-                arguments: news,
+          Positioned.fill(
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () => Navigator.pushNamed(
+                  context,
+                  newsDetailRoute,
+                  arguments: NewsDetailPageArgs(news, heroTag),
+                ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
+    );
+  }
+
+  Expanded _buildSubtitleWithIcon(
+    BuildContext context,
+    IconData icon,
+    String label,
+  ) {
+    return Expanded(
+      child: Row(
+        children: <Widget>[
+          Icon(
+            icon,
+            size: 12,
+            color: secondaryTextColor,
+          ),
+          const SizedBox(width: 2),
+          Expanded(
+            child: Text(
+              label,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(context).textTheme.caption!.copyWith(
+                    color: secondaryTextColor,
+                    letterSpacing: 0.25,
+                  ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
