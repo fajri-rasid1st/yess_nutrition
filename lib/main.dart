@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:yess_nutrition/presentation/pages/schedule_pages/alarm_main_page.dart';
 
 import 'common/styles/styles.dart';
 import 'common/utils/http_ssl_pinning.dart';
@@ -22,7 +23,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   var initializationSettingsAndroid =
-      const AndroidInitializationSettings('codex_logo');
+      const AndroidInitializationSettings('splash');
   var initializationSettingsIOS = IOSInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
@@ -216,6 +217,14 @@ class MyApp extends StatelessWidget {
             case newsBookmarksRoute:
               return MaterialPageRoute(
                 builder: (_) => const NewsBookmarksPage(),
+              );
+            case alarmNutriTime:
+              return MaterialPageRoute(
+                builder: (_) => const AlarmNutriTime(),
+              );
+            case alarmNutriTimePage:
+              return MaterialPageRoute(
+                builder: (_) => const AlarmNutriTimePage(),
               );
             default:
               return null;

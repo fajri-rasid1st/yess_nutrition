@@ -11,6 +11,8 @@ const updateProfileRoute = '/profile/update';
 const newsDetailRoute = '/news-detail';
 const newsWebViewRoute = '/news-webview';
 const newsBookmarksRoute = '/news-bookmarks';
+const alarmNutriTime = '/alarm-nutri-time';
+const alarmNutriTimePage = '/alarm-nutri-time-page';
 
 // Register the RouteObserver as a navigation observer.
 final routeObserver = RouteObserver<ModalRoute<void>>();

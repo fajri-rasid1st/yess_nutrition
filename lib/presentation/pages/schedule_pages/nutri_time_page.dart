@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/data/models/schedule_models/data_menu_makan_nutritime.dart';
 import 'package:yess_nutrition/presentation/pages/pages.dart';
-import 'package:yess_nutrition/presentation/pages/schedule_pages/alarm_main_page.dart';
 import 'package:yess_nutrition/presentation/pages/schedule_pages/nutri_time_add_food_page.dart';
+import 'alarm_main_page.dart';
+import 'package:yess_nutrition/common/utils/routes.dart';
 
 class NutriTimePage extends StatefulWidget {
   const NutriTimePage({Key? key}) : super(key: key);
@@ -23,14 +24,6 @@ class _NutriTimePagePageState extends State<NutriTimePage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back_ios,
-                    size: 20.0,
-                    color: primaryColor,
-                  ),
-                  onPressed: () {},
-                ),
                 const Text(
                   'NutriTime',
                   style: TextStyle(
@@ -44,12 +37,7 @@ class _NutriTimePagePageState extends State<NutriTimePage> {
                     color: primaryColor,
                   ),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const AlarmNutriTime(),
-                      ),
-                    );
+                    Navigator.pushNamed(context, alarmNutriTimePage);
                   },
                 ),
               ],

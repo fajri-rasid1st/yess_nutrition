@@ -2,12 +2,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
+import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/data/datasources/databases/nutritime_helper.dart';
 import 'package:yess_nutrition/data/models/schedule_models/nutritime_info.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
-import 'package:yess_nutrition/presentation/pages/schedule_pages/schedule_pages.dart';
 import '../main_page.dart';
 
 class AlarmNutriTimePage extends StatefulWidget {
@@ -20,10 +20,11 @@ class AlarmNutriTimePage extends StatefulWidget {
 class _AlarmNutriTimePageState extends State<AlarmNutriTimePage> {
   DateTime? _alarmTime;
   String? _alarmTimeString;
-  NutriTimeHelper _alarmHelper = NutriTimeHelper();
+  final NutriTimeHelper _alarmHelper = NutriTimeHelper();
   late Future<List<NutriTimeInfo>> _alarms;
   late List<NutriTimeInfo> _currentAlarms;
 
+  @override
   void initState() {
     _alarmTime = DateTime.now();
     _alarmHelper.initializeDatabase().then((value) {
@@ -38,6 +39,7 @@ class _AlarmNutriTimePageState extends State<AlarmNutriTimePage> {
     if (mounted) setState(() {});
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -46,7 +48,7 @@ class _AlarmNutriTimePageState extends State<AlarmNutriTimePage> {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
             onPressed: () {
-              Navigator.pop(context, true);
+              Navigator.popAndPushNamed(context, alarmNutriTime);
             },
           ),
           automaticallyImplyLeading: false,
@@ -59,7 +61,7 @@ class _AlarmNutriTimePageState extends State<AlarmNutriTimePage> {
             children: [
               const Text(
                 'Alarm Waktu Makan',
-                style: const TextStyle(
+                style: TextStyle(
                     color: primaryTextColor,
                     fontWeight: FontWeight.w700,
                     fontSize: 24),
@@ -95,8 +97,8 @@ class _AlarmNutriTimePageState extends State<AlarmNutriTimePage> {
                                   offset: const Offset(4, 4),
                                 ),
                               ],
-                              borderRadius: const BorderRadius.all(
-                                  const Radius.circular(24)),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(24)),
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -164,7 +166,7 @@ class _AlarmNutriTimePageState extends State<AlarmNutriTimePage> {
                               color: clockOutline,
                               borderType: BorderType.RRect,
                               radius: const Radius.circular(24),
-                              dashPattern: [5, 4],
+                              dashPattern: const [5, 4],
                               child: Container(
                                 width: double.infinity,
                                 decoration: const BoxDecoration(
@@ -233,13 +235,13 @@ class _AlarmNutriTimePageState extends State<AlarmNutriTimePage> {
                                                     ),
                                                   ),
                                                   const ListTile(
-                                                    title: const Text('Repeat'),
-                                                    trailing: const Icon(Icons
+                                                    title: Text('Repeat'),
+                                                    trailing: Icon(Icons
                                                         .arrow_forward_ios),
                                                   ),
                                                   const ListTile(
-                                                    title: const Text('Sound'),
-                                                    trailing: const Icon(Icons
+                                                    title: Text('Sound'),
+                                                    trailing: Icon(Icons
                                                         .arrow_forward_ios),
                                                   ),
                                                   const ListTile(
@@ -270,7 +272,7 @@ class _AlarmNutriTimePageState extends State<AlarmNutriTimePage> {
                                       const SizedBox(height: 8),
                                       const Text(
                                         'Add Alarm',
-                                        style: const TextStyle(
+                                        style: TextStyle(
                                             color: Colors.white,
                                             fontFamily: 'avenir'),
                                       ),
@@ -283,7 +285,7 @@ class _AlarmNutriTimePageState extends State<AlarmNutriTimePage> {
                             const Center(
                                 child: Text(
                               'Only 5 alarms allowed!',
-                              style: const TextStyle(color: Colors.white),
+                              style: TextStyle(color: Colors.white),
                             )),
                         ]).toList(),
                       );
@@ -291,7 +293,7 @@ class _AlarmNutriTimePageState extends State<AlarmNutriTimePage> {
                     return const Center(
                       child: Text(
                         'Loading..',
-                        style: const TextStyle(color: Colors.white),
+                        style: TextStyle(color: Colors.white),
                       ),
                     );
                   },
