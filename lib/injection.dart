@@ -107,11 +107,11 @@ void init() {
   // News usecases
   locator.registerLazySingleton(() => GetNews(locator()));
   locator.registerLazySingleton(() => SearchNews(locator()));
-  locator.registerLazySingleton(() => CreateBookmark(locator()));
-  locator.registerLazySingleton(() => DeleteBookmark(locator()));
-  locator.registerLazySingleton(() => GetBookmarkStatus(locator()));
-  locator.registerLazySingleton(() => GetBookmarks(locator()));
-  locator.registerLazySingleton(() => ClearBookmarks(locator()));
+  locator.registerLazySingleton(() => CreateNewsBookmark(locator()));
+  locator.registerLazySingleton(() => DeleteNewsBookmark(locator()));
+  locator.registerLazySingleton(() => GetNewsBookmarkStatus(locator()));
+  locator.registerLazySingleton(() => GetNewsBookmarks(locator()));
+  locator.registerLazySingleton(() => ClearNewsBookmarks(locator()));
 
   // User repositories
   locator.registerLazySingleton<UserAuthRepository>(

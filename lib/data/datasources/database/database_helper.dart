@@ -4,6 +4,7 @@ import 'package:sqflite_sqlcipher/sqflite.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/data/models/food_models/food_table.dart';
 import 'package:yess_nutrition/data/models/news_models/news_table.dart';
+import 'package:yess_nutrition/data/models/recipe_models/recipe_table.dart';
 
 class DatabaseHelper {
   static DatabaseHelper? _databaseHelper;
@@ -64,17 +65,30 @@ class DatabaseHelper {
         nutrients TEXT,
         createdAt TEXT)
         ''');
+
+    await db.execute('''
+      CREATE TABLE $recipeBookmarksTable (
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        uid TEXT,
+        recipeId TEXT,
+        label TEXT,
+        image TEXT,
+        url TEXT,
+        totalServing INTEGER,
+        totalTime INTEGER,
+        calories REAL)
+        ''');
   }
 
-  /// added [news] to bookmarks table
-  Future<int> createBookmark(NewsTable news) async {
+  /// added [news] to news bookmarks table
+  Future<int> createNewsBookmark(NewsTable news) async {
     final db = await database;
 
     return await db.insert(newsBookmarksTable, news.toMap());
   }
 
-  /// get all news at bookmarks table, according to [uid]
-  Future<List<NewsTable>> getBookmarks(String uid) async {
+  /// get all news at news bookmarks table, according to [uid]
+  Future<List<NewsTable>> getNewsBookmarks(String uid) async {
     final db = await database;
 
     final result = await db.query(
@@ -91,8 +105,8 @@ class DatabaseHelper {
     return news;
   }
 
-  /// check whether [news] is already in bookmarks table
-  Future<bool> isBookmarkExist(NewsTable news) async {
+  /// check whether [news] is already in news bookmarks table
+  Future<bool> isNewsBookmarkExist(NewsTable news) async {
     final db = await database;
 
     final result = await db.query(
@@ -106,8 +120,8 @@ class DatabaseHelper {
     return Future.value(false);
   }
 
-  /// delete [news] from bookmarks table
-  Future<int> deleteBookmark(NewsTable news) async {
+  /// delete [news] from news bookmarks table
+  Future<int> deleteNewsBookmark(NewsTable news) async {
     final db = await database;
 
     return await db.delete(
@@ -117,8 +131,8 @@ class DatabaseHelper {
     );
   }
 
-  /// clear all news from bookmarks table, according to [uid]
-  Future<int> clearBookmarks(String uid) async {
+  /// clear all news from news bookmarks table, according to [uid]
+  Future<int> clearNewsBookmarks(String uid) async {
     final db = await database;
 
     return await db.delete(
@@ -170,6 +184,68 @@ class DatabaseHelper {
 
     return await db.delete(
       foodHistoryTable,
+      where: 'uid = ?',
+      whereArgs: [uid],
+    );
+  }
+
+  /// added [recipe] to recipe bookmarks table
+  Future<int> createRecipeBookmark(RecipeTable recipe) async {
+    final db = await database;
+
+    return await db.insert(recipeBookmarksTable, recipe.toMap());
+  }
+
+  /// get all recipe at recipe bookmarks table, according to [uid]
+  Future<List<RecipeTable>> getRecipeBookmarks(String uid) async {
+    final db = await database;
+
+    final result = await db.query(
+      recipeBookmarksTable,
+      where: 'uid = ?',
+      whereArgs: [uid],
+      orderBy: '_id DESC',
+    );
+
+    final recipes = List<RecipeTable>.from(
+      result.map((bookmark) => RecipeTable.fromMap(bookmark)),
+    );
+
+    return recipes;
+  }
+
+  /// check whether [recipe] is already in recipe bookmarks table
+  Future<bool> isRecipeBookmarkExist(RecipeTable recipe) async {
+    final db = await database;
+
+    final result = await db.query(
+      recipeBookmarksTable,
+      where: 'uid = ? AND recipeId = ?',
+      whereArgs: [recipe.uid, recipe.recipeId],
+    );
+
+    if (result.isNotEmpty) return Future.value(true);
+
+    return Future.value(false);
+  }
+
+  /// delete [recipe] from recipe bookmarks table
+  Future<int> deleteRecipeBookmark(RecipeTable recipe) async {
+    final db = await database;
+
+    return await db.delete(
+      recipeBookmarksTable,
+      where: 'uid = ? AND recipeId = ?',
+      whereArgs: [recipe.uid, recipe.recipeId],
+    );
+  }
+
+  /// clear all recipe from recipe bookmarks table, according to [uid]
+  Future<int> clearRecipeBookmarks(String uid) async {
+    final db = await database;
+
+    return await db.delete(
+      recipeBookmarksTable,
       where: 'uid = ?',
       whereArgs: [uid],
     );

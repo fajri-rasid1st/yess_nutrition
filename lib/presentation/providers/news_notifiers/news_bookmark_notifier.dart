@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/domain/entities/news_entity.dart';
-import 'package:yess_nutrition/domain/usecases/news_usecases/clear_bookmarks.dart';
-import 'package:yess_nutrition/domain/usecases/news_usecases/create_bookmark.dart';
-import 'package:yess_nutrition/domain/usecases/news_usecases/delete_bookmark.dart';
-import 'package:yess_nutrition/domain/usecases/news_usecases/get_bookmark_status.dart';
-import 'package:yess_nutrition/domain/usecases/news_usecases/get_bookmarks.dart';
+import 'package:yess_nutrition/domain/usecases/news_usecases/clear_news_bookmarks.dart';
+import 'package:yess_nutrition/domain/usecases/news_usecases/create_news_bookmark.dart';
+import 'package:yess_nutrition/domain/usecases/news_usecases/delete_news_bookmark.dart';
+import 'package:yess_nutrition/domain/usecases/news_usecases/get_news_bookmark_status.dart';
+import 'package:yess_nutrition/domain/usecases/news_usecases/get_news_bookmarks.dart';
 
 class NewsBookmarkNotifier extends ChangeNotifier {
-  final CreateBookmark createBookmarkUseCase;
-  final DeleteBookmark deleteBookmarkUseCase;
-  final GetBookmarkStatus getBookmarkStatusUseCase;
-  final GetBookmarks getBookmarksUseCase;
-  final ClearBookmarks clearBookmarksUseCase;
+  final CreateNewsBookmark createBookmarkUseCase;
+  final DeleteNewsBookmark deleteBookmarkUseCase;
+  final GetNewsBookmarkStatus getBookmarkStatusUseCase;
+  final GetNewsBookmarks getBookmarksUseCase;
+  final ClearNewsBookmarks clearBookmarksUseCase;
 
   NewsBookmarkNotifier({
     required this.createBookmarkUseCase,

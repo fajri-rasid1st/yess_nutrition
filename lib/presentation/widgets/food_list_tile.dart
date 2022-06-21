@@ -196,7 +196,7 @@ class FoodListTile extends StatelessWidget {
 
     labels.sort((label1, label2) => label1.length.compareTo(label2.length));
 
-    if (labels.length > 10) return labels.sublist(0, 10);
+    if (labels.length > 8) return labels.sublist(0, 8);
 
     return labels;
   }

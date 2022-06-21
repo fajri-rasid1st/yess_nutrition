@@ -3,15 +3,15 @@ import 'package:yess_nutrition/data/datasources/database/database_helper.dart';
 import 'package:yess_nutrition/data/models/news_models/news_table.dart';
 
 abstract class NewsLocalDataSource {
-  Future<String> createBookmark(NewsTable news);
+  Future<String> createNewsBookmark(NewsTable news);
 
-  Future<List<NewsTable>> getBookmarks(String uid);
+  Future<List<NewsTable>> getNewsBookmarks(String uid);
 
-  Future<bool> isBookmarkExist(NewsTable news);
+  Future<bool> isNewsBookmarkExist(NewsTable news);
 
-  Future<String> deleteBookmark(NewsTable news);
+  Future<String> deleteNewsBookmark(NewsTable news);
 
-  Future<String> clearBookmarks(String uid);
+  Future<String> clearNewsBookmarks(String uid);
 }
 
 class NewsLocalDataSourceImpl implements NewsLocalDataSource {
@@ -20,9 +20,9 @@ class NewsLocalDataSourceImpl implements NewsLocalDataSource {
   NewsLocalDataSourceImpl({required this.databaseHelper});
 
   @override
-  Future<String> createBookmark(NewsTable news) async {
+  Future<String> createNewsBookmark(NewsTable news) async {
     try {
-      await databaseHelper.createBookmark(news);
+      await databaseHelper.createNewsBookmark(news);
 
       return 'Artikel ditambahkan ke Bookmarks.';
     } catch (e) {
@@ -31,9 +31,9 @@ class NewsLocalDataSourceImpl implements NewsLocalDataSource {
   }
 
   @override
-  Future<List<NewsTable>> getBookmarks(String uid) async {
+  Future<List<NewsTable>> getNewsBookmarks(String uid) async {
     try {
-      final bookmarks = await databaseHelper.getBookmarks(uid);
+      final bookmarks = await databaseHelper.getNewsBookmarks(uid);
 
       return bookmarks;
     } catch (e) {
@@ -42,9 +42,9 @@ class NewsLocalDataSourceImpl implements NewsLocalDataSource {
   }
 
   @override
-  Future<bool> isBookmarkExist(NewsTable news) async {
+  Future<bool> isNewsBookmarkExist(NewsTable news) async {
     try {
-      final isExist = await databaseHelper.isBookmarkExist(news);
+      final isExist = await databaseHelper.isNewsBookmarkExist(news);
 
       return isExist;
     } catch (e) {
@@ -53,9 +53,9 @@ class NewsLocalDataSourceImpl implements NewsLocalDataSource {
   }
 
   @override
-  Future<String> deleteBookmark(NewsTable news) async {
+  Future<String> deleteNewsBookmark(NewsTable news) async {
     try {
-      await databaseHelper.deleteBookmark(news);
+      await databaseHelper.deleteNewsBookmark(news);
 
       return 'Artikel dihapus dari Bookmarks.';
     } catch (e) {
@@ -64,9 +64,9 @@ class NewsLocalDataSourceImpl implements NewsLocalDataSource {
   }
 
   @override
-  Future<String> clearBookmarks(String uid) async {
+  Future<String> clearNewsBookmarks(String uid) async {
     try {
-      await databaseHelper.clearBookmarks(uid);
+      await databaseHelper.clearNewsBookmarks(uid);
 
       return 'Semua artikel berhasil dihapus.';
     } catch (e) {

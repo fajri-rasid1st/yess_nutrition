@@ -1,6 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:yess_nutrition/data/models/nutrients_models/nutrients_model.dart';
-import 'package:yess_nutrition/domain/entities/nutrients_entity.dart';
 import 'package:yess_nutrition/domain/entities/recipe_entity.dart';
 
 class RecipeModel extends Equatable {
@@ -9,9 +7,8 @@ class RecipeModel extends Equatable {
   final String? image;
   final String? url;
   final num? totalServing;
-  final List<String>? healthLabels;
   final num? totalTime;
-  final NutrientsModel? totalNutrients;
+  final num? calories;
 
   const RecipeModel({
     this.recipeId,
@@ -19,9 +16,8 @@ class RecipeModel extends Equatable {
     this.image,
     this.url,
     this.totalServing,
-    this.healthLabels,
     this.totalTime,
-    this.totalNutrients,
+    this.calories,
   });
 
   factory RecipeModel.fromJson(Map<String, dynamic> recipe) {
@@ -29,13 +25,10 @@ class RecipeModel extends Equatable {
       recipeId: (recipe['uri'] as String?)?.split('#').last,
       label: recipe['label'] as String?,
       image: recipe['image'] as String?,
-      url: recipe['recipe'] as String?,
+      url: recipe['url'] as String?,
       totalServing: recipe['yield'] as num?,
-      healthLabels: recipe['healthLabels'] as List<String>?,
       totalTime: recipe['totalTime'] as num?,
-      totalNutrients: NutrientsModel.fromJsonRecipe(
-        recipe['totalNutrients'] as Map<String, dynamic>,
-      ),
+      calories: recipe['calories'] as num?,
     );
   }
 
@@ -46,9 +39,8 @@ class RecipeModel extends Equatable {
       'image': image,
       'url': url,
       'totalServing': totalServing,
-      'healthLabels': healthLabels,
       'totalTime': totalTime,
-      'totalNutrients': totalNutrients?.toJson(),
+      'calories': calories,
     };
   }
 
@@ -59,16 +51,8 @@ class RecipeModel extends Equatable {
       image: image ?? '',
       url: url ?? '',
       totalServing: totalServing?.toInt() ?? 0,
-      healthLabels: healthLabels ?? <String>[],
       totalTime: totalServing?.toInt() ?? 0,
-      totalNutrients: totalNutrients?.toEntity() ??
-          const NutrientsEntity(
-            calories: 0,
-            carbohydrate: 0,
-            protein: 0,
-            fat: 0,
-            fiber: 0,
-          ),
+      calories: calories?.toDouble() ?? 0,
     );
   }
 
@@ -79,8 +63,7 @@ class RecipeModel extends Equatable {
         image,
         url,
         totalServing,
-        healthLabels,
         totalTime,
-        totalNutrients,
+        calories,
       ];
 }

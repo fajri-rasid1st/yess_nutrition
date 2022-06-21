@@ -197,7 +197,6 @@ class _ProductCheckPageState extends State<ProductCheckPage> {
           ListView.separated(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            padding: const EdgeInsets.all(0),
             itemCount: (results.length + hints.length),
             itemBuilder: (context, index) {
               final products = [...results, ...hints];
@@ -239,7 +238,7 @@ class _ProductCheckPageState extends State<ProductCheckPage> {
     if (productNotifier.failure is ServerFailure) {
       return _buildSearchEmpty();
     }
-    
+
     return CustomInformation(
       key: const Key('error_message'),
       imgPath: 'assets/svg/error_robot_cuate.svg',

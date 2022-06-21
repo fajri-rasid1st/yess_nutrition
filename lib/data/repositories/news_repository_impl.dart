@@ -18,11 +18,11 @@ class NewsRepositoryImpl implements NewsRepository {
   });
 
   @override
-  Future<Either<Failure, String>> createBookmark(NewsEntity news) async {
+  Future<Either<Failure, String>> createNewsBookmark(NewsEntity news) async {
     try {
       final newsTable = NewsTable.fromEntity(news);
 
-      final result = await newsLocalDataSource.createBookmark(newsTable);
+      final result = await newsLocalDataSource.createNewsBookmark(newsTable);
 
       return Right(result);
     } on DatabaseException {
@@ -31,9 +31,9 @@ class NewsRepositoryImpl implements NewsRepository {
   }
 
   @override
-  Future<Either<Failure, List<NewsEntity>>> getBookmarks(String uid) async {
+  Future<Either<Failure, List<NewsEntity>>> getNewsBookmarks(String uid) async {
     try {
-      final result = await newsLocalDataSource.getBookmarks(uid);
+      final result = await newsLocalDataSource.getNewsBookmarks(uid);
 
       return Right(result.map((table) => table.toEntity()).toList());
     } on DatabaseException {
@@ -42,11 +42,11 @@ class NewsRepositoryImpl implements NewsRepository {
   }
 
   @override
-  Future<Either<Failure, bool>> isBookmarkExist(NewsEntity news) async {
+  Future<Either<Failure, bool>> isNewsBookmarkExist(NewsEntity news) async {
     try {
       final newsTable = NewsTable.fromEntity(news);
 
-      final result = await newsLocalDataSource.isBookmarkExist(newsTable);
+      final result = await newsLocalDataSource.isNewsBookmarkExist(newsTable);
 
       return Right(result);
     } on DatabaseException {
@@ -55,11 +55,11 @@ class NewsRepositoryImpl implements NewsRepository {
   }
 
   @override
-  Future<Either<Failure, String>> deleteBookmark(NewsEntity news) async {
+  Future<Either<Failure, String>> deleteNewsBookmark(NewsEntity news) async {
     try {
       final newsTable = NewsTable.fromEntity(news);
 
-      final result = await newsLocalDataSource.deleteBookmark(newsTable);
+      final result = await newsLocalDataSource.deleteNewsBookmark(newsTable);
 
       return Right(result);
     } on DatabaseException {
@@ -68,9 +68,9 @@ class NewsRepositoryImpl implements NewsRepository {
   }
 
   @override
-  Future<Either<Failure, String>> clearBookmarks(String uid) async {
+  Future<Either<Failure, String>> clearNewsBookmarks(String uid) async {
     try {
-      final result = await newsLocalDataSource.clearBookmarks(uid);
+      final result = await newsLocalDataSource.clearNewsBookmarks(uid);
 
       return Right(result);
     } on DatabaseException {

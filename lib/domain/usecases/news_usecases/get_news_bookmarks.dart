@@ -3,12 +3,12 @@ import 'package:yess_nutrition/common/utils/failure.dart';
 import 'package:yess_nutrition/domain/entities/news_entity.dart';
 import 'package:yess_nutrition/domain/repositories/news_repository.dart';
 
-class CreateBookmark {
+class GetNewsBookmarks {
   final NewsRepository _repository;
 
-  CreateBookmark(this._repository);
+  GetNewsBookmarks(this._repository);
 
-  Future<Either<Failure, String>> execute(NewsEntity news) {
-    return _repository.createBookmark(news);
+  Future<Either<Failure, List<NewsEntity>>> execute(String uid) {
+    return _repository.getNewsBookmarks(uid);
   }
 }

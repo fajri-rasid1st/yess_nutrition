@@ -1,8 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:yess_nutrition/data/models/nutrients_models/nutrients_table.dart';
 import 'package:yess_nutrition/domain/entities/recipe_entity.dart';
 
-const recipeFavoriteTable = 'recipe_favorite_table';
+const recipeBookmarksTable = 'recipe_bookmarks_table';
 
 class RecipeTable extends Equatable {
   final String uid;
@@ -11,9 +10,8 @@ class RecipeTable extends Equatable {
   final String image;
   final String url;
   final int totalServing;
-  final List<String> healthLabels;
   final int totalTime;
-  final NutrientsTable totalNutrients;
+  final num calories;
 
   const RecipeTable({
     required this.uid,
@@ -22,9 +20,8 @@ class RecipeTable extends Equatable {
     required this.image,
     required this.url,
     required this.totalServing,
-    required this.healthLabels,
     required this.totalTime,
-    required this.totalNutrients,
+    required this.calories,
   });
 
   factory RecipeTable.fromEntity(RecipeEntity recipe) {
@@ -35,25 +32,21 @@ class RecipeTable extends Equatable {
       image: recipe.image,
       url: recipe.url,
       totalServing: recipe.totalServing,
-      healthLabels: recipe.healthLabels,
       totalTime: recipe.totalTime,
-      totalNutrients: NutrientsTable.fromEntity(recipe.totalNutrients),
+      calories: recipe.calories,
     );
   }
 
   factory RecipeTable.fromMap(Map<String, dynamic> recipe) {
     return RecipeTable(
       uid: recipe['uid'] as String,
-      recipeId: recipe['uri'] as String,
+      recipeId: recipe['recipeId'] as String,
       label: recipe['label'] as String,
       image: recipe['image'] as String,
-      url: recipe['recipe'] as String,
-      totalServing: recipe['yield'] as int,
-      healthLabels: (recipe['healthLabels'] as String).split('; '),
+      url: recipe['url'] as String,
+      totalServing: recipe['totalServing'] as int,
       totalTime: recipe['totalTime'] as int,
-      totalNutrients: NutrientsTable.fromString(
-        recipe['totalNutrients'] as String,
-      ),
+      calories: recipe['calories'] as num,
     );
   }
 
@@ -65,9 +58,8 @@ class RecipeTable extends Equatable {
       image: image,
       url: url,
       totalServing: totalServing,
-      healthLabels: healthLabels,
       totalTime: totalServing,
-      totalNutrients: totalNutrients.toEntity(),
+      calories: calories.toDouble(),
     );
   }
 
@@ -79,9 +71,8 @@ class RecipeTable extends Equatable {
       'image': image,
       'url': url,
       'totalServing': totalServing,
-      'healthLabels': healthLabels.join('; '),
       'totalTime': totalTime,
-      'totalNutrients': totalNutrients.toString(),
+      'calories': calories,
     };
   }
 
@@ -93,8 +84,7 @@ class RecipeTable extends Equatable {
         image,
         url,
         totalServing,
-        healthLabels,
         totalTime,
-        totalNutrients,
+        calories,
       ];
 }

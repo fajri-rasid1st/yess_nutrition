@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:yess_nutrition/domain/entities/nutrients_entity.dart';
 
 class RecipeEntity extends Equatable {
   final String? uid;
@@ -8,9 +7,8 @@ class RecipeEntity extends Equatable {
   final String image;
   final String url;
   final int totalServing;
-  final List<String> healthLabels;
   final int totalTime;
-  final NutrientsEntity totalNutrients;
+  final double calories;
 
   const RecipeEntity({
     this.uid,
@@ -19,9 +17,8 @@ class RecipeEntity extends Equatable {
     required this.image,
     required this.url,
     required this.totalServing,
-    required this.healthLabels,
     required this.totalTime,
-    required this.totalNutrients,
+    required this.calories,
   });
 
   const RecipeEntity.favorite({
@@ -31,9 +28,8 @@ class RecipeEntity extends Equatable {
     required this.image,
     required this.url,
     required this.totalServing,
-    required this.healthLabels,
     required this.totalTime,
-    required this.totalNutrients,
+    required this.calories,
   });
 
   RecipeEntity copyWith({
@@ -43,9 +39,8 @@ class RecipeEntity extends Equatable {
     String? image,
     String? url,
     int? totalServing,
-    List<String>? healthLabels,
     int? totalTime,
-    NutrientsEntity? totalNutrients,
+    double? calories,
   }) {
     return RecipeEntity(
       uid: uid ?? this.uid,
@@ -54,9 +49,8 @@ class RecipeEntity extends Equatable {
       image: image ?? this.image,
       url: url ?? this.url,
       totalServing: totalServing ?? this.totalServing,
-      healthLabels: healthLabels ?? this.healthLabels,
       totalTime: totalTime ?? this.totalTime,
-      totalNutrients: totalNutrients ?? this.totalNutrients,
+      calories: calories ?? this.calories,
     );
   }
 
@@ -68,8 +62,7 @@ class RecipeEntity extends Equatable {
         image,
         url,
         totalServing,
-        healthLabels,
         totalTime,
-        totalNutrients,
+        calories,
       ];
 }
