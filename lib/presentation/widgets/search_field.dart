@@ -6,6 +6,7 @@ class SearchField extends StatelessWidget {
   final String query;
   final String hintText;
   final Color backgroundColor;
+  final TextInputType textInputType;
   final VoidCallback? onTap;
   final ValueChanged<String>? onChanged;
   final ValueSetter<String>? onSubmitted;
@@ -16,6 +17,7 @@ class SearchField extends StatelessWidget {
     required this.query,
     required this.hintText,
     this.backgroundColor = secondaryColor,
+    this.textInputType = TextInputType.text,
     this.onTap,
     this.onChanged,
     this.onSubmitted,
@@ -26,10 +28,11 @@ class SearchField extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: TextField(
         controller: controller,
+        keyboardType: textInputType,
         textInputAction: TextInputAction.search,
         decoration: InputDecoration(
           border: InputBorder.none,

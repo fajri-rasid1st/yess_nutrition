@@ -16,6 +16,8 @@ class FoodListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final labels = foodContentsLabelWithFilter(food.foodContentsLabel);
+
     return Padding(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -78,18 +80,18 @@ class FoodListTile extends StatelessWidget {
               )
             ],
           ),
-          if (food.foodContentLabel.join().trim().isNotEmpty) ...[
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: List<Container>.generate(
-                food.foodContentLabel.length,
-                (index) {
-                  return _buildFoodContentLabelChip(
-                    context,
-                    food.foodContentLabel[index],
-                  );
-                },
+          if (food.foodContentsLabel.join().trim().isNotEmpty) ...[
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: List<Container>.generate(
+                  labels.length,
+                  (index) {
+                    return _buildFoodContentLabelChip(context, labels[index]);
+                  },
+                ),
               ),
             ),
           ],
@@ -181,5 +183,21 @@ class FoodListTile extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  List<String> foodContentsLabelWithFilter(List<String> foodContentsLabel) {
+    if (foodContentsLabel.isEmpty) return <String>[];
+
+    final labelsString = foodContentsLabel.join('; ');
+
+    final newLabelsString = labelsString.replaceAll(RegExp(r'[^\w\s;-]'), '');
+
+    final labels = newLabelsString.toLowerCase().split('; ').toSet().toList();
+
+    labels.sort((label1, label2) => label1.length.compareTo(label2.length));
+
+    if (labels.length > 10) return labels.sublist(0, 10);
+
+    return labels;
   }
 }

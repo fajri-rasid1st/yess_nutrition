@@ -50,6 +50,9 @@ void init() {
     () => SearchFoodNotifier(searchFoodsUseCase: locator()),
   );
   locator.registerFactory(
+    () => SearchProductNotifier(searchFoodsUseCase: locator()),
+  );
+  locator.registerFactory(
     () => FoodHistoryNotifier(
       addFoodHistoryUseCase: locator(),
       getFoodHistoriesUseCase: locator(),

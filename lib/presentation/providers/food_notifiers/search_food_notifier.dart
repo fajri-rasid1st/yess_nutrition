@@ -63,7 +63,7 @@ class SearchFoodNotifier extends ChangeNotifier {
   }
 
   Future<void> refresh() async {
-    final result = await searchFoodsUseCase.execute(_onSubmittedQuery);
+    final result = await searchFoodsUseCase.execute('ingr=$_onSubmittedQuery');
 
     result.fold(
       (failure) {

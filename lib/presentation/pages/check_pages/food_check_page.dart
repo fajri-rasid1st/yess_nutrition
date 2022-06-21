@@ -263,12 +263,20 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
         onPressed: foodNotifier.isReload
             ? null
             : () {
+                // set isReload to true
                 foodNotifier.isReload = true;
 
                 Future.wait([
+                  // create one second delay
                   Future.delayed(const Duration(seconds: 1)),
+
+                  // refresh page
                   foodNotifier.refresh(),
-                ]).then((_) {
+                ]).then((_) async {
+                  // add every search results to history
+                  await addSearchedToHistory(foodNotifier);
+
+                  // set isReload to true
                   foodNotifier.isReload = false;
                 });
               },
@@ -290,15 +298,17 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
   }
 
   Future<void> addSearchedToHistory(SearchFoodNotifier foodNotifier) async {
-    for (var food in foodNotifier.results) {
-      final foodHistory = food.copyWith(
-        uid: widget.uid,
-        createdAt: DateTime.now(),
-      );
+    if (foodNotifier.state == RequestState.success) {
+      for (var food in foodNotifier.results) {
+        final foodHistory = food.copyWith(
+          uid: widget.uid,
+          createdAt: DateTime.now(),
+        );
 
-      await _scaffoldKey.currentContext!
-          .read<FoodHistoryNotifier>()
-          .addFoodHistory(foodHistory);
+        await _scaffoldKey.currentContext!
+            .read<FoodHistoryNotifier>()
+            .addFoodHistory(foodHistory);
+      }
     }
   }
 }

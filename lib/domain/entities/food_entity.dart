@@ -7,7 +7,7 @@ class FoodEntity extends Equatable {
   final String label;
   final String category;
   final String categoryLabel;
-  final List<String> foodContentLabel;
+  final List<String> foodContentsLabel;
   final String image;
   final NutrientsEntity nutrients;
   final DateTime? createdAt;
@@ -18,7 +18,7 @@ class FoodEntity extends Equatable {
     required this.label,
     required this.category,
     required this.categoryLabel,
-    required this.foodContentLabel,
+    required this.foodContentsLabel,
     required this.image,
     required this.nutrients,
     this.createdAt,
@@ -30,7 +30,7 @@ class FoodEntity extends Equatable {
     required this.label,
     required this.category,
     required this.categoryLabel,
-    required this.foodContentLabel,
+    required this.foodContentsLabel,
     required this.image,
     required this.nutrients,
     required this.createdAt,
@@ -42,7 +42,7 @@ class FoodEntity extends Equatable {
     String? label,
     String? category,
     String? categoryLabel,
-    List<String>? foodContentLabel,
+    List<String>? foodContentsLabel,
     String? image,
     NutrientsEntity? nutrients,
     DateTime? createdAt,
@@ -53,7 +53,7 @@ class FoodEntity extends Equatable {
       label: label ?? this.label,
       category: category ?? this.category,
       categoryLabel: categoryLabel ?? this.categoryLabel,
-      foodContentLabel: foodContentLabel ?? this.foodContentLabel,
+      foodContentsLabel: foodContentsLabel ?? this.foodContentsLabel,
       image: image ?? this.image,
       nutrients: nutrients ?? this.nutrients,
       createdAt: createdAt ?? this.createdAt,
@@ -67,7 +67,7 @@ class FoodEntity extends Equatable {
         label,
         category,
         categoryLabel,
-        foodContentLabel,
+        foodContentsLabel,
         image,
         nutrients,
         createdAt,

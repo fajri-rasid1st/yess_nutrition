@@ -10,7 +10,7 @@ class FoodTable extends Equatable {
   final String label;
   final String category;
   final String categoryLabel;
-  final List<String> foodContentLabel;
+  final List<String> foodContentsLabel;
   final String image;
   final NutrientsTable nutrients;
   final DateTime createdAt;
@@ -21,7 +21,7 @@ class FoodTable extends Equatable {
     required this.label,
     required this.category,
     required this.categoryLabel,
-    required this.foodContentLabel,
+    required this.foodContentsLabel,
     required this.image,
     required this.nutrients,
     required this.createdAt,
@@ -34,7 +34,7 @@ class FoodTable extends Equatable {
       label: food.label,
       category: food.category,
       categoryLabel: food.categoryLabel,
-      foodContentLabel: food.foodContentLabel,
+      foodContentsLabel: food.foodContentsLabel,
       image: food.image,
       nutrients: NutrientsTable.fromEntity(food.nutrients),
       createdAt: food.createdAt!,
@@ -48,7 +48,7 @@ class FoodTable extends Equatable {
       label: food['label'] as String,
       category: food['category'] as String,
       categoryLabel: food['categoryLabel'] as String,
-      foodContentLabel: (food['foodContentLabel'] as String).split('; '),
+      foodContentsLabel: (food['foodContentsLabel'] as String).split('; '),
       image: food['image'] as String,
       nutrients: NutrientsTable.fromString(food['nutrients'] as String),
       createdAt: DateTime.parse(food['createdAt'] as String),
@@ -62,7 +62,7 @@ class FoodTable extends Equatable {
       label: label,
       category: category,
       categoryLabel: categoryLabel,
-      foodContentLabel: foodContentLabel,
+      foodContentsLabel: foodContentsLabel,
       image: image,
       nutrients: nutrients.toEntity(),
       createdAt: createdAt,
@@ -76,7 +76,7 @@ class FoodTable extends Equatable {
       'label': label,
       'category': category,
       'categoryLabel': categoryLabel,
-      'foodContentLabel': foodContentLabel.join('; '),
+      'foodContentsLabel': foodContentsLabel.join('; '),
       'image': image,
       'nutrients': nutrients.toString(),
       'createdAt': createdAt.toIso8601String(),
@@ -90,7 +90,7 @@ class FoodTable extends Equatable {
         label,
         category,
         categoryLabel,
-        foodContentLabel,
+        foodContentsLabel,
         image,
         nutrients,
         createdAt,

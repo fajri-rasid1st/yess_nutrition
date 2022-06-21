@@ -8,7 +8,7 @@ class FoodModel extends Equatable {
   final String? label;
   final String? category;
   final String? categoryLabel;
-  final List<String>? foodContentLabel;
+  final List<String>? foodContentsLabel;
   final String? image;
   final NutrientsModel? nutrients;
 
@@ -17,7 +17,7 @@ class FoodModel extends Equatable {
     this.label,
     this.category,
     this.categoryLabel,
-    this.foodContentLabel,
+    this.foodContentsLabel,
     this.image,
     this.nutrients,
   });
@@ -28,7 +28,7 @@ class FoodModel extends Equatable {
       label: food['label'] as String?,
       category: food['category'] as String?,
       categoryLabel: food['categoryLabel'] as String?,
-      foodContentLabel: (food['foodContentLabel'] as String?)?.split('; '),
+      foodContentsLabel: (food['foodContentsLabel'] as String?)?.split('; '),
       image: food['image'] as String?,
       nutrients: NutrientsModel.fromJsonFood(
         food['nutrients'] as Map<String, dynamic>,
@@ -42,7 +42,7 @@ class FoodModel extends Equatable {
       'label': label,
       'category': category,
       'categoryLabel': categoryLabel,
-      'foodContentLabel': foodContentLabel?.join('; '),
+      'foodContentsLabel': foodContentsLabel?.join('; '),
       'image': image,
       'nutrients': nutrients?.toJson(),
     };
@@ -54,7 +54,7 @@ class FoodModel extends Equatable {
       label: label ?? '',
       category: category ?? '',
       categoryLabel: categoryLabel ?? '',
-      foodContentLabel: foodContentLabel ?? <String>[],
+      foodContentsLabel: foodContentsLabel ?? <String>[],
       image: image ?? '',
       nutrients: nutrients?.toEntity() ??
           const NutrientsEntity(
@@ -73,7 +73,7 @@ class FoodModel extends Equatable {
         label,
         category,
         categoryLabel,
-        foodContentLabel,
+        foodContentsLabel,
         image,
         nutrients,
       ];

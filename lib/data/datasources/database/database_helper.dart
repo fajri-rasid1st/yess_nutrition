@@ -59,7 +59,7 @@ class DatabaseHelper {
         label TEXT,
         category TEXT,
         categoryLabel TEXT,
-        foodContentLabel TEXT,
+        foodContentsLabel TEXT,
         image TEXT,
         nutrients TEXT,
         createdAt TEXT)
