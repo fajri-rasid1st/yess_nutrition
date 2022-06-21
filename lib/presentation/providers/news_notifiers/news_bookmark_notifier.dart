@@ -7,14 +7,14 @@ import 'package:yess_nutrition/domain/usecases/news_usecases/delete_bookmark.dar
 import 'package:yess_nutrition/domain/usecases/news_usecases/get_bookmark_status.dart';
 import 'package:yess_nutrition/domain/usecases/news_usecases/get_bookmarks.dart';
 
-class BookmarkNotifier extends ChangeNotifier {
+class NewsBookmarkNotifier extends ChangeNotifier {
   final CreateBookmark createBookmarkUseCase;
   final DeleteBookmark deleteBookmarkUseCase;
   final GetBookmarkStatus getBookmarkStatusUseCase;
   final GetBookmarks getBookmarksUseCase;
   final ClearBookmarks clearBookmarksUseCase;
 
-  BookmarkNotifier({
+  NewsBookmarkNotifier({
     required this.createBookmarkUseCase,
     required this.deleteBookmarkUseCase,
     required this.getBookmarkStatusUseCase,

@@ -17,7 +17,7 @@ class FoodRemoteDataSourceImpl implements FoodRemoteDataSource {
   @override
   Future<Map<String, List<FoodModel>>> searchFoods(String query) async {
     final url =
-        '$foodBaseUrl?app_id=$foodAppId&app_key=$foodAppKey&ingr=$query&nutrition-type=logging';
+        '$foodBaseUrl?app_id=$foodAppId&app_key=$foodAppKey&$query&nutrition-type=logging';
 
     final uri = Uri.parse(url);
 

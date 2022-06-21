@@ -7,7 +7,7 @@ import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
-import 'package:yess_nutrition/presentation/providers/user_notifiers/user_auth_notifiers/reset_password_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/user_auth_notifiers/user_auth_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
@@ -146,7 +146,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
     if (_formKey.currentState!.validate()) {
       final value = _formKey.currentState!.value;
-      final resetPasswordNotifier = context.read<ResetPasswordNotifier>();
+      final authNotifier = context.read<UserAuthNotifier>();
 
       // show loading when currently on process
       showDialog(
@@ -155,11 +155,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         builder: (context) => const LoadingIndicator(),
       );
 
-      await resetPasswordNotifier.resetPassword(value['email']);
+      await authNotifier.resetPassword(value['email']);
 
-      if (resetPasswordNotifier.state == UserState.success) {
-        final succeessSnackBar =
-            Utilities.createSnackBar(resetPasswordNotifier.success);
+      if (authNotifier.state == UserState.success) {
+        final succeessSnackBar = Utilities.createSnackBar(authNotifier.success);
 
         scaffoldMessengerKey.currentState!
           ..hideCurrentSnackBar()
@@ -168,8 +167,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         // navigate to first route after email sended
         navigatorKey.currentState!.popUntil((route) => route.isFirst);
       } else {
-        final errorSnackBar =
-            Utilities.createSnackBar(resetPasswordNotifier.error);
+        final errorSnackBar = Utilities.createSnackBar(authNotifier.error);
 
         // close the loading indicator
         navigatorKey.currentState!.pop();

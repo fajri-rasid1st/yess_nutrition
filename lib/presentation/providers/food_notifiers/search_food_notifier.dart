@@ -3,10 +3,10 @@ import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/domain/entities/food_entity.dart';
 import 'package:yess_nutrition/domain/usecases/food_usecases/search_foods.dart';
 
-class FoodNotifier extends ChangeNotifier {
+class SearchFoodNotifier extends ChangeNotifier {
   final SearchFoods searchFoodsUseCase;
 
-  FoodNotifier({required this.searchFoodsUseCase});
+  SearchFoodNotifier({required this.searchFoodsUseCase});
 
   RequestState _state = RequestState.empty;
   RequestState get state => _state;
@@ -45,7 +45,7 @@ class FoodNotifier extends ChangeNotifier {
     _state = RequestState.loading;
     notifyListeners();
 
-    final result = await searchFoodsUseCase.execute(query);
+    final result = await searchFoodsUseCase.execute('ingr=$query');
 
     result.fold(
       (failure) {

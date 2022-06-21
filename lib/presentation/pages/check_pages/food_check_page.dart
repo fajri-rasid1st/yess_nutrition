@@ -4,7 +4,7 @@ import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/presentation/providers/food_notifiers/food_history_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/food_notifiers/food_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/food_notifiers/search_food_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_information.dart';
 import 'package:yess_nutrition/presentation/widgets/food_hint_list_tile.dart';
 import 'package:yess_nutrition/presentation/widgets/food_list_tile.dart';
@@ -55,12 +55,11 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
                 top: false,
                 sliver: SliverAppBar(
                   floating: true,
-                  pinned: true,
                   snap: true,
                   forceElevated: innerBoxIsScrolled,
                   toolbarHeight: 64,
                   backgroundColor: secondaryBackgroundColor,
-                  shadowColor: Colors.black.withOpacity(0.6),
+                  shadowColor: Colors.black.withOpacity(0.5),
                   centerTitle: true,
                   title: const Text(
                     'Food Nutrition Check',
@@ -86,9 +85,9 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
                     )
                   ],
                   bottom: PreferredSize(
-                    preferredSize: const Size.fromHeight(72),
+                    preferredSize: const Size.fromHeight(68),
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                       child: _buildSearchField(),
                     ),
                   ),
@@ -97,7 +96,7 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
             ),
           ];
         },
-        body: Consumer<FoodNotifier>(
+        body: Consumer<SearchFoodNotifier>(
           builder: (context, foodNotifier, child) {
             final onChangedQuery = foodNotifier.onChangedQuery;
             final onSubmittedQuery = foodNotifier.onSubmittedQuery;
@@ -126,14 +125,14 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
     );
   }
 
-  Consumer<FoodNotifier> _buildSearchField() {
-    return Consumer<FoodNotifier>(
+  Consumer<SearchFoodNotifier> _buildSearchField() {
+    return Consumer<SearchFoodNotifier>(
       builder: (context, foodNotifier, child) {
         return SearchField(
           controller: _searchController,
           backgroundColor: primaryBackgroundColor,
           query: foodNotifier.onChangedQuery,
-          hintText: 'Masukkan nama makanan atau minuman...',
+          hintText: 'Cari nama makanan atau minuman...',
           onChanged: (value) {
             foodNotifier.onChangedQuery = value.trim();
           },
@@ -152,7 +151,7 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
 
   SingleChildScrollView _buildSearchResults(
     BuildContext context,
-    FoodNotifier foodNotifier,
+    SearchFoodNotifier foodNotifier,
   ) {
     final results = foodNotifier.results;
     final hints = foodNotifier.hints;
@@ -240,7 +239,7 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
     return const CustomInformation(
       key: Key('first_view'),
       imgPath: 'assets/svg/pasta_cuate.svg',
-      title: 'Mau nyari apa yo?',
+      title: 'Mau cari apa hari ini?',
       subtitle: 'Hasil pencarian anda akan muncul di sini.',
     );
   }
@@ -254,7 +253,7 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
     );
   }
 
-  CustomInformation _buildSearchError(FoodNotifier foodNotifier) {
+  CustomInformation _buildSearchError(SearchFoodNotifier foodNotifier) {
     return CustomInformation(
       key: const Key('error_message'),
       imgPath: 'assets/svg/error_robot_cuate.svg',
@@ -290,7 +289,7 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
     );
   }
 
-  Future<void> addSearchedToHistory(FoodNotifier foodNotifier) async {
+  Future<void> addSearchedToHistory(SearchFoodNotifier foodNotifier) async {
     for (var food in foodNotifier.results) {
       final foodHistory = food.copyWith(
         uid: widget.uid,

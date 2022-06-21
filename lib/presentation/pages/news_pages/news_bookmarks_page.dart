@@ -9,7 +9,7 @@ import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/news_entity.dart';
 import 'package:yess_nutrition/presentation/pages/news_pages/news_detail_page.dart';
-import 'package:yess_nutrition/presentation/providers/news_notifiers/bookmark_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/news_notifiers/news_bookmark_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_information.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 import 'package:yess_nutrition/presentation/widgets/news_list_tile.dart';
@@ -29,7 +29,7 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
     super.initState();
 
     Future.microtask(() {
-      Provider.of<BookmarkNotifier>(context, listen: false)
+      Provider.of<NewsBookmarkNotifier>(context, listen: false)
           .getBookmarks(widget.uid);
     });
   }
@@ -43,7 +43,7 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
 
   @override
   void didPopNext() {
-    Provider.of<BookmarkNotifier>(context, listen: false)
+    Provider.of<NewsBookmarkNotifier>(context, listen: false)
         .getBookmarks(widget.uid);
   }
 
@@ -81,7 +81,7 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
         ),
         actions: <Widget>[
           IconButton(
-            onPressed: context.watch<BookmarkNotifier>().bookmarks.isEmpty
+            onPressed: context.watch<NewsBookmarkNotifier>().bookmarks.isEmpty
                 ? null
                 : () {
                     Utilities.showConfirmDialog(
@@ -107,7 +107,7 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
           ),
         ],
       ),
-      body: Consumer<BookmarkNotifier>(
+      body: Consumer<NewsBookmarkNotifier>(
         builder: (context, bookmarkNotifier, child) {
           if (bookmarkNotifier.state == RequestState.success) {
             if (bookmarkNotifier.bookmarks.isEmpty) {
@@ -192,7 +192,7 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
   }
 
   Future<void> deleteBookmark(BuildContext context, NewsEntity news) async {
-    final bookmarkNotifier = context.read<BookmarkNotifier>();
+    final bookmarkNotifier = context.read<NewsBookmarkNotifier>();
 
     await bookmarkNotifier.deleteBookmark(news);
 
@@ -207,7 +207,7 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
   }
 
   Future<void> clearBookmarks(BuildContext context) async {
-    final bookmarkNotifier = context.read<BookmarkNotifier>();
+    final bookmarkNotifier = context.read<NewsBookmarkNotifier>();
 
     await bookmarkNotifier.clearBookmarks(widget.uid);
 

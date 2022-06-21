@@ -6,7 +6,7 @@ import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/news_entity.dart';
-import 'package:yess_nutrition/presentation/providers/news_notifiers/bookmark_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/news_notifiers/news_bookmark_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_network_image.dart';
 
 class NewsDetailPage extends StatefulWidget {
@@ -29,7 +29,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
     super.initState();
 
     Future.microtask(() {
-      Provider.of<BookmarkNotifier>(context, listen: false)
+      Provider.of<NewsBookmarkNotifier>(context, listen: false)
           .getBookmarkStatus(widget.news);
     });
   }
@@ -61,7 +61,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
             ),
             tooltip: 'Share',
           ),
-          Consumer<BookmarkNotifier>(
+          Consumer<NewsBookmarkNotifier>(
             builder: (context, bookmarkNotifier, child) {
               final isExist = bookmarkNotifier.isExist;
 

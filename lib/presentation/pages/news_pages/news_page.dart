@@ -12,7 +12,7 @@ import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/news_entity.dart';
 import 'package:yess_nutrition/presentation/pages/news_pages/news_detail_page.dart';
 import 'package:yess_nutrition/presentation/providers/common_notifiers/news_fab_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/news_notifiers/bookmark_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/news_notifiers/news_bookmark_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/get_news_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/search_news_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_information.dart';
@@ -295,7 +295,7 @@ class _NewsPageState extends State<NewsPage> {
           ),
           SlidableAction(
             onPressed: (context) async {
-              final bookmarkNotifier = context.read<BookmarkNotifier>();
+              final bookmarkNotifier = context.read<NewsBookmarkNotifier>();
 
               await bookmarkNotifier.getBookmarkStatus(newsWithUid);
 

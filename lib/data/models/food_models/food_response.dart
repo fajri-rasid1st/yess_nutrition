@@ -10,17 +10,13 @@ class FoodResponse extends Equatable {
   factory FoodResponse.fromJson(Map<String, dynamic> results) {
     return FoodResponse(
       results: List<FoodModel>.from(
-        (results['parsed'] as List<Map<String, dynamic>>).map(
-          (parsed) => FoodModel.fromJson(
-            parsed['food'] as Map<String, dynamic>,
-          ),
+        (results['parsed'] as List).map(
+          (parse) => FoodModel.fromJson(parse['food'] as Map<String, dynamic>),
         ),
       ),
       hints: List<FoodModel>.from(
-        (results['hints'] as List<Map<String, dynamic>>).map(
-          (hint) => FoodModel.fromJson(
-            hint['food'] as Map<String, dynamic>,
-          ),
+        (results['hints'] as List).map(
+          (hint) => FoodModel.fromJson(hint['food'] as Map<String, dynamic>),
         ),
       ),
     );

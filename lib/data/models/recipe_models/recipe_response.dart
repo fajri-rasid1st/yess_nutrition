@@ -9,10 +9,8 @@ class RecipeResponse extends Equatable {
   factory RecipeResponse.fromJson(Map<String, dynamic> results) {
     return RecipeResponse(
       recipes: List<RecipeModel>.from(
-        (results['hits'] as List<Map<String, dynamic>>).map(
-          (hit) => RecipeModel.fromJson(
-            hit['recipe'] as Map<String, dynamic>,
-          ),
+        (results['hits'] as List).map(
+          (hit) => RecipeModel.fromJson(hit['recipe'] as Map<String, dynamic>),
         ),
       ),
     );

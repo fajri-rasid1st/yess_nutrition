@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-import 'package:yess_nutrition/presentation/pages/check_pages/food_and_product_check_history_page.dart';
 
 import 'common/styles/styles.dart';
 import 'common/utils/http_ssl_pinning.dart';
@@ -54,19 +53,7 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<GetUserNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<SignInNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<SignUpNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<SignOutNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<ResetPasswordNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<DeleteUserNotifier>(),
+          create: (_) => di.locator<UserAuthNotifier>(),
         ),
         ChangeNotifierProvider(
           create: (_) => di.locator<UserFirestoreNotifier>(),
@@ -75,7 +62,7 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<UserStorageNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<FoodNotifier>(),
+          create: (_) => di.locator<SearchFoodNotifier>(),
         ),
         ChangeNotifierProvider(
           create: (_) => di.locator<FoodHistoryNotifier>(),
@@ -87,7 +74,7 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<SearchNewsNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<BookmarkNotifier>(),
+          create: (_) => di.locator<NewsBookmarkNotifier>(),
         ),
         ChangeNotifierProvider(
           create: (_) => BottomNavigationBarNotifier(),
@@ -217,6 +204,12 @@ class MyApp extends StatelessWidget {
 
               return MaterialPageRoute(
                 builder: (_) => FoodCheckPage(uid: uid),
+              );
+            case productCheckRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => ProductCheckPage(uid: uid),
               );
             case foodAndProductCheckHistoryRoute:
               final uid = settings.arguments as String;

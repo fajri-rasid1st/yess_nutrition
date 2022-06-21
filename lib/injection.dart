@@ -16,25 +16,17 @@ final locator = GetIt.instance;
 void init() {
   // User auth providers
   locator.registerFactory(
-    () => GetUserNotifier(getUserUseCase: locator()),
-  );
-  locator.registerFactory(
-    () => SignInNotifier(
+    () => UserAuthNotifier(
       signInUseCase: locator(),
       signInWithGoogleUseCase: locator(),
+      signUpUseCase: locator(),
+      resetPasswordUseCase: locator(),
+      signOutUseCase: locator(),
+      deleteUserUseCase: locator(),
     ),
   );
   locator.registerFactory(
-    () => SignUpNotifier(signUpUseCase: locator()),
-  );
-  locator.registerFactory(
-    () => SignOutNotifier(signOutUseCase: locator()),
-  );
-  locator.registerFactory(
-    () => ResetPasswordNotifier(resetPasswordUseCase: locator()),
-  );
-  locator.registerFactory(
-    () => DeleteUserNotifier(deleteUserUseCase: locator()),
+    () => GetUserNotifier(getUserUseCase: locator()),
   );
 
   // User firestore providers
@@ -55,7 +47,7 @@ void init() {
 
   // Food providers
   locator.registerFactory(
-    () => FoodNotifier(searchFoodsUseCase: locator()),
+    () => SearchFoodNotifier(searchFoodsUseCase: locator()),
   );
   locator.registerFactory(
     () => FoodHistoryNotifier(
@@ -74,7 +66,7 @@ void init() {
     () => SearchNewsNotifier(searchNewsUseCase: locator()),
   );
   locator.registerFactory(
-    () => BookmarkNotifier(
+    () => NewsBookmarkNotifier(
       createBookmarkUseCase: locator(),
       deleteBookmarkUseCase: locator(),
       getBookmarkStatusUseCase: locator(),

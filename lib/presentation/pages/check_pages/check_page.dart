@@ -47,7 +47,11 @@ class CheckPage extends StatelessWidget {
             description:
                 'Analisis kandungan nutrisi produk melalui barcode scan.',
             assetName: 'assets/img/product_nutricheck.png',
-            onTap: () {},
+            onTap: () => Navigator.pushNamed(
+              context,
+              productCheckRoute,
+              arguments: uid,
+            ),
           ),
           NutriCheckCard(
             title: 'Food Recipe Check',

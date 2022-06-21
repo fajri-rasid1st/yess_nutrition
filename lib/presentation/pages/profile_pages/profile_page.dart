@@ -5,7 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
-import 'package:yess_nutrition/presentation/providers/providers.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/user_auth_notifiers/user_auth_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_firestore_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -266,7 +267,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             MdiIcons.logout,
                             "Keluar",
                             () async {
-                              await context.read<SignOutNotifier>().signOut();
+                              await context.read<UserAuthNotifier>().signOut();
 
                               if (!mounted) return;
 
