@@ -7,11 +7,11 @@ abstract class NewsLocalDataSource {
 
   Future<List<NewsTable>> getNewsBookmarks(String uid);
 
-  Future<bool> isNewsBookmarkExist(NewsTable news);
-
   Future<String> deleteNewsBookmark(NewsTable news);
 
   Future<String> clearNewsBookmarks(String uid);
+
+  Future<bool> isNewsBookmarkExist(NewsTable news);
 }
 
 class NewsLocalDataSourceImpl implements NewsLocalDataSource {
@@ -42,17 +42,6 @@ class NewsLocalDataSourceImpl implements NewsLocalDataSource {
   }
 
   @override
-  Future<bool> isNewsBookmarkExist(NewsTable news) async {
-    try {
-      final isExist = await databaseHelper.isNewsBookmarkExist(news);
-
-      return isExist;
-    } catch (e) {
-      throw DatabaseException(e.toString());
-    }
-  }
-
-  @override
   Future<String> deleteNewsBookmark(NewsTable news) async {
     try {
       await databaseHelper.deleteNewsBookmark(news);
@@ -69,6 +58,17 @@ class NewsLocalDataSourceImpl implements NewsLocalDataSource {
       await databaseHelper.clearNewsBookmarks(uid);
 
       return 'Semua artikel berhasil dihapus.';
+    } catch (e) {
+      throw DatabaseException(e.toString());
+    }
+  }
+
+  @override
+  Future<bool> isNewsBookmarkExist(NewsTable news) async {
+    try {
+      final isExist = await databaseHelper.isNewsBookmarkExist(news);
+
+      return isExist;
     } catch (e) {
       throw DatabaseException(e.toString());
     }

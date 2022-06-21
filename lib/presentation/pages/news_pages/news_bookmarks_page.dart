@@ -30,7 +30,7 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
 
     Future.microtask(() {
       Provider.of<NewsBookmarkNotifier>(context, listen: false)
-          .getBookmarks(widget.uid);
+          .getNewsBookmarks(widget.uid);
     });
   }
 
@@ -44,7 +44,7 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
   @override
   void didPopNext() {
     Provider.of<NewsBookmarkNotifier>(context, listen: false)
-        .getBookmarks(widget.uid);
+        .getNewsBookmarks(widget.uid);
   }
 
   @override
@@ -194,7 +194,7 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
   Future<void> deleteBookmark(BuildContext context, NewsEntity news) async {
     final bookmarkNotifier = context.read<NewsBookmarkNotifier>();
 
-    await bookmarkNotifier.deleteBookmark(news);
+    await bookmarkNotifier.deleteNewsBookmark(news);
 
     final message = bookmarkNotifier.message;
     final snackBar = Utilities.createSnackBar(message);
@@ -203,13 +203,13 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
       ..hideCurrentSnackBar()
       ..showSnackBar(snackBar);
 
-    await bookmarkNotifier.getBookmarks(widget.uid);
+    await bookmarkNotifier.getNewsBookmarks(widget.uid);
   }
 
   Future<void> clearBookmarks(BuildContext context) async {
     final bookmarkNotifier = context.read<NewsBookmarkNotifier>();
 
-    await bookmarkNotifier.clearBookmarks(widget.uid);
+    await bookmarkNotifier.clearNewsBookmarks(widget.uid);
 
     final message = bookmarkNotifier.message;
     final snackBar = Utilities.createSnackBar(message);
@@ -218,6 +218,6 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
       ..hideCurrentSnackBar()
       ..showSnackBar(snackBar);
 
-    await bookmarkNotifier.getBookmarks(widget.uid);
+    await bookmarkNotifier.getNewsBookmarks(widget.uid);
   }
 }

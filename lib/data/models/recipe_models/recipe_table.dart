@@ -51,7 +51,7 @@ class RecipeTable extends Equatable {
   }
 
   RecipeEntity toEntity() {
-    return RecipeEntity.favorite(
+    return RecipeEntity.bookmark(
       uid: uid,
       recipeId: recipeId,
       label: label,

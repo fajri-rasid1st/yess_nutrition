@@ -30,7 +30,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
 
     Future.microtask(() {
       Provider.of<NewsBookmarkNotifier>(context, listen: false)
-          .getBookmarkStatus(widget.news);
+          .getNewsBookmarkStatus(widget.news);
     });
   }
 
@@ -68,9 +68,9 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
               return IconButton(
                 onPressed: () async {
                   if (isExist) {
-                    await bookmarkNotifier.deleteBookmark(widget.news);
+                    await bookmarkNotifier.deleteNewsBookmark(widget.news);
                   } else {
-                    await bookmarkNotifier.createBookmark(widget.news);
+                    await bookmarkNotifier.createNewsBookmark(widget.news);
                   }
 
                   final message = bookmarkNotifier.message;

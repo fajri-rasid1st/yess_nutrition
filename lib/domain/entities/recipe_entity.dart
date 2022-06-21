@@ -21,7 +21,7 @@ class RecipeEntity extends Equatable {
     required this.calories,
   });
 
-  const RecipeEntity.favorite({
+  const RecipeEntity.bookmark({
     required this.uid,
     required this.recipeId,
     required this.label,

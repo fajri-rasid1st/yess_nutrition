@@ -14,6 +14,10 @@ import 'presentation/providers/providers.dart';
 final locator = GetIt.instance;
 
 void init() {
+  /*
+  * Provider section
+  */
+
   // User auth providers
   locator.registerFactory(
     () => UserAuthNotifier(
@@ -61,6 +65,23 @@ void init() {
     ),
   );
 
+  // Recipe providers
+  locator.registerFactory(
+    () => SearchRecipesNotifier(searchRecipesUseCase: locator()),
+  );
+  locator.registerFactory(
+    () => GetRecipeDetailNotifier(getRecipeDetailUseCase: locator()),
+  );
+  locator.registerFactory(
+    () => RecipeBookmarkNotifier(
+      createRecipeBookmarkUseCase: locator(),
+      deleteRecipeBookmarkUseCase: locator(),
+      getRecipeBookmarkStatusUseCase: locator(),
+      getRecipeBookmarksUseCase: locator(),
+      clearRecipeBookmarksUseCase: locator(),
+    ),
+  );
+
   // News providers
   locator.registerFactory(
     () => GetNewsNotifier(getNewsUseCase: locator()),
@@ -70,13 +91,17 @@ void init() {
   );
   locator.registerFactory(
     () => NewsBookmarkNotifier(
-      createBookmarkUseCase: locator(),
-      deleteBookmarkUseCase: locator(),
-      getBookmarkStatusUseCase: locator(),
-      getBookmarksUseCase: locator(),
-      clearBookmarksUseCase: locator(),
+      createNewsBookmarkUseCase: locator(),
+      deleteNewsBookmarkUseCase: locator(),
+      getNewsBookmarkStatusUseCase: locator(),
+      getNewsBookmarksUseCase: locator(),
+      clearNewsBookmarksUseCase: locator(),
     ),
   );
+
+  /*
+  * Use cases section
+  */
 
   // User auth usecases
   locator.registerLazySingleton(() => GetUser(locator()));
@@ -104,6 +129,15 @@ void init() {
   locator.registerLazySingleton(() => DeleteFoodHistory(locator()));
   locator.registerLazySingleton(() => ClearFoodHistories(locator()));
 
+  // Recipe usecases
+  locator.registerLazySingleton(() => SearchRecipes(locator()));
+  locator.registerLazySingleton(() => GetRecipeDetail(locator()));
+  locator.registerLazySingleton(() => CreateRecipeBookmark(locator()));
+  locator.registerLazySingleton(() => DeleteRecipeBookmark(locator()));
+  locator.registerLazySingleton(() => GetRecipeBookmarkStatus(locator()));
+  locator.registerLazySingleton(() => GetRecipeBookmarks(locator()));
+  locator.registerLazySingleton(() => ClearRecipeBookmarks(locator()));
+
   // News usecases
   locator.registerLazySingleton(() => GetNews(locator()));
   locator.registerLazySingleton(() => SearchNews(locator()));
@@ -112,6 +146,10 @@ void init() {
   locator.registerLazySingleton(() => GetNewsBookmarkStatus(locator()));
   locator.registerLazySingleton(() => GetNewsBookmarks(locator()));
   locator.registerLazySingleton(() => ClearNewsBookmarks(locator()));
+
+  /*
+  * Repositories section
+  */
 
   // User repositories
   locator.registerLazySingleton<UserAuthRepository>(
@@ -132,6 +170,14 @@ void init() {
     ),
   );
 
+  // Recipe repositories
+  locator.registerLazySingleton<RecipeRepository>(
+    () => RecipeRepositoryImpl(
+      recipeLocalDataSource: locator(),
+      recipeRemoteDataSource: locator(),
+    ),
+  );
+
   // News repositories
   locator.registerLazySingleton<NewsRepository>(
     () => NewsRepositoryImpl(
@@ -139,6 +185,10 @@ void init() {
       newsRemoteDataSource: locator(),
     ),
   );
+
+  /*
+  * Data sources section
+  */
 
   // User data sources
   locator.registerLazySingleton<UserAuthDataSource>(
@@ -162,6 +212,14 @@ void init() {
     () => FoodRemoteDataSourceImpl(client: locator()),
   );
 
+  // Recipe data sources
+  locator.registerLazySingleton<RecipeLocalDataSource>(
+    () => RecipeLocalDataSourceImpl(databaseHelper: locator()),
+  );
+  locator.registerLazySingleton<RecipeRemoteDataSource>(
+    () => RecipeRemoteDataSourceImpl(client: locator()),
+  );
+
   // News data sources
   locator.registerLazySingleton<NewsLocalDataSource>(
     () => NewsLocalDataSourceImpl(databaseHelper: locator()),
@@ -169,6 +227,10 @@ void init() {
   locator.registerLazySingleton<NewsRemoteDataSource>(
     () => NewsRemoteDataSourceImpl(client: locator()),
   );
+
+  /*
+  * Common services section
+  */
 
   // Databases
   locator.registerLazySingleton(() => DatabaseHelper());

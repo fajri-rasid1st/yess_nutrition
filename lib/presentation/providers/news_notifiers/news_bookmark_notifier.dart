@@ -8,18 +8,18 @@ import 'package:yess_nutrition/domain/usecases/news_usecases/get_news_bookmark_s
 import 'package:yess_nutrition/domain/usecases/news_usecases/get_news_bookmarks.dart';
 
 class NewsBookmarkNotifier extends ChangeNotifier {
-  final CreateNewsBookmark createBookmarkUseCase;
-  final DeleteNewsBookmark deleteBookmarkUseCase;
-  final GetNewsBookmarkStatus getBookmarkStatusUseCase;
-  final GetNewsBookmarks getBookmarksUseCase;
-  final ClearNewsBookmarks clearBookmarksUseCase;
+  final CreateNewsBookmark createNewsBookmarkUseCase;
+  final DeleteNewsBookmark deleteNewsBookmarkUseCase;
+  final GetNewsBookmarkStatus getNewsBookmarkStatusUseCase;
+  final GetNewsBookmarks getNewsBookmarksUseCase;
+  final ClearNewsBookmarks clearNewsBookmarksUseCase;
 
   NewsBookmarkNotifier({
-    required this.createBookmarkUseCase,
-    required this.deleteBookmarkUseCase,
-    required this.getBookmarkStatusUseCase,
-    required this.getBookmarksUseCase,
-    required this.clearBookmarksUseCase,
+    required this.createNewsBookmarkUseCase,
+    required this.deleteNewsBookmarkUseCase,
+    required this.getNewsBookmarkStatusUseCase,
+    required this.getNewsBookmarksUseCase,
+    required this.clearNewsBookmarksUseCase,
   });
 
   RequestState _state = RequestState.empty;
@@ -34,30 +34,30 @@ class NewsBookmarkNotifier extends ChangeNotifier {
   List<NewsEntity> _bookmarks = <NewsEntity>[];
   List<NewsEntity> get bookmarks => _bookmarks;
 
-  Future<void> createBookmark(NewsEntity news) async {
-    final result = await createBookmarkUseCase.execute(news);
+  Future<void> createNewsBookmark(NewsEntity news) async {
+    final result = await createNewsBookmarkUseCase.execute(news);
 
     result.fold(
       (failure) => _message = failure.message,
       (success) => _message = success,
     );
 
-    await getBookmarkStatus(news);
+    await getNewsBookmarkStatus(news);
   }
 
-  Future<void> deleteBookmark(NewsEntity news) async {
-    final result = await deleteBookmarkUseCase.execute(news);
+  Future<void> deleteNewsBookmark(NewsEntity news) async {
+    final result = await deleteNewsBookmarkUseCase.execute(news);
 
     result.fold(
       (failure) => _message = failure.message,
       (success) => _message = success,
     );
 
-    await getBookmarkStatus(news);
+    await getNewsBookmarkStatus(news);
   }
 
-  Future<void> getBookmarkStatus(NewsEntity news) async {
-    final result = await getBookmarkStatusUseCase.execute(news);
+  Future<void> getNewsBookmarkStatus(NewsEntity news) async {
+    final result = await getNewsBookmarkStatusUseCase.execute(news);
 
     result.fold(
       (failure) => _message = failure.message,
@@ -67,8 +67,8 @@ class NewsBookmarkNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getBookmarks(String uid) async {
-    final result = await getBookmarksUseCase.execute(uid);
+  Future<void> getNewsBookmarks(String uid) async {
+    final result = await getNewsBookmarksUseCase.execute(uid);
 
     result.fold(
       (failure) {
@@ -84,8 +84,8 @@ class NewsBookmarkNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> clearBookmarks(String uid) async {
-    final result = await clearBookmarksUseCase.execute(uid);
+  Future<void> clearNewsBookmarks(String uid) async {
+    final result = await clearNewsBookmarksUseCase.execute(uid);
 
     result.fold(
       (failure) => _message = failure.message,

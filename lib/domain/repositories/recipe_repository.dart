@@ -8,11 +8,11 @@ abstract class RecipeRepository {
 
   Future<Either<Failure, List<RecipeEntity>>> getRecipeBookmarks(String uid);
 
-  Future<Either<Failure, bool>> isRecipeBookmarkExist(RecipeEntity recipe);
-
   Future<Either<Failure, String>> deleteRecipeBookmark(RecipeEntity recipe);
 
   Future<Either<Failure, String>> clearRecipeBookmarks(String uid);
+
+  Future<Either<Failure, bool>> isRecipeBookmarkExist(RecipeEntity recipe);
 
   Future<Either<Failure, List<RecipeEntity>>> searchRecipes(String query);
 

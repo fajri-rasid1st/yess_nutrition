@@ -7,11 +7,11 @@ abstract class NewsRepository {
 
   Future<Either<Failure, List<NewsEntity>>> getNewsBookmarks(String uid);
 
-  Future<Either<Failure, bool>> isNewsBookmarkExist(NewsEntity news);
-
   Future<Either<Failure, String>> deleteNewsBookmark(NewsEntity news);
 
   Future<Either<Failure, String>> clearNewsBookmarks(String uid);
+
+  Future<Either<Failure, bool>> isNewsBookmarkExist(NewsEntity news);
 
   Future<Either<Failure, List<NewsEntity>>> getNews(int pageSize, int page);
 

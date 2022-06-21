@@ -7,11 +7,11 @@ abstract class RecipeLocalDataSource {
 
   Future<List<RecipeTable>> getRecipeBookmarks(String uid);
 
-  Future<bool> isRecipeBookmarkExist(RecipeTable recipe);
-
   Future<String> deleteRecipeBookmark(RecipeTable recipe);
 
   Future<String> clearRecipeBookmarks(String uid);
+
+  Future<bool> isRecipeBookmarkExist(RecipeTable recipe);
 }
 
 class RecipeLocalDataSourceImpl implements RecipeLocalDataSource {
@@ -42,17 +42,6 @@ class RecipeLocalDataSourceImpl implements RecipeLocalDataSource {
   }
 
   @override
-  Future<bool> isRecipeBookmarkExist(RecipeTable recipe) async {
-    try {
-      final isExist = await databaseHelper.isRecipeBookmarkExist(recipe);
-
-      return isExist;
-    } catch (e) {
-      throw DatabaseException(e.toString());
-    }
-  }
-
-  @override
   Future<String> deleteRecipeBookmark(RecipeTable recipe) async {
     try {
       await databaseHelper.deleteRecipeBookmark(recipe);
@@ -69,6 +58,17 @@ class RecipeLocalDataSourceImpl implements RecipeLocalDataSource {
       await databaseHelper.clearRecipeBookmarks(uid);
 
       return 'Semua resep berhasil dihapus.';
+    } catch (e) {
+      throw DatabaseException(e.toString());
+    }
+  }
+
+  @override
+  Future<bool> isRecipeBookmarkExist(RecipeTable recipe) async {
+    try {
+      final isExist = await databaseHelper.isRecipeBookmarkExist(recipe);
+
+      return isExist;
     } catch (e) {
       throw DatabaseException(e.toString());
     }

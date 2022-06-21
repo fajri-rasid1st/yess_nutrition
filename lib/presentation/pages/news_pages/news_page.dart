@@ -297,7 +297,7 @@ class _NewsPageState extends State<NewsPage> {
             onPressed: (context) async {
               final bookmarkNotifier = context.read<NewsBookmarkNotifier>();
 
-              await bookmarkNotifier.getBookmarkStatus(newsWithUid);
+              await bookmarkNotifier.getNewsBookmarkStatus(newsWithUid);
 
               final isExist = bookmarkNotifier.isExist;
 
@@ -309,7 +309,7 @@ class _NewsPageState extends State<NewsPage> {
                   ..hideCurrentSnackBar()
                   ..showSnackBar(snackBar);
               } else {
-                await bookmarkNotifier.createBookmark(newsWithUid);
+                await bookmarkNotifier.createNewsBookmark(newsWithUid);
 
                 final message = bookmarkNotifier.message;
                 final snackBar = Utilities.createSnackBar(message);

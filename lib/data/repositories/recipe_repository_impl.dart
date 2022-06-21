@@ -29,7 +29,7 @@ class RecipeRepositoryImpl implements RecipeRepository {
 
       return Right(result);
     } on DatabaseException {
-      return const Left(DatabaseFailure('Gagal menambah bookmark'));
+      return const Left(DatabaseFailure('Gagal menambah resep ke bookmark'));
     }
   }
 
@@ -41,22 +41,7 @@ class RecipeRepositoryImpl implements RecipeRepository {
 
       return Right(result.map((table) => table.toEntity()).toList());
     } on DatabaseException {
-      return const Left(DatabaseFailure('Gagal memuat bookmarks'));
-    }
-  }
-
-  @override
-  Future<Either<Failure, bool>> isRecipeBookmarkExist(
-      RecipeEntity recipe) async {
-    try {
-      final recipeTable = RecipeTable.fromEntity(recipe);
-
-      final result =
-          await recipeLocalDataSource.isRecipeBookmarkExist(recipeTable);
-
-      return Right(result);
-    } on DatabaseException {
-      return const Left(DatabaseFailure('Gagal memuat bookmark'));
+      return const Left(DatabaseFailure('Gagal memuat resep bookmarks'));
     }
   }
 
@@ -71,7 +56,7 @@ class RecipeRepositoryImpl implements RecipeRepository {
 
       return Right(result);
     } on DatabaseException {
-      return const Left(DatabaseFailure('Gagal menghapus bookmark'));
+      return const Left(DatabaseFailure('Gagal menghapus resep bookmark'));
     }
   }
 
@@ -82,7 +67,22 @@ class RecipeRepositoryImpl implements RecipeRepository {
 
       return Right(result);
     } on DatabaseException {
-      return const Left(DatabaseFailure('Gagal menghapus bookmarks'));
+      return const Left(DatabaseFailure('Gagal menghapus resep bookmarks'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> isRecipeBookmarkExist(
+      RecipeEntity recipe) async {
+    try {
+      final recipeTable = RecipeTable.fromEntity(recipe);
+
+      final result =
+          await recipeLocalDataSource.isRecipeBookmarkExist(recipeTable);
+
+      return Right(result);
+    } on DatabaseException {
+      return const Left(DatabaseFailure('Gagal memuat resep bookmark'));
     }
   }
 

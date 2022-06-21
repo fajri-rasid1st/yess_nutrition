@@ -105,21 +105,6 @@ class DatabaseHelper {
     return news;
   }
 
-  /// check whether [news] is already in news bookmarks table
-  Future<bool> isNewsBookmarkExist(NewsTable news) async {
-    final db = await database;
-
-    final result = await db.query(
-      newsBookmarksTable,
-      where: 'uid = ? AND url = ?',
-      whereArgs: [news.uid, news.url],
-    );
-
-    if (result.isNotEmpty) return Future.value(true);
-
-    return Future.value(false);
-  }
-
   /// delete [news] from news bookmarks table
   Future<int> deleteNewsBookmark(NewsTable news) async {
     final db = await database;
@@ -140,6 +125,21 @@ class DatabaseHelper {
       where: 'uid = ?',
       whereArgs: [uid],
     );
+  }
+
+  /// check whether [news] is already in news bookmarks table
+  Future<bool> isNewsBookmarkExist(NewsTable news) async {
+    final db = await database;
+
+    final result = await db.query(
+      newsBookmarksTable,
+      where: 'uid = ? AND url = ?',
+      whereArgs: [news.uid, news.url],
+    );
+
+    if (result.isNotEmpty) return Future.value(true);
+
+    return Future.value(false);
   }
 
   /// added [food] to history table
@@ -214,21 +214,6 @@ class DatabaseHelper {
     return recipes;
   }
 
-  /// check whether [recipe] is already in recipe bookmarks table
-  Future<bool> isRecipeBookmarkExist(RecipeTable recipe) async {
-    final db = await database;
-
-    final result = await db.query(
-      recipeBookmarksTable,
-      where: 'uid = ? AND recipeId = ?',
-      whereArgs: [recipe.uid, recipe.recipeId],
-    );
-
-    if (result.isNotEmpty) return Future.value(true);
-
-    return Future.value(false);
-  }
-
   /// delete [recipe] from recipe bookmarks table
   Future<int> deleteRecipeBookmark(RecipeTable recipe) async {
     final db = await database;
@@ -249,5 +234,20 @@ class DatabaseHelper {
       where: 'uid = ?',
       whereArgs: [uid],
     );
+  }
+
+  /// check whether [recipe] is already in recipe bookmarks table
+  Future<bool> isRecipeBookmarkExist(RecipeTable recipe) async {
+    final db = await database;
+
+    final result = await db.query(
+      recipeBookmarksTable,
+      where: 'uid = ? AND recipeId = ?',
+      whereArgs: [recipe.uid, recipe.recipeId],
+    );
+
+    if (result.isNotEmpty) return Future.value(true);
+
+    return Future.value(false);
   }
 }

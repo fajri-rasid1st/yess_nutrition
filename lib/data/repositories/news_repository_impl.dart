@@ -26,7 +26,7 @@ class NewsRepositoryImpl implements NewsRepository {
 
       return Right(result);
     } on DatabaseException {
-      return const Left(DatabaseFailure('Gagal menambah bookmark'));
+      return const Left(DatabaseFailure('Gagal menambah artikel ke bookmark'));
     }
   }
 
@@ -37,20 +37,7 @@ class NewsRepositoryImpl implements NewsRepository {
 
       return Right(result.map((table) => table.toEntity()).toList());
     } on DatabaseException {
-      return const Left(DatabaseFailure('Gagal memuat bookmarks'));
-    }
-  }
-
-  @override
-  Future<Either<Failure, bool>> isNewsBookmarkExist(NewsEntity news) async {
-    try {
-      final newsTable = NewsTable.fromEntity(news);
-
-      final result = await newsLocalDataSource.isNewsBookmarkExist(newsTable);
-
-      return Right(result);
-    } on DatabaseException {
-      return const Left(DatabaseFailure('Gagal memuat bookmark'));
+      return const Left(DatabaseFailure('Gagal memuat artikel bookmarks'));
     }
   }
 
@@ -63,7 +50,7 @@ class NewsRepositoryImpl implements NewsRepository {
 
       return Right(result);
     } on DatabaseException {
-      return const Left(DatabaseFailure('Gagal menghapus bookmark'));
+      return const Left(DatabaseFailure('Gagal menghapus artikel bookmark'));
     }
   }
 
@@ -74,7 +61,20 @@ class NewsRepositoryImpl implements NewsRepository {
 
       return Right(result);
     } on DatabaseException {
-      return const Left(DatabaseFailure('Gagal menghapus bookmarks'));
+      return const Left(DatabaseFailure('Gagal menghapus artikel bookmarks'));
+    }
+  }
+
+  @override
+  Future<Either<Failure, bool>> isNewsBookmarkExist(NewsEntity news) async {
+    try {
+      final newsTable = NewsTable.fromEntity(news);
+
+      final result = await newsLocalDataSource.isNewsBookmarkExist(newsTable);
+
+      return Right(result);
+    } on DatabaseException {
+      return const Left(DatabaseFailure('Gagal memuat artikel bookmark'));
     }
   }
 
