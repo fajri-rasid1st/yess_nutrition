@@ -9,8 +9,8 @@ class NewsResponse extends Equatable {
   factory NewsResponse.fromJson(Map<String, dynamic> news) {
     return NewsResponse(
       news: List<NewsModel>.from(
-        (news['articles'] as List).map(
-          (article) => NewsModel.fromJson(article as Map<String, dynamic>),
+        (news['articles'] as List<Map<String, dynamic>>).map(
+          (article) => NewsModel.fromJson(article),
         ),
       ),
     );
@@ -18,7 +18,7 @@ class NewsResponse extends Equatable {
 
   Map<String, dynamic> toJson() {
     return {
-      'articles': List<Map<String, dynamic>>.from(
+      'news': List<Map<String, dynamic>>.from(
         news.map((article) => article.toJson()),
       ),
     };

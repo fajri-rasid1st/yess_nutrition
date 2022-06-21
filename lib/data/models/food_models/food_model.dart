@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:yess_nutrition/data/models/food_models/nutrients_model.dart';
+import 'package:yess_nutrition/data/models/nutrients_models/nutrients_model.dart';
 import 'package:yess_nutrition/domain/entities/food_entity.dart';
 import 'package:yess_nutrition/domain/entities/nutrients_entity.dart';
 
@@ -30,7 +30,7 @@ class FoodModel extends Equatable {
       categoryLabel: food['categoryLabel'] as String?,
       foodContentLabel: (food['foodContentLabel'] as String?)?.split('; '),
       image: food['image'] as String?,
-      nutrients: NutrientsModel.fromJson(
+      nutrients: NutrientsModel.fromJsonFood(
         food['nutrients'] as Map<String, dynamic>,
       ),
     );
@@ -59,9 +59,9 @@ class FoodModel extends Equatable {
       nutrients: nutrients?.toEntity() ??
           const NutrientsEntity(
             calories: 0,
+            carbohydrate: 0,
             protein: 0,
             fat: 0,
-            carbohydrate: 0,
             fiber: 0,
           ),
     );

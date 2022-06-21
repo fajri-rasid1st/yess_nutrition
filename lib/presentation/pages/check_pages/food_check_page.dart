@@ -206,7 +206,7 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               padding: const EdgeInsets.all(0),
-              itemCount: hints.length,
+              itemCount: hints.length > 16 ? 16 : hints.length,
               itemBuilder: (context, index) {
                 return FoodHintListTile(
                   food: hints[index],

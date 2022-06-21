@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:yess_nutrition/data/models/food_models/nutrients_table.dart';
+import 'package:yess_nutrition/data/models/nutrients_models/nutrients_table.dart';
 import 'package:yess_nutrition/domain/entities/food_entity.dart';
 
 const foodHistoryTable = 'food_history_table';

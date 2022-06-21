@@ -3,25 +3,25 @@ import 'package:yess_nutrition/domain/entities/nutrients_entity.dart';
 
 class NutrientsTable extends Equatable {
   final double calories;
+  final double carbohydrate;
   final double protein;
   final double fat;
-  final double carbohydrate;
   final double fiber;
 
   const NutrientsTable({
     required this.calories,
+    required this.carbohydrate,
     required this.protein,
     required this.fat,
-    required this.carbohydrate,
     required this.fiber,
   });
 
   factory NutrientsTable.fromEntity(NutrientsEntity nutrients) {
     return NutrientsTable(
       calories: nutrients.calories,
+      carbohydrate: nutrients.carbohydrate,
       protein: nutrients.protein,
       fat: nutrients.fat,
-      carbohydrate: nutrients.carbohydrate,
       fiber: nutrients.fiber,
     );
   }
@@ -31,9 +31,9 @@ class NutrientsTable extends Equatable {
 
     return NutrientsTable(
       calories: double.parse(nutrientsList[0]),
-      protein: double.parse(nutrientsList[1]),
-      fat: double.parse(nutrientsList[2]),
-      carbohydrate: double.parse(nutrientsList[3]),
+      carbohydrate: double.parse(nutrientsList[1]),
+      protein: double.parse(nutrientsList[2]),
+      fat: double.parse(nutrientsList[3]),
       fiber: double.parse(nutrientsList[4]),
     );
   }
@@ -41,16 +41,16 @@ class NutrientsTable extends Equatable {
   NutrientsEntity toEntity() {
     return NutrientsEntity(
       calories: calories,
+      carbohydrate: carbohydrate,
       protein: protein,
       fat: fat,
-      carbohydrate: carbohydrate,
       fiber: fiber,
     );
   }
 
   @override
-  String toString() => '$calories; $protein; $fat; $carbohydrate; $fiber';
+  String toString() => '$calories; $carbohydrate; $protein; $fat; $fiber';
 
   @override
-  List<Object> get props => [calories, protein, fat, carbohydrate, fiber];
+  List<Object> get props => [calories, carbohydrate, protein, fat, fiber];
 }

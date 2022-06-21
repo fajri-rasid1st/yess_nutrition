@@ -13,8 +13,17 @@ const foodAppId = 'b8bd9b3a';
 /// an app key, used with [foodBaseUrl]
 const foodAppKey = '6cf3d53b97c0bfa283c2120350b0e532';
 
+/// a base API urls for food recipe feauture
+const recipeBaseUrl = 'https://api.edamam.com/api/recipes/v2';
+
+/// an app id, used with [recipeBaseUrl]
+const recipeAppId = 'c4cfd3e2';
+
+/// an app key, used with [recipeBaseUrl]
+const recipeAppKey = '25a1a63aff3f14b00da8df7ad109f4b5';
+
 /// a list of certificates that used for request data from API
 const certificates = <String, String>{
   'newsApi': 'certificates/sni-cloudflaressl-com.pem',
-  'foodApi': 'certificates/edamam-com.pem',
+  'nutritionApi': 'certificates/edamam-com.pem',
 };

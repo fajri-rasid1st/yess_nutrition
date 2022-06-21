@@ -29,8 +29,8 @@ class HttpSslPinning {
 
       securityContext.setTrustedCertificatesBytes(sslCert1.buffer.asInt8List());
 
-      // certificate for Food Database API
-      final sslCert2 = await rootBundle.load(certificates['foodApi']!);
+      // certificate for Food, Product, and Recipe API
+      final sslCert2 = await rootBundle.load(certificates['nutritionApi']!);
 
       securityContext.setTrustedCertificatesBytes(sslCert2.buffer.asInt8List());
     } on TlsException catch (e) {
