@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/utils/constants.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
-import 'package:yess_nutrition/data/models/categories.dart';
-import 'package:yess_nutrition/data/models/products.dart';
+import 'package:yess_nutrition/data/models/shop_models/shop_categories.dart';
+import 'package:yess_nutrition/data/models/shop_models/shop_products.dart';
 import 'package:yess_nutrition/presentation/widgets/categories_kesehatan_card.dart';
 import 'package:yess_nutrition/presentation/widgets/categories_makanan_minuman_card.dart';
 import 'package:yess_nutrition/presentation/widgets/product_card.dart';
