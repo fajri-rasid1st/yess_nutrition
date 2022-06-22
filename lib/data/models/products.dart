@@ -29,107 +29,105 @@ class Product {
 
 List<Product> masker = [
   Product(
-      name:
-          'Masker 4ply Duckbill Flower Series Earloop & Hijab - Flower Ungu, Earloop',
-      imagePath: 'assets/img/masker1.png',
-      originalPrice: 37.500,
-      rating: 4.9,
-      discountPercent: 30),
+      name: 'MASKER KF94 KOREA 4PLY MOUSON ISI 10 PCS KOREAN MASK BOGOR',
+      imagePath: 'assets/img/masker1.webp',
+      originalPrice: 6.500,
+      rating: 5,
+      discountPercent: 15),
   Product(
       name:
-          'Masker Anak Duckbill Custom Warna Maskit - Masker Hijau - Round White',
-      imagePath: 'assets/img/masker2.png',
-      originalPrice: 37.500,
+          'Masker 3 PLy 3ply Earloop Medical Grade Hitam Black Edition isi 50',
+      imagePath: 'assets/img/masker2.webp',
+      originalPrice: 15.000,
       rating: 4.9,
-      discountPercent: 25),
+      discountPercent: 17),
   Product(
       name:
-          'Masker KN95 5 Ply, Masker 5 Lapis Premium 5ply Earloop, Medical Grade - Putih',
-      imagePath: 'assets/img/masker3.jpg',
-      originalPrice: 27.800,
+          'Masker Duckbill 3D kn95 3ply 3 Ply Duck Bill earloop Tali isi 50 Pcs',
+      imagePath: 'assets/img/masker3.webp',
+      originalPrice: 50.000,
       rating: 4.9,
-      discountPercent: 19),
+      discountPercent: 68),
+  Product(
+      name: 'MASKER DUCKBILL ANAK MOTIF SENSA ISI 50PCS KEMENKES',
+      imagePath: 'assets/img/masker4.webp',
+      originalPrice: 115.000,
+      rating: 5,
+      discountPercent: 64),
   Product(
       name:
-          'MIISOO Disposable N95 KN95 Korea KF94 Masker Kesehatan masker evo 4ply - EVO 1pcs',
-      imagePath: 'assets/img/masker4.jpg',
-      originalPrice: 10.000,
-      rating: 4.9,
-      discountPercent: 82),
-  Product(
-      name:
-          'Masker Anak Duckbill Maskit Cartoon Series Kids - Duckbill Tali Warna - Mickey Mouse',
-      imagePath: 'assets/img/masker5.jpg',
-      originalPrice: 39.500,
-      rating: 4.9,
-      discountPercent: 25),
+          'Masker dukbil anak 3ply isi 10biji tulis dicatatan mau cewe atau cowo atau campur',
+      imagePath: 'assets/img/masker5.webp',
+      originalPrice: 50.00,
+      rating: 5,
+      discountPercent: 85),
 ];
 
 List<Product> obat = [
   Product(
-      name: 'HerbaPAIN Obat Sakit Kepala Herbal 30 Tablet',
-      imagePath: 'assets/img/obat1.jpg',
-      originalPrice: 108.900,
-      rating: 4.7,
-      discountPercent: 5),
-  Product(
-      name: 'Herbana Relief Sari Jinten Hitam - 60 Kapsul',
-      imagePath: 'assets/img/obat2.jpg',
-      originalPrice: 150.000,
+      name: 'Tolak Angin Cair Dus 5x5s Herbal-Masuk Angin Mual Flu Demam',
+      imagePath: 'assets/img/obat1.webp',
+      originalPrice: 102.580,
       rating: 5,
-      discountPercent: 17),
+      discountPercent: 35),
   Product(
-      name: 'Jelly Gamat Gold G 500 ml',
-      imagePath: 'assets/img/obat3.jpg',
-      originalPrice: 130.000,
-      rating: 4.9,
+      name:
+          'Naturatik Naturafit Original Herbal Obat Asam Urat Rematik Pegal Linu Nyeri Sendi kaku Kemeng 50 kapsul',
+      imagePath: 'assets/img/obat2.webp',
+      originalPrice: 55.000,
+      rating: 5,
+      discountPercent: 34),
+  Product(
+      name: 'Kapsul Herbal Obat Hernia',
+      imagePath: 'assets/img/obat3.webp',
+      originalPrice: 24.900,
+      rating: 4.8,
       discountPercent: 12),
   Product(
       name:
-          'HerbaKOF Sirup Obat Batuk Herbal StickPack Sachet 15 ml - 16 pcs x 15 ml',
-      imagePath: 'assets/img/obat4.jpg',
-      originalPrice: 43.200,
-      rating: 5,
-      discountPercent: 10),
+          'Propolis Light G-Nutri Obat Herbal Untuk Diabetes Hipertensi Stroke & Jantung Asli Original',
+      imagePath: 'assets/img/obat4.webp',
+      originalPrice: 200.000,
+      rating: 4.8,
+      discountPercent: 15),
   Product(
-      name: 'HerbaVOMITZ Herbal Pereda kembung dan Mual 30 Tablet',
-      imagePath: 'assets/img/obat5.jpg',
-      originalPrice: 108.900,
-      rating: 5,
-      discountPercent: 10),
+      name: 'Bactenormin Original Obat Parasit Tubuh Asli Herbal',
+      imagePath: 'assets/img/obat5.jwebp',
+      originalPrice: 100.000,
+      rating: 4.8,
+      discountPercent: 30),
 ];
 
 List<Product> rekomendasi = [
   Product(
-      name: 'Masker Evo PlusMed 4d Medis - Putih',
-      imagePath: 'assets/img/rekomend1.png',
-      originalPrice: 135.000,
+      name: 'Salep BL Asli Original - Cream BL - Salep Gatal-Eksim-Jamur',
+      imagePath: 'assets/img/rekomend1.webp',
+      originalPrice: 16.000,
       rating: 5,
-      discountPercent: 56),
+      discountPercent: 15),
   Product(
-      name:
-          'Paket FreshCare Teens (1Cherry,1Bubble Gum,1Passion Fruit) Free Holder',
-      imagePath: 'assets/img/rekomend2.jpg',
-      originalPrice: 32.700,
-      rating: 5,
-      discountPercent: 12),
-  Product(
-      name: 'Imboost Kids Tablet Hisap Chewy - Isi 21 Tablet',
-      imagePath: 'assets/img/rekomend3.jpg',
-      originalPrice: 30.025,
-      rating: 5,
+      name: 'Komix Adult Jahe Pack 30 Sachet',
+      imagePath: 'assets/img/rekomend2.webp',
+      originalPrice: 55.500,
+      rating: 4.9,
       discountPercent: 20),
   Product(
-      name: 'Akurat Test Kehamilan',
-      imagePath: 'assets/img/rekomend4.jpg',
-      originalPrice: 10.099,
+      name: 'Sutra Lubricant 50 mL',
+      imagePath: 'assets/img/rekomend3.webp',
+      originalPrice: 14.000,
       rating: 4.9,
-      discountPercent: 6),
+      discountPercent: 14),
   Product(
       name:
-          'Minyak Kelapa Extra Virgin Coconut Oil VCO - Pure Unrefined 100% 250ML',
-      imagePath: 'assets/img/rekomend5.jpg',
-      originalPrice: 59.500,
+          'Masker 3 PLy 3ply Earloop Medical Grade Hitam Black Edition isi 50',
+      imagePath: 'assets/img/rekomend4.webp',
+      originalPrice: 15.000,
       rating: 4.9,
-      discountPercent: 30),
+      discountPercent: 17),
+  Product(
+      name: 'Paket Hemat Bundling isi 6 Saniter Hand Sanitizer Spray 60 ml',
+      imagePath: 'assets/img/rekomend5.webp',
+      originalPrice: 99.400,
+      rating: 4.9,
+      discountPercent: 32),
 ];
