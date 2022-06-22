@@ -58,7 +58,11 @@ class CheckPage extends StatelessWidget {
             subtitle: '(Teks)',
             description: 'Yuk cari tahu resep dalam membuat makanan favoritmu.',
             assetName: 'assets/img/recipe_nutricheck.png',
-            onTap: () {},
+            onTap: () => Navigator.pushNamed(
+              context,
+              recipeCheckRoute,
+              arguments: uid,
+            ),
           ),
         ],
       ),

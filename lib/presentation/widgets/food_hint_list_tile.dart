@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/domain/entities/food_entity.dart';
@@ -27,7 +28,6 @@ class FoodHintListTile extends StatelessWidget {
             child: CustomNetworkImage(
               width: 64,
               height: 64,
-              fit: BoxFit.cover,
               imgUrl: food.image,
               placeHolderSize: 32,
               errorIcon: Icons.fastfood_outlined,
@@ -51,7 +51,7 @@ class FoodHintListTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '${food.categoryLabel}, ${food.category}',
+                    '${toBeginningOfSentenceCase(food.categoryLabel)}, ${food.category}',
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context)

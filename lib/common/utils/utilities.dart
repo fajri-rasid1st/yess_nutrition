@@ -8,9 +8,11 @@ import 'package:yess_nutrition/common/styles/color_scheme.dart';
 class Utilities {
   /// Function to convert [dateTime] to time ago string format
   static String dateTimeToTimeAgo(DateTime dateTime) {
+    if (dateTime.year == 0) return '?';
+
     timeago.setLocaleMessages('id', timeago.IdMessages());
 
-    return timeago.format(dateTime, locale: 'id');
+    return toBeginningOfSentenceCase(timeago.format(dateTime, locale: 'id'))!;
   }
 
   /// Function to format [dateTime] to **dd MMM y** string pattern

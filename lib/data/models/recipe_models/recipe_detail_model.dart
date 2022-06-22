@@ -75,7 +75,7 @@ class RecipeDetailModel extends Equatable {
       image: image ?? '',
       url: url ?? '',
       totalServing: totalServing?.toInt() ?? 0,
-      totalTime: totalServing?.toInt() ?? 0,
+      totalTime: totalTime?.toInt() ?? 0,
       calories: calories?.toDouble() ?? 0,
       dietLabels: dietLabels ?? <String>[],
       healthLabels: healthLabels ?? <String>[],
@@ -93,20 +93,18 @@ class RecipeDetailModel extends Equatable {
   }
 
   @override
-  List<Object?> get props {
-    return [
-      recipeId,
-      label,
-      image,
-      url,
-      totalServing,
-      totalTime,
-      calories,
-      dietLabels,
-      healthLabels,
-      cautionLabels,
-      ingredients,
-      totalNutrients,
-    ];
-  }
+  List<Object?> get props => [
+        recipeId,
+        label,
+        image,
+        url,
+        totalServing,
+        totalTime,
+        calories,
+        dietLabels,
+        healthLabels,
+        cautionLabels,
+        ingredients,
+        totalNutrients,
+      ];
 }

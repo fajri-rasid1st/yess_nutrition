@@ -12,5 +12,6 @@ export 'large_circular_progress.dart';
 export 'loading_indicator.dart';
 export 'news_list_tile.dart';
 export 'nutricheck_card.dart';
+export 'recipe_list_tile.dart';
 export 'search_field.dart';
 export 'small_circular_progress.dart';

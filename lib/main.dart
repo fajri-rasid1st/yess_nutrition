@@ -71,6 +71,15 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<FoodHistoryNotifier>(),
         ),
         ChangeNotifierProvider(
+          create: (_) => di.locator<SearchRecipesNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<GetRecipeDetailNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<RecipeBookmarkNotifier>(),
+        ),
+        ChangeNotifierProvider(
           create: (_) => di.locator<GetNewsNotifier>(),
         ),
         ChangeNotifierProvider(
@@ -124,19 +133,22 @@ class MyApp extends StatelessWidget {
         home: const Wrapper(),
         onGenerateRoute: (settings) {
           switch (settings.name) {
-            // -------------- Auth routes and pages ---------------
+            // -------------- Auth and common routes and pages ---------------
             case loginRoute:
               return MaterialPageRoute(
                 builder: (_) => const LoginPage(),
               );
+
             case registerRoute:
               return MaterialPageRoute(
                 builder: (_) => const RegisterPage(),
               );
+
             case forgotPasswordRoute:
               return MaterialPageRoute(
                 builder: (_) => const ForgotPasswordPage(),
               );
+
             case additionalInfoRoute:
               final user = settings.arguments as UserEntity;
 
@@ -144,11 +156,20 @@ class MyApp extends StatelessWidget {
                 builder: (_) => AdditionalInfoPage(user: user),
                 settings: settings,
               );
+
             case mainRoute:
               final user = settings.arguments as UserEntity;
 
               return MaterialPageRoute(
                 builder: (_) => MainPage(user: user),
+                settings: settings,
+              );
+
+            case webviewRoute:
+              final url = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => WebViewPage(url: url),
                 settings: settings,
               );
 
@@ -160,6 +181,7 @@ class MyApp extends StatelessWidget {
                 builder: (_) => ProfilePage(uid: uid),
                 settings: settings,
               );
+
             case updateProfileRoute:
               final userData = settings.arguments as UserDataEntity;
 
@@ -179,13 +201,7 @@ class MyApp extends StatelessWidget {
                 ),
                 settings: settings,
               );
-            case newsWebViewRoute:
-              final url = settings.arguments as String;
 
-              return MaterialPageRoute(
-                builder: (_) => NewsWebViewPage(url: url),
-                settings: settings,
-              );
             case newsBookmarksRoute:
               final uid = settings.arguments as String;
 
@@ -202,24 +218,59 @@ class MyApp extends StatelessWidget {
                 builder: (_) => CheckPage(uid: uid),
                 settings: settings,
               );
+
             case foodCheckRoute:
               final uid = settings.arguments as String;
 
               return MaterialPageRoute(
                 builder: (_) => FoodCheckPage(uid: uid),
+                settings: settings,
               );
+
             case productCheckRoute:
               final uid = settings.arguments as String;
 
               return MaterialPageRoute(
                 builder: (_) => ProductCheckPage(uid: uid),
+                settings: settings,
               );
+
+            case recipeCheckRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => RecipeCheckPage(uid: uid),
+                settings: settings,
+              );
+
             case foodAndProductCheckHistoryRoute:
               final uid = settings.arguments as String;
 
               return MaterialPageRoute(
                 builder: (_) => FoodAndProductCheckHistoryPage(uid: uid),
+                settings: settings,
               );
+
+            case recipeDetailRoute:
+              final arguments = settings.arguments as RecipeDetailPageArgs;
+
+              return MaterialPageRoute(
+                builder: (_) => RecipeDetailPage(
+                  uid: arguments.uid,
+                  recipeId: arguments.recipeId,
+                  heroTag: arguments.heroTag,
+                ),
+                settings: settings,
+              );
+
+            case recipeBookmarksRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => RecipeBookmarksPage(uid: uid),
+                settings: settings,
+              );
+
             default:
               return null;
           }

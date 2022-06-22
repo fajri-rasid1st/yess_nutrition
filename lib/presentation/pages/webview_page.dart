@@ -6,16 +6,16 @@ import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/presentation/providers/common_notifiers/news_webview_notifier.dart';
 
-class NewsWebViewPage extends StatefulWidget {
+class WebViewPage extends StatefulWidget {
   final String url;
 
-  const NewsWebViewPage({Key? key, required this.url}) : super(key: key);
+  const WebViewPage({Key? key, required this.url}) : super(key: key);
 
   @override
-  State<NewsWebViewPage> createState() => _NewsWebViewPageState();
+  State<WebViewPage> createState() => _WebViewPageState();
 }
 
-class _NewsWebViewPageState extends State<NewsWebViewPage> {
+class _WebViewPageState extends State<WebViewPage> {
   late final WebViewController _webViewController;
 
   @override
@@ -34,7 +34,7 @@ class _NewsWebViewPageState extends State<NewsWebViewPage> {
         toolbarHeight: 64,
         centerTitle: true,
         title: const Text(
-          'NutriNews',
+          'Yess Nutrition',
           style: TextStyle(
             color: primaryColor,
             fontWeight: FontWeight.bold,

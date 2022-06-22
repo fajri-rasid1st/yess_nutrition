@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/domain/entities/food_entity.dart';
@@ -30,7 +31,6 @@ class FoodListTile extends StatelessWidget {
                 child: CustomNetworkImage(
                   width: 68,
                   height: 68,
-                  fit: BoxFit.cover,
                   imgUrl: food.image,
                   placeHolderSize: 36,
                   errorIcon: Icons.fastfood_outlined,
@@ -54,7 +54,7 @@ class FoodListTile extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '${food.categoryLabel}, ${food.category}',
+                        '${toBeginningOfSentenceCase(food.categoryLabel)}, ${food.category}',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context)
@@ -186,18 +186,32 @@ class FoodListTile extends StatelessWidget {
   }
 
   List<String> foodContentsLabelWithFilter(List<String> foodContentsLabel) {
+    // If list is empty, return it;
     if (foodContentsLabel.isEmpty) return <String>[];
 
+    // Convert list to string, separated with '; '
     final labelsString = foodContentsLabel.join('; ');
 
+    // API call result data may be not clean, so omit certain characters.
     final newLabelsString = labelsString.replaceAll(RegExp(r'[^\w\s;-]'), '');
 
+    // Convert all characters to lower case,
+    // Convert to list with '; ' as splitter,
+    // Convert to set, so it will remove duplicate item,
+    // Convert to list again.
     final labels = newLabelsString.toLowerCase().split('; ').toSet().toList();
 
+    // Sorted labels depending on item length in ascending order
     labels.sort((label1, label2) => label1.length.compareTo(label2.length));
 
-    if (labels.length > 8) return labels.sublist(0, 8);
+    // Converts the first letter to uppercase
+    final capitalizeLabels = labels.map((label) {
+      return toBeginningOfSentenceCase(label)!;
+    }).toList();
 
-    return labels;
+    // return just <= 8 items
+    if (capitalizeLabels.length > 8) return capitalizeLabels.sublist(0, 8);
+
+    return capitalizeLabels;
   }
 }

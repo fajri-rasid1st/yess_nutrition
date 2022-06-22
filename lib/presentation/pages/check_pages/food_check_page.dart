@@ -21,14 +21,12 @@ class FoodCheckPage extends StatefulWidget {
 }
 
 class _FoodCheckPageState extends State<FoodCheckPage> {
-  late final GlobalKey<ScaffoldState> _scaffoldKey;
   late final TextEditingController _searchController;
 
   @override
   void initState() {
     super.initState();
 
-    _scaffoldKey = GlobalKey<ScaffoldState>();
     _searchController = TextEditingController();
   }
 
@@ -42,7 +40,6 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: _scaffoldKey,
       resizeToAvoidBottomInset: false,
       backgroundColor: primaryBackgroundColor,
       body: NestedScrollView(
@@ -115,7 +112,7 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
             }
 
             if (foodNotifier.state == RequestState.error) {
-              return _buildSearchError(foodNotifier);
+              return _buildSearchError(context, foodNotifier);
             }
 
             return const LoadingIndicator();
@@ -140,7 +137,7 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
             if (value.trim().isNotEmpty) {
               foodNotifier.searchFoods(query: value).then((_) async {
                 // add every search results to history
-                await addSearchedToHistory(foodNotifier);
+                await addSearchedToHistory(context, foodNotifier);
               });
             }
           },
@@ -206,7 +203,7 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
               shrinkWrap: true,
               padding: const EdgeInsets.all(0),
               itemCount: hints.length > 16 ? 16 : hints.length,
-              itemBuilder: (context, index) {
+              itemBuilder: (_, index) {
                 return FoodHintListTile(
                   food: hints[index],
                   onPressedSearchIcon: () {
@@ -221,7 +218,7 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
                     // search foods, according to item label
                     foodNotifier.searchFoods(query: label).then((_) async {
                       // add every search results to history
-                      await addSearchedToHistory(foodNotifier);
+                      await addSearchedToHistory(context, foodNotifier);
                     });
                   },
                   onPressedTimeIcon: () {},
@@ -253,7 +250,10 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
     );
   }
 
-  CustomInformation _buildSearchError(SearchFoodNotifier foodNotifier) {
+  CustomInformation _buildSearchError(
+    BuildContext context,
+    SearchFoodNotifier foodNotifier,
+  ) {
     return CustomInformation(
       key: const Key('error_message'),
       imgPath: 'assets/svg/error_robot_cuate.svg',
@@ -274,7 +274,7 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
                   foodNotifier.refresh(),
                 ]).then((_) async {
                   // add every search results to history
-                  await addSearchedToHistory(foodNotifier);
+                  await addSearchedToHistory(context, foodNotifier);
 
                   // set isReload to true
                   foodNotifier.isReload = false;
@@ -297,7 +297,10 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
     );
   }
 
-  Future<void> addSearchedToHistory(SearchFoodNotifier foodNotifier) async {
+  Future<void> addSearchedToHistory(
+    BuildContext context,
+    SearchFoodNotifier foodNotifier,
+  ) async {
     if (foodNotifier.state == RequestState.success) {
       for (var food in foodNotifier.results) {
         final foodHistory = food.copyWith(
@@ -305,9 +308,7 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
           createdAt: DateTime.now(),
         );
 
-        await _scaffoldKey.currentContext!
-            .read<FoodHistoryNotifier>()
-            .addFoodHistory(foodHistory);
+        await context.read<FoodHistoryNotifier>().addFoodHistory(foodHistory);
       }
     }
   }

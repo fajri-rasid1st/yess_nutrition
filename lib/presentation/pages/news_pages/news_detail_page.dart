@@ -196,7 +196,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                       child: OutlinedButton.icon(
                         onPressed: () => Navigator.pushNamed(
                           context,
-                          newsWebViewRoute,
+                          webviewRoute,
                           arguments: widget.news.url,
                         ),
                         icon: const Icon(Icons.open_in_new_rounded),

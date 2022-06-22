@@ -64,7 +64,7 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
         toolbarHeight: 64,
         centerTitle: true,
         title: const Text(
-          'Bookmarks',
+          'News Bookmarks',
           style: TextStyle(
             color: primaryColor,
             fontWeight: FontWeight.bold,

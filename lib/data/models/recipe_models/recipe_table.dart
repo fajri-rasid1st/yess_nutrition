@@ -58,7 +58,7 @@ class RecipeTable extends Equatable {
       image: image,
       url: url,
       totalServing: totalServing,
-      totalTime: totalServing,
+      totalTime: totalTime,
       calories: calories.toDouble(),
     );
   }

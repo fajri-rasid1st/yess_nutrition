@@ -51,7 +51,7 @@ class RecipeModel extends Equatable {
       image: image ?? '',
       url: url ?? '',
       totalServing: totalServing?.toInt() ?? 0,
-      totalTime: totalServing?.toInt() ?? 0,
+      totalTime: totalTime?.toInt() ?? 0,
       calories: calories?.toDouble() ?? 0,
     );
   }

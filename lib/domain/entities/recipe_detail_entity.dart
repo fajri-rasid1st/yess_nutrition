@@ -31,20 +31,18 @@ class RecipeDetailEntity extends Equatable {
   });
 
   @override
-  List<Object> get props {
-    return [
-      recipeId,
-      label,
-      image,
-      url,
-      totalServing,
-      totalTime,
-      calories,
-      dietLabels,
-      healthLabels,
-      cautionLabels,
-      ingredients,
-      totalNutrients,
-    ];
-  }
+  List<Object> get props => [
+        recipeId,
+        label,
+        image,
+        url,
+        totalServing,
+        totalTime,
+        calories,
+        dietLabels,
+        healthLabels,
+        cautionLabels,
+        ingredients,
+        totalNutrients,
+      ];
 }
