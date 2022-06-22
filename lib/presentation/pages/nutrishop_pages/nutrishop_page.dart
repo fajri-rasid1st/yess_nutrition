@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:yess_nutrition/common/utils/constants.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
-import 'package:yess_nutrition/data/models/shop_models/shop_categories.dart';
-import 'package:yess_nutrition/data/models/shop_models/shop_products.dart';
+import 'package:yess_nutrition/presentation/pages/nutrishop_pages/product_list_page.dart';
 import 'package:yess_nutrition/presentation/widgets/categories_kesehatan_card.dart';
 import 'package:yess_nutrition/presentation/widgets/categories_makanan_minuman_card.dart';
 import 'package:yess_nutrition/presentation/widgets/product_card.dart';
+
+import '../../../common/utils/utils.dart';
+import '../../../data/models/models.dart';
 
 class NutriShopPage extends StatelessWidget {
   const NutriShopPage({Key? key}) : super(key: key);
@@ -121,7 +122,20 @@ class NutriShopPage extends StatelessWidget {
                                             img: categoriKesehatan[index].img,
                                             title:
                                                 categoriKesehatan[index].title,
-                                            press: () {}),
+                                            press: () {
+                                              Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          ProductListPage(
+                                                            title:
+                                                                categoriKesehatan[
+                                                                        index]
+                                                                    .title,
+                                                            url: healthBaseUrls[
+                                                                index],
+                                                          )));
+                                            }),
                                       )),
                                 ),
                               ),
@@ -144,18 +158,33 @@ class NutriShopPage extends StatelessWidget {
                                 children: List.generate(
                                   categoriMakananMinuman.length,
                                   (index) => Padding(
-                                      padding: const EdgeInsets.only(
-                                          right: defaultPadding),
-                                      child: Container(
-                                        margin: const EdgeInsets.only(
-                                            left: 15, top: 15),
-                                        child: CategoryCardMakananMinuman(
-                                            img: categoriMakananMinuman[index]
-                                                .img,
-                                            title: categoriMakananMinuman[index]
-                                                .title,
-                                            press: () {}),
-                                      )),
+                                    padding: const EdgeInsets.only(
+                                        right: defaultPadding),
+                                    child: Container(
+                                      margin: const EdgeInsets.only(
+                                          left: 15, top: 15),
+                                      child: CategoryCardMakananMinuman(
+                                        img: categoriMakananMinuman[index].img,
+                                        title:
+                                            categoriMakananMinuman[index].title,
+                                        press: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) =>
+                                                  ProductListPage(
+                                                title: categoriMakananMinuman[
+                                                        index]
+                                                    .title,
+                                                url:
+                                                    foodAndDrinkBaseUrls[index],
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -309,6 +338,30 @@ class NutriShopPage extends StatelessWidget {
           ),
         ],
       )),
+    );
+  }
+}
+
+class LoveButton extends StatefulWidget {
+  @override
+  _LoveButtonState createState() => _LoveButtonState();
+}
+
+class _LoveButtonState extends State<LoveButton> {
+  bool isLove = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(
+        isLove ? Icons.favorite : Icons.favorite_border,
+        color: Colors.red,
+      ),
+      onPressed: () {
+        setState(() {
+          isLove = !isLove;
+        });
+      },
     );
   }
 }
