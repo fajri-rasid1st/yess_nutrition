@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
-import 'package:yess_nutrition/common/utils/constants.dart';
-import 'package:yess_nutrition/data/models/shop_models/shop_products.dart';
+
+import '../../common/utils/utils.dart';
+import '../../data/models/models.dart';
+import '../pages/nutrishop_pages/nutrishop_page.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
@@ -86,34 +88,41 @@ class ProductCard extends StatelessWidget {
                                 )
                               ],
                             ),
-                            Wrap(
-                              direction: Axis.vertical,
-                              children: [
-                                SizedBox(
-                                  height: 5,
-                                ),
-                                Text(
-                                  '${Product.format(product.price)}',
-                                  style: TextStyle(
-                                      fontFamily: font,
-                                      color: primaryColor,
-                                      fontSize: 16),
-                                ),
-                                if (product.discountPercent != null)
-                                  Text(
-                                    '${Product.format(product.originalPrice)}',
-                                    style: TextStyle(
-                                      fontFamily: font,
-                                      color: primaryColor,
-                                      fontSize: 14,
-                                      decoration: TextDecoration.lineThrough,
-                                      decorationColor: Colors.black,
-                                      decorationStyle:
-                                          TextDecorationStyle.solid,
-                                    ),
+                            Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Wrap(
+                                    direction: Axis.vertical,
+                                    children: [
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        '${Product.format(product.price)}',
+                                        style: TextStyle(
+                                            fontFamily: font,
+                                            color: primaryColor,
+                                            fontSize: 16),
+                                      ),
+                                      if (product.discountPercent != null)
+                                        Text(
+                                          '${Product.format(product.originalPrice)}',
+                                          style: TextStyle(
+                                            fontFamily: font,
+                                            color: primaryColor,
+                                            fontSize: 14,
+                                            decoration:
+                                                TextDecoration.lineThrough,
+                                            decorationColor: Colors.black,
+                                            decorationStyle:
+                                                TextDecorationStyle.solid,
+                                          ),
+                                        ),
+                                    ],
                                   ),
-                              ],
-                            )
+                                  LoveButton(),
+                                ]),
                           ],
                         ),
                       ),
