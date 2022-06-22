@@ -303,7 +303,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                         _buildNutrientDetailSmall(
                           context,
                           '${recipeDetail.totalNutrients.fiber.toStringAsFixed(0)}g',
-                          'Lemak',
+                          'Serat',
                         ),
                       ],
                     ),
@@ -344,21 +344,18 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                       .copyWith(fontWeight: FontWeight.bold),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-                child: ListView(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  padding: const EdgeInsets.all(0),
-                  children: List<Padding>.generate(
-                    recipeDetail.ingredients.length,
-                    (index) {
-                      return Padding(
-                        padding: const EdgeInsets.only(bottom: 4),
-                        child: Text(recipeDetail.ingredients[index]),
-                      );
-                    },
-                  ),
+              ListView(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                children: List<Padding>.generate(
+                  recipeDetail.ingredients.length,
+                  (index) {
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 4),
+                      child: Text('- ${recipeDetail.ingredients[index]}'),
+                    );
+                  },
                 ),
               ),
               Padding(
