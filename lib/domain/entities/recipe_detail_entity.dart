@@ -9,10 +9,10 @@ class RecipeDetailEntity extends Equatable {
   final int totalServing;
   final int totalTime;
   final double calories;
-  final List<String> dietLabels;
-  final List<String> healthLabels;
-  final List<String> cautionLabels;
-  final List<String> ingredients;
+  final List dietLabels;
+  final List healthLabels;
+  final List cautionLabels;
+  final List ingredients;
   final NutrientsEntity totalNutrients;
 
   const RecipeDetailEntity({

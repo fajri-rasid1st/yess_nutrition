@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/domain/entities/food_entity.dart';
+import 'package:yess_nutrition/presentation/widgets/custom_chip.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_network_image.dart';
 
 class FoodListTile extends StatelessWidget {
@@ -86,10 +87,14 @@ class FoodListTile extends StatelessWidget {
               child: Wrap(
                 spacing: 6,
                 runSpacing: 6,
-                children: List<Container>.generate(
+                children: List<CustomChip>.generate(
                   labels.length,
                   (index) {
-                    return _buildFoodContentLabelChip(context, labels[index]);
+                    return CustomChip(
+                      label: labels[index],
+                      labelColor: primaryColor,
+                      backgroundColor: secondaryColor,
+                    );
                   },
                 ),
               ),
@@ -131,25 +136,6 @@ class FoodListTile extends StatelessWidget {
             amount: '${food.nutrients.fiber.toStringAsFixed(1)} g',
           ),
         ],
-      ),
-    );
-  }
-
-  Container _buildFoodContentLabelChip(BuildContext context, String label) {
-    return Container(
-      decoration: BoxDecoration(
-        color: secondaryColor,
-        borderRadius: BorderRadius.circular(100),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-        child: Text(
-          label,
-          style: Theme.of(context)
-              .textTheme
-              .caption!
-              .copyWith(color: primaryColor),
-        ),
       ),
     );
   }

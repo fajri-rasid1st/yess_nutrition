@@ -87,7 +87,7 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
                     Utilities.showConfirmDialog(
                       context,
                       title: 'Konfirmasi',
-                      question: 'Hapus semua daftar bookmarks?',
+                      question: 'Hapus semua artikel bookmarks?',
                       onPressedPrimaryAction: () {
                         clearBookmarks(context).then((_) {
                           Navigator.pop(context);
@@ -114,8 +114,8 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
               return const CustomInformation(
                 key: Key('bookmarks_empty'),
                 imgPath: 'assets/svg/reading_glasses_cuate.svg',
-                title: 'Bookmarks masih kosong',
-                subtitle: 'Bookmarks anda akan muncul di sini.',
+                title: 'Artikel masih kosong',
+                subtitle: 'Artikel bookmarks akan muncul di sini.',
               );
             }
 

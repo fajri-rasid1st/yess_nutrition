@@ -11,10 +11,10 @@ class RecipeDetailModel extends Equatable {
   final num? totalServing;
   final num? totalTime;
   final num? calories;
-  final List<String>? dietLabels;
-  final List<String>? healthLabels;
-  final List<String>? cautionLabels;
-  final List<String>? ingredients;
+  final List? dietLabels;
+  final List? healthLabels;
+  final List? cautionLabels;
+  final List? ingredients;
   final NutrientsModel? totalNutrients;
 
   const RecipeDetailModel({
@@ -41,10 +41,10 @@ class RecipeDetailModel extends Equatable {
       totalServing: recipe['yield'] as num?,
       totalTime: recipe['totalTime'] as num?,
       calories: recipe['calories'] as num?,
-      dietLabels: recipe['dietLabels'] as List<String>?,
-      healthLabels: recipe['healthLabels'] as List<String>?,
-      cautionLabels: recipe['cautions'] as List<String>?,
-      ingredients: recipe['ingredientLines'] as List<String>?,
+      dietLabels: recipe['dietLabels'] as List?,
+      healthLabels: recipe['healthLabels'] as List?,
+      cautionLabels: recipe['cautions'] as List?,
+      ingredients: recipe['ingredientLines'] as List?,
       totalNutrients: NutrientsModel.fromJsonRecipe(
         recipe['totalNutrients'] as Map<String, dynamic>,
       ),
@@ -77,10 +77,10 @@ class RecipeDetailModel extends Equatable {
       totalServing: totalServing?.toInt() ?? 0,
       totalTime: totalTime?.toInt() ?? 0,
       calories: calories?.toDouble() ?? 0,
-      dietLabels: dietLabels ?? <String>[],
-      healthLabels: healthLabels ?? <String>[],
-      cautionLabels: cautionLabels ?? <String>[],
-      ingredients: ingredients ?? <String>[],
+      dietLabels: dietLabels ?? [],
+      healthLabels: healthLabels ?? [],
+      cautionLabels: cautionLabels ?? [],
+      ingredients: ingredients ?? [],
       totalNutrients: totalNutrients?.toEntity() ??
           const NutrientsEntity(
             calories: 0,

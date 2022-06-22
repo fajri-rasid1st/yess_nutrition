@@ -138,7 +138,7 @@ class Utilities {
           ),
         );
       },
-      transitionDuration: const Duration(milliseconds: 300),
+      transitionDuration: const Duration(milliseconds: 250),
       pageBuilder: (context, animStart, animEnd) => const SizedBox(),
     );
   }

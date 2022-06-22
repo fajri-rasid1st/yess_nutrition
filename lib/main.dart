@@ -256,8 +256,7 @@ class MyApp extends StatelessWidget {
 
               return MaterialPageRoute(
                 builder: (_) => RecipeDetailPage(
-                  uid: arguments.uid,
-                  recipeId: arguments.recipeId,
+                  recipe: arguments.recipe,
                   heroTag: arguments.heroTag,
                 ),
                 settings: settings,

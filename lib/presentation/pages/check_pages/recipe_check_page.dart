@@ -174,8 +174,7 @@ class _RecipeCheckPageState extends State<RecipeCheckPage> {
                 context,
                 recipeDetailRoute,
                 arguments: RecipeDetailPageArgs(
-                  widget.uid,
-                  recipe.recipeId,
+                  recipeWithUid,
                   'recipe:${recipe.recipeId}',
                 ),
               );

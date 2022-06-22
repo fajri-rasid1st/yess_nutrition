@@ -70,7 +70,7 @@ class RecipeListTile extends StatelessWidget {
                           const SizedBox(width: 4),
                           Expanded(
                             child: Text(
-                              '${recipe.totalServing.toString()} Porsi',
+                              '${recipe.totalServing} Porsi',
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context)
                                   .textTheme
@@ -93,7 +93,7 @@ class RecipeListTile extends StatelessWidget {
                             child: Text(
                               recipe.totalTime == 0
                                   ? 'Tidak ditentukan'
-                                  : '${recipe.totalTime.toString()} Menit',
+                                  : '${recipe.totalTime} Menit',
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context)
                                   .textTheme
@@ -117,11 +117,7 @@ class RecipeListTile extends StatelessWidget {
               onTap: () => Navigator.pushNamed(
                 context,
                 recipeDetailRoute,
-                arguments: RecipeDetailPageArgs(
-                  recipe.uid!,
-                  recipe.recipeId,
-                  heroTag,
-                ),
+                arguments: RecipeDetailPageArgs(recipe, heroTag),
               ),
             ),
           ),
