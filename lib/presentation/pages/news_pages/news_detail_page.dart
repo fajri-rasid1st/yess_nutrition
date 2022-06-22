@@ -134,7 +134,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                             fontWeight: FontWeight.bold,
                           ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 8),
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,
@@ -169,7 +169,6 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
               height: MediaQuery.of(context).size.height / 2 - 24,
               child: SingleChildScrollView(
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     Padding(
@@ -197,7 +196,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
                       child: SizedBox(
                         width: double.infinity,
                         child: OutlinedButton.icon(

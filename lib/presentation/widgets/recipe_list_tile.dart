@@ -54,7 +54,7 @@ class RecipeListTile extends StatelessWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        '${recipe.calories.toStringAsFixed(0)}Kkal',
+                        '${recipe.calories.toStringAsFixed(0)} Kkal',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(color: primaryColor),

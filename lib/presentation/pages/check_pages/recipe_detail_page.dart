@@ -5,6 +5,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/keys.dart';
+import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/recipe_detail_entity.dart';
 import 'package:yess_nutrition/domain/entities/recipe_entity.dart';
@@ -47,7 +48,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
       body: Consumer<GetRecipeDetailNotifier>(
         builder: (context, detailNotifier, child) {
           if (detailNotifier.state == RequestState.success) {
-            return _buildDetailPage(detailNotifier.recipe);
+            return _buildDetailPage(context, detailNotifier.recipe);
           }
 
           if (detailNotifier.state == RequestState.error) {
@@ -63,7 +64,10 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
     );
   }
 
-  NestedScrollView _buildDetailPage(RecipeDetailEntity recipeDetail) {
+  NestedScrollView _buildDetailPage(
+    BuildContext context,
+    RecipeDetailEntity recipeDetail,
+  ) {
     return NestedScrollView(
       headerSliverBuilder: (context, innerBoxIsScrolled) {
         return <Widget>[
@@ -105,7 +109,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                         gradient: LinearGradient(
                           begin: Alignment.bottomCenter,
                           end: Alignment.topCenter,
-                          colors: [Colors.black87, Colors.black38],
+                          colors: [Colors.black, Colors.black26],
                         ),
                       ),
                     ),
@@ -117,207 +121,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
           ),
         ];
       },
-      body: _buildBody(recipeDetail),
-    );
-  }
-
-  ClipRRect _buildBody(RecipeDetailEntity recipeDetail) {
-    return ClipRRect(
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-      child: Container(
-        color: primaryBackgroundColor,
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
-                child: Text(
-                  'Nutrition Facts',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline6!
-                      .copyWith(fontWeight: FontWeight.bold),
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Column(
-                    children: <Text>[
-                      Text(
-                        '${recipeDetail.calories.toStringAsFixed(0)}Kkal',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline5!
-                            .copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        'Total Kalori',
-                        style: Theme.of(context).textTheme.bodyText1,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 56,
-                    child: VerticalDivider(),
-                  ),
-                  Column(
-                    children: <Text>[
-                      Text(
-                        '${recipeDetail.totalNutrients.carbohydrate.toStringAsFixed(0)}g',
-                        style: Theme.of(context)
-                            .textTheme
-                            .headline5!
-                            .copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      Text(
-                        'Karbohidrat',
-                        style: Theme.of(context).textTheme.bodyText1,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 20, 16, 20),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: primaryBackgroundColor,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: <BoxShadow>[
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 16,
-                        spreadRadius: 1,
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Column>[
-                        Column(
-                          children: <Text>[
-                            Text(
-                              '${recipeDetail.totalNutrients.protein.toStringAsFixed(0)}g',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline6!
-                                  .copyWith(fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              'Protein',
-                              style: Theme.of(context).textTheme.bodyText2,
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: <Text>[
-                            Text(
-                              '${recipeDetail.totalNutrients.fat.toStringAsFixed(0)}g',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline6!
-                                  .copyWith(fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              'Lemak',
-                              style: Theme.of(context).textTheme.bodyText2,
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: <Text>[
-                            Text(
-                              '${recipeDetail.totalNutrients.fiber.toStringAsFixed(0)}g',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline6!
-                                  .copyWith(fontWeight: FontWeight.bold),
-                            ),
-                            Text(
-                              'Serat',
-                              style: Theme.of(context).textTheme.bodyText2,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Padding _buildFlexibleSpaceTitle(
-    BuildContext context,
-    RecipeDetailEntity recipeDetail,
-  ) {
-    final textStyle = Theme.of(context).textTheme.headline4!.copyWith(
-          color: primaryBackgroundColor,
-          fontSize: 28,
-          fontWeight: FontWeight.bold,
-        );
-
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            recipeDetail.label,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: textStyle,
-          ),
-          RichText(
-            text: TextSpan(
-              style: textStyle,
-              children: <TextSpan>[
-                TextSpan(
-                  text: (recipeDetail.calories / recipeDetail.totalServing)
-                      .toStringAsFixed(0),
-                ),
-                const TextSpan(
-                  text: 'Kkal/porsi',
-                  style: TextStyle(fontSize: 14),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 12),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: <Widget>[
-              CustomChip(
-                label: '${recipeDetail.totalServing} Porsi',
-                labelColor: primaryBackgroundColor,
-                backgroundColor: secondaryColor.withOpacity(0.5),
-                icon: MdiIcons.bowlMixOutline,
-                iconColor: primaryBackgroundColor,
-              ),
-              CustomChip(
-                label: recipeDetail.totalTime == 0
-                    ? 'Tidak ditentukan'
-                    : '${recipeDetail.totalTime} Menit',
-                labelColor: primaryBackgroundColor,
-                backgroundColor: secondaryColor.withOpacity(0.5),
-                icon: Icons.access_time_rounded,
-                iconColor: primaryBackgroundColor,
-              ),
-            ],
-          ),
-        ],
-      ),
+      body: _buildBody(context, recipeDetail),
     );
   }
 
@@ -361,6 +165,316 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
           tooltip: 'Bookmark',
         );
       },
+    );
+  }
+
+  Padding _buildFlexibleSpaceTitle(
+    BuildContext context,
+    RecipeDetailEntity recipeDetail,
+  ) {
+    final textStyle = Theme.of(context).textTheme.headline4!.copyWith(
+          color: primaryBackgroundColor,
+          fontSize: 28,
+          fontWeight: FontWeight.bold,
+        );
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            recipeDetail.label,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: textStyle,
+          ),
+          RichText(
+            text: TextSpan(
+              style: textStyle,
+              children: <TextSpan>[
+                TextSpan(
+                  text: (recipeDetail.calories / recipeDetail.totalServing)
+                      .toStringAsFixed(0),
+                ),
+                const TextSpan(
+                  text: 'Kkal/porsi',
+                  style: TextStyle(fontSize: 14),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: <Widget>[
+              CustomChip(
+                label: '${recipeDetail.totalServing} Porsi',
+                labelColor: primaryBackgroundColor,
+                backgroundColor: secondaryColor.withOpacity(0.5),
+                icon: MdiIcons.bowlMixOutline,
+                iconColor: primaryBackgroundColor,
+              ),
+              CustomChip(
+                label: recipeDetail.totalTime == 0
+                    ? 'Tidak ditentukan'
+                    : '${recipeDetail.totalTime} Menit',
+                labelColor: primaryBackgroundColor,
+                backgroundColor: secondaryColor.withOpacity(0.5),
+                icon: Icons.access_time_rounded,
+                iconColor: primaryBackgroundColor,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  ClipRRect _buildBody(BuildContext context, RecipeDetailEntity recipeDetail) {
+    return ClipRRect(
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+      child: Container(
+        color: primaryBackgroundColor,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
+                child: Text(
+                  'Nutrition Facts',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline6!
+                      .copyWith(fontWeight: FontWeight.bold),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  _buildNutrientDetailLarge(
+                    context,
+                    '${recipeDetail.calories.toStringAsFixed(0)}Kkal',
+                    'Total Kalori',
+                  ),
+                  const SizedBox(
+                    height: 56,
+                    child: VerticalDivider(),
+                  ),
+                  _buildNutrientDetailLarge(
+                    context,
+                    '${recipeDetail.totalNutrients.carbohydrate.toStringAsFixed(0)}g',
+                    'Karbohidrat',
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 20, 16, 20),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: primaryBackgroundColor,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.08),
+                        blurRadius: 8,
+                        spreadRadius: 2,
+                      ),
+                    ],
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Column>[
+                        _buildNutrientDetailSmall(
+                          context,
+                          '${recipeDetail.totalNutrients.protein.toStringAsFixed(0)}g',
+                          'Protein',
+                        ),
+                        _buildNutrientDetailSmall(
+                          context,
+                          '${recipeDetail.totalNutrients.fat.toStringAsFixed(0)}g',
+                          'Lemak',
+                        ),
+                        _buildNutrientDetailSmall(
+                          context,
+                          '${recipeDetail.totalNutrients.fiber.toStringAsFixed(0)}g',
+                          'Lemak',
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              _buildLabelsSection(
+                context,
+                recipeDetail.healthLabels,
+                'Kategori kesehatan',
+                primaryColor,
+                primaryColor,
+                secondaryColor,
+              ),
+              _buildLabelsSection(
+                context,
+                recipeDetail.dietLabels,
+                'Kategori diet',
+                const Color(0XFF89BD16),
+                const Color(0XFF89BD16),
+                const Color(0XFF89BD16).withOpacity(0.2),
+              ),
+              _buildLabelsSection(
+                context,
+                recipeDetail.cautionLabels,
+                'Tidak dianjurkan untuk',
+                errorColor,
+                errorColor,
+                errorColor.withOpacity(0.2),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: Text(
+                  'Bahan-bahan',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline6!
+                      .copyWith(fontWeight: FontWeight.bold),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                child: ListView(
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  padding: const EdgeInsets.all(0),
+                  children: List<Padding>.generate(
+                    recipeDetail.ingredients.length,
+                    (index) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: Text(recipeDetail.ingredients[index]),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+                child: Text(
+                  'Cara Pembuatan',
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline6!
+                      .copyWith(fontWeight: FontWeight.bold),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: () => Navigator.pushNamed(
+                      context,
+                      webviewRoute,
+                      arguments: recipeDetail.url,
+                    ),
+                    icon: const Icon(Icons.open_in_new_rounded),
+                    label: const Text('Lihat Selengkapnya'),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Column _buildNutrientDetailLarge(
+    BuildContext context,
+    String title,
+    String subtitle,
+  ) {
+    return Column(
+      children: <Text>[
+        Text(
+          title,
+          style: Theme.of(context)
+              .textTheme
+              .headline5!
+              .copyWith(fontWeight: FontWeight.bold),
+        ),
+        Text(
+          subtitle,
+          style: Theme.of(context).textTheme.bodyText1,
+        ),
+      ],
+    );
+  }
+
+  Column _buildNutrientDetailSmall(
+    BuildContext context,
+    String title,
+    String subtitle,
+  ) {
+    return Column(
+      children: <Text>[
+        Text(
+          title,
+          style: Theme.of(context)
+              .textTheme
+              .headline6!
+              .copyWith(fontWeight: FontWeight.bold),
+        ),
+        Text(
+          subtitle,
+          style: Theme.of(context).textTheme.bodyText2,
+        ),
+      ],
+    );
+  }
+
+  Padding _buildLabelsSection(
+    BuildContext context,
+    List labels,
+    String title,
+    Color titleColor,
+    Color chipLabelColor,
+    Color chipBackgroundColor,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            title,
+            style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                  color: titleColor,
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: List<CustomChip>.generate(
+              labels.length,
+              (index) {
+                return CustomChip(
+                  label: labels[index],
+                  labelColor: chipLabelColor,
+                  backgroundColor: chipBackgroundColor,
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 
