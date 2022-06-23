@@ -22,6 +22,22 @@
           }
         },
         {
+          "client_id": "82449681129-p7groqk7tdk7qopggd4q826c0gr7v0oi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.yess_nutrition",
+            "certificate_hash": "b0f3ed69c90c4767fcaaf9e43471c4cc1b9bbd2b"
+          }
+        },
+        {
+          "client_id": "82449681129-tn71q40ueinsuo4q3p6pve8uhr163d7i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.yess_nutrition",
+            "certificate_hash": "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+          }
+        },
+        {
           "client_id": "82449681129-1h6b6al7i9lqlf10mchongma28bj90f2.apps.googleusercontent.com",
           "client_type": 3
         }

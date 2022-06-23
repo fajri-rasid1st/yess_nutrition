@@ -20,6 +20,11 @@ class FirestoreFailure extends Failure {
   const FirestoreFailure(String message) : super(message);
 }
 
+/// A class that will be returned when a **Firestore Failure** occurs.
+class StorageFailure extends Failure {
+  const StorageFailure(String message) : super(message);
+}
+
 /// A class that will be returned when a **Database Failure** occurs.
 class DatabaseFailure extends Failure {
   const DatabaseFailure(String message) : super(message);

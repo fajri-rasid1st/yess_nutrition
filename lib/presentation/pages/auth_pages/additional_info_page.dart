@@ -5,11 +5,11 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
+import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
-import 'package:yess_nutrition/presentation/providers/user_notifiers/firestore_notifiers/read_user_data_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user_notifiers/firestore_notifiers/update_user_data_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_firestore_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
 class AdditionalInfoPage extends StatefulWidget {
@@ -29,21 +29,21 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
 
   @override
   void initState() {
+    super.initState();
+
     _formKey = GlobalKey<FormBuilderState>();
     _ageController = TextEditingController();
     _weightController = TextEditingController();
     _heightController = TextEditingController();
-
-    super.initState();
   }
 
   @override
   void dispose() {
+    super.dispose();
+
     _ageController.dispose();
     _weightController.dispose();
     _heightController.dispose();
-
-    super.dispose();
   }
 
   @override
@@ -52,8 +52,8 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
       onWillPop: () {
         Navigator.pushNamedAndRemoveUntil(
           context,
-          homeRoute,
-          ((route) => false),
+          mainRoute,
+          (route) => false,
           arguments: widget.user,
         );
 
@@ -78,15 +78,13 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
                       onPressed: () {
                         Navigator.pushNamedAndRemoveUntil(
                           context,
-                          homeRoute,
-                          ((route) => false),
+                          mainRoute,
+                          (route) => false,
                           arguments: widget.user,
                         );
                       },
-                      icon: const Icon(
-                        Icons.close_rounded,
-                        color: primaryColor,
-                      ),
+                      icon: const Icon(Icons.close_rounded),
+                      color: primaryColor,
                       tooltip: 'Close',
                     ),
                   ),
@@ -266,8 +264,7 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
 
     if (_formKey.currentState!.validate()) {
       final value = _formKey.currentState!.value;
-      final readUserDataNotifier = context.read<ReadUserDataNotifier>();
-      final updateUserDataNotifier = context.read<UpdateUserDataNotifier>();
+      final userDataNotifier = context.read<UserFirestoreNotifier>();
 
       // show loading when on process
       showDialog(
@@ -277,43 +274,41 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
       );
 
       // read user data
-      await readUserDataNotifier.readUserData(widget.user.uid);
+      await userDataNotifier.readUserData(widget.user.uid);
 
-      if (!mounted) return;
-
-      if (readUserDataNotifier.state == UserState.success) {
+      if (userDataNotifier.state == UserState.success) {
         // get user data
-        final userData = readUserDataNotifier.userData;
+        final userData = userDataNotifier.userData;
 
-        // update user data
-        await updateUserDataNotifier.updateUserData(
-          userData.copyWith(
-            gender: value['gender'],
-            age: int.tryParse(value['age']),
-            weight: int.tryParse(value['weight']),
-            height: int.tryParse(value['height']),
-          ),
+        // updated user data
+        final updatedUserData = userData.copyWith(
+          gender: value['gender'],
+          age: int.tryParse(value['age']),
+          weight: int.tryParse(value['weight']),
+          height: int.tryParse(value['height']),
         );
 
-        if (!mounted) return;
+        // update user data on firestore
+        await userDataNotifier.updateUserData(updatedUserData);
 
-        // close loading indicator
-        Navigator.pop(context);
+        if (userDataNotifier.state == UserState.success) {
+          // close loading indicator
+          navigatorKey.currentState!.pop();
 
-        // navigate to home page
-        Navigator.pushNamedAndRemoveUntil(
-          context,
-          homeRoute,
-          ((route) => false),
-          arguments: widget.user,
-        );
+          // navigate to main page
+          navigatorKey.currentState!.pushNamedAndRemoveUntil(
+            mainRoute,
+            (route) => false,
+            arguments: widget.user,
+          );
+        }
       } else {
-        final snackBar = Utilities.createSnackBar(readUserDataNotifier.error);
+        final snackBar = Utilities.createSnackBar(userDataNotifier.error);
 
         // close loading indicator
-        Navigator.pop(context);
+        navigatorKey.currentState!.pop();
 
-        ScaffoldMessenger.of(context)
+        scaffoldMessengerKey.currentState!
           ..hideCurrentSnackBar()
           ..showSnackBar(snackBar);
       }

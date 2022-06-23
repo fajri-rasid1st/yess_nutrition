@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/io_client.dart';
+import 'package:yess_nutrition/common/utils/constants.dart';
 
 class HttpSslPinning {
   static http.Client? _clientInstance;
@@ -23,10 +24,15 @@ class HttpSslPinning {
     final securityContext = SecurityContext();
 
     try {
-      final sslCert =
-          await rootBundle.load('certificates/sni-cloudflaressl-com.pem');
+      // certificate for News API
+      final sslCert1 = await rootBundle.load(certificates['newsApi']!);
 
-      securityContext.setTrustedCertificatesBytes(sslCert.buffer.asInt8List());
+      securityContext.setTrustedCertificatesBytes(sslCert1.buffer.asInt8List());
+
+      // certificate for Food, Product, and Recipe API
+      final sslCert2 = await rootBundle.load(certificates['nutritionApi']!);
+
+      securityContext.setTrustedCertificatesBytes(sslCert2.buffer.asInt8List());
     } on TlsException catch (e) {
       log('Error: ${e.message}');
 

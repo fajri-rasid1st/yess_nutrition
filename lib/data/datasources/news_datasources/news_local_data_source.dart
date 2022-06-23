@@ -1,37 +1,39 @@
 import 'package:yess_nutrition/common/utils/exception.dart';
-import 'package:yess_nutrition/data/datasources/databases/news_database.dart';
+import 'package:yess_nutrition/data/datasources/database/database_helper.dart';
 import 'package:yess_nutrition/data/models/news_models/news_table.dart';
 
 abstract class NewsLocalDataSource {
-  Future<String> createBookmark(NewsTable news);
+  Future<String> createNewsBookmark(NewsTable news);
 
-  Future<List<NewsTable>> getBookmarks();
+  Future<List<NewsTable>> getNewsBookmarks(String uid);
 
-  Future<bool> isBookmarkExist(NewsTable news);
+  Future<String> deleteNewsBookmark(NewsTable news);
 
-  Future<String> deleteBookmark(NewsTable news);
+  Future<String> clearNewsBookmarks(String uid);
+
+  Future<bool> isNewsBookmarkExist(NewsTable news);
 }
 
 class NewsLocalDataSourceImpl implements NewsLocalDataSource {
-  final NewsDatabase newsDatabase;
+  final DatabaseHelper databaseHelper;
 
-  NewsLocalDataSourceImpl({required this.newsDatabase});
+  NewsLocalDataSourceImpl({required this.databaseHelper});
 
   @override
-  Future<String> createBookmark(NewsTable news) async {
+  Future<String> createNewsBookmark(NewsTable news) async {
     try {
-      await newsDatabase.createBookmark(news);
+      await databaseHelper.createNewsBookmark(news);
 
-      return 'Berita ditambahkan ke Bookmarks.';
+      return 'Artikel ditambahkan ke Bookmarks.';
     } catch (e) {
       throw DatabaseException(e.toString());
     }
   }
 
   @override
-  Future<List<NewsTable>> getBookmarks() async {
+  Future<List<NewsTable>> getNewsBookmarks(String uid) async {
     try {
-      final bookmarks = await newsDatabase.getBookmarks();
+      final bookmarks = await databaseHelper.getNewsBookmarks(uid);
 
       return bookmarks;
     } catch (e) {
@@ -40,22 +42,33 @@ class NewsLocalDataSourceImpl implements NewsLocalDataSource {
   }
 
   @override
-  Future<bool> isBookmarkExist(NewsTable news) async {
+  Future<String> deleteNewsBookmark(NewsTable news) async {
     try {
-      final isExist = await newsDatabase.isBookmarkExist(news);
+      await databaseHelper.deleteNewsBookmark(news);
 
-      return isExist;
+      return 'Artikel dihapus dari Bookmarks.';
     } catch (e) {
       throw DatabaseException(e.toString());
     }
   }
 
   @override
-  Future<String> deleteBookmark(NewsTable news) async {
+  Future<String> clearNewsBookmarks(String uid) async {
     try {
-      await newsDatabase.deleteBookmark(news);
+      await databaseHelper.clearNewsBookmarks(uid);
 
-      return 'Berita dihapus dari Bookmarks.';
+      return 'Semua artikel berhasil dihapus.';
+    } catch (e) {
+      throw DatabaseException(e.toString());
+    }
+  }
+
+  @override
+  Future<bool> isNewsBookmarkExist(NewsTable news) async {
+    try {
+      final isExist = await databaseHelper.isNewsBookmarkExist(news);
+
+      return isExist;
     } catch (e) {
       throw DatabaseException(e.toString());
     }

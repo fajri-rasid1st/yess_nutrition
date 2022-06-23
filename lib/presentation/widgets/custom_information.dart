@@ -32,8 +32,12 @@ class CustomInformation extends StatelessWidget {
             Text(
               title,
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.headline5,
+              style: Theme.of(context)
+                  .textTheme
+                  .headline6!
+                  .copyWith(fontWeight: FontWeight.bold),
             ),
+            const SizedBox(height: 4),
             Text(
               subtitle,
               textAlign: TextAlign.center,

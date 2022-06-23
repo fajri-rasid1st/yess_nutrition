@@ -9,6 +9,7 @@ class UserDataEntity extends Equatable {
   final int age;
   final int weight;
   final int height;
+  final String bio;
 
   const UserDataEntity({
     required this.uid,
@@ -19,6 +20,7 @@ class UserDataEntity extends Equatable {
     required this.age,
     required this.weight,
     required this.height,
+    required this.bio,
   });
 
   UserDataEntity copyWith({
@@ -30,6 +32,7 @@ class UserDataEntity extends Equatable {
     int? age,
     int? weight,
     int? height,
+    String? bio,
   }) {
     return UserDataEntity(
       uid: uid ?? this.uid,
@@ -40,6 +43,7 @@ class UserDataEntity extends Equatable {
       age: age ?? this.age,
       weight: weight ?? this.weight,
       height: height ?? this.height,
+      bio: bio ?? this.bio,
     );
   }
 
@@ -53,5 +57,6 @@ class UserDataEntity extends Equatable {
         age,
         weight,
         height,
+        bio,
       ];
 }

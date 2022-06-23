@@ -6,14 +6,14 @@ import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
+import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
-import 'package:yess_nutrition/presentation/providers/input_password_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user_notifiers/auth_notifiers/sign_in_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user_notifiers/auth_notifiers/sign_in_with_google_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user_notifiers/firestore_notifiers/create_user_data_notifier.dart';
-import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
+import 'package:yess_nutrition/presentation/providers/common_notifiers/input_password_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/user_auth_notifiers/user_auth_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_firestore_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/clickable_text.dart';
+import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -29,19 +29,19 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   void initState() {
+    super.initState();
+
     _formKey = GlobalKey<FormBuilderState>();
     _emailController = TextEditingController();
     _passwordController = TextEditingController();
-
-    super.initState();
   }
 
   @override
   void dispose() {
+    super.dispose();
+
     _emailController.dispose();
     _passwordController.dispose();
-
-    super.dispose();
   }
 
   @override
@@ -228,7 +228,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (_formKey.currentState!.validate()) {
       final value = _formKey.currentState!.value;
-      final signInNotifier = context.read<SignInNotifier>();
+      final authNotifier = context.read<UserAuthNotifier>();
 
       // show loading when sign in is currently on process
       showDialog(
@@ -238,26 +238,27 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       // sign in process
-      await signInNotifier.signIn(value['email'], value['password']);
+      await authNotifier.signIn(value['email'], value['password']);
 
-      if (!mounted) return;
-
-      if (signInNotifier.state == UserState.success) {
+      if (authNotifier.state == UserState.success) {
         // get user
-        final user = signInNotifier.user;
+        final user = authNotifier.user;
 
         // close the loading indicator
-        Navigator.pop(context);
+        navigatorKey.currentState!.pop();
 
-        // navigate to home page
-        Navigator.pushReplacementNamed(context, homeRoute, arguments: user);
+        // navigate to main page
+        navigatorKey.currentState!.pushReplacementNamed(
+          mainRoute,
+          arguments: user,
+        );
       } else {
-        final snackBar = Utilities.createSnackBar(signInNotifier.error);
+        final snackBar = Utilities.createSnackBar(authNotifier.error);
 
         // close the loading indicator
-        Navigator.pop(context);
+        navigatorKey.currentState!.pop();
 
-        ScaffoldMessenger.of(context)
+        scaffoldMessengerKey.currentState!
           ..hideCurrentSnackBar()
           ..showSnackBar(snackBar);
       }
@@ -265,33 +266,49 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _onPressedGoogleSignInButton(BuildContext context) async {
-    final googleSignInNotifier = context.read<SignInWithGoogleNotifier>();
-    final createUserDataNotifier = context.read<CreateUserDataNotifier>();
+    final authNotifier = context.read<UserAuthNotifier>();
+    final userDataNotifier = context.read<UserFirestoreNotifier>();
 
-    await googleSignInNotifier.signInWithGoogle();
+    await authNotifier.signInWithGoogle();
 
-    if (!mounted) return;
+    if (authNotifier.state == UserState.error) {
+      final snackBar = Utilities.createSnackBar(authNotifier.error);
 
-    if (googleSignInNotifier.state == UserState.success) {
-      // get user
-      final user = googleSignInNotifier.user;
-
-      // get user data
-      final userData = user.toUserData();
-
-      // craete user data when sign in successfully
-      await createUserDataNotifier.createUserData(userData);
-
-      if (!mounted) return;
-
-      // navigate to home page
-      Navigator.pushReplacementNamed(context, homeRoute, arguments: user);
-    } else {
-      final snackBar = Utilities.createSnackBar(googleSignInNotifier.error);
-
-      ScaffoldMessenger.of(context)
+      scaffoldMessengerKey.currentState!
         ..hideCurrentSnackBar()
         ..showSnackBar(snackBar);
+    }
+
+    // get user
+    final user = authNotifier.userFromGoogle;
+
+    if (user != null) {
+      // first, check if this user already in database
+      await userDataNotifier.getUserStatus(user.uid);
+
+      if (userDataNotifier.state == UserState.success) {
+        if (userDataNotifier.isNewUser) {
+          // convert user entity to user data entity
+          final userData = user.toUserData();
+
+          // craete user data
+          await userDataNotifier.createUserData(userData);
+
+          if (userDataNotifier.state == UserState.success) {
+            // navigate to main page
+            navigatorKey.currentState!.pushReplacementNamed(
+              mainRoute,
+              arguments: user,
+            );
+          }
+        } else {
+          // navigate to main page
+          navigatorKey.currentState!.pushReplacementNamed(
+            mainRoute,
+            arguments: user,
+          );
+        }
+      }
     }
   }
 }

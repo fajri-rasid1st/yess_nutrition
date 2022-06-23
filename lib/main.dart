@@ -3,17 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-import 'package:yess_nutrition/presentation/providers/fab_notifier.dart';
 
 import 'common/styles/styles.dart';
 import 'common/utils/http_ssl_pinning.dart';
+import 'common/utils/keys.dart';
 import 'common/utils/routes.dart';
-import 'domain/entities/user_entity.dart';
-import 'presentation/pages/pages.dart';
-import 'presentation/providers/providers.dart';
-
+import 'domain/entities/entities.dart';
 import 'firebase_options.dart';
 import 'injection.dart' as di;
+import 'presentation/pages/pages.dart';
+import 'presentation/providers/providers.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -54,40 +53,31 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<GetUserNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<SignInNotifier>(),
+          create: (_) => di.locator<UserAuthNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<SignInWithGoogleNotifier>(),
+          create: (_) => di.locator<UserFirestoreNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<SignUpNotifier>(),
+          create: (_) => di.locator<UserStorageNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<SignOutNotifier>(),
+          create: (_) => di.locator<SearchFoodNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<ResetPasswordNotifier>(),
+          create: (_) => di.locator<SearchProductNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<DeleteUserNotifier>(),
+          create: (_) => di.locator<FoodHistoryNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<CreateUserDataNotifier>(),
+          create: (_) => di.locator<SearchRecipesNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<ReadUserDataNotifier>(),
+          create: (_) => di.locator<GetRecipeDetailNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<UpdateUserDataNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<DeleteUserDataNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<BookmarkNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<GetBookmarksNotifier>(),
+          create: (_) => di.locator<RecipeBookmarkNotifier>(),
         ),
         ChangeNotifierProvider(
           create: (_) => di.locator<GetNewsNotifier>(),
@@ -96,10 +86,19 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<SearchNewsNotifier>(),
         ),
         ChangeNotifierProvider(
+          create: (_) => di.locator<NewsBookmarkNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => BottomNavigationBarNotifier(),
+        ),
+        ChangeNotifierProvider(
           create: (_) => InputPasswordNotifier(),
         ),
         ChangeNotifierProvider(
-          create: (_) => FabNotifier(),
+          create: (_) => NewsFabNotifier(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => NewsWebViewNotifier(),
         ),
       ],
       child: MaterialApp(
@@ -118,23 +117,38 @@ class MyApp extends StatelessWidget {
           outlinedButtonTheme: OutlinedButtonThemeData(
             style: outlinedButtonStyle,
           ),
+          textButtonTheme: TextButtonThemeData(
+            style: textButtonStyle,
+          ),
+          pageTransitionsTheme: const PageTransitionsTheme(
+            builders: {
+              TargetPlatform.android: FadeUpwardsPageTransitionsBuilder()
+            },
+          ),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
+        navigatorKey: navigatorKey,
+        scaffoldMessengerKey: scaffoldMessengerKey,
+        navigatorObservers: [routeObserver],
         home: const Wrapper(),
         onGenerateRoute: (settings) {
           switch (settings.name) {
+            // -------------- Auth and common routes and pages ---------------
             case loginRoute:
               return MaterialPageRoute(
                 builder: (_) => const LoginPage(),
               );
+
             case registerRoute:
               return MaterialPageRoute(
                 builder: (_) => const RegisterPage(),
               );
+
             case forgotPasswordRoute:
               return MaterialPageRoute(
                 builder: (_) => const ForgotPasswordPage(),
               );
+
             case additionalInfoRoute:
               final user = settings.arguments as UserEntity;
 
@@ -142,21 +156,120 @@ class MyApp extends StatelessWidget {
                 builder: (_) => AdditionalInfoPage(user: user),
                 settings: settings,
               );
-            case homeRoute:
+
+            case mainRoute:
               final user = settings.arguments as UserEntity;
 
               return MaterialPageRoute(
-                builder: (_) => HomePage(user: user),
+                builder: (_) => MainPage(user: user),
                 settings: settings,
               );
+
+            case webviewRoute:
+              final url = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => WebViewPage(url: url),
+                settings: settings,
+              );
+
+            // -------------- Profile routes and pages ---------------
+            case profileRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => ProfilePage(uid: uid),
+                settings: settings,
+              );
+
+            case updateProfileRoute:
+              final userData = settings.arguments as UserDataEntity;
+
+              return MaterialPageRoute(
+                builder: (_) => UpdateProfilePage(userData: userData),
+                settings: settings,
+              );
+
+            // -------------- NutriNews routes and pages ---------------
             case newsDetailRoute:
+              final arguments = settings.arguments as NewsDetailPageArgs;
+
               return MaterialPageRoute(
-                builder: (_) => const NewsDetailPage(),
+                builder: (_) => NewsDetailPage(
+                  news: arguments.news,
+                  heroTag: arguments.heroTag,
+                ),
+                settings: settings,
               );
+
             case newsBookmarksRoute:
+              final uid = settings.arguments as String;
+
               return MaterialPageRoute(
-                builder: (_) => const NewsBookmarksPage(),
+                builder: (_) => NewsBookmarksPage(uid: uid),
+                settings: settings,
               );
+
+            // -------------- NutriCheck routes and pages ---------------
+            case checkRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => CheckPage(uid: uid),
+                settings: settings,
+              );
+
+            case foodCheckRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => FoodCheckPage(uid: uid),
+                settings: settings,
+              );
+
+            case productCheckRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => ProductCheckPage(uid: uid),
+                settings: settings,
+              );
+
+            case recipeCheckRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => RecipeCheckPage(uid: uid),
+                settings: settings,
+              );
+
+            case foodAndProductCheckHistoryRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => FoodAndProductCheckHistoryPage(uid: uid),
+                settings: settings,
+              );
+
+            case recipeDetailRoute:
+              final arguments = settings.arguments as RecipeDetailPageArgs;
+
+              return MaterialPageRoute(
+                builder: (_) => RecipeDetailPage(
+                  recipe: arguments.recipe,
+                  heroTag: arguments.heroTag,
+                ),
+                settings: settings,
+              );
+
+            case recipeBookmarksRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => RecipeBookmarksPage(uid: uid),
+                settings: settings,
+              );
+
             default:
               return null;
           }

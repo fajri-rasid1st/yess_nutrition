@@ -14,62 +14,96 @@ import 'presentation/providers/providers.dart';
 final locator = GetIt.instance;
 
 void init() {
-  // Auth providers
-  locator.registerFactory(
-    () => GetUserNotifier(getUserUseCase: locator()),
-  );
-  locator.registerFactory(
-    () => SignInNotifier(signInUseCase: locator()),
-  );
-  locator.registerFactory(
-    () => SignInWithGoogleNotifier(signInWithGoogleUseCase: locator()),
-  );
-  locator.registerFactory(
-    () => SignUpNotifier(signUpUseCase: locator()),
-  );
-  locator.registerFactory(
-    () => SignOutNotifier(signOutUseCase: locator()),
-  );
-  locator.registerFactory(
-    () => ResetPasswordNotifier(resetPasswordUseCase: locator()),
-  );
-  locator.registerFactory(
-    () => DeleteUserNotifier(deleteUserUseCase: locator()),
-  );
+  /*
+  * Provider section
+  */
 
-  // Firestore providers
+  // User auth providers
   locator.registerFactory(
-    () => CreateUserDataNotifier(createUserDataUseCase: locator()),
-  );
-  locator.registerFactory(
-    () => ReadUserDataNotifier(readUserDataUseCase: locator()),
-  );
-  locator.registerFactory(
-    () => UpdateUserDataNotifier(updateUserDataUseCase: locator()),
-  );
-  locator.registerFactory(
-    () => DeleteUserDataNotifier(deleteUserDataUseCase: locator()),
-  );
-
-  // News providers
-  locator.registerFactory(
-    () => BookmarkNotifier(
-      createBookmarkUseCase: locator(),
-      deleteBookmarkUseCase: locator(),
-      getBookmarkStatusUseCase: locator(),
+    () => UserAuthNotifier(
+      signInUseCase: locator(),
+      signInWithGoogleUseCase: locator(),
+      signUpUseCase: locator(),
+      resetPasswordUseCase: locator(),
+      signOutUseCase: locator(),
+      deleteUserUseCase: locator(),
     ),
   );
   locator.registerFactory(
-    () => GetBookmarksNotifier(getBookmarksUseCase: locator()),
+    () => GetUserNotifier(getUserUseCase: locator()),
   );
+
+  // User firestore providers
+  locator.registerFactory(
+    () => UserFirestoreNotifier(
+      createUserDataUseCase: locator(),
+      readUserDataUseCase: locator(),
+      updateUserDataUseCase: locator(),
+      deleteUserDataUseCase: locator(),
+      getUserStatusUseCase: locator(),
+    ),
+  );
+
+  // User storage providers
+  locator.registerFactory(
+    () => UserStorageNotifier(uploadProfilePictureUseCase: locator()),
+  );
+
+  // Food providers
+  locator.registerFactory(
+    () => SearchFoodNotifier(searchFoodsUseCase: locator()),
+  );
+  locator.registerFactory(
+    () => SearchProductNotifier(searchFoodsUseCase: locator()),
+  );
+  locator.registerFactory(
+    () => FoodHistoryNotifier(
+      addFoodHistoryUseCase: locator(),
+      getFoodHistoriesUseCase: locator(),
+      deleteFoodHistoryUseCase: locator(),
+      clearFoodHistoriesUseCase: locator(),
+    ),
+  );
+
+  // Recipe providers
+  locator.registerFactory(
+    () => SearchRecipesNotifier(searchRecipesUseCase: locator()),
+  );
+  locator.registerFactory(
+    () => GetRecipeDetailNotifier(getRecipeDetailUseCase: locator()),
+  );
+  locator.registerFactory(
+    () => RecipeBookmarkNotifier(
+      createRecipeBookmarkUseCase: locator(),
+      deleteRecipeBookmarkUseCase: locator(),
+      getRecipeBookmarkStatusUseCase: locator(),
+      getRecipeBookmarksUseCase: locator(),
+      clearRecipeBookmarksUseCase: locator(),
+    ),
+  );
+
+  // News providers
   locator.registerFactory(
     () => GetNewsNotifier(getNewsUseCase: locator()),
   );
   locator.registerFactory(
     () => SearchNewsNotifier(searchNewsUseCase: locator()),
   );
+  locator.registerFactory(
+    () => NewsBookmarkNotifier(
+      createNewsBookmarkUseCase: locator(),
+      deleteNewsBookmarkUseCase: locator(),
+      getNewsBookmarkStatusUseCase: locator(),
+      getNewsBookmarksUseCase: locator(),
+      clearNewsBookmarksUseCase: locator(),
+    ),
+  );
 
-  // Auth usecases
+  /*
+  * Use cases section
+  */
+
+  // User auth usecases
   locator.registerLazySingleton(() => GetUser(locator()));
   locator.registerLazySingleton(() => SignIn(locator()));
   locator.registerLazySingleton(() => SignInWithGoogle(locator()));
@@ -78,27 +112,73 @@ void init() {
   locator.registerLazySingleton(() => ResetPassword(locator()));
   locator.registerLazySingleton(() => DeleteUser(locator()));
 
-  // Firestore usecases
+  // User firestore usecases
   locator.registerLazySingleton(() => CreateUserData(locator()));
   locator.registerLazySingleton(() => ReadUserData(locator()));
   locator.registerLazySingleton(() => UpdateUserData(locator()));
   locator.registerLazySingleton(() => DeleteUserData(locator()));
+  locator.registerLazySingleton(() => GetUserStatus(locator()));
+
+  // User storage usecases
+  locator.registerLazySingleton(() => UploadProfilePicture(locator()));
+
+  // Food usecases
+  locator.registerLazySingleton(() => SearchFoods(locator()));
+  locator.registerLazySingleton(() => AddFoodHistory(locator()));
+  locator.registerLazySingleton(() => GetFoodHistories(locator()));
+  locator.registerLazySingleton(() => DeleteFoodHistory(locator()));
+  locator.registerLazySingleton(() => ClearFoodHistories(locator()));
+
+  // Recipe usecases
+  locator.registerLazySingleton(() => SearchRecipes(locator()));
+  locator.registerLazySingleton(() => GetRecipeDetail(locator()));
+  locator.registerLazySingleton(() => CreateRecipeBookmark(locator()));
+  locator.registerLazySingleton(() => DeleteRecipeBookmark(locator()));
+  locator.registerLazySingleton(() => GetRecipeBookmarkStatus(locator()));
+  locator.registerLazySingleton(() => GetRecipeBookmarks(locator()));
+  locator.registerLazySingleton(() => ClearRecipeBookmarks(locator()));
 
   // News usecases
-  locator.registerLazySingleton(() => CreateBookmark(locator()));
-  locator.registerLazySingleton(() => DeleteBookmark(locator()));
-  locator.registerLazySingleton(() => GetBookmarkStatus(locator()));
-  locator.registerLazySingleton(() => GetBookmarks(locator()));
   locator.registerLazySingleton(() => GetNews(locator()));
   locator.registerLazySingleton(() => SearchNews(locator()));
+  locator.registerLazySingleton(() => CreateNewsBookmark(locator()));
+  locator.registerLazySingleton(() => DeleteNewsBookmark(locator()));
+  locator.registerLazySingleton(() => GetNewsBookmarkStatus(locator()));
+  locator.registerLazySingleton(() => GetNewsBookmarks(locator()));
+  locator.registerLazySingleton(() => ClearNewsBookmarks(locator()));
 
-  // Repositories
+  /*
+  * Repositories section
+  */
+
+  // User repositories
   locator.registerLazySingleton<UserAuthRepository>(
     () => UserAuthRepositoryImpl(userAuthDataSource: locator()),
   );
   locator.registerLazySingleton<UserFirestoreRepository>(
     () => UserFirestoreRepositoryImpl(userFirestoreDataSource: locator()),
   );
+  locator.registerLazySingleton<UserStorageRepository>(
+    () => UserStorageRepositoryImpl(userStorageDataSource: locator()),
+  );
+
+  // Food repositories
+  locator.registerLazySingleton<FoodRepository>(
+    () => FoodRepositoryImpl(
+      foodLocalDataSource: locator(),
+      foodRemoteDataSource: locator(),
+    ),
+  );
+
+  // Recipe repositories
+  locator.registerLazySingleton<RecipeRepository>(
+    () => RecipeRepositoryImpl(
+      recipeLocalDataSource: locator(),
+      recipeRemoteDataSource: locator(),
+    ),
+  );
+
+  // News repositories
   locator.registerLazySingleton<NewsRepository>(
     () => NewsRepositoryImpl(
       newsLocalDataSource: locator(),
@@ -106,7 +186,11 @@ void init() {
     ),
   );
 
-  // Data sources
+  /*
+  * Data sources section
+  */
+
+  // User data sources
   locator.registerLazySingleton<UserAuthDataSource>(
     () => UserAuthDataSourceImpl(
       firebaseAuth: locator(),
@@ -116,15 +200,40 @@ void init() {
   locator.registerLazySingleton<UserFirestoreDataSource>(
     () => UserFirestoreDataSourceImpl(firebaseFirestore: locator()),
   );
+  locator.registerLazySingleton<UserStorageDataSource>(
+    () => UserStorageDataSourceImpl(firebaseStorage: locator()),
+  );
+
+  // Food data sources
+  locator.registerLazySingleton<FoodLocalDataSource>(
+    () => FoodLocalDataSourceImpl(databaseHelper: locator()),
+  );
+  locator.registerLazySingleton<FoodRemoteDataSource>(
+    () => FoodRemoteDataSourceImpl(client: locator()),
+  );
+
+  // Recipe data sources
+  locator.registerLazySingleton<RecipeLocalDataSource>(
+    () => RecipeLocalDataSourceImpl(databaseHelper: locator()),
+  );
+  locator.registerLazySingleton<RecipeRemoteDataSource>(
+    () => RecipeRemoteDataSourceImpl(client: locator()),
+  );
+
+  // News data sources
   locator.registerLazySingleton<NewsLocalDataSource>(
-    () => NewsLocalDataSourceImpl(newsDatabase: locator()),
+    () => NewsLocalDataSourceImpl(databaseHelper: locator()),
   );
   locator.registerLazySingleton<NewsRemoteDataSource>(
     () => NewsRemoteDataSourceImpl(client: locator()),
   );
 
+  /*
+  * Common services section
+  */
+
   // Databases
-  locator.registerLazySingleton<NewsDatabase>(() => NewsDatabase());
+  locator.registerLazySingleton(() => DatabaseHelper());
 
   // Services
   locator.registerLazySingleton(() => FirebaseAuth.instance);

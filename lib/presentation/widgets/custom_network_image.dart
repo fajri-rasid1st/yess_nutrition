@@ -6,9 +6,10 @@ import 'package:yess_nutrition/common/styles/color_scheme.dart';
 class CustomNetworkImage extends StatelessWidget {
   final double? width;
   final double? height;
-  final BoxFit? fit;
+  final BoxFit fit;
   final String imgUrl;
   final double placeHolderSize;
+  final IconData errorIcon;
 
   const CustomNetworkImage({
     Key? key,
@@ -17,6 +18,7 @@ class CustomNetworkImage extends StatelessWidget {
     this.fit = BoxFit.cover,
     required this.imgUrl,
     required this.placeHolderSize,
+    required this.errorIcon,
   }) : super(key: key);
 
   @override
@@ -41,12 +43,13 @@ class CustomNetworkImage extends StatelessWidget {
         );
       },
       errorWidget: (context, url, error) {
-        return Center(
-          child: SizedBox(
-            width: placeHolderSize,
-            height: placeHolderSize,
-            child: const Icon(
-              Icons.motion_photos_off_outlined,
+        return Container(
+          width: width,
+          height: height,
+          color: scaffoldBackgroundColor,
+          child: Center(
+            child: Icon(
+              errorIcon,
               color: secondaryColor,
             ),
           ),

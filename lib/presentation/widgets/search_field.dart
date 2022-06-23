@@ -5,25 +5,34 @@ class SearchField extends StatelessWidget {
   final TextEditingController? controller;
   final String query;
   final String hintText;
+  final Color backgroundColor;
+  final TextInputType textInputType;
+  final VoidCallback? onTap;
   final ValueChanged<String>? onChanged;
+  final ValueSetter<String>? onSubmitted;
 
   const SearchField({
     Key? key,
     this.controller,
     required this.query,
     required this.hintText,
+    this.backgroundColor = secondaryColor,
+    this.textInputType = TextInputType.text,
+    this.onTap,
     this.onChanged,
+    this.onSubmitted,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: secondaryColor,
-        borderRadius: BorderRadius.circular(12),
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(8),
       ),
       child: TextField(
         controller: controller,
+        keyboardType: textInputType,
         textInputAction: TextInputAction.search,
         decoration: InputDecoration(
           border: InputBorder.none,
@@ -36,10 +45,16 @@ class SearchField extends StatelessWidget {
               : IconButton(
                   icon: const Icon(Icons.close_rounded),
                   color: primaryTextColor,
-                  onPressed: () => controller?.clear(),
+                  onPressed: () {
+                    controller?.clear();
+
+                    if (onChanged != null) onChanged!('');
+                  },
                 ),
         ),
+        onTap: onTap,
         onChanged: onChanged,
+        onSubmitted: onSubmitted,
       ),
     );
   }
