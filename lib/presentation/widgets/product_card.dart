@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
+import 'package:yess_nutrition/data/models/shop_models/shop_products.dart';
 
 import '../../common/utils/utils.dart';
 import '../../data/models/models.dart';

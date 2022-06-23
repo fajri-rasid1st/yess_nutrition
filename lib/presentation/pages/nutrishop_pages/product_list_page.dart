@@ -1,10 +1,8 @@
-import 'dart:ffi';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:yess_nutrition/data/models/models.dart';
+import 'package:yess_nutrition/data/models/shop_models/shop_product_list.dart';
 
 class ProductListPage extends StatefulWidget {
   static const routeName = '/product_list_page';

@@ -275,8 +275,8 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
           color: primaryColor,
         ),
       ),
-      options: [
-        FormBuilderFieldOption(
+      options: <FormBuilderChipOption<String>>[
+        FormBuilderChipOption(
           value: 'Laki-laki',
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -294,7 +294,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
             ],
           ),
         ),
-        FormBuilderFieldOption(
+        FormBuilderChipOption(
           value: 'Perempuan',
           child: Row(
             mainAxisSize: MainAxisSize.min,

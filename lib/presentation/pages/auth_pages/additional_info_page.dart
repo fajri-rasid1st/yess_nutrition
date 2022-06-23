@@ -149,8 +149,8 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
           color: primaryColor,
         ),
       ),
-      options: [
-        FormBuilderFieldOption(
+      options: <FormBuilderChipOption<String>>[
+        FormBuilderChipOption(
           value: 'Laki-laki',
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -168,7 +168,7 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
             ],
           ),
         ),
-        FormBuilderFieldOption(
+        FormBuilderChipOption(
           value: 'Perempuan',
           child: Row(
             mainAxisSize: MainAxisSize.min,
