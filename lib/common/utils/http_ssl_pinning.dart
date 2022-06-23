@@ -33,6 +33,11 @@ class HttpSslPinning {
       final sslCert2 = await rootBundle.load(certificates['nutritionApi']!);
 
       securityContext.setTrustedCertificatesBytes(sslCert2.buffer.asInt8List());
+
+      // certificate for Shop data scraping
+      final sslCert3 = await rootBundle.load(certificates['bukalapak']!);
+
+      securityContext.setTrustedCertificatesBytes(sslCert3.buffer.asInt8List());
     } on TlsException catch (e) {
       log('Error: ${e.message}');
 
