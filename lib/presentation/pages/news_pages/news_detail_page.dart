@@ -196,7 +196,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
                       child: SizedBox(
                         width: double.infinity,
                         child: OutlinedButton.icon(

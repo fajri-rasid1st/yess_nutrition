@@ -38,6 +38,9 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
     Future.microtask(() {
       Provider.of<GetRecipeDetailNotifier>(context, listen: false)
           .getRecipeDetail(recipeId: widget.recipe.recipeId);
+
+      Provider.of<RecipeBookmarkNotifier>(context, listen: false)
+          .getRecipeBookmarkStatus(widget.recipe);
     });
   }
 
@@ -86,7 +89,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
               tooltip: 'Back',
             ),
             actions: <Widget>[
-              _buildShareIconAction(recipeDetail),
+              _buildShareIconAction(recipeDetail.url),
               _buildBookmarkIconAction(),
             ],
             flexibleSpace: FlexibleSpaceBar(
@@ -125,10 +128,10 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
     );
   }
 
-  IconButton _buildShareIconAction(RecipeDetailEntity recipeDetail) {
+  IconButton _buildShareIconAction(String url) {
     return IconButton(
       onPressed: () async {
-        await Share.share('Hai, coba deh cek ini\n\n${recipeDetail.url}');
+        await Share.share('Hai, coba deh cek ini\n\n$url');
       },
       icon: const Icon(
         Icons.share_rounded,
@@ -252,24 +255,27 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                       .copyWith(fontWeight: FontWeight.bold),
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  _buildNutrientDetailLarge(
-                    context,
-                    '${recipeDetail.calories.toStringAsFixed(0)}Kkal',
-                    'Total Kalori',
-                  ),
-                  const SizedBox(
-                    height: 56,
-                    child: VerticalDivider(),
-                  ),
-                  _buildNutrientDetailLarge(
-                    context,
-                    '${recipeDetail.totalNutrients.carbohydrate.toStringAsFixed(0)}g',
-                    'Karbohidrat',
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: <Widget>[
+                    _buildNutrientDetailLarge(
+                      context,
+                      '${recipeDetail.calories.toStringAsFixed(0)}Kkal',
+                      'Total Kalori',
+                    ),
+                    const SizedBox(
+                      height: 56,
+                      child: VerticalDivider(),
+                    ),
+                    _buildNutrientDetailLarge(
+                      context,
+                      '${recipeDetail.totalNutrients.carbohydrate.toStringAsFixed(0)}g',
+                      'Karbohidrat',
+                    ),
+                  ],
+                ),
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 20, 16, 20),
@@ -334,6 +340,14 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                 errorColor,
                 errorColor.withOpacity(0.2),
               ),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: Divider(
+                  height: 8,
+                  thickness: 8,
+                  color: scaffoldBackgroundColor,
+                ),
+              ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
                 child: Text(
@@ -369,7 +383,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
                 child: SizedBox(
                   width: double.infinity,
                   child: OutlinedButton.icon(
@@ -456,62 +470,73 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                 ),
           ),
           const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: List<CustomChip>.generate(
-              labels.length,
-              (index) {
-                return CustomChip(
-                  label: labels[index],
-                  labelColor: chipLabelColor,
-                  backgroundColor: chipBackgroundColor,
-                );
-              },
+          if (labels.isEmpty) ...[
+            CustomChip(
+              label: 'Tidak ada',
+              labelColor: chipLabelColor,
+              backgroundColor: chipBackgroundColor,
             ),
-          ),
+          ] else ...[
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: List<CustomChip>.generate(
+                labels.length,
+                (index) {
+                  return CustomChip(
+                    label: labels[index],
+                    labelColor: chipLabelColor,
+                    backgroundColor: chipBackgroundColor,
+                  );
+                },
+              ),
+            ),
+          ]
         ],
       ),
     );
   }
 
-  CustomInformation _buildDetailError(GetRecipeDetailNotifier detailNotifier) {
-    return CustomInformation(
-      key: const Key('error_message'),
-      imgPath: 'assets/svg/error_robot_cuate.svg',
-      title: detailNotifier.message,
-      subtitle: 'Silahkan coba beberapa saat lagi.',
-      child: ElevatedButton.icon(
-        onPressed: detailNotifier.isReload
-            ? null
-            : () {
-                // set isReload to true
-                detailNotifier.isReload = true;
-
-                Future.wait([
-                  // create one second delay
-                  Future.delayed(const Duration(seconds: 1)),
-
-                  // refresh page
-                  detailNotifier.refresh(),
-                ]).then((_) {
+  Container _buildDetailError(GetRecipeDetailNotifier detailNotifier) {
+    return Container(
+      color: primaryBackgroundColor,
+      child: CustomInformation(
+        key: const Key('error_message'),
+        imgPath: 'assets/svg/error_robot_cuate.svg',
+        title: detailNotifier.message,
+        subtitle: 'Silahkan coba beberapa saat lagi.',
+        child: ElevatedButton.icon(
+          onPressed: detailNotifier.isReload
+              ? null
+              : () {
                   // set isReload to true
-                  detailNotifier.isReload = false;
-                });
-              },
-        icon: detailNotifier.isReload
-            ? const SizedBox(
-                width: 18,
-                height: 18,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: dividerColor,
-                ),
-              )
-            : const Icon(Icons.refresh_rounded),
-        label: detailNotifier.isReload
-            ? const Text('Tunggu sebentar...')
-            : const Text('Coba lagi'),
+                  detailNotifier.isReload = true;
+
+                  Future.wait([
+                    // create one second delay
+                    Future.delayed(const Duration(seconds: 1)),
+
+                    // refresh page
+                    detailNotifier.refresh(),
+                  ]).then((_) {
+                    // set isReload to true
+                    detailNotifier.isReload = false;
+                  });
+                },
+          icon: detailNotifier.isReload
+              ? const SizedBox(
+                  width: 18,
+                  height: 18,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: dividerColor,
+                  ),
+                )
+              : const Icon(Icons.refresh_rounded),
+          label: detailNotifier.isReload
+              ? const Text('Tunggu sebentar...')
+              : const Text('Coba lagi'),
+        ),
       ),
     );
   }
