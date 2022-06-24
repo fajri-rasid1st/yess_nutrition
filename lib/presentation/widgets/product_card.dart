@@ -65,7 +65,8 @@ class ProductCard extends StatelessWidget {
                                         right: 10,
                                       ),
                                       child: Text(
-                                        product.rating,
+                                        // product.rating,
+                                        '',
                                         style: const TextStyle(fontSize: 12),
                                       ),
                                     )

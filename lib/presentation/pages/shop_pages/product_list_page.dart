@@ -1,7 +1,4 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:html/dom.dart' as dom;
-import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:yess_nutrition/data/models/product_models/product_model.dart';
 
@@ -24,8 +21,6 @@ class _ProductListPageState extends State<ProductListPage> {
 
   @override
   void initState() {
-    futureProducts = getProducts(widget.url);
-
     super.initState();
   }
 
@@ -46,7 +41,7 @@ class _ProductListPageState extends State<ProductListPage> {
                 padding: const EdgeInsets.all(16),
                 itemBuilder: (context, index) {
                   return InkWell(
-                    onTap: () async => await openUrl(products[index].id),
+                    onTap: () async => await openUrl(products[index].url),
                     child: ListTile(
                       leading: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
@@ -85,77 +80,6 @@ class _ProductListPageState extends State<ProductListPage> {
     if (isValidUrl) await launchUrl(uri);
 
     return Future.value(false);
-  }
-
-  Future<List<ProductModel>> getProducts(String uri) async {
-    try {
-      final url = Uri.parse(uri);
-
-      final response = await http.get(url);
-
-      final html = dom.Document.html(response.body);
-
-      const idSelector = 'div.bl-product-card__description-name > p > a';
-      const titleSelector = 'div.bl-product-card__description-name > p > a';
-      const priceSelector = 'div.bl-product-card__description-price > p';
-      const ratingSelector = 'div.bl-product-card__description-rating > p > a';
-      const imgUrlSelector =
-          'div.bl-product-card__thumbnail > figure > div > div > a > img';
-
-      final ids = html
-          .querySelectorAll(idSelector)
-          .map((element) => element.attributes['href']!)
-          .toList();
-
-      final titles = html
-          .querySelectorAll(titleSelector)
-          .map((element) => element.innerHtml.trim())
-          .toList();
-
-      final prices = html
-          .querySelectorAll(priceSelector)
-          .map((element) => element.innerHtml.trim())
-          .toList();
-
-      final ratings = html
-          .querySelectorAll(ratingSelector)
-          .map((element) => element.innerHtml.trim())
-          .toList();
-
-      final imgUrls = html
-          .querySelectorAll(imgUrlSelector)
-          .map((element) => element.attributes['src']!)
-          .toList();
-
-      final descs = [
-        ids.length,
-        titles.length,
-        prices.length,
-        ratings.length,
-        imgUrls.length,
-      ];
-
-      var minLength = 0;
-
-      for (var i = 0; i < descs.length - 1; i++) {
-        minLength = math.min(descs[i], descs[i + 1]);
-      }
-
-      return List<ProductModel>.generate(
-        minLength,
-        (index) {
-          return ProductModel(
-            id: ids[index],
-            title: titles[index],
-            price: prices[index],
-            rating: ratings[index],
-            imgUrl: imgUrls[index],
-          );
-        },
-      );
-    } catch (e) {
-      rethrow;
-    }
   }
 }
 

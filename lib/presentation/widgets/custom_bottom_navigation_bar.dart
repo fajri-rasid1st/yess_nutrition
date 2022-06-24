@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
-import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/presentation/providers/common_notifiers/bottom_navigation_bar_notifier.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
@@ -31,16 +30,16 @@ class CustomBottomNavigationBar extends StatelessWidget {
         children: <Widget>[
           _buildNavBarItem(
             context,
+            index: 0,
             selectedIcon: MdiIcons.home,
             unselectedIcon: MdiIcons.homeOutline,
-            menu: MenuNavBar.home,
             backgroundColor: scaffoldBackgroundColor,
           ),
           _buildNavBarItem(
             context,
+            index: 1,
             selectedIcon: MdiIcons.timer,
             unselectedIcon: MdiIcons.timerOutline,
-            menu: MenuNavBar.nutriTime,
             backgroundColor: scaffoldBackgroundColor,
           ),
           SizedBox(
@@ -49,16 +48,16 @@ class CustomBottomNavigationBar extends StatelessWidget {
           ),
           _buildNavBarItem(
             context,
+            index: 2,
             selectedIcon: MdiIcons.newspaperVariant,
             unselectedIcon: MdiIcons.newspaperVariantOutline,
-            menu: MenuNavBar.nutriNews,
             backgroundColor: primaryBackgroundColor,
           ),
           _buildNavBarItem(
             context,
+            index: 3,
             selectedIcon: MdiIcons.shopping,
             unselectedIcon: MdiIcons.shoppingOutline,
-            menu: MenuNavBar.nutriShop,
             backgroundColor: scaffoldBackgroundColor,
           ),
         ],
@@ -68,22 +67,24 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
   GestureDetector _buildNavBarItem(
     BuildContext context, {
+    required int index,
     required IconData selectedIcon,
     required IconData unselectedIcon,
-    required MenuNavBar menu,
     required Color backgroundColor,
   }) {
+    final isSelected = index == notifier.selectedIndex;
+
     return GestureDetector(
       onTap: () {
-        notifier.selectedMenu = menu;
+        notifier.selectedIndex = index;
         notifier.backgroundColor = backgroundColor;
       },
       child: SizedBox(
         width: MediaQuery.of(context).size.width / 5,
         height: kBottomNavigationBarHeight + 8,
         child: Icon(
-          menu == notifier.selectedMenu ? selectedIcon : unselectedIcon,
-          color: menu == notifier.selectedMenu ? primaryColor : secondaryColor,
+          isSelected ? selectedIcon : unselectedIcon,
+          color: isSelected ? primaryColor : secondaryColor,
           size: 28,
         ),
       ),

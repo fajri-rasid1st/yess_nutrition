@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
 import 'package:yess_nutrition/presentation/pages/home_page.dart';
@@ -10,31 +9,38 @@ import 'package:yess_nutrition/presentation/providers/common_notifiers/bottom_na
 import 'package:yess_nutrition/presentation/widgets/custom_bottom_navigation_bar.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_floating_action_button.dart';
 
-class MainPage extends StatelessWidget {
+class MainPage extends StatefulWidget {
   final UserEntity user;
 
   const MainPage({Key? key, required this.user}) : super(key: key);
+
+  @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  final _pages = <Widget>[];
+
+  @override
+  void initState() {
+    _pages.addAll([
+      HomePage(user: widget.user),
+      const NutriTimePage(),
+      NewsPage(uid: widget.user.uid),
+      const Scaffold(body: Center(child: Text('NutriShop Page')))
+    ]);
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<BottomNavigationBarNotifier>(
       builder: (context, navbar, child) {
         return Scaffold(
-          body: Builder(
-            builder: (context) {
-              switch (navbar.selectedMenu) {
-                case MenuNavBar.home:
-                  return HomePage(user: user);
-                case MenuNavBar.nutriTime:
-                  return const NutriTimePage();
-                case MenuNavBar.nutriNews:
-                  return NewsPage(uid: user.uid);
-                case MenuNavBar.nutriShop:
-                  return const Scaffold(
-                    body: Center(child: Text('NutriShop Page')),
-                  );
-              }
-            },
+          body: IndexedStack(
+            index: navbar.selectedIndex,
+            children: <Widget>[..._pages],
           ),
           backgroundColor: navbar.backgroundColor,
           bottomNavigationBar: CustomBottomNavigationBar(notifier: navbar),
@@ -42,7 +48,7 @@ class MainPage extends StatelessWidget {
             onPressed: () => Navigator.pushNamed(
               context,
               checkRoute,
-              arguments: user.uid,
+              arguments: widget.user.uid,
             ),
           ),
           floatingActionButtonLocation:

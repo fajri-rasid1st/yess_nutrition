@@ -4,7 +4,6 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
-import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
 import 'package:yess_nutrition/presentation/providers/common_notifiers/bottom_navigation_bar_notifier.dart';
@@ -174,7 +173,7 @@ class _HomePageState extends State<HomePage> {
                 var bottomNav = Provider.of<BottomNavigationBarNotifier>(
                     context,
                     listen: false);
-                bottomNav.selectedMenu = MenuNavBar.nutriNews;
+                bottomNav.selectedIndex = 2;
                 bottomNav.backgroundColor = primaryBackgroundColor;
               },
             ),
@@ -188,7 +187,7 @@ class _HomePageState extends State<HomePage> {
                 var bottomNav = Provider.of<BottomNavigationBarNotifier>(
                     context,
                     listen: false);
-                bottomNav.selectedMenu = MenuNavBar.nutriShop;
+                bottomNav.selectedIndex = 3;
                 bottomNav.backgroundColor = scaffoldBackgroundColor;
               },
             ),
