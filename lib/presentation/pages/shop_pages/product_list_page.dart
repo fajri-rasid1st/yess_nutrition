@@ -6,7 +6,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:yess_nutrition/data/models/product_models/product_model.dart';
 
 class ProductListPage extends StatefulWidget {
-  static const routeName = '/product_list_page';
   final String title;
   final String url;
 
@@ -158,4 +157,11 @@ class _ProductListPageState extends State<ProductListPage> {
       rethrow;
     }
   }
+}
+
+class ProductListPageArgs {
+  final String title;
+  final String url;
+
+  ProductListPageArgs(this.title, this.url);
 }

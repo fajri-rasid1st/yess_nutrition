@@ -89,6 +89,15 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<NewsBookmarkNotifier>(),
         ),
         ChangeNotifierProvider(
+          create: (_) => di.locator<ProductsNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<ProductListNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<FavoriteProductNotifier>(),
+        ),
+        ChangeNotifierProvider(
           create: (_) => BottomNavigationBarNotifier(),
         ),
         ChangeNotifierProvider(
@@ -190,26 +199,6 @@ class MyApp extends StatelessWidget {
                 settings: settings,
               );
 
-            // -------------- NutriNews routes and pages ---------------
-            case newsDetailRoute:
-              final arguments = settings.arguments as NewsDetailPageArgs;
-
-              return MaterialPageRoute(
-                builder: (_) => NewsDetailPage(
-                  news: arguments.news,
-                  heroTag: arguments.heroTag,
-                ),
-                settings: settings,
-              );
-
-            case newsBookmarksRoute:
-              final uid = settings.arguments as String;
-
-              return MaterialPageRoute(
-                builder: (_) => NewsBookmarksPage(uid: uid),
-                settings: settings,
-              );
-
             // -------------- NutriCheck routes and pages ---------------
             case checkRoute:
               final uid = settings.arguments as String;
@@ -267,6 +256,38 @@ class MyApp extends StatelessWidget {
 
               return MaterialPageRoute(
                 builder: (_) => RecipeBookmarksPage(uid: uid),
+                settings: settings,
+              );
+
+            // -------------- NutriNews routes and pages ---------------
+            case newsDetailRoute:
+              final arguments = settings.arguments as NewsDetailPageArgs;
+
+              return MaterialPageRoute(
+                builder: (_) => NewsDetailPage(
+                  news: arguments.news,
+                  heroTag: arguments.heroTag,
+                ),
+                settings: settings,
+              );
+
+            case newsBookmarksRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => NewsBookmarksPage(uid: uid),
+                settings: settings,
+              );
+
+            // -------------- NutriNews routes and pages ---------------
+            case productListRoute:
+              final arguments = settings.arguments as ProductListPageArgs;
+
+              return MaterialPageRoute(
+                builder: (_) => ProductListPage(
+                  title: arguments.title,
+                  url: arguments.url,
+                ),
                 settings: settings,
               );
 

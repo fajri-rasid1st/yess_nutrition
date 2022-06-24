@@ -99,6 +99,24 @@ void init() {
     ),
   );
 
+  // Product providers
+  locator.registerFactory(
+    () => ProductsNotifier(getProductsUseCase: locator()),
+  );
+  locator.registerFactory(
+    () => ProductListNotifier(getProductsUseCase: locator()),
+  );
+
+  locator.registerFactory(
+    () => FavoriteProductNotifier(
+      createFavoriteProductUseCase: locator(),
+      deleteFavoriteProductUseCase: locator(),
+      getFavoriteProductStatusUseCase: locator(),
+      getFavoriteProductsUseCase: locator(),
+      clearFavoriteProductsUseCase: locator(),
+    ),
+  );
+
   /*
   * Use cases section
   */
@@ -147,6 +165,14 @@ void init() {
   locator.registerLazySingleton(() => GetNewsBookmarks(locator()));
   locator.registerLazySingleton(() => ClearNewsBookmarks(locator()));
 
+  // Product usecases
+  locator.registerLazySingleton(() => GetProducts(locator()));
+  locator.registerLazySingleton(() => CreateFavoriteProduct(locator()));
+  locator.registerLazySingleton(() => DeleteFavoriteProduct(locator()));
+  locator.registerLazySingleton(() => GetFavoriteProductStatus(locator()));
+  locator.registerLazySingleton(() => GetFavoriteProducts(locator()));
+  locator.registerLazySingleton(() => ClearFavoriteProducts(locator()));
+
   /*
   * Repositories section
   */
@@ -183,6 +209,14 @@ void init() {
     () => NewsRepositoryImpl(
       newsLocalDataSource: locator(),
       newsRemoteDataSource: locator(),
+    ),
+  );
+
+  // Product repositories
+  locator.registerLazySingleton<ProductRepository>(
+    () => ProductRepositoryImpl(
+      productLocalDataSource: locator(),
+      productRemoteDataSource: locator(),
     ),
   );
 
@@ -226,6 +260,14 @@ void init() {
   );
   locator.registerLazySingleton<NewsRemoteDataSource>(
     () => NewsRemoteDataSourceImpl(client: locator()),
+  );
+
+  // News data sources
+  locator.registerLazySingleton<ProductLocalDataSource>(
+    () => ProductLocalDataSourceImpl(databaseHelper: locator()),
+  );
+  locator.registerLazySingleton<ProductRemoteDataSource>(
+    () => ProductRemoteDataSourceImpl(client: locator()),
   );
 
   /*

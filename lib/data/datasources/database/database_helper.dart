@@ -4,6 +4,7 @@ import 'package:sqflite_sqlcipher/sqflite.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/data/models/food_models/food_table.dart';
 import 'package:yess_nutrition/data/models/news_models/news_table.dart';
+import 'package:yess_nutrition/data/models/product_models/product_table.dart';
 import 'package:yess_nutrition/data/models/recipe_models/recipe_table.dart';
 
 class DatabaseHelper {
@@ -77,6 +78,17 @@ class DatabaseHelper {
         totalServing INTEGER,
         totalTime INTEGER,
         calories REAL)
+        ''');
+
+    await db.execute('''
+      CREATE TABLE $productFavoriteTable (
+        _id INTEGER PRIMARY KEY AUTOINCREMENT,
+        uid TEXT,
+        url TEXT,
+        title TEXT,
+        price TEXT,
+        rating REAL,
+        imgUrl TEXT)
         ''');
   }
 
@@ -244,6 +256,68 @@ class DatabaseHelper {
       recipeBookmarksTable,
       where: 'uid = ? AND recipeId = ?',
       whereArgs: [recipe.uid, recipe.recipeId],
+    );
+
+    if (result.isNotEmpty) return Future.value(true);
+
+    return Future.value(false);
+  }
+
+  /// added [product] to product favorite table
+  Future<int> createFavoriteProduct(ProductTable product) async {
+    final db = await database;
+
+    return await db.insert(productFavoriteTable, product.toMap());
+  }
+
+  /// get all products at product favorite table, according to [uid]
+  Future<List<ProductTable>> getFavoriteProducts(String uid) async {
+    final db = await database;
+
+    final result = await db.query(
+      productFavoriteTable,
+      where: 'uid = ?',
+      whereArgs: [uid],
+      orderBy: '_id DESC',
+    );
+
+    final products = List<ProductTable>.from(
+      result.map((product) => ProductTable.fromMap(product)),
+    );
+
+    return products;
+  }
+
+  /// delete [product] from product favorite table
+  Future<int> deleteFavoriteProduct(ProductTable product) async {
+    final db = await database;
+
+    return await db.delete(
+      productFavoriteTable,
+      where: 'uid = ? AND url = ?',
+      whereArgs: [product.uid, product.url],
+    );
+  }
+
+  /// clear all products from product favorite table, according to [uid]
+  Future<int> clearFavoriteProducts(String uid) async {
+    final db = await database;
+
+    return await db.delete(
+      productFavoriteTable,
+      where: 'uid = ?',
+      whereArgs: [uid],
+    );
+  }
+
+  /// check whether [product] is already in product favorite table
+  Future<bool> isFavoriteProductExist(ProductTable product) async {
+    final db = await database;
+
+    final result = await db.query(
+      productFavoriteTable,
+      where: 'uid = ? AND url = ?',
+      whereArgs: [product.uid, product.url],
     );
 
     if (result.isNotEmpty) return Future.value(true);

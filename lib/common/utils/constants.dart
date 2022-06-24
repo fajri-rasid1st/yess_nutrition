@@ -60,6 +60,9 @@ const healthProductBaseUrls = <String>[
   '$shopBaseUrl/c/kesehatan-2359/obat-vitamin',
 ];
 
+const recommendationProductBaseUrl =
+    '$shopBaseUrl/products?search%5Bkeywords%5D=buku%20makanan%20kesehatan';
+
 /// list of food produccategory urls
 const foodProductCategories = <ProductCategoryModel>[
   ProductCategoryModel(
