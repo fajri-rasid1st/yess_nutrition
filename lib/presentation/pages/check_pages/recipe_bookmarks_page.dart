@@ -150,7 +150,7 @@ class _RecipeBookmarksPageState extends State<RecipeBookmarksPage>
     return Slidable(
       groupTag: 0,
       startActionPane: ActionPane(
-        extentRatio: 0.5,
+        extentRatio: 0.55,
         motion: const ScrollMotion(),
         children: <Widget>[
           SlidableAction(

@@ -280,14 +280,23 @@ class MyApp extends StatelessWidget {
               );
 
             // -------------- NutriNews routes and pages ---------------
-            case productListRoute:
+            case productsRoute:
               final arguments = settings.arguments as ProductListPageArgs;
 
               return MaterialPageRoute(
-                builder: (_) => ProductListPage(
+                builder: (_) => ProductsPage(
+                  uid: arguments.uid,
                   title: arguments.title,
                   productBaseUrl: arguments.productBaseUrl,
                 ),
+                settings: settings,
+              );
+
+            case favoriteProductsRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => FavoriteProductsPage(uid: uid),
                 settings: settings,
               );
 

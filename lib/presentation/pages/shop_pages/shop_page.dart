@@ -2,13 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
+import 'package:yess_nutrition/common/utils/constants.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
+import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/data/models/product_models/product_category_model.dart';
+import 'package:yess_nutrition/presentation/pages/shop_pages/products_page.dart';
 import 'package:yess_nutrition/presentation/providers/product_notifiers/products_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_information.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
-import 'package:yess_nutrition/presentation/widgets/product_card.dart';
 import 'package:yess_nutrition/presentation/widgets/product_category_card.dart';
+import 'package:yess_nutrition/presentation/widgets/product_list_card.dart';
 
 class ShopPage extends StatefulWidget {
   final String uid;
@@ -32,11 +35,12 @@ class _ShopPageState extends State<ShopPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: secondaryBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        toolbarHeight: 84,
+        toolbarHeight: 86,
         title: const Text(
           'NutriShop',
           style: TextStyle(
@@ -52,13 +56,17 @@ class _ShopPageState extends State<ShopPage> {
                 alignment: Alignment.topRight,
                 child: Container(
                   decoration: BoxDecoration(
-                    color: primaryColor,
+                    color: secondaryColor,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: () => Navigator.pushNamed(
+                      context,
+                      favoriteProductsRoute,
+                      arguments: widget.uid,
+                    ),
                     icon: const Icon(Icons.favorite),
-                    color: primaryBackgroundColor,
+                    color: primaryColor,
                     tooltip: 'Favorite',
                   ),
                 ),
@@ -86,10 +94,7 @@ class _ShopPageState extends State<ShopPage> {
     );
   }
 
-  ClipRRect _buildMainPage(
-    BuildContext context,
-    ProductsNotifier notifier,
-  ) {
+  ClipRRect _buildMainPage(BuildContext context, ProductsNotifier notifier) {
     final productsMap = notifier.productsMap;
 
     return ClipRRect(
@@ -122,6 +127,7 @@ class _ShopPageState extends State<ShopPage> {
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
                     return ProductCategoryCard(
+                      uid: widget.uid,
                       productCategory: healthProductCategories[index],
                     );
                   },
@@ -148,6 +154,7 @@ class _ShopPageState extends State<ShopPage> {
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
                     return ProductCategoryCard(
+                      uid: widget.uid,
                       productCategory: foodProductCategories[index],
                     );
                   },
@@ -164,17 +171,25 @@ class _ShopPageState extends State<ShopPage> {
               _buildTitleContent(
                 context,
                 'Produk kesehatan terlaris!',
-                () {},
+                () => Navigator.pushNamed(
+                  context,
+                  productsRoute,
+                  arguments: ProductListPageArgs(
+                    widget.uid,
+                    'Kesehatan terlaris',
+                    healthProductBaseUrls[notifier.randIndex],
+                  ),
+                ),
               ),
               SizedBox(
-                height: 260,
+                height: 270,
                 child: ListView.separated(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
                     final products = productsMap['health']!;
 
-                    return ProductCard(product: products[index]);
+                    return ProductListCard(product: products[index]);
                   },
                   separatorBuilder: (context, index) {
                     return const SizedBox(width: 8);
@@ -186,17 +201,25 @@ class _ShopPageState extends State<ShopPage> {
               _buildTitleContent(
                 context,
                 'Produk makanan terlaris!',
-                () {},
+                () => Navigator.pushNamed(
+                  context,
+                  productsRoute,
+                  arguments: ProductListPageArgs(
+                    widget.uid,
+                    'Makanan terlaris',
+                    foodProductBaseUrls[notifier.randIndex],
+                  ),
+                ),
               ),
               SizedBox(
-                height: 260,
+                height: 270,
                 child: ListView.separated(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
                     final products = productsMap['food']!;
 
-                    return ProductCard(product: products[index]);
+                    return ProductListCard(product: products[index]);
                   },
                   separatorBuilder: (context, index) {
                     return const SizedBox(width: 8);
@@ -208,17 +231,25 @@ class _ShopPageState extends State<ShopPage> {
               _buildTitleContent(
                 context,
                 'Rekomendasi untukmu!',
-                () {},
+                () => Navigator.pushNamed(
+                  context,
+                  productsRoute,
+                  arguments: ProductListPageArgs(
+                    widget.uid,
+                    'Produk rekomendasi',
+                    recommendationProductBaseUrl,
+                  ),
+                ),
               ),
               SizedBox(
-                height: 260,
+                height: 270,
                 child: ListView.separated(
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
                     final products = productsMap['recommendation']!;
 
-                    return ProductCard(product: products[index]);
+                    return ProductListCard(product: products[index]);
                   },
                   separatorBuilder: (context, index) {
                     return const SizedBox(width: 8);

@@ -24,7 +24,8 @@ const recipeBookmarksRoute = '/check/recipe/bookmarks';
 const newsDetailRoute = '/news-detail';
 const newsBookmarksRoute = '/news-bookmarks';
 
-const productListRoute = '/product-list';
+const productsRoute = '/products';
+const favoriteProductsRoute = '/favorite-products';
 
 // Register the RouteObserver as a navigation observer.
 final routeObserver = RouteObserver<ModalRoute<void>>();

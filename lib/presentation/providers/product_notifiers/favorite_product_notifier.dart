@@ -54,7 +54,7 @@ class FavoriteProductNotifier extends ChangeNotifier {
 
   Future<void> getFavoriteProductStatus(ProductEntity product) async {
     final result = await getFavoriteProductStatusUseCase.execute(product);
-
+    
     result.fold(
       (failure) => _message = failure.message,
       (isExist) => _isExist = isExist,

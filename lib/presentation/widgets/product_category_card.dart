@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/data/models/product_models/product_category_model.dart';
-import 'package:yess_nutrition/presentation/pages/shop_pages/product_list_page.dart';
+import 'package:yess_nutrition/presentation/pages/shop_pages/products_page.dart';
 
 class ProductCategoryCard extends StatelessWidget {
+  final String uid;
   final ProductCategoryModel productCategory;
-
+  
   const ProductCategoryCard({
     Key? key,
+    required this.uid,
     required this.productCategory,
   }) : super(key: key);
 
@@ -17,8 +19,9 @@ class ProductCategoryCard extends StatelessWidget {
     return OutlinedButton(
       onPressed: () => Navigator.pushNamed(
         context,
-        productListRoute,
+        productsRoute,
         arguments: ProductListPageArgs(
+          uid,
           productCategory.title,
           productCategory.baseUrl,
         ),

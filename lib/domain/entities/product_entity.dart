@@ -26,6 +26,24 @@ class ProductEntity extends Equatable {
     required this.imgUrl,
   });
 
+  ProductEntity copyWith({
+    String? uid,
+    String? url,
+    String? title,
+    String? price,
+    double? rating,
+    String? imgUrl,
+  }) {
+    return ProductEntity(
+      uid: uid ?? this.uid,
+      url: url ?? this.url,
+      title: title ?? this.title,
+      price: price ?? this.price,
+      rating: rating ?? this.rating,
+      imgUrl: imgUrl ?? this.imgUrl,
+    );
+  }
+
   @override
   List<Object?> get props => [uid, url, title, price, rating, imgUrl];
 }

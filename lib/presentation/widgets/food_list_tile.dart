@@ -78,7 +78,7 @@ class FoodListTile extends StatelessWidget {
                   color: primaryColor,
                   tooltip: 'Add to journal',
                 ),
-              )
+              ),
             ],
           ),
           if (food.foodContentsLabel.join().trim().isNotEmpty) ...[
