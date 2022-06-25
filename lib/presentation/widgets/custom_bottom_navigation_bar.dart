@@ -5,10 +5,12 @@ import 'package:yess_nutrition/presentation/providers/common_notifiers/bottom_na
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final BottomNavigationBarNotifier notifier;
+  final PageController pageController;
 
   const CustomBottomNavigationBar({
     Key? key,
     required this.notifier,
+    required this.pageController,
   }) : super(key: key);
 
   @override
@@ -76,8 +78,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
-        notifier.selectedIndex = index;
         notifier.backgroundColor = backgroundColor;
+        pageController.jumpToPage(index);
       },
       child: SizedBox(
         width: MediaQuery.of(context).size.width / 5,

@@ -22,7 +22,8 @@ class ShopPage extends StatefulWidget {
   State<ShopPage> createState() => _ShopPageState();
 }
 
-class _ShopPageState extends State<ShopPage> {
+class _ShopPageState extends State<ShopPage>
+    with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
@@ -34,6 +35,8 @@ class _ShopPageState extends State<ShopPage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: secondaryBackgroundColor,
@@ -349,4 +352,7 @@ class _ShopPageState extends State<ShopPage> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

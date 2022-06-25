@@ -42,7 +42,7 @@ class ProductListTile extends StatelessWidget {
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 4),
                   Text(
                     product.price,
                     maxLines: 1,
@@ -52,7 +52,7 @@ class ProductListTile extends StatelessWidget {
                           color: primaryColor,
                         ),
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 4),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[

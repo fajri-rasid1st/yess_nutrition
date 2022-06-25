@@ -6,7 +6,7 @@ class NutriCheckCard extends StatelessWidget {
   final String subtitle;
   final String description;
   final String assetName;
-  final VoidCallback? onTap;
+  final VoidCallback onTap;
 
   const NutriCheckCard({
     Key? key,
@@ -14,7 +14,7 @@ class NutriCheckCard extends StatelessWidget {
     required this.subtitle,
     required this.description,
     required this.assetName,
-    this.onTap,
+    required this.onTap,
   }) : super(key: key);
 
   @override

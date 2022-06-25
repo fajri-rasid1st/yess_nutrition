@@ -7,14 +7,14 @@ import 'package:yess_nutrition/presentation/widgets/custom_network_image.dart';
 
 class FoodHintListTile extends StatelessWidget {
   final FoodEntity food;
-  final VoidCallback? onPressedSearchIcon;
-  final VoidCallback? onPressedTimeIcon;
+  final VoidCallback onPressedSearchIcon;
+  final VoidCallback onPressedTimeIcon;
 
   const FoodHintListTile({
     Key? key,
     required this.food,
-    this.onPressedSearchIcon,
-    this.onPressedTimeIcon,
+    required this.onPressedSearchIcon,
+    required this.onPressedTimeIcon,
   }) : super(key: key);
 
   @override

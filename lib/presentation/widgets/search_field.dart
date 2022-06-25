@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 
 class SearchField extends StatelessWidget {
-  final TextEditingController? controller;
+  final TextEditingController controller;
   final String query;
   final String hintText;
   final Color backgroundColor;
@@ -13,7 +13,7 @@ class SearchField extends StatelessWidget {
 
   const SearchField({
     Key? key,
-    this.controller,
+    required this.controller,
     required this.query,
     required this.hintText,
     this.backgroundColor = secondaryColor,
@@ -46,7 +46,7 @@ class SearchField extends StatelessWidget {
                   icon: const Icon(Icons.close_rounded),
                   color: primaryTextColor,
                   onPressed: () {
-                    controller?.clear();
+                    controller.clear();
 
                     if (onChanged != null) onChanged!('');
                   },

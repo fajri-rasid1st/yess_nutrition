@@ -20,7 +20,9 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final _pages = <Widget>[];
+  final List<Widget> _pages = <Widget>[];
+
+  late PageController _pageController;
 
   @override
   void initState() {
@@ -32,6 +34,15 @@ class _MainPageState extends State<MainPage> {
       NewsPage(uid: widget.user.uid),
       ShopPage(uid: widget.user.uid),
     ]);
+
+    _pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    _pageController.dispose();
   }
 
   @override
@@ -39,12 +50,17 @@ class _MainPageState extends State<MainPage> {
     return Consumer<BottomNavigationBarNotifier>(
       builder: (context, navbar, child) {
         return Scaffold(
-          body: IndexedStack(
-            index: navbar.selectedIndex,
-            children: <Widget>[..._pages],
+          body: PageView(
+            physics: const NeverScrollableScrollPhysics(),
+            controller: _pageController,
+            children: _pages,
+            onPageChanged: (index) => navbar.selectedIndex = index,
           ),
           backgroundColor: navbar.backgroundColor,
-          bottomNavigationBar: CustomBottomNavigationBar(notifier: navbar),
+          bottomNavigationBar: CustomBottomNavigationBar(
+            notifier: navbar,
+            pageController: _pageController,
+          ),
           floatingActionButton: CustomFloatingActionButton(
             onPressed: () => Navigator.pushNamed(
               context,

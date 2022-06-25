@@ -3,7 +3,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/domain/entities/recipe_entity.dart';
-import 'package:yess_nutrition/presentation/pages/check_pages/check_pages.dart';
+import 'package:yess_nutrition/presentation/pages/check_pages/recipe_detail_page.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_network_image.dart';
 
 class RecipeListTile extends StatelessWidget {

@@ -11,9 +11,12 @@ class NutriTimePage extends StatefulWidget {
   State<NutriTimePage> createState() => _NutriTimePagePageState();
 }
 
-class _NutriTimePagePageState extends State<NutriTimePage> {
+class _NutriTimePagePageState extends State<NutriTimePage>
+    with AutomaticKeepAliveClientMixin {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return Scaffold(
       body: Center(
         child: Column(
@@ -127,4 +130,7 @@ class _NutriTimePagePageState extends State<NutriTimePage> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

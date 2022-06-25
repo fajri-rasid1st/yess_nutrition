@@ -29,7 +29,8 @@ class NewsPage extends StatefulWidget {
   State<NewsPage> createState() => _NewsPageState();
 }
 
-class _NewsPageState extends State<NewsPage> {
+class _NewsPageState extends State<NewsPage>
+    with AutomaticKeepAliveClientMixin {
   late final ScrollController _scrollController;
   late final TextEditingController _searchController;
 
@@ -55,6 +56,8 @@ class _NewsPageState extends State<NewsPage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return Consumer3<NewsFabNotifier, GetNewsNotifier, SearchNewsNotifier>(
       builder: (context, fabNotifier, newsNotifier, searchNotifier, child) {
         return Scaffold(
@@ -469,4 +472,7 @@ class _NewsPageState extends State<NewsPage> {
 
     return true;
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

@@ -8,12 +8,12 @@ import 'package:yess_nutrition/presentation/widgets/custom_network_image.dart';
 
 class FoodListTile extends StatelessWidget {
   final FoodEntity food;
-  final VoidCallback? onPressedTimeIcon;
+  final VoidCallback onPressedTimeIcon;
 
   const FoodListTile({
     Key? key,
     required this.food,
-    this.onPressedTimeIcon,
+    required this.onPressedTimeIcon,
   }) : super(key: key);
 
   @override
