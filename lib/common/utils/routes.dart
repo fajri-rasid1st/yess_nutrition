@@ -23,6 +23,8 @@ const recipeBookmarksRoute = '/check/recipe/bookmarks';
 
 const newsDetailRoute = '/news-detail';
 const newsBookmarksRoute = '/news-bookmarks';
+const alarmNutriTime = '/alarm-nutri-time';
+const alarmNutriTimePage = '/alarm-nutri-time-page';
 
 const productsRoute = '/products';
 const favoriteProductsRoute = '/favorite-products';

@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
+import 'package:yess_nutrition/presentation/pages/schedule_pages/alarm_main_page.dart';
 
 import 'common/styles/styles.dart';
 import 'common/utils/http_ssl_pinning.dart';
@@ -14,8 +16,27 @@ import 'injection.dart' as di;
 import 'presentation/pages/pages.dart';
 import 'presentation/providers/providers.dart';
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  var initializationSettingsAndroid =
+      const AndroidInitializationSettings('splash');
+  var initializationSettingsIOS = IOSInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+      onDidReceiveLocalNotification: (id, title, body, payload) async {});
+  var initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+  await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+      onSelectNotification: (payload) async {
+    if (payload != null) {
+      debugPrint('notification payload: ' + payload);
+    }
+  });
 
   // Prevent landscape orientation
   SystemChrome.setPreferredOrientations(<DeviceOrientation>[
@@ -291,7 +312,14 @@ class MyApp extends StatelessWidget {
                 ),
                 settings: settings,
               );
-
+            case alarmNutriTime:
+              return MaterialPageRoute(
+                builder: (_) => const AlarmNutriTime(),
+              );
+            case alarmNutriTimePage:
+              return MaterialPageRoute(
+                builder: (_) => const AlarmNutriTimePage(),
+              );
             case favoriteProductsRoute:
               final uid = settings.arguments as String;
 
@@ -299,7 +327,6 @@ class MyApp extends StatelessWidget {
                 builder: (_) => FavoriteProductsPage(uid: uid),
                 settings: settings,
               );
-
             default:
               return null;
           }
