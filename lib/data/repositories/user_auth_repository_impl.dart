@@ -12,7 +12,7 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
   UserAuthRepositoryImpl({required this.userAuthDataSource});
 
   @override
-  Either<AuthFailure, Stream<UserEntity?>> getUser() {
+  Either<Failure, Stream<UserEntity?>> getUser() {
     try {
       final result = userAuthDataSource.getUser().map((user) {
         if (user == null) return null;
@@ -27,7 +27,7 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
   }
 
   @override
-  Future<Either<AuthFailure, UserEntity>> signIn(
+  Future<Either<Failure, UserEntity>> signIn(
     String email,
     String password,
   ) async {
@@ -52,7 +52,7 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
   }
 
   @override
-  Future<Either<AuthFailure, UserEntity>> signUp(
+  Future<Either<Failure, UserEntity>> signUp(
     String email,
     String password,
   ) async {
@@ -77,7 +77,7 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
   }
 
   @override
-  Future<Either<AuthFailure, void>> signOut() async {
+  Future<Either<Failure, void>> signOut() async {
     try {
       final result = await userAuthDataSource.signOut();
 
@@ -88,7 +88,7 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
   }
 
   @override
-  Future<Either<AuthFailure, void>> resetPassword(String email) async {
+  Future<Either<Failure, void>> resetPassword(String email) async {
     try {
       final result = await userAuthDataSource.resetPassword(email);
 
@@ -108,7 +108,7 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
   }
 
   @override
-  Future<Either<AuthFailure, void>> deleteUser() async {
+  Future<Either<Failure, void>> deleteUser() async {
     try {
       final result = await userAuthDataSource.deleteUser();
 
@@ -119,7 +119,7 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
   }
 
   @override
-  Future<Either<AuthFailure, UserEntity?>> signInWithGoogle() async {
+  Future<Either<Failure, UserEntity?>> signInWithGoogle() async {
     try {
       final result = await userAuthDataSource.signInWithGoogle();
 

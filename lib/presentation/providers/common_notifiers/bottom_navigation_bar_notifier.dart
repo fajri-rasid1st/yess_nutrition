@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
-import 'package:yess_nutrition/common/utils/enum_state.dart';
 
 class BottomNavigationBarNotifier extends ChangeNotifier {
-  MenuNavBar _selectedMenu = MenuNavBar.home;
-  MenuNavBar get selectedMenu => _selectedMenu;
+  int _selectedIndex = 0;
+  int get selectedIndex => _selectedIndex;
 
-  set selectedMenu(MenuNavBar menu) {
-    _selectedMenu = menu;
+  set selectedIndex(int value) {
+    _selectedIndex = value;
     notifyListeners();
   }
 

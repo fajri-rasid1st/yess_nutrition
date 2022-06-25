@@ -9,14 +9,15 @@ import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/news_entity.dart';
 import 'package:yess_nutrition/presentation/pages/news_pages/news_detail_page.dart';
-import 'package:yess_nutrition/presentation/providers/news_notifiers/bookmark_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/news_notifiers/get_bookmarks_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/news_notifiers/news_bookmark_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_information.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
-import 'package:yess_nutrition/presentation/widgets/news_tile.dart';
+import 'package:yess_nutrition/presentation/widgets/news_list_tile.dart';
 
 class NewsBookmarksPage extends StatefulWidget {
-  const NewsBookmarksPage({Key? key}) : super(key: key);
+  final String uid;
+
+  const NewsBookmarksPage({Key? key, required this.uid}) : super(key: key);
 
   @override
   State<NewsBookmarksPage> createState() => _NewsBookmarksPageState();
@@ -28,7 +29,8 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
     super.initState();
 
     Future.microtask(() {
-      Provider.of<GetBookmarksNotifier>(context, listen: false).getBookmarks();
+      Provider.of<NewsBookmarkNotifier>(context, listen: false)
+          .getNewsBookmarks(widget.uid);
     });
   }
 
@@ -41,7 +43,8 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
 
   @override
   void didPopNext() {
-    Provider.of<GetBookmarksNotifier>(context, listen: false).getBookmarks();
+    Provider.of<NewsBookmarkNotifier>(context, listen: false)
+        .getNewsBookmarks(widget.uid);
   }
 
   @override
@@ -61,7 +64,7 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
         toolbarHeight: 64,
         centerTitle: true,
         title: const Text(
-          'Bookmarks',
+          'News Bookmarks',
           style: TextStyle(
             color: primaryColor,
             fontWeight: FontWeight.bold,
@@ -71,41 +74,57 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
           onPressed: () => Navigator.pop(context),
           icon: const Icon(
             Icons.chevron_left_rounded,
-            color: primaryColor,
             size: 32,
           ),
+          color: primaryColor,
           tooltip: 'Back',
         ),
         actions: <Widget>[
           IconButton(
-            onPressed: () {},
+            onPressed: context.watch<NewsBookmarkNotifier>().bookmarks.isEmpty
+                ? null
+                : () {
+                    Utilities.showConfirmDialog(
+                      context,
+                      title: 'Konfirmasi',
+                      question: 'Hapus semua artikel bookmarks?',
+                      onPressedPrimaryAction: () {
+                        clearBookmarks(context).then((_) {
+                          Navigator.pop(context);
+                        });
+                      },
+                      onPressedSecondaryAction: () {
+                        Navigator.pop(context);
+                      },
+                    );
+                  },
             icon: const Icon(
               Icons.clear_all_rounded,
-              color: primaryColor,
               size: 28,
             ),
+            color: primaryColor,
             tooltip: 'Clear All',
           ),
         ],
       ),
-      body: Consumer<GetBookmarksNotifier>(
-        builder: (context, bookmarksNotifier, child) {
-          if (bookmarksNotifier.state == RequestState.success) {
-            if (bookmarksNotifier.bookmarks.isEmpty) {
+      body: Consumer<NewsBookmarkNotifier>(
+        builder: (context, bookmarkNotifier, child) {
+          if (bookmarkNotifier.state == RequestState.success) {
+            if (bookmarkNotifier.bookmarks.isEmpty) {
               return const CustomInformation(
                 key: Key('bookmarks_empty'),
-                imgPath: 'assets/svg/reading-glasses-cuate.svg',
-                title: 'Bookmarks masih kosong',
-                subtitle: 'Bookmarks anda akan muncul di sini.',
+                imgPath: 'assets/svg/reading_glasses_cuate.svg',
+                title: 'Artikel masih kosong',
+                subtitle: 'Artikel bookmarks akan muncul di sini.',
               );
             }
 
-            return _buildBookmarksList(bookmarksNotifier.bookmarks);
-          } else if (bookmarksNotifier.state == RequestState.error) {
+            return _buildBookmarksList(bookmarkNotifier.bookmarks);
+          } else if (bookmarkNotifier.state == RequestState.error) {
             return CustomInformation(
               key: const Key('error_message'),
-              imgPath: 'assets/svg/feeling-sorry-cuate.svg',
-              title: bookmarksNotifier.message,
+              imgPath: 'assets/svg/feeling_sorry_cuate.svg',
+              title: bookmarkNotifier.message,
               subtitle: 'Silahkan kembali beberapa saat lagi.',
             );
           }
@@ -157,19 +176,7 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
           ),
           SlidableAction(
             onPressed: (context) async {
-              final bookmarkNotifier = context.read<BookmarkNotifier>();
-              final getBookmarksNotifier = context.read<GetBookmarksNotifier>();
-
-              await bookmarkNotifier.deleteBookmark(news);
-
-              final message = bookmarkNotifier.message;
-              final snackBar = Utilities.createSnackBar(message);
-
-              scaffoldMessengerKey.currentState!
-                ..hideCurrentSnackBar()
-                ..showSnackBar(snackBar);
-
-              await getBookmarksNotifier.getBookmarks();
+              await deleteBookmark(context, news);
             },
             icon: Icons.bookmark_remove_outlined,
             foregroundColor: primaryTextColor,
@@ -177,10 +184,40 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
           ),
         ],
       ),
-      child: NewsTile(
+      child: NewsListTile(
         news: news,
         heroTag: 'bookmark:${news.url}',
       ),
     );
+  }
+
+  Future<void> deleteBookmark(BuildContext context, NewsEntity news) async {
+    final bookmarkNotifier = context.read<NewsBookmarkNotifier>();
+
+    await bookmarkNotifier.deleteNewsBookmark(news);
+
+    final message = bookmarkNotifier.message;
+    final snackBar = Utilities.createSnackBar(message);
+
+    scaffoldMessengerKey.currentState!
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
+
+    await bookmarkNotifier.getNewsBookmarks(widget.uid);
+  }
+
+  Future<void> clearBookmarks(BuildContext context) async {
+    final bookmarkNotifier = context.read<NewsBookmarkNotifier>();
+
+    await bookmarkNotifier.clearNewsBookmarks(widget.uid);
+
+    final message = bookmarkNotifier.message;
+    final snackBar = Utilities.createSnackBar(message);
+
+    scaffoldMessengerKey.currentState!
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
+
+    await bookmarkNotifier.getNewsBookmarks(widget.uid);
   }
 }

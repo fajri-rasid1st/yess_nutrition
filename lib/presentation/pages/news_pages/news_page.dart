@@ -12,22 +12,25 @@ import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/news_entity.dart';
 import 'package:yess_nutrition/presentation/pages/news_pages/news_detail_page.dart';
 import 'package:yess_nutrition/presentation/providers/common_notifiers/news_fab_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/news_notifiers/bookmark_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/get_news_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/news_notifiers/news_bookmark_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/search_news_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_information.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
-import 'package:yess_nutrition/presentation/widgets/news_tile.dart';
+import 'package:yess_nutrition/presentation/widgets/news_list_tile.dart';
 import 'package:yess_nutrition/presentation/widgets/search_field.dart';
 
 class NewsPage extends StatefulWidget {
-  const NewsPage({Key? key}) : super(key: key);
+  final String uid;
+
+  const NewsPage({Key? key, required this.uid}) : super(key: key);
 
   @override
   State<NewsPage> createState() => _NewsPageState();
 }
 
-class _NewsPageState extends State<NewsPage> {
+class _NewsPageState extends State<NewsPage>
+    with AutomaticKeepAliveClientMixin {
   late final ScrollController _scrollController;
   late final TextEditingController _searchController;
 
@@ -53,6 +56,8 @@ class _NewsPageState extends State<NewsPage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return Consumer3<NewsFabNotifier, GetNewsNotifier, SearchNewsNotifier>(
       builder: (context, fabNotifier, newsNotifier, searchNotifier, child) {
         return Scaffold(
@@ -98,11 +103,10 @@ class _NewsPageState extends State<NewsPage> {
                           onPressed: () => Navigator.pushNamed(
                             context,
                             newsBookmarksRoute,
+                            arguments: widget.uid,
                           ),
-                          icon: const Icon(
-                            Icons.bookmarks_outlined,
-                            color: primaryColor,
-                          ),
+                          icon: const Icon(Icons.bookmarks_outlined),
+                          color: primaryColor,
                           tooltip: 'Bookmarks',
                         ),
                       ),
@@ -142,10 +146,8 @@ class _NewsPageState extends State<NewsPage> {
           builder: (context) {
             final onChangedQuery = searchNotifier.onChangedQuery;
             final onSubmittedQuery = searchNotifier.onSubmittedQuery;
-
             final isOnChangedQueryEmpty = onChangedQuery.isEmpty;
             final isOnSubmittedQueryEmpty = onSubmittedQuery.isEmpty;
-
             final isTyping = onChangedQuery != onSubmittedQuery;
 
             if (isOnChangedQueryEmpty || isOnSubmittedQueryEmpty || isTyping) {
@@ -185,7 +187,7 @@ class _NewsPageState extends State<NewsPage> {
               ),
               icon: const Icon(
                 Icons.arrow_upward_rounded,
-                size: 20,
+                size: 18,
               ),
               onPressed: () {
                 _scrollController.jumpTo(0);
@@ -204,16 +206,16 @@ class _NewsPageState extends State<NewsPage> {
       onTap: () {
         _scrollController.animateTo(
           0,
-          duration: const Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 250),
           curve: Curves.easeOut,
         );
       },
       onChanged: (value) {
         newsNotifier.onChangedQuery = value.trim();
       },
-      onSubmitted: (value) {
+      onSubmitted: (value) async {
         if (value.trim().isNotEmpty) {
-          newsNotifier.searchNews(page: 1, query: value);
+          await newsNotifier.searchNews(page: 1, query: value);
         }
       },
     );
@@ -222,6 +224,7 @@ class _NewsPageState extends State<NewsPage> {
   SlidableAutoCloseBehavior _buildNewsList(GetNewsNotifier newsNotifier) {
     return SlidableAutoCloseBehavior(
       child: ListView.separated(
+        padding: const EdgeInsets.all(0),
         itemCount: newsNotifier.hasMoreData
             ? newsNotifier.news.length + 1
             : newsNotifier.news.length,
@@ -244,6 +247,7 @@ class _NewsPageState extends State<NewsPage> {
   SlidableAutoCloseBehavior _buildSearchList(SearchNewsNotifier newsNotifier) {
     return SlidableAutoCloseBehavior(
       child: ListView.separated(
+        padding: const EdgeInsets.all(0),
         itemCount: newsNotifier.hasMoreData
             ? newsNotifier.results.length + 1
             : newsNotifier.results.length,
@@ -264,6 +268,8 @@ class _NewsPageState extends State<NewsPage> {
   }
 
   Slidable _buildSlidableListTile(NewsEntity news) {
+    final newsWithUid = news.copyWith(uid: widget.uid);
+
     return Slidable(
       groupTag: 0,
       startActionPane: ActionPane(
@@ -275,7 +281,7 @@ class _NewsPageState extends State<NewsPage> {
               Navigator.pushNamed(
                 context,
                 newsDetailRoute,
-                arguments: NewsDetailPageArgs(news, 'news:${news.url}'),
+                arguments: NewsDetailPageArgs(newsWithUid, 'news:${news.url}'),
               );
             },
             icon: Icons.open_in_new_rounded,
@@ -292,9 +298,9 @@ class _NewsPageState extends State<NewsPage> {
           ),
           SlidableAction(
             onPressed: (context) async {
-              final bookmarkNotifier = context.read<BookmarkNotifier>();
+              final bookmarkNotifier = context.read<NewsBookmarkNotifier>();
 
-              await bookmarkNotifier.getBookmarkStatus(news);
+              await bookmarkNotifier.getNewsBookmarkStatus(newsWithUid);
 
               final isExist = bookmarkNotifier.isExist;
 
@@ -306,7 +312,7 @@ class _NewsPageState extends State<NewsPage> {
                   ..hideCurrentSnackBar()
                   ..showSnackBar(snackBar);
               } else {
-                await bookmarkNotifier.createBookmark(news);
+                await bookmarkNotifier.createNewsBookmark(newsWithUid);
 
                 final message = bookmarkNotifier.message;
                 final snackBar = Utilities.createSnackBar(message);
@@ -322,8 +328,8 @@ class _NewsPageState extends State<NewsPage> {
           ),
         ],
       ),
-      child: NewsTile(
-        news: news,
+      child: NewsListTile(
+        news: newsWithUid,
         heroTag: 'news:${news.url}',
       ),
     );
@@ -466,4 +472,7 @@ class _NewsPageState extends State<NewsPage> {
 
     return true;
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

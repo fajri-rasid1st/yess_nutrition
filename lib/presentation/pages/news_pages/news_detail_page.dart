@@ -6,7 +6,8 @@ import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/news_entity.dart';
-import 'package:yess_nutrition/presentation/providers/news_notifiers/bookmark_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/news_notifiers/news_bookmark_notifier.dart';
+import 'package:yess_nutrition/presentation/widgets/custom_chip.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_network_image.dart';
 
 class NewsDetailPage extends StatefulWidget {
@@ -29,8 +30,8 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
     super.initState();
 
     Future.microtask(() {
-      Provider.of<BookmarkNotifier>(context, listen: false)
-          .getBookmarkStatus(widget.news);
+      Provider.of<NewsBookmarkNotifier>(context, listen: false)
+          .getNewsBookmarkStatus(widget.news);
     });
   }
 
@@ -61,16 +62,16 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
             ),
             tooltip: 'Share',
           ),
-          Consumer<BookmarkNotifier>(
+          Consumer<NewsBookmarkNotifier>(
             builder: (context, bookmarkNotifier, child) {
               final isExist = bookmarkNotifier.isExist;
 
               return IconButton(
                 onPressed: () async {
                   if (isExist) {
-                    await bookmarkNotifier.deleteBookmark(widget.news);
+                    await bookmarkNotifier.deleteNewsBookmark(widget.news);
                   } else {
-                    await bookmarkNotifier.createBookmark(widget.news);
+                    await bookmarkNotifier.createNewsBookmark(widget.news);
                   }
 
                   final message = bookmarkNotifier.message;
@@ -86,7 +87,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                       : Icons.bookmark_border_rounded,
                   size: 26,
                 ),
-                tooltip: 'Bookmarks',
+                tooltip: 'Bookmark',
               );
             },
           ),
@@ -99,12 +100,12 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
             children: <Widget>[
               Hero(
                 tag: widget.heroTag,
-                transitionOnUserGestures: true,
                 child: CustomNetworkImage(
                   height: MediaQuery.of(context).size.height / 2 + 24,
                   fit: BoxFit.fitHeight,
                   imgUrl: widget.news.urlToImage,
                   placeHolderSize: 100,
+                  errorIcon: Icons.motion_photos_off_outlined,
                 ),
               ),
               Positioned.fill(
@@ -121,6 +122,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
@@ -132,20 +134,26 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                             fontWeight: FontWeight.bold,
                           ),
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 8),
                     Wrap(
                       spacing: 8,
                       runSpacing: 8,
                       children: <Widget>[
-                        _buildChip(
-                          context,
-                          Icons.person_rounded,
-                          widget.news.author,
+                        CustomChip(
+                          label: widget.news.author,
+                          labelColor: primaryBackgroundColor,
+                          backgroundColor: secondaryColor.withOpacity(0.5),
+                          icon: Icons.person_rounded,
+                          iconColor: primaryBackgroundColor,
                         ),
-                        _buildChip(
-                          context,
-                          Icons.access_time_rounded,
-                          Utilities.dateFormatToMMMddy(widget.news.publishedAt),
+                        CustomChip(
+                          label: Utilities.dateTimeToddMMMy(
+                            widget.news.publishedAt,
+                          ),
+                          labelColor: primaryBackgroundColor,
+                          backgroundColor: secondaryColor.withOpacity(0.5),
+                          icon: Icons.access_time_rounded,
+                          iconColor: primaryBackgroundColor,
                         ),
                       ],
                     ),
@@ -154,92 +162,60 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
               ),
             ],
           ),
-          Container(
-            height: MediaQuery.of(context).size.height / 2 - 24,
-            decoration: const BoxDecoration(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+            child: Container(
               color: primaryBackgroundColor,
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
-                    child: Text(
-                      widget.news.source,
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline6!
-                          .copyWith(fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(
-                      widget.news.description,
-                      style: const TextStyle(color: secondaryTextColor),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                    child: Text(
-                      widget.news.content,
-                      style: const TextStyle(color: secondaryTextColor),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                    child: SizedBox(
-                      width: double.infinity,
-                      child: OutlinedButton.icon(
-                        onPressed: () => Navigator.pushNamed(
-                          context,
-                          newsWebViewRoute,
-                          arguments: widget.news.url,
-                        ),
-                        icon: const Icon(Icons.open_in_new_rounded),
-                        label: const Text('Lihat Selengkapnya'),
+              height: MediaQuery.of(context).size.height / 2 - 24,
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 20, 16, 8),
+                      child: Text(
+                        widget.news.source,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline6!
+                            .copyWith(fontWeight: FontWeight.bold),
                       ),
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        widget.news.description,
+                        style: const TextStyle(color: secondaryTextColor),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                      child: Text(
+                        widget.news.content,
+                        style: const TextStyle(color: secondaryTextColor),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton.icon(
+                          onPressed: () => Navigator.pushNamed(
+                            context,
+                            webviewRoute,
+                            arguments: widget.news.url,
+                          ),
+                          icon: const Icon(Icons.open_in_new_rounded),
+                          label: const Text('Lihat Selengkapnya'),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Container _buildChip(BuildContext context, IconData icon, String label) {
-    return Container(
-      decoration: BoxDecoration(
-        color: secondaryColor.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(100),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Icon(
-              icon,
-              size: 18,
-              color: primaryBackgroundColor,
-            ),
-            const SizedBox(width: 4),
-            Text(
-              label,
-              style: Theme.of(context)
-                  .textTheme
-                  .caption!
-                  .copyWith(color: primaryBackgroundColor),
-            ),
-          ],
-        ),
       ),
     );
   }

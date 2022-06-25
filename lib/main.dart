@@ -10,7 +10,7 @@ import 'common/styles/styles.dart';
 import 'common/utils/http_ssl_pinning.dart';
 import 'common/utils/keys.dart';
 import 'common/utils/routes.dart';
-import 'domain/entities/user_entity.dart';
+import 'domain/entities/entities.dart';
 import 'firebase_options.dart';
 import 'injection.dart' as di;
 import 'presentation/pages/pages.dart';
@@ -74,49 +74,49 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<GetUserNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<SignInNotifier>(),
+          create: (_) => di.locator<UserAuthNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<SignInWithGoogleNotifier>(),
+          create: (_) => di.locator<UserFirestoreNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<SignUpNotifier>(),
+          create: (_) => di.locator<UserStorageNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<SignOutNotifier>(),
+          create: (_) => di.locator<SearchFoodNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<ResetPasswordNotifier>(),
+          create: (_) => di.locator<SearchProductNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<DeleteUserNotifier>(),
+          create: (_) => di.locator<FoodHistoryNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<CreateUserDataNotifier>(),
+          create: (_) => di.locator<SearchRecipesNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<ReadUserDataNotifier>(),
+          create: (_) => di.locator<GetRecipeDetailNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<UpdateUserDataNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<DeleteUserDataNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<UserStatusNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<BookmarkNotifier>(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<GetBookmarksNotifier>(),
+          create: (_) => di.locator<RecipeBookmarkNotifier>(),
         ),
         ChangeNotifierProvider(
           create: (_) => di.locator<GetNewsNotifier>(),
         ),
         ChangeNotifierProvider(
           create: (_) => di.locator<SearchNewsNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<NewsBookmarkNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<ProductsNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<ProductListNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<FavoriteProductNotifier>(),
         ),
         ChangeNotifierProvider(
           create: (_) => BottomNavigationBarNotifier(),
@@ -147,6 +147,9 @@ class MyApp extends StatelessWidget {
           outlinedButtonTheme: OutlinedButtonThemeData(
             style: outlinedButtonStyle,
           ),
+          textButtonTheme: TextButtonThemeData(
+            style: textButtonStyle,
+          ),
           pageTransitionsTheme: const PageTransitionsTheme(
             builders: {
               TargetPlatform.android: FadeUpwardsPageTransitionsBuilder()
@@ -154,24 +157,28 @@ class MyApp extends StatelessWidget {
           ),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: const Wrapper(),
         navigatorKey: navigatorKey,
         scaffoldMessengerKey: scaffoldMessengerKey,
         navigatorObservers: [routeObserver],
+        home: const Wrapper(),
         onGenerateRoute: (settings) {
           switch (settings.name) {
+            // -------------- Auth and common routes and pages ---------------
             case loginRoute:
               return MaterialPageRoute(
                 builder: (_) => const LoginPage(),
               );
+
             case registerRoute:
               return MaterialPageRoute(
                 builder: (_) => const RegisterPage(),
               );
+
             case forgotPasswordRoute:
               return MaterialPageRoute(
                 builder: (_) => const ForgotPasswordPage(),
               );
+
             case additionalInfoRoute:
               final user = settings.arguments as UserEntity;
 
@@ -179,6 +186,7 @@ class MyApp extends StatelessWidget {
                 builder: (_) => AdditionalInfoPage(user: user),
                 settings: settings,
               );
+
             case mainRoute:
               final user = settings.arguments as UserEntity;
 
@@ -186,17 +194,93 @@ class MyApp extends StatelessWidget {
                 builder: (_) => MainPage(user: user),
                 settings: settings,
               );
-            case profileRoute:
-              final user = settings.arguments as UserEntity;
+
+            case webviewRoute:
+              final url = settings.arguments as String;
 
               return MaterialPageRoute(
-                builder: (_) => ProfilePage(user: user),
+                builder: (_) => WebViewPage(url: url),
                 settings: settings,
               );
-            case updateProfileRoute:
+
+            // -------------- Profile routes and pages ---------------
+            case profileRoute:
+              final uid = settings.arguments as String;
+
               return MaterialPageRoute(
-                builder: (_) => const UpdateProfilePage(),
+                builder: (_) => ProfilePage(uid: uid),
+                settings: settings,
               );
+
+            case updateProfileRoute:
+              final userData = settings.arguments as UserDataEntity;
+
+              return MaterialPageRoute(
+                builder: (_) => UpdateProfilePage(userData: userData),
+                settings: settings,
+              );
+
+            // -------------- NutriCheck routes and pages ---------------
+            case checkRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => CheckPage(uid: uid),
+                settings: settings,
+              );
+
+            case foodCheckRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => FoodCheckPage(uid: uid),
+                settings: settings,
+              );
+
+            case productCheckRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => ProductCheckPage(uid: uid),
+                settings: settings,
+              );
+
+            case recipeCheckRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => RecipeCheckPage(uid: uid),
+                settings: settings,
+              );
+
+            case foodAndProductCheckHistoryRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => FoodAndProductCheckHistoryPage(uid: uid),
+                settings: settings,
+              );
+
+            case recipeDetailRoute:
+              final arguments = settings.arguments as RecipeDetailPageArgs;
+
+              return MaterialPageRoute(
+                builder: (_) => RecipeDetailPage(
+                  recipe: arguments.recipe,
+                  heroTag: arguments.heroTag,
+                ),
+                settings: settings,
+              );
+
+            case recipeBookmarksRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => RecipeBookmarksPage(uid: uid),
+                settings: settings,
+              );
+
+            // -------------- NutriNews routes and pages ---------------
             case newsDetailRoute:
               final arguments = settings.arguments as NewsDetailPageArgs;
 
@@ -207,16 +291,26 @@ class MyApp extends StatelessWidget {
                 ),
                 settings: settings,
               );
-            case newsWebViewRoute:
-              final url = settings.arguments as String;
+
+            case newsBookmarksRoute:
+              final uid = settings.arguments as String;
 
               return MaterialPageRoute(
-                builder: (_) => NewsWebViewPage(url: url),
+                builder: (_) => NewsBookmarksPage(uid: uid),
                 settings: settings,
               );
-            case newsBookmarksRoute:
+
+            // -------------- NutriNews routes and pages ---------------
+            case productsRoute:
+              final arguments = settings.arguments as ProductListPageArgs;
+
               return MaterialPageRoute(
-                builder: (_) => const NewsBookmarksPage(),
+                builder: (_) => ProductsPage(
+                  uid: arguments.uid,
+                  title: arguments.title,
+                  productBaseUrl: arguments.productBaseUrl,
+                ),
+                settings: settings,
               );
             case alarmNutriTime:
               return MaterialPageRoute(
@@ -225,6 +319,13 @@ class MyApp extends StatelessWidget {
             case alarmNutriTimePage:
               return MaterialPageRoute(
                 builder: (_) => const AlarmNutriTimePage(),
+              );
+            case favoriteProductsRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => FavoriteProductsPage(uid: uid),
+                settings: settings,
               );
             default:
               return null;

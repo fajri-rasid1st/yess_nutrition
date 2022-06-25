@@ -10,10 +10,8 @@ import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/presentation/providers/common_notifiers/input_password_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user_notifiers/auth_notifiers/sign_in_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user_notifiers/auth_notifiers/sign_in_with_google_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user_notifiers/firestore_notifiers/create_user_data_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user_notifiers/firestore_notifiers/user_status_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/user_auth_notifiers/user_auth_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_firestore_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/clickable_text.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
@@ -230,7 +228,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (_formKey.currentState!.validate()) {
       final value = _formKey.currentState!.value;
-      final signInNotifier = context.read<SignInNotifier>();
+      final authNotifier = context.read<UserAuthNotifier>();
 
       // show loading when sign in is currently on process
       showDialog(
@@ -240,11 +238,11 @@ class _LoginPageState extends State<LoginPage> {
       );
 
       // sign in process
-      await signInNotifier.signIn(value['email'], value['password']);
+      await authNotifier.signIn(value['email'], value['password']);
 
-      if (signInNotifier.state == UserState.success) {
+      if (authNotifier.state == UserState.success) {
         // get user
-        final user = signInNotifier.user;
+        final user = authNotifier.user;
 
         // close the loading indicator
         navigatorKey.currentState!.pop();
@@ -255,7 +253,7 @@ class _LoginPageState extends State<LoginPage> {
           arguments: user,
         );
       } else {
-        final snackBar = Utilities.createSnackBar(signInNotifier.error);
+        final snackBar = Utilities.createSnackBar(authNotifier.error);
 
         // close the loading indicator
         navigatorKey.currentState!.pop();
@@ -268,14 +266,13 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<void> _onPressedGoogleSignInButton(BuildContext context) async {
-    final googleSignInNotifier = context.read<SignInWithGoogleNotifier>();
-    final userStatusNotifier = context.read<UserStatusNotifier>();
-    final createUserDataNotifier = context.read<CreateUserDataNotifier>();
+    final authNotifier = context.read<UserAuthNotifier>();
+    final userDataNotifier = context.read<UserFirestoreNotifier>();
 
-    await googleSignInNotifier.signInWithGoogle();
+    await authNotifier.signInWithGoogle();
 
-    if (googleSignInNotifier.state == UserState.error) {
-      final snackBar = Utilities.createSnackBar(googleSignInNotifier.error);
+    if (authNotifier.state == UserState.error) {
+      final snackBar = Utilities.createSnackBar(authNotifier.error);
 
       scaffoldMessengerKey.currentState!
         ..hideCurrentSnackBar()
@@ -283,21 +280,21 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     // get user
-    final user = googleSignInNotifier.user;
+    final user = authNotifier.userFromGoogle;
 
     if (user != null) {
       // first, check if this user already in database
-      await userStatusNotifier.getUserStatus(user.uid);
+      await userDataNotifier.getUserStatus(user.uid);
 
-      if (userStatusNotifier.state == UserState.success) {
-        if (userStatusNotifier.isNewUser) {
+      if (userDataNotifier.state == UserState.success) {
+        if (userDataNotifier.isNewUser) {
           // convert user entity to user data entity
           final userData = user.toUserData();
 
           // craete user data
-          await createUserDataNotifier.createUserData(userData);
+          await userDataNotifier.createUserData(userData);
 
-          if (createUserDataNotifier.state == UserState.success) {
+          if (userDataNotifier.state == UserState.success) {
             // navigate to main page
             navigatorKey.currentState!.pushReplacementNamed(
               mainRoute,

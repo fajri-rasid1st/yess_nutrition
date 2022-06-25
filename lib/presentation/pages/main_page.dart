@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
-import 'package:yess_nutrition/common/utils/enum_state.dart';
+import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
 import 'package:yess_nutrition/presentation/pages/home_page.dart';
 import 'package:yess_nutrition/presentation/pages/news_pages/news_page.dart';
 import 'package:yess_nutrition/presentation/pages/schedule_pages/nutri_time_page.dart';
+import 'package:yess_nutrition/presentation/pages/shop_pages/shop_page.dart';
 import 'package:yess_nutrition/presentation/providers/common_notifiers/bottom_navigation_bar_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_bottom_navigation_bar.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_floating_action_button.dart';
@@ -13,35 +14,64 @@ import 'package:yess_nutrition/presentation/widgets/custom_floating_action_butto
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
-class MainPage extends StatelessWidget {
+class MainPage extends StatefulWidget {
   final UserEntity user;
 
   const MainPage({Key? key, required this.user}) : super(key: key);
 
   @override
+  State<MainPage> createState() => _MainPageState();
+}
+
+class _MainPageState extends State<MainPage> {
+  final List<Widget> _pages = <Widget>[];
+
+  late PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _pages.addAll([
+      HomePage(user: widget.user),
+      const NutriTimePage(),
+      NewsPage(uid: widget.user.uid),
+      ShopPage(uid: widget.user.uid),
+    ]);
+
+    _pageController = PageController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    _pageController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Consumer<BottomNavigationBarNotifier>(
-      builder: (context, navBar, child) {
+      builder: (context, navbar, child) {
         return Scaffold(
-          backgroundColor: navBar.backgroundColor,
-          body: Builder(
-            builder: (context) {
-              switch (navBar.selectedMenu) {
-                case MenuNavBar.home:
-                  return HomePage(user: user);
-                case MenuNavBar.nutriTime:
-                  return const NutriTimePage();
-                case MenuNavBar.nutriNews:
-                  return const NewsPage();
-                case MenuNavBar.nutriShop:
-                  return const Scaffold(
-                    body: Center(child: Text('NutriShop Page')),
-                  );
-              }
-            },
+          body: PageView(
+            physics: const NeverScrollableScrollPhysics(),
+            controller: _pageController,
+            children: _pages,
+            onPageChanged: (index) => navbar.selectedIndex = index,
           ),
-          bottomNavigationBar: CustomBottomNavigationBar(notifier: navBar),
-          floatingActionButton: CustomFloatingActionButton(onPressed: () {}),
+          backgroundColor: navbar.backgroundColor,
+          bottomNavigationBar: CustomBottomNavigationBar(
+            notifier: navbar,
+            pageController: _pageController,
+          ),
+          floatingActionButton: CustomFloatingActionButton(
+            onPressed: () => Navigator.pushNamed(
+              context,
+              checkRoute,
+              arguments: widget.user.uid,
+            ),
+          ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
         );

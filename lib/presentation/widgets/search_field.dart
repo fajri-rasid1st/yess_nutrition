@@ -2,18 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 
 class SearchField extends StatelessWidget {
-  final TextEditingController? controller;
+  final TextEditingController controller;
   final String query;
   final String hintText;
+  final Color backgroundColor;
+  final TextInputType textInputType;
   final VoidCallback? onTap;
   final ValueChanged<String>? onChanged;
   final ValueSetter<String>? onSubmitted;
 
   const SearchField({
     Key? key,
-    this.controller,
+    required this.controller,
     required this.query,
     required this.hintText,
+    this.backgroundColor = secondaryColor,
+    this.textInputType = TextInputType.text,
     this.onTap,
     this.onChanged,
     this.onSubmitted,
@@ -23,13 +27,13 @@ class SearchField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: secondaryColor,
-        borderRadius: BorderRadius.circular(12),
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(8),
       ),
       child: TextField(
         controller: controller,
+        keyboardType: textInputType,
         textInputAction: TextInputAction.search,
-        textCapitalization: TextCapitalization.words,
         decoration: InputDecoration(
           border: InputBorder.none,
           contentPadding: const EdgeInsets.only(top: 14),
@@ -42,7 +46,7 @@ class SearchField extends StatelessWidget {
                   icon: const Icon(Icons.close_rounded),
                   color: primaryTextColor,
                   onPressed: () {
-                    controller?.clear();
+                    controller.clear();
 
                     if (onChanged != null) onChanged!('');
                   },

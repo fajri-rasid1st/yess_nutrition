@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
-import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/presentation/providers/common_notifiers/bottom_navigation_bar_notifier.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final BottomNavigationBarNotifier notifier;
+  final PageController pageController;
 
   const CustomBottomNavigationBar({
     Key? key,
     required this.notifier,
+    required this.pageController,
   }) : super(key: key);
 
   @override
@@ -29,61 +30,63 @@ class CustomBottomNavigationBar extends StatelessWidget {
       ),
       child: Row(
         children: <Widget>[
-          buildNavBarItem(
+          _buildNavBarItem(
             context,
-            MdiIcons.homeOutline,
-            MdiIcons.home,
-            MenuNavBar.home,
-            scaffoldBackgroundColor,
+            index: 0,
+            selectedIcon: MdiIcons.home,
+            unselectedIcon: MdiIcons.homeOutline,
+            backgroundColor: scaffoldBackgroundColor,
           ),
-          buildNavBarItem(
+          _buildNavBarItem(
             context,
-            MdiIcons.timerOutline,
-            MdiIcons.timer,
-            MenuNavBar.nutriTime,
-            scaffoldBackgroundColor,
+            index: 1,
+            selectedIcon: MdiIcons.timer,
+            unselectedIcon: MdiIcons.timerOutline,
+            backgroundColor: scaffoldBackgroundColor,
           ),
           SizedBox(
             height: kBottomNavigationBarHeight + 8,
             width: MediaQuery.of(context).size.width / 5,
           ),
-          buildNavBarItem(
+          _buildNavBarItem(
             context,
-            MdiIcons.newspaperVariantOutline,
-            MdiIcons.newspaperVariant,
-            MenuNavBar.nutriNews,
-            primaryBackgroundColor,
+            index: 2,
+            selectedIcon: MdiIcons.newspaperVariant,
+            unselectedIcon: MdiIcons.newspaperVariantOutline,
+            backgroundColor: primaryBackgroundColor,
           ),
-          buildNavBarItem(
+          _buildNavBarItem(
             context,
-            MdiIcons.shoppingOutline,
-            MdiIcons.shopping,
-            MenuNavBar.nutriShop,
-            scaffoldBackgroundColor,
+            index: 3,
+            selectedIcon: MdiIcons.shopping,
+            unselectedIcon: MdiIcons.shoppingOutline,
+            backgroundColor: scaffoldBackgroundColor,
           ),
         ],
       ),
     );
   }
 
-  GestureDetector buildNavBarItem(
-    BuildContext context,
-    IconData unselectedIcon,
-    IconData selectedIcon,
-    MenuNavBar menu,
-    Color backgroundColor,
-  ) {
+  GestureDetector _buildNavBarItem(
+    BuildContext context, {
+    required int index,
+    required IconData selectedIcon,
+    required IconData unselectedIcon,
+    required Color backgroundColor,
+  }) {
+    final isSelected = index == notifier.selectedIndex;
+
     return GestureDetector(
       onTap: () {
-        notifier.selectedMenu = menu;
         notifier.backgroundColor = backgroundColor;
+        pageController.jumpToPage(index);
       },
       child: SizedBox(
         width: MediaQuery.of(context).size.width / 5,
         height: kBottomNavigationBarHeight + 8,
         child: Icon(
-          menu == notifier.selectedMenu ? selectedIcon : unselectedIcon,
-          color: menu == notifier.selectedMenu ? primaryColor : secondaryColor,
+          isSelected ? selectedIcon : unselectedIcon,
+          color: isSelected ? primaryColor : secondaryColor,
           size: 28,
         ),
       ),

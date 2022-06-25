@@ -9,8 +9,8 @@ import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/presentation/providers/common_notifiers/input_password_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user_notifiers/auth_notifiers/sign_up_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user_notifiers/firestore_notifiers/create_user_data_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/user_auth_notifiers/user_auth_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_firestore_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -76,9 +76,9 @@ class _RegisterPageState extends State<RegisterPage> {
                         onPressed: () => Navigator.pop(context),
                         icon: const Icon(
                           Icons.chevron_left_rounded,
-                          color: primaryBackgroundColor,
                           size: 32,
                         ),
+                        color: primaryBackgroundColor,
                         tooltip: 'Back',
                       ),
                     ),
@@ -258,8 +258,8 @@ class _RegisterPageState extends State<RegisterPage> {
 
     if (_formKey.currentState!.validate()) {
       final value = _formKey.currentState!.value;
-      final signUpNotifier = context.read<SignUpNotifier>();
-      final createUserDataNotifier = context.read<CreateUserDataNotifier>();
+      final authNotifier = context.read<UserAuthNotifier>();
+      final userDataNotifier = context.read<UserFirestoreNotifier>();
 
       // show loading when sign up is currently on process
       showDialog(
@@ -269,21 +269,21 @@ class _RegisterPageState extends State<RegisterPage> {
       );
 
       // sign up process
-      await signUpNotifier.signUp(value['email'], value['password']);
+      await authNotifier.signUp(value['email'], value['password']);
 
-      if (signUpNotifier.state == UserState.success) {
+      if (authNotifier.state == UserState.success) {
         // get user
-        final user = signUpNotifier.user;
+        final user = authNotifier.user;
 
         // convert user entity to user data entity
         final userData = user.toUserData();
 
         // craete user data when sign up successfully
-        await createUserDataNotifier.createUserData(
+        await userDataNotifier.createUserData(
           userData.copyWith(name: value['name']),
         );
 
-        if (createUserDataNotifier.state == UserState.success) {
+        if (userDataNotifier.state == UserState.success) {
           // close the loading indicator
           navigatorKey.currentState!.pop();
 
@@ -294,7 +294,7 @@ class _RegisterPageState extends State<RegisterPage> {
           );
         }
       } else {
-        final snackBar = Utilities.createSnackBar(signUpNotifier.error);
+        final snackBar = Utilities.createSnackBar(authNotifier.error);
 
         // close the loading indicator
         navigatorKey.currentState!.pop();

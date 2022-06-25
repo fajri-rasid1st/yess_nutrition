@@ -2,22 +2,43 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
+import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
+import 'package:yess_nutrition/presentation/providers/common_notifiers/bottom_navigation_bar_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/news_notifiers/get_news_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_news_home.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_shop_home.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_time_task.dart';
 import 'package:yess_nutrition/presentation/widgets/large_circular_progress.dart';
 import 'package:yess_nutrition/presentation/widgets/small_circular_progress.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   final UserEntity user;
 
   const HomePage({Key? key, required this.user}) : super(key: key);
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() {
+      Provider.of<GetNewsNotifier>(context, listen: false)
+          .getNewsByCount(count: 5);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
@@ -48,48 +69,57 @@ class HomePage extends StatelessWidget {
             ),
             child: Row(
               children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Container(
-                      width: 50,
-                      height: 50,
-                      margin: const EdgeInsets.only(right: 12),
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(8),
-                        ),
-                      ),
-                      clipBehavior: Clip.hardEdge,
-                      child: Image.asset(
-                        'assets/img/test_avatar.png',
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Text(
-                          'Hai, ${user.name}!',
-                          style: const TextStyle(
-                            color: primaryBackgroundColor,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w800,
+                Expanded(
+                  child: Row(
+                    children: <Widget>[
+                      Container(
+                        width: 50,
+                        height: 50,
+                        margin: const EdgeInsets.only(right: 12),
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(8),
                           ),
                         ),
-                        const SizedBox(height: 4),
-                        Text(
-                          "Selamat Datang",
-                          style: Theme.of(context)
-                              .textTheme
-                              .caption
-                              ?.copyWith(color: primaryBackgroundColor),
+                        clipBehavior: Clip.hardEdge,
+                        child: widget.user.imgUrl.isEmpty
+                            ? Image.asset(
+                                'assets/img/default_user_pict.png',
+                                fit: BoxFit.cover,
+                              )
+                            : Image.network(
+                                widget.user.imgUrl,
+                                fit: BoxFit.cover,
+                              ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text(
+                              'Hai, ${widget.user.name}',
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: primaryBackgroundColor,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              "Selamat Datang",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .caption
+                                  ?.copyWith(color: primaryBackgroundColor),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ],
+                      ),
+                    ],
+                  ),
                 ),
-                const Spacer(),
                 Container(
                   decoration: BoxDecoration(
                     color: primaryColor,
@@ -100,7 +130,7 @@ class HomePage extends StatelessWidget {
                       Navigator.pushNamed(
                         context,
                         profileRoute,
-                        arguments: user,
+                        arguments: widget.user.uid,
                       );
                     },
                     icon: const Icon(
@@ -139,11 +169,31 @@ class HomePage extends StatelessWidget {
             const SizedBox(height: 20),
             _buildCardNutriTime(context),
             const SizedBox(height: 20),
-            _buildTitleContent(context, "NutriNews"),
+            _buildTitleContent(
+              context,
+              "NutriNews",
+              () {
+                var bottomNav = Provider.of<BottomNavigationBarNotifier>(
+                    context,
+                    listen: false);
+                bottomNav.selectedIndex = 2;
+                bottomNav.backgroundColor = primaryBackgroundColor;
+              },
+            ),
             const SizedBox(height: 8),
             _buildListNutriNews(),
             const SizedBox(height: 20),
-            _buildTitleContent(context, "NutriShop"),
+            _buildTitleContent(
+              context,
+              "NutriShop",
+              () {
+                var bottomNav = Provider.of<BottomNavigationBarNotifier>(
+                    context,
+                    listen: false);
+                bottomNav.selectedIndex = 3;
+                bottomNav.backgroundColor = scaffoldBackgroundColor;
+              },
+            ),
             const SizedBox(height: 8),
             _buildListNutriShop(),
             const SizedBox(height: 120),
@@ -347,7 +397,11 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Padding _buildTitleContent(BuildContext context, String title) {
+  Padding _buildTitleContent(
+    BuildContext context,
+    String title,
+    VoidCallback onTap,
+  ) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
@@ -356,20 +410,19 @@ class HomePage extends StatelessWidget {
             title,
             style: Theme.of(context)
                 .textTheme
-                .subtitle1
-                ?.copyWith(fontWeight: FontWeight.w800),
+                .subtitle1!
+                .copyWith(fontWeight: FontWeight.bold),
           ),
           const Spacer(),
           InkWell(
-            onTap: () {},
+            onTap: onTap,
             child: Row(
               children: <Widget>[
                 Text(
                   "Selengkapnya",
-                  style: Theme.of(context).textTheme.overline?.copyWith(
+                  style: Theme.of(context).textTheme.caption!.copyWith(
                         color: primaryColor,
                         letterSpacing: 0.25,
-                        fontSize: 12,
                       ),
                 ),
                 const Icon(
@@ -387,26 +440,27 @@ class HomePage extends StatelessWidget {
 
   Padding _buildListNutriNews() {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16,
-      ),
-      child: ListView.separated(
-        primary: false,
-        shrinkWrap: true,
-        padding: EdgeInsets.zero,
-        itemBuilder: (context, index) {
-          return const CardNutriNewsHome(
-            picture:
-                'https://s3.theasianparent.com/cdn-cgi/image/height=250/tap-assets-prod/wp-content/uploads/sites/6/2013/03/healthy-foods.jpg',
-            title: 'Tak Perlu Minum Obat, Cukup Konsumsi...',
-            time: '2 jam lalu',
-            show: '1080 dilihat',
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Consumer<GetNewsNotifier>(
+        builder: (context, result, child) {
+          return ListView.separated(
+            primary: false,
+            shrinkWrap: true,
+            padding: EdgeInsets.zero,
+            itemBuilder: (context, index) {
+              final news = result.news[index];
+
+              return CardNutriNewsHome(
+                news: news.copyWith(uid: widget.user.uid),
+                heroTag: 'home:${news.url}',
+              );
+            },
+            separatorBuilder: (context, index) {
+              return const SizedBox(height: 10);
+            },
+            itemCount: result.news.length,
           );
         },
-        separatorBuilder: (context, index) {
-          return const SizedBox(height: 8);
-        },
-        itemCount: 3,
       ),
     );
   }
@@ -433,4 +487,7 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
