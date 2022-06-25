@@ -286,7 +286,7 @@ class MyApp extends StatelessWidget {
               return MaterialPageRoute(
                 builder: (_) => ProductListPage(
                   title: arguments.title,
-                  url: arguments.url,
+                  productBaseUrl: arguments.productBaseUrl,
                 ),
                 settings: settings,
               );

@@ -27,7 +27,8 @@ class ProductsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  final int randIndex = math.Random().nextInt(8);
+  final int _randIndex = math.Random().nextInt(8);
+  int get randIndex => _randIndex;
 
   Future<void> getProducts() async {
     _state = RequestState.loading;

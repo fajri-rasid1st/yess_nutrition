@@ -1,133 +1,84 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
-import 'package:yess_nutrition/data/models/product_models/product_model.dart';
+import 'package:yess_nutrition/common/utils/routes.dart';
+import 'package:yess_nutrition/domain/entities/product_entity.dart';
+import 'package:yess_nutrition/presentation/widgets/custom_network_image.dart';
 
 class ProductCard extends StatelessWidget {
-  final ProductModel product;
+  final ProductEntity product;
 
   const ProductCard({Key? key, required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            height: 370,
-            width: 200,
-            margin: const EdgeInsets.only(left: 15, top: 15),
-            decoration: BoxDecoration(
-              color: scaffoldBackgroundColor,
-              borderRadius: BorderRadius.circular(15),
-              boxShadow: const <BoxShadow>[
-                // to make elevation
-                BoxShadow(
-                  color: Colors.black45,
-                  offset: Offset(2, 2),
-                  blurRadius: 4,
-                ),
-              ],
-            ),
-            child: Expanded(
-              child: Column(
-                children: <Widget>[
-                  Stack(
-                    children: <Widget>[
-                      Container(
-                        height: 180,
-                        width: 200,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                            alignment: Alignment.bottomCenter,
-                            image: AssetImage(product.imgUrl),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(top: 200, left: 15),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                Expanded(child: Text(product.title)),
-                                Wrap(
-                                  children: <Widget>[
-                                    const SizedBox(
-                                      height: 10,
-                                      width: 20,
-                                    ),
-                                    Image.asset('assets/img/bintang.png'),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                        left: 5,
-                                        right: 10,
-                                      ),
-                                      child: Text(
-                                        // product.rating,
-                                        '',
-                                        style: const TextStyle(fontSize: 12),
-                                      ),
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Wrap(
-                                  direction: Axis.vertical,
-                                  children: [
-                                    const SizedBox(height: 5),
-                                    Text(
-                                      product.price,
-                                      style:
-                                          Theme.of(context).textTheme.bodyText1,
-                                    ),
-                                    const Text(
-                                      '',
-                                      style: TextStyle(
-                                        color: primaryColor,
-                                        decoration: TextDecoration.lineThrough,
-                                        decorationColor: Colors.black,
-                                        decorationStyle:
-                                            TextDecorationStyle.solid,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                // LoveButton(),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      // Positioned(
-                      //   child: Container(
-                      //     width: 50,
-                      //     height: 40,
-                      //     decoration: const BoxDecoration(
-                      //       image: DecorationImage(
-                      //         alignment: Alignment.topLeft,
-                      //         image: AssetImage('assets/img/discount.png'),
-                      //       ),
-                      //     ),
-                      //     padding: const EdgeInsets.only(top: 10, left: 5),
-                      //     child: Text(
-                      //       '${product.discountPercent}%',
-                      //       style: Theme.of(context).textTheme.caption,
-                      //     ),
-                      //   ),
-                      // ),
-                    ],
-                  )
-                ],
+    return SizedBox(
+      width: 150,
+      height: double.infinity,
+      child: Card(
+        elevation: 4,
+        clipBehavior: Clip.antiAlias,
+        shadowColor: Colors.black.withOpacity(0.1),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: InkWell(
+          onTap: () => Navigator.pushNamed(
+            context,
+            webviewRoute,
+            arguments: product.url,
+          ),
+          child: Column(
+            children: <Widget>[
+              CustomNetworkImage(
+                fit: BoxFit.fill,
+                imgUrl: product.imgUrl,
+                placeHolderSize: 40,
+                errorIcon: Icons.motion_photos_off_outlined,
               ),
-            ),
-          )
-        ],
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      product.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      product.price,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: primaryColor,
+                          ),
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: <Widget>[
+                        Icon(
+                          Icons.star_rate_rounded,
+                          color: Colors.orange[400],
+                          size: 20,
+                        ),
+                        Text(
+                          product.rating.toString(),
+                          style: Theme.of(context)
+                              .textTheme
+                              .subtitle2!
+                              .copyWith(color: Colors.orange[400]),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

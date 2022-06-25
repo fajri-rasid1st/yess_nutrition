@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
@@ -27,6 +29,9 @@ class _WebViewPageState extends State<WebViewPage> {
 
   @override
   Widget build(BuildContext context) {
+    final popUpMenuTextStyle =
+        GoogleFonts.plusJakartaSans(color: primaryTextColor);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: primaryBackgroundColor,
@@ -47,28 +52,89 @@ class _WebViewPageState extends State<WebViewPage> {
           tooltip: 'Close',
         ),
         actions: <Widget>[
-          IconButton(
-            onPressed: () => _webViewController.reload(),
-            icon: const Icon(Icons.refresh_rounded),
-            color: primaryColor,
-            tooltip: 'Reload',
-          ),
-          IconButton(
-            onPressed: () {
-              Future.wait([
-                _webViewController.clearCache(),
-                CookieManager().clearCookies(),
-              ]).then((_) {
-                ScaffoldMessenger.of(context)
-                  ..hideCurrentSnackBar()
-                  ..showSnackBar(
-                    Utilities.createSnackBar('Cache berhasil dihapus'),
-                  );
-              });
+          PopupMenuButton(
+            padding: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            icon: const Icon(
+              Icons.more_vert_rounded,
+              color: primaryColor,
+            ),
+            itemBuilder: (context) {
+              return <PopupMenuItem>[
+                PopupMenuItem(
+                  textStyle: popUpMenuTextStyle,
+                  onTap: () async {
+                    final url = Uri.parse(widget.url);
+
+                    if (await canLaunchUrl(url)) {
+                      await launchUrl(
+                        url,
+                        mode: LaunchMode.externalApplication,
+                      );
+                    }
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const <Widget>[
+                      Icon(
+                        Icons.open_in_browser_rounded,
+                        color: primaryColor,
+                      ),
+                      SizedBox(width: 12),
+                      Text('Buka di Browser'),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  textStyle: popUpMenuTextStyle,
+                  onTap: () async {
+                    await _webViewController.reload();
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const <Widget>[
+                      Icon(
+                        Icons.refresh_rounded,
+                        color: primaryColor,
+                      ),
+                      SizedBox(width: 12),
+                      Text('Muat Ulang'),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  textStyle: popUpMenuTextStyle,
+                  onTap: () {
+                    Future.wait([
+                      // clear caches
+                      _webViewController.clearCache(),
+                      // clear cookies
+                      CookieManager().clearCookies(),
+                    ]).then((_) {
+                      ScaffoldMessenger.of(context)
+                        ..hideCurrentSnackBar()
+                        ..showSnackBar(
+                          Utilities.createSnackBar('Cache berhasil dihapus'),
+                        );
+                    });
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: const <Widget>[
+                      Icon(
+                        Icons.cached_rounded,
+                        color: primaryColor,
+                      ),
+                      SizedBox(width: 12),
+                      Text('Hapus Cache'),
+                    ],
+                  ),
+                ),
+              ];
             },
-            icon: const Icon(Icons.cached_rounded),
-            color: primaryColor,
-            tooltip: 'Clear Cache',
+            tooltip: 'More',
           ),
         ],
       ),

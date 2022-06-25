@@ -5,6 +5,7 @@ import 'package:yess_nutrition/domain/entities/user_entity.dart';
 import 'package:yess_nutrition/presentation/pages/home_page.dart';
 import 'package:yess_nutrition/presentation/pages/news_pages/news_page.dart';
 import 'package:yess_nutrition/presentation/pages/schedule_pages/nutri_time_page.dart';
+import 'package:yess_nutrition/presentation/pages/shop_pages/shop_page.dart';
 import 'package:yess_nutrition/presentation/providers/common_notifiers/bottom_navigation_bar_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_bottom_navigation_bar.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_floating_action_button.dart';
@@ -23,14 +24,14 @@ class _MainPageState extends State<MainPage> {
 
   @override
   void initState() {
+    super.initState();
+
     _pages.addAll([
       HomePage(user: widget.user),
       const NutriTimePage(),
       NewsPage(uid: widget.user.uid),
-      const Scaffold(body: Center(child: Text('NutriShop Page')))
+      ShopPage(uid: widget.user.uid),
     ]);
-
-    super.initState();
   }
 
   @override

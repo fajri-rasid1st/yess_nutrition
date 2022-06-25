@@ -1,329 +1,319 @@
 import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
-import 'package:yess_nutrition/common/utils/constants.dart';
-import 'package:yess_nutrition/presentation/pages/shop_pages/product_list_page.dart';
+import 'package:yess_nutrition/common/utils/enum_state.dart';
+import 'package:yess_nutrition/data/models/product_models/product_category_model.dart';
+import 'package:yess_nutrition/presentation/providers/product_notifiers/products_notifier.dart';
+import 'package:yess_nutrition/presentation/widgets/custom_information.dart';
+import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
+import 'package:yess_nutrition/presentation/widgets/product_card.dart';
 import 'package:yess_nutrition/presentation/widgets/product_category_card.dart';
 
-class ShopPage extends StatelessWidget {
-  const ShopPage({Key? key}) : super(key: key);
+class ShopPage extends StatefulWidget {
+  final String uid;
+
+  const ShopPage({Key? key, required this.uid}) : super(key: key);
+
+  @override
+  State<ShopPage> createState() => _ShopPageState();
+}
+
+class _ShopPageState extends State<ShopPage> {
+  @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() {
+      Provider.of<ProductsNotifier>(context, listen: false).getProducts();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: secondaryBackgroundColor,
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  const Text(
-                    'NutriShop',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: primaryBackgroundColor,
-                    ),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        toolbarHeight: 84,
+        title: const Text(
+          'NutriShop',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 24,
+          ),
+        ),
+        actions: <Widget>[
+          SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Align(
+                alignment: Alignment.topRight,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: primaryColor,
+                    borderRadius: BorderRadius.circular(12),
                   ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 15,
-                    ),
-                    decoration: BoxDecoration(
+                  child: IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.favorite),
+                    color: primaryBackgroundColor,
+                    tooltip: 'Favorite',
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+      body: Consumer<ProductsNotifier>(
+        builder: (context, productsNotifier, child) {
+          if (productsNotifier.state == RequestState.success) {
+            return _buildMainPage(context, productsNotifier);
+          }
+
+          if (productsNotifier.state == RequestState.error) {
+            return _buildPageError(productsNotifier);
+          }
+
+          return Container(
+            color: scaffoldBackgroundColor,
+            child: const LoadingIndicator(),
+          );
+        },
+      ),
+    );
+  }
+
+  ClipRRect _buildMainPage(
+    BuildContext context,
+    ProductsNotifier notifier,
+  ) {
+    final productsMap = notifier.productsMap;
+
+    return ClipRRect(
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+      child: Container(
+        color: scaffoldBackgroundColor,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(vertical: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                child: Image.asset('assets/img/shop_frame_2.png'),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                child: Text(
+                  'Kategori Kesehatan',
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle1!
+                      .copyWith(fontWeight: FontWeight.bold),
+                ),
+              ),
+              SizedBox(
+                height: 170,
+                child: ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    return ProductCategoryCard(
+                      productCategory: healthProductCategories[index],
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return const SizedBox(width: 16);
+                  },
+                  itemCount: healthProductCategories.length,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 24, 16, 12),
+                child: Text(
+                  'Kategori Makanan & Minuman',
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle1!
+                      .copyWith(fontWeight: FontWeight.bold),
+                ),
+              ),
+              SizedBox(
+                height: 170,
+                child: ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    return ProductCategoryCard(
+                      productCategory: foodProductCategories[index],
+                    );
+                  },
+                  separatorBuilder: (context, index) {
+                    return const SizedBox(width: 16);
+                  },
+                  itemCount: foodProductCategories.length,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 28, 16, 32),
+                child: Image.asset('assets/img/shop_frame_1.png'),
+              ),
+              _buildTitleContent(
+                context,
+                'Produk kesehatan terlaris!',
+                () {},
+              ),
+              SizedBox(
+                height: 260,
+                child: ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    final products = productsMap['health']!;
+
+                    return ProductCard(product: products[index]);
+                  },
+                  separatorBuilder: (context, index) {
+                    return const SizedBox(width: 8);
+                  },
+                  itemCount: productsMap['health']!.length,
+                ),
+              ),
+              const SizedBox(height: 24),
+              _buildTitleContent(
+                context,
+                'Produk makanan terlaris!',
+                () {},
+              ),
+              SizedBox(
+                height: 260,
+                child: ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    final products = productsMap['food']!;
+
+                    return ProductCard(product: products[index]);
+                  },
+                  separatorBuilder: (context, index) {
+                    return const SizedBox(width: 8);
+                  },
+                  itemCount: productsMap['food']!.length,
+                ),
+              ),
+              const SizedBox(height: 24),
+              _buildTitleContent(
+                context,
+                'Rekomendasi untukmu!',
+                () {},
+              ),
+              SizedBox(
+                height: 260,
+                child: ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    final products = productsMap['recommendation']!;
+
+                    return ProductCard(product: products[index]);
+                  },
+                  separatorBuilder: (context, index) {
+                    return const SizedBox(width: 8);
+                  },
+                  itemCount: productsMap['recommendation']!.length,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Padding _buildTitleContent(
+    BuildContext context,
+    String title,
+    VoidCallback onTap,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 10, 12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            title,
+            style: Theme.of(context)
+                .textTheme
+                .subtitle1!
+                .copyWith(fontWeight: FontWeight.bold),
+          ),
+          const Spacer(),
+          InkWell(
+            onTap: onTap,
+            child: Row(
+              children: <Widget>[
+                Text(
+                  "Lihat semua",
+                  style: Theme.of(context).textTheme.caption!.copyWith(
                         color: primaryColor,
-                        borderRadius: BorderRadius.circular(8),
-                        image: const DecorationImage(
-                          image: AssetImage('assets/img/ic_love.png'),
-                        )),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: primaryBackgroundColor,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(25),
-                    topRight: Radius.circular(25),
-                  ),
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 20,
-                        ),
-                        height: 54,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: primaryColor),
-                        ),
-                        child: Row(
-                          children: const <Widget>[
-                            Expanded(
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.search,
-                                    color: primaryColor,
-                                  ),
-                                  border: InputBorder.none,
-                                  hintText: 'Search Item',
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SingleChildScrollView(
-                        child: Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                padding:
-                                    const EdgeInsets.only(left: 15, right: 10),
-                                child: Image.asset('assets/img/bg_iklan.png'),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.only(left: 16),
-                                child: const Text(
-                                  'Kategori Kesehatan',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: List<Padding>.generate(
-                                    healthProductCategories.length,
-                                    (index) => Padding(
-                                        padding:
-                                            const EdgeInsets.only(right: 16),
-                                        child: Container(
-                                          margin: const EdgeInsets.only(
-                                            left: 15,
-                                            top: 15,
-                                          ),
-                                          child: ProductCategoryCard(
-                                              imgAsset:
-                                                  healthProductCategories[index]
-                                                      .imgAsset,
-                                              title:
-                                                  healthProductCategories[index]
-                                                      .title,
-                                              onPressed: () {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        ProductListPage(
-                                                      title:
-                                                          healthProductCategories[
-                                                                  index]
-                                                              .title,
-                                                      url:
-                                                          healthProductBaseUrls[
-                                                              index],
-                                                    ),
-                                                  ),
-                                                );
-                                              }),
-                                        )),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              Container(
-                                padding: const EdgeInsets.only(left: 16),
-                                child: const Text(
-                                  'Kategori Makanan & Minuman',
-                                  style: TextStyle(fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                              SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  children: List.generate(
-                                    foodProductCategories.length,
-                                    (index) => Padding(
-                                      padding: const EdgeInsets.only(right: 16),
-                                      child: Container(
-                                        margin: const EdgeInsets.only(
-                                          left: 15,
-                                          top: 15,
-                                        ),
-                                        child: ProductCategoryCard(
-                                          imgAsset: foodProductCategories[index]
-                                              .imgAsset,
-                                          title: foodProductCategories[index]
-                                              .title,
-                                          onPressed: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    ProductListPage(
-                                                  title: foodProductCategories[
-                                                          index]
-                                                      .title,
-                                                  url: foodProductBaseUrls[
-                                                      index],
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.only(
-                                    left: 40, right: 20, top: 30),
-                                child: Image.asset(
-                                  'assets/img/bg_discount.png',
-                                ),
-                              ),
-                              const SizedBox(
-                                height: 30,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.only(left: 16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: const [
-                                Text(
-                                  'Masker Medis',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(width: 20),
-                                Text(
-                                  'Yang Terbaik Untukmu!',
-                                  style: TextStyle(fontSize: 16),
-                                ),
-                              ],
-                            ),
-                            // SizedBox(
-                            //   height: 400,
-                            //   child: ListView.separated(
-                            //     shrinkWrap: true,
-                            //     scrollDirection: Axis.horizontal,
-                            //     itemCount: masker.length,
-                            //     itemBuilder: (context, index) => ProductCard(
-                            //       product: masker[index],
-                            //     ),
-                            //     separatorBuilder: (context, index) =>
-                            //         const SizedBox(width: 16),
-                            //   ),
-                            // ),
-                            const SizedBox(height: 20),
-                            Container(
-                              padding: const EdgeInsets.only(left: 16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: const [
-                                      Text(
-                                        'Obat herbal lainnya',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(width: 20),
-                                      Text(
-                                        'Cek disini, yuk!',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.normal,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  // SizedBox(
-                                  //   height: 400,
-                                  //   child: ListView.separated(
-                                  //     shrinkWrap: true,
-                                  //     scrollDirection: Axis.horizontal,
-                                  //     itemCount: obat.length,
-                                  //     itemBuilder: (context, index) =>
-                                  //         ProductCard(
-                                  //       product: obat[index],
-                                  //     ),
-                                  //     separatorBuilder: (context, index) =>
-                                  //         const SizedBox(width: 16),
-                                  //   ),
-                                  // ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            Container(
-                              padding: const EdgeInsets.only(left: 16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: const [
-                                      Text(
-                                        'Rekomendasi Untukmu',
-                                        style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      SizedBox(width: 20),
-                                    ],
-                                  ),
-                                  // SizedBox(
-                                  //   height: 400,
-                                  //   child: ListView.separated(
-                                  //     shrinkWrap: true,
-                                  //     scrollDirection: Axis.horizontal,
-                                  //     itemCount: rekomendasi.length,
-                                  //     itemBuilder: (context, index) =>
-                                  //         ProductCard(
-                                  //       product: rekomendasi[index],
-                                  //     ),
-                                  //     separatorBuilder: (context, index) =>
-                                  //         const SizedBox(width: 16),
-                                  //   ),
-                                  // ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                const Icon(
+                  MdiIcons.chevronRight,
+                  color: primaryColor,
+                  size: 20,
                 ),
-              ),
+              ],
             ),
-          ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container _buildPageError(ProductsNotifier notifier) {
+    return Container(
+      color: scaffoldBackgroundColor,
+      child: CustomInformation(
+        key: const Key('error_message'),
+        imgPath: 'assets/svg/error_robot_cuate.svg',
+        title: notifier.message,
+        subtitle: 'Silahkan coba beberapa saat lagi.',
+        child: ElevatedButton.icon(
+          onPressed: notifier.isReload
+              ? null
+              : () {
+                  // set isReload to true
+                  notifier.isReload = true;
+
+                  Future.wait([
+                    // create one second delay
+                    Future.delayed(const Duration(seconds: 1)),
+
+                    // refresh page
+                    notifier.refresh(),
+                  ]).then((_) {
+                    // set isReload to true
+                    notifier.isReload = false;
+                  });
+                },
+          icon: notifier.isReload
+              ? const SizedBox(
+                  width: 18,
+                  height: 18,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: dividerColor,
+                  ),
+                )
+              : const Icon(Icons.refresh_rounded),
+          label: notifier.isReload
+              ? const Text('Tunggu sebentar...')
+              : const Text('Coba lagi'),
         ),
       ),
     );
