@@ -40,6 +40,7 @@ class Utilities {
       maxCarbohydrate: maxCarbohydrate,
       maxProtein: maxProtein,
       maxFat: maxFat,
+      currentDate: DateTime.now(),
     );
   }
 

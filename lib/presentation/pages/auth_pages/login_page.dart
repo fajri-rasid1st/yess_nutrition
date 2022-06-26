@@ -11,7 +11,7 @@ import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/presentation/providers/common_notifiers/input_password_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/user_auth_notifiers/user_auth_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_firestore_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/clickable_text.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
@@ -267,7 +267,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _onPressedGoogleSignInButton(BuildContext context) async {
     final authNotifier = context.read<UserAuthNotifier>();
-    final userDataNotifier = context.read<UserFirestoreNotifier>();
+    final userDataNotifier = context.read<UserDataNotifier>();
 
     await authNotifier.signInWithGoogle();
 

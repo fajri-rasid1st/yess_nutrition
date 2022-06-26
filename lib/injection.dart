@@ -35,12 +35,19 @@ void init() {
 
   // User firestore providers
   locator.registerFactory(
-    () => UserFirestoreNotifier(
+    () => UserDataNotifier(
       createUserDataUseCase: locator(),
       readUserDataUseCase: locator(),
       updateUserDataUseCase: locator(),
       deleteUserDataUseCase: locator(),
       getUserStatusUseCase: locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => UserNutrientsNotifier(
+      createUserNutrientsUseCase: locator(),
+      readUserNutrientsUseCase: locator(),
+      updateUserNutrientsUseCase: locator(),
     ),
   );
 
@@ -145,6 +152,9 @@ void init() {
   locator.registerLazySingleton(() => UpdateUserData(locator()));
   locator.registerLazySingleton(() => DeleteUserData(locator()));
   locator.registerLazySingleton(() => GetUserStatus(locator()));
+  locator.registerLazySingleton(() => CreateUserNutrients(locator()));
+  locator.registerLazySingleton(() => ReadUserNutrients(locator()));
+  locator.registerLazySingleton(() => UpdateUserNutrients(locator()));
 
   // User storage usecases
   locator.registerLazySingleton(() => UploadProfilePicture(locator()));

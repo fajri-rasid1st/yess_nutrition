@@ -403,7 +403,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
 
     if (_formKey.currentState!.validate()) {
       final value = _formKey.currentState!.value;
-      final userDataNotifier = context.read<UserFirestoreNotifier>();
+      final userDataNotifier = context.read<UserDataNotifier>();
 
       // show loading when on process
       showDialog(
@@ -548,7 +548,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     if (!mounted) return;
 
     if (uploadProfilePictureNotifier.state == UserState.success) {
-      final userDataNotifier = context.read<UserFirestoreNotifier>();
+      final userDataNotifier = context.read<UserDataNotifier>();
 
       String url = uploadProfilePictureNotifier.downloadUrl;
 

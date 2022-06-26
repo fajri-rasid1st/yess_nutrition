@@ -79,7 +79,10 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<UserAuthNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => di.locator<UserFirestoreNotifier>(),
+          create: (_) => di.locator<UserDataNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<UserNutrientsNotifier>(),
         ),
         ChangeNotifierProvider(
           create: (_) => di.locator<UserStorageNotifier>(),

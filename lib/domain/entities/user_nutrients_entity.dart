@@ -10,6 +10,7 @@ class UserNutrientsEntity extends Equatable {
   final int maxProtein;
   final int currentFat;
   final int maxFat;
+  final DateTime currentDate;
 
   const UserNutrientsEntity({
     required this.uid,
@@ -21,6 +22,7 @@ class UserNutrientsEntity extends Equatable {
     required this.maxProtein,
     this.currentFat = 0,
     required this.maxFat,
+    required this.currentDate,
   });
 
   @override
@@ -34,5 +36,6 @@ class UserNutrientsEntity extends Equatable {
         maxProtein,
         currentFat,
         maxFat,
+        currentDate,
       ];
 }

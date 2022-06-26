@@ -7,14 +7,14 @@ import 'package:yess_nutrition/domain/usecases/user_usecases/user_firestore_usec
 import 'package:yess_nutrition/domain/usecases/user_usecases/user_firestore_usecases/read_user_data.dart';
 import 'package:yess_nutrition/domain/usecases/user_usecases/user_firestore_usecases/update_user_data.dart';
 
-class UserFirestoreNotifier extends ChangeNotifier {
+class UserDataNotifier extends ChangeNotifier {
   final CreateUserData createUserDataUseCase;
   final ReadUserData readUserDataUseCase;
   final UpdateUserData updateUserDataUseCase;
   final DeleteUserData deleteUserDataUseCase;
   final GetUserStatus getUserStatusUseCase;
 
-  UserFirestoreNotifier({
+  UserDataNotifier({
     required this.createUserDataUseCase,
     required this.readUserDataUseCase,
     required this.updateUserDataUseCase,

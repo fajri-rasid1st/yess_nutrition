@@ -5,23 +5,23 @@ class UserDataModel extends Equatable {
   final String uid;
   final String email;
   final String name;
-  final String? imgUrl;
-  final String? gender;
-  final int? age;
-  final int? weight;
-  final int? height;
-  final String? bio;
+  final String imgUrl;
+  final String gender;
+  final int age;
+  final int weight;
+  final int height;
+  final String bio;
 
   const UserDataModel({
     required this.uid,
     required this.email,
     required this.name,
-    this.imgUrl,
-    this.gender,
-    this.age,
-    this.weight,
-    this.height,
-    this.bio,
+    required this.imgUrl,
+    required this.gender,
+    required this.age,
+    required this.weight,
+    required this.height,
+    required this.bio,
   });
 
   factory UserDataModel.fromEntity(UserDataEntity userData) {
@@ -57,12 +57,12 @@ class UserDataModel extends Equatable {
       uid: uid,
       email: email,
       name: name,
-      imgUrl: imgUrl ?? '',
-      gender: gender ?? '',
-      age: age ?? 0,
-      weight: weight ?? 0,
-      height: height ?? 0,
-      bio: bio ?? '',
+      imgUrl: imgUrl,
+      gender: gender,
+      age: age,
+      weight: weight,
+      height: height,
+      bio: bio,
     );
   }
 
@@ -71,17 +71,17 @@ class UserDataModel extends Equatable {
       'uid': uid,
       'email': email,
       'name': name,
-      'imgUrl': imgUrl ?? '',
-      'gender': gender ?? '',
-      'age': age ?? 0,
-      'weight': weight ?? 0,
-      'height': height ?? 0,
-      'bio': bio ?? '',
+      'imgUrl': imgUrl,
+      'gender': gender,
+      'age': age,
+      'weight': weight,
+      'height': height,
+      'bio': bio,
     };
   }
 
   @override
-  List<Object?> get props => [
+  List<Object> get props => [
         uid,
         email,
         name,
