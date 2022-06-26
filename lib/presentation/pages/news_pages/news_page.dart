@@ -11,7 +11,7 @@ import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/news_entity.dart';
 import 'package:yess_nutrition/presentation/pages/news_pages/news_detail_page.dart';
-import 'package:yess_nutrition/presentation/providers/common_notifiers/news_fab_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/common_notifiers/news_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/get_news_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/news_bookmark_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/search_news_notifier.dart';
@@ -58,7 +58,7 @@ class _NewsPageState extends State<NewsPage>
   Widget build(BuildContext context) {
     super.build(context);
 
-    return Consumer3<NewsFabNotifier, GetNewsNotifier, SearchNewsNotifier>(
+    return Consumer3<NewsNotifier, GetNewsNotifier, SearchNewsNotifier>(
       builder: (context, fabNotifier, newsNotifier, searchNotifier, child) {
         return Scaffold(
           resizeToAvoidBottomInset: false,
@@ -72,7 +72,7 @@ class _NewsPageState extends State<NewsPage>
   }
 
   NotificationListener _buildBody(
-    NewsFabNotifier fabNotifier,
+    NewsNotifier fabNotifier,
     GetNewsNotifier newsNotifier,
     SearchNewsNotifier searchNotifier,
   ) {
@@ -173,7 +173,7 @@ class _NewsPageState extends State<NewsPage>
     );
   }
 
-  Padding? _buildFab(NewsFabNotifier fabNotifier) {
+  Padding? _buildFab(NewsNotifier fabNotifier) {
     return fabNotifier.isFabVisible
         ? Padding(
             padding: const EdgeInsets.only(top: 32),
@@ -439,7 +439,7 @@ class _NewsPageState extends State<NewsPage>
 
   bool onScrollNotification(
     UserScrollNotification notification,
-    NewsFabNotifier fabNotifier,
+    NewsNotifier fabNotifier,
   ) {
     // get the scroll position in pixel
     final scrollPosition = _scrollController.position.pixels;

@@ -134,6 +134,10 @@ class UserFirestoreDataSourceImpl implements UserFirestoreDataSource {
           'currentFat': 0,
           'currentDate': DateTime.now(),
         });
+
+        final newSnapshot = await reference.get();
+
+        return UserNutrientsModel.fromDocument(newSnapshot.data()!);
       }
 
       return model;

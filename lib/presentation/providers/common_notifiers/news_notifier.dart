@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class NewsFabNotifier extends ChangeNotifier {
+class NewsNotifier extends ChangeNotifier {
   bool _isFabVisible = false;
 
   bool get isFabVisible => _isFabVisible;

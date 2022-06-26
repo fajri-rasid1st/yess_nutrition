@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class InputPasswordNotifier extends ChangeNotifier {
+class PasswordNotifier extends ChangeNotifier {
   bool _isSignInPasswordVisible = false;
   bool get isSignInPasswordVisible => _isSignInPasswordVisible;
 

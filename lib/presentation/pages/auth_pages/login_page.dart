@@ -9,7 +9,7 @@ import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
-import 'package:yess_nutrition/presentation/providers/common_notifiers/input_password_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/common_notifiers/password_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/user_auth_notifiers/user_auth_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/clickable_text.dart';
@@ -165,8 +165,8 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  Consumer<InputPasswordNotifier> _buildPasswordField() {
-    return Consumer<InputPasswordNotifier>(
+  Consumer<PasswordNotifier> _buildPasswordField() {
+    return Consumer<PasswordNotifier>(
       builder: (context, provider, child) {
         final isVisible = provider.isSignInPasswordVisible;
 

@@ -130,13 +130,13 @@ class MyApp extends StatelessWidget {
           create: (_) => BottomNavigationBarNotifier(),
         ),
         ChangeNotifierProvider(
-          create: (_) => InputPasswordNotifier(),
+          create: (_) => PasswordNotifier(),
         ),
         ChangeNotifierProvider(
           create: (_) => WebViewNotifier(),
         ),
         ChangeNotifierProvider(
-          create: (_) => NewsFabNotifier(),
+          create: (_) => NewsNotifier(),
         ),
       ],
       child: MaterialApp(
