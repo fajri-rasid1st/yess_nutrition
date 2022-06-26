@@ -5,8 +5,8 @@ import 'package:yess_nutrition/domain/entities/food_entity.dart';
 const foodHistoryTable = 'food_history_table';
 
 class FoodTable extends Equatable {
+  final int? id;
   final String uid;
-  final String foodId;
   final String label;
   final String category;
   final String categoryLabel;
@@ -16,8 +16,8 @@ class FoodTable extends Equatable {
   final DateTime createdAt;
 
   const FoodTable({
+    this.id,
     required this.uid,
-    required this.foodId,
     required this.label,
     required this.category,
     required this.categoryLabel,
@@ -29,8 +29,8 @@ class FoodTable extends Equatable {
 
   factory FoodTable.fromEntity(FoodEntity food) {
     return FoodTable(
+      id: food.id,
       uid: food.uid!,
-      foodId: food.foodId,
       label: food.label,
       category: food.category,
       categoryLabel: food.categoryLabel,
@@ -43,8 +43,8 @@ class FoodTable extends Equatable {
 
   factory FoodTable.fromMap(Map<String, dynamic> food) {
     return FoodTable(
+      id: food['id'] as int,
       uid: food['uid'] as String,
-      foodId: food['foodId'] as String,
       label: food['label'] as String,
       category: food['category'] as String,
       categoryLabel: food['categoryLabel'] as String,
@@ -57,8 +57,8 @@ class FoodTable extends Equatable {
 
   FoodEntity toEntity() {
     return FoodEntity.history(
+      id: id,
       uid: uid,
-      foodId: foodId,
       label: label,
       category: category,
       categoryLabel: categoryLabel,
@@ -71,8 +71,8 @@ class FoodTable extends Equatable {
 
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'uid': uid,
-      'foodId': foodId,
       'label': label,
       'category': category,
       'categoryLabel': categoryLabel,
@@ -84,9 +84,9 @@ class FoodTable extends Equatable {
   }
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
+        id,
         uid,
-        foodId,
         label,
         category,
         categoryLabel,

@@ -6,7 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
-import 'package:yess_nutrition/presentation/providers/common_notifiers/news_webview_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/common_notifiers/webview_notifier.dart';
 
 class WebViewPage extends StatefulWidget {
   final String url;
@@ -138,7 +138,7 @@ class _WebViewPageState extends State<WebViewPage> {
           ),
         ],
       ),
-      body: Consumer<NewsWebViewNotifier>(
+      body: Consumer<WebViewNotifier>(
         builder: (context, webViewNotifier, child) {
           return Stack(
             alignment: AlignmentDirectional.topCenter,

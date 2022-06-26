@@ -1,10 +1,5 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
-import 'package:yess_nutrition/common/utils/routes.dart';
-import 'package:yess_nutrition/data/datasources/databases/nutritime_helper.dart';
-import 'package:yess_nutrition/data/models/schedule_models/nutritime_info.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
@@ -21,14 +16,13 @@ class _AlarmNutriTimePageState extends State<AlarmNutriTimePage> {
   DateTime? _alarmTime;
   String? _alarmTimeString;
   final NutriTimeHelper _alarmHelper = NutriTimeHelper();
-  late Future<List<NutriTimeInfo>> _alarms;
-  late List<NutriTimeInfo> _currentAlarms;
+  late Future<List<AlarmScheduleModel>> _alarms;
+  late List<AlarmScheduleModel> _currentAlarms;
 
   @override
   void initState() {
     _alarmTime = DateTime.now();
     _alarmHelper.initializeDatabase().then((value) {
-      print('------database intialized');
       loadAlarms();
     });
     super.initState();
@@ -67,7 +61,7 @@ class _AlarmNutriTimePageState extends State<AlarmNutriTimePage> {
                     fontSize: 24),
               ),
               Expanded(
-                child: FutureBuilder<List<NutriTimeInfo>>(
+                child: FutureBuilder<List<AlarmScheduleModel>>(
                   future: _alarms,
                   builder: (context, snapshot) {
                     if (snapshot.hasData) {
@@ -304,15 +298,14 @@ class _AlarmNutriTimePageState extends State<AlarmNutriTimePage> {
         )));
   }
 
-  void scheduleAlarm(
-      DateTime scheduledNotificationDateTime, NutriTimeInfo alarmInfo) async {
-    // ignore: prefer_const_constructors
-    var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+  void scheduleAlarm(DateTime scheduledNotificationDateTime,
+      AlarmScheduleModel alarmInfo) async {
+    var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
       'alarm_notif',
       'Channel for Alarm notification',
       icon: 'splash',
-      sound: const RawResourceAndroidNotificationSound('a_long_cold_sting'),
-      largeIcon: const DrawableResourceAndroidBitmap('splash'),
+      sound: RawResourceAndroidNotificationSound('a_long_cold_sting'),
+      largeIcon: DrawableResourceAndroidBitmap('splash'),
     );
 
     var iOSPlatformChannelSpecifics = const IOSNotificationDetails(
@@ -340,7 +333,7 @@ class _AlarmNutriTimePageState extends State<AlarmNutriTimePage> {
       scheduleAlarmDateTime = _alarmTime!.add(const Duration(days: 1));
     }
 
-    var alarmInfo = NutriTimeInfo(
+    var alarmInfo = AlarmScheduleModel(
       alarmDateTime: scheduleAlarmDateTime,
       gradientColorIndex: _currentAlarms.length,
       title: 'alarm',

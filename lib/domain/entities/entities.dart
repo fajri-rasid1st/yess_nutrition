@@ -1,3 +1,4 @@
+export 'alarm_entity.dart';
 export 'food_entity.dart';
 export 'news_entity.dart';
 export 'nutrients_entity.dart';

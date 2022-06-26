@@ -4,7 +4,6 @@ import 'package:yess_nutrition/domain/entities/food_entity.dart';
 import 'package:yess_nutrition/domain/entities/nutrients_entity.dart';
 
 class FoodModel extends Equatable {
-  final String? foodId;
   final String? label;
   final String? category;
   final String? categoryLabel;
@@ -13,7 +12,6 @@ class FoodModel extends Equatable {
   final NutrientsModel? nutrients;
 
   const FoodModel({
-    this.foodId,
     this.label,
     this.category,
     this.categoryLabel,
@@ -24,7 +22,6 @@ class FoodModel extends Equatable {
 
   factory FoodModel.fromJson(Map<String, dynamic> food) {
     return FoodModel(
-      foodId: food['foodId'] as String?,
       label: food['label'] as String?,
       category: food['category'] as String?,
       categoryLabel: food['categoryLabel'] as String?,
@@ -38,7 +35,6 @@ class FoodModel extends Equatable {
 
   Map<String, dynamic> toJson() {
     return {
-      'foodId': foodId,
       'label': label,
       'category': category,
       'categoryLabel': categoryLabel,
@@ -50,7 +46,6 @@ class FoodModel extends Equatable {
 
   FoodEntity toEntity() {
     return FoodEntity(
-      foodId: foodId ?? '',
       label: label ?? '',
       category: category ?? '',
       categoryLabel: categoryLabel ?? '',
@@ -69,7 +64,6 @@ class FoodModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        foodId,
         label,
         category,
         categoryLabel,

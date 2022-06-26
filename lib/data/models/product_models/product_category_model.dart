@@ -16,7 +16,7 @@ class ProductCategoryModel extends Equatable {
   List<Object> get props => [title, imgAsset, baseUrl];
 }
 
-/// list of food produccategory urls
+/// list of food product category urls
 final foodProductCategories = <ProductCategoryModel>[
   ProductCategoryModel(
     title: 'Makanan',
@@ -70,6 +70,7 @@ final foodProductCategories = <ProductCategoryModel>[
   ),
 ];
 
+/// list of health product categories urls
 final healthProductCategories = <ProductCategoryModel>[
   ProductCategoryModel(
     title: 'Alat Kesehatan',
@@ -104,11 +105,11 @@ final healthProductCategories = <ProductCategoryModel>[
   ProductCategoryModel(
     title: 'Kesehatan Wanita',
     imgAsset: 'assets/img/health_category_female.png',
-    baseUrl: healthProductBaseUrls[5],
+    baseUrl: healthProductBaseUrls[6],
   ),
   ProductCategoryModel(
     title: 'Obat & Vitamin',
     imgAsset: 'assets/img/health_category_drug_and_vitamin.png',
-    baseUrl: healthProductBaseUrls[6],
+    baseUrl: healthProductBaseUrls[7],
   ),
 ];

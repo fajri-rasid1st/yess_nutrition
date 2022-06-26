@@ -2,8 +2,8 @@ import 'package:equatable/equatable.dart';
 import 'package:yess_nutrition/domain/entities/nutrients_entity.dart';
 
 class FoodEntity extends Equatable {
+  final int? id;
   final String? uid;
-  final String foodId;
   final String label;
   final String category;
   final String categoryLabel;
@@ -13,8 +13,8 @@ class FoodEntity extends Equatable {
   final DateTime? createdAt;
 
   const FoodEntity({
+    this.id,
     this.uid,
-    required this.foodId,
     required this.label,
     required this.category,
     required this.categoryLabel,
@@ -25,8 +25,8 @@ class FoodEntity extends Equatable {
   });
 
   const FoodEntity.history({
+    required this.id,
     required this.uid,
-    required this.foodId,
     required this.label,
     required this.category,
     required this.categoryLabel,
@@ -37,8 +37,8 @@ class FoodEntity extends Equatable {
   });
 
   FoodEntity copyWith({
+    int? id,
     String? uid,
-    String? foodId,
     String? label,
     String? category,
     String? categoryLabel,
@@ -48,8 +48,8 @@ class FoodEntity extends Equatable {
     DateTime? createdAt,
   }) {
     return FoodEntity(
+      id: id ?? this.id,
       uid: uid ?? this.uid,
-      foodId: foodId ?? this.foodId,
       label: label ?? this.label,
       category: category ?? this.category,
       categoryLabel: categoryLabel ?? this.categoryLabel,
@@ -62,8 +62,8 @@ class FoodEntity extends Equatable {
 
   @override
   List<Object?> get props => [
+        id,
         uid,
-        foodId,
         label,
         category,
         categoryLabel,

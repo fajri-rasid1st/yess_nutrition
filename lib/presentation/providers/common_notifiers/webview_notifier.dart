@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class NewsWebViewNotifier extends ChangeNotifier {
+class WebViewNotifier extends ChangeNotifier {
   double _progress = 0;
 
   double get progress => _progress;

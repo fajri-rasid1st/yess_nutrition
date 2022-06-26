@@ -49,6 +49,15 @@ void init() {
     () => UserStorageNotifier(uploadProfilePictureUseCase: locator()),
   );
 
+  // Schedule providers
+  locator.registerFactory(
+    () => ScheduleNotifier(
+      createAlarmUseCase: locator(),
+      getAlarmsUseCase: locator(),
+      deleteAlarmUseCase: locator(),
+    ),
+  );
+
   // Food providers
   locator.registerFactory(
     () => SearchFoodNotifier(searchFoodsUseCase: locator()),
@@ -140,6 +149,11 @@ void init() {
   // User storage usecases
   locator.registerLazySingleton(() => UploadProfilePicture(locator()));
 
+  // Schedule usecases
+  locator.registerLazySingleton(() => CreateAlarm(locator()));
+  locator.registerLazySingleton(() => GetAlarms(locator()));
+  locator.registerLazySingleton(() => DeleteAlarm(locator()));
+
   // Food usecases
   locator.registerLazySingleton(() => SearchFoods(locator()));
   locator.registerLazySingleton(() => AddFoodHistory(locator()));
@@ -186,6 +200,11 @@ void init() {
   );
   locator.registerLazySingleton<UserStorageRepository>(
     () => UserStorageRepositoryImpl(userStorageDataSource: locator()),
+  );
+
+  // Schedule repositories
+  locator.registerLazySingleton<ScheduleRepository>(
+    () => ScheduleRepositoryImpl(scheduleDataSource: locator()),
   );
 
   // Food repositories
@@ -236,6 +255,11 @@ void init() {
   );
   locator.registerLazySingleton<UserStorageDataSource>(
     () => UserStorageDataSourceImpl(firebaseStorage: locator()),
+  );
+
+  // Schedule data sources
+  locator.registerLazySingleton<ScheduleDataSource>(
+    () => ScheduleDataSourceImpl(databaseHelper: locator()),
   );
 
   // Food data sources
