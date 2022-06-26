@@ -27,6 +27,7 @@ final colorScheme = ColorScheme.fromSeed(
   errorContainer: errorColor,
 );
 
+// Gradient color used for alarm schedule background color
 class GradientColors {
   final List<Color> colors;
 
@@ -58,6 +59,7 @@ class GradientColors {
   ];
 }
 
+// Gradient color template
 class GradientTemplate {
   static List<GradientColors> gradientTemplate = [
     GradientColors(GradientColors.sky),

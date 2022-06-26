@@ -4,8 +4,45 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
+import 'package:yess_nutrition/domain/entities/user_data_entity.dart';
+import 'package:yess_nutrition/domain/entities/user_nutrients_entity.dart';
 
 class Utilities {
+  /// Function to calculate user total daily nutritional needs (BMR)
+  /// using the **Harris-Benedict Formula**
+  static UserNutrientsEntity calculateUserNutrients(UserDataEntity userData) {
+    var maxCalories = 0;
+
+    // first, check user gender
+    if (userData.gender == 'Laki-laki') {
+      // Man BMR formula
+      maxCalories = (655 +
+              (9.6 * userData.weight) +
+              (1.8 * userData.height) -
+              (4.7 * userData.age))
+          .toInt();
+    } else {
+      // Woman BMR formula
+      maxCalories = (66.5 +
+              (13.7 * userData.weight) +
+              (5 * userData.height) -
+              (6.8 * userData.age))
+          .toInt();
+    }
+
+    final maxCarbohydrate = (0.65 * maxCalories) ~/ 4;
+    final maxProtein = (0.15 * maxCalories) ~/ 4;
+    final maxFat = (0.2 * maxCalories) ~/ 9;
+
+    return UserNutrientsEntity(
+      uid: userData.uid,
+      maxCalories: maxCalories,
+      maxCarbohydrate: maxCarbohydrate,
+      maxProtein: maxProtein,
+      maxFat: maxFat,
+    );
+  }
+
   /// Function to convert [dateTime] to time ago string format
   static String dateTimeToTimeAgo(DateTime dateTime) {
     if (dateTime.year == 0) return '?';
@@ -33,7 +70,7 @@ class Utilities {
     return currencyFormatter.format(number);
   }
 
-  /// Function to encrypt [text] with Salsa20 engine
+  /// Function to encrypt [text] with **Salsa20 engine**
   static String encryptText(String text) {
     final key = encrypt.Key.fromLength(32);
     final iv = encrypt.IV.fromLength(8);

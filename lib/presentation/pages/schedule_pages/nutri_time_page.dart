@@ -38,7 +38,7 @@ class _NutriTimePagePageState extends State<NutriTimePage>
                     color: primaryColor,
                   ),
                   onPressed: () {
-                    Navigator.pushNamed(context, alarmNutriTimePage);
+                    // Navigator.pushNamed(context, alarmNutriTimePage);
                   },
                 ),
               ],
