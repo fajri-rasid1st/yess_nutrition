@@ -4,20 +4,23 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
+import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
-import 'package:yess_nutrition/domain/entities/user_entity.dart';
 import 'package:yess_nutrition/presentation/providers/common_notifiers/bottom_navigation_bar_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/get_news_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_data_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_nutrients_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_news_home.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_shop_home.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_time_task.dart';
 import 'package:yess_nutrition/presentation/widgets/large_circular_progress.dart';
+import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 import 'package:yess_nutrition/presentation/widgets/small_circular_progress.dart';
 
 class HomePage extends StatefulWidget {
-  final UserEntity user;
+  final String uid;
 
-  const HomePage({Key? key, required this.user}) : super(key: key);
+  const HomePage({Key? key, required this.uid}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -30,6 +33,12 @@ class _HomePageState extends State<HomePage>
     super.initState();
 
     Future.microtask(() {
+      Provider.of<UserDataNotifier>(context, listen: false)
+          .readUserData(widget.uid);
+
+      Provider.of<UserNutrientsNotifier>(context, listen: false)
+          .readUserNutrients(widget.uid);
+
       Provider.of<GetNewsNotifier>(context, listen: false)
           .getNewsByCount(count: 5);
     });
@@ -50,102 +59,111 @@ class _HomePageState extends State<HomePage>
     );
   }
 
-  Stack _buildHeaderHomePage(BuildContext context) {
-    return Stack(
-      alignment: AlignmentDirectional.topStart,
-      clipBehavior: Clip.none,
-      children: <Widget>[
-        SvgPicture.asset(
-          'assets/svg/header_background.svg',
-          alignment: Alignment.topCenter,
-          fit: BoxFit.fitWidth,
-          width: double.infinity,
-        ),
-        SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 36,
-            ),
-            child: Row(
-              children: <Widget>[
-                Expanded(
+  Consumer<UserDataNotifier> _buildHeaderHomePage(BuildContext context) {
+    return Consumer<UserDataNotifier>(
+      builder: (context, userDataNotifier, child) {
+        if (userDataNotifier.state == UserState.success) {
+          return Stack(
+            alignment: AlignmentDirectional.topStart,
+            clipBehavior: Clip.none,
+            children: <Widget>[
+              SvgPicture.asset(
+                'assets/svg/header_background.svg',
+                alignment: Alignment.topCenter,
+                fit: BoxFit.fitWidth,
+                width: double.infinity,
+              ),
+              SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 36,
+                  ),
                   child: Row(
                     children: <Widget>[
-                      Container(
-                        width: 50,
-                        height: 50,
-                        margin: const EdgeInsets.only(right: 12),
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(8),
-                          ),
-                        ),
-                        clipBehavior: Clip.hardEdge,
-                        child: widget.user.imgUrl.isEmpty
-                            ? Image.asset(
-                                'assets/img/default_user_pict.png',
-                                fit: BoxFit.cover,
-                              )
-                            : Image.network(
-                                widget.user.imgUrl,
-                                fit: BoxFit.cover,
-                              ),
-                      ),
                       Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
+                        child: Row(
                           children: <Widget>[
-                            Text(
-                              'Hai, ${widget.user.name}',
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: primaryBackgroundColor,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w800,
+                            Container(
+                              width: 50,
+                              height: 50,
+                              margin: const EdgeInsets.only(right: 12),
+                              decoration: const BoxDecoration(
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8),
+                                ),
                               ),
+                              clipBehavior: Clip.hardEdge,
+                              child: userDataNotifier.userData.imgUrl.isEmpty
+                                  ? Image.asset(
+                                      'assets/img/default_user_pict.png',
+                                      fit: BoxFit.cover,
+                                    )
+                                  : Image.network(
+                                      userDataNotifier.userData.imgUrl,
+                                      fit: BoxFit.cover,
+                                    ),
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              "Selamat Datang",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .caption
-                                  ?.copyWith(color: primaryBackgroundColor),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: <Widget>[
+                                  Text(
+                                    'Hai, ${userDataNotifier.userData.name}',
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                      color: primaryBackgroundColor,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    "Selamat Datang",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .caption
+                                        ?.copyWith(
+                                            color: primaryBackgroundColor),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
+                        ),
+                      ),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: primaryColor,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: IconButton(
+                          onPressed: () {
+                            Navigator.pushNamed(
+                              context,
+                              profileRoute,
+                              arguments: widget.uid,
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.settings_outlined,
+                            color: primaryBackgroundColor,
+                            size: 28,
+                          ),
+                          tooltip: 'Pengaturan',
                         ),
                       ),
                     ],
                   ),
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: primaryColor,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.pushNamed(
-                        context,
-                        profileRoute,
-                        arguments: widget.user.uid,
-                      );
-                    },
-                    icon: const Icon(
-                      Icons.settings_outlined,
-                      color: primaryBackgroundColor,
-                      size: 28,
-                    ),
-                    tooltip: 'Pengaturan',
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
+              ),
+            ],
+          );
+        }
+
+        return const LoadingIndicator();
+      },
     );
   }
 
@@ -173,9 +191,8 @@ class _HomePageState extends State<HomePage>
               context,
               "NutriNews",
               () {
-                var bottomNav = Provider.of<BottomNavigationBarNotifier>(
-                    context,
-                    listen: false);
+                final bottomNav = context.read<BottomNavigationBarNotifier>();
+
                 bottomNav.selectedIndex = 2;
                 bottomNav.backgroundColor = primaryBackgroundColor;
               },
@@ -187,9 +204,8 @@ class _HomePageState extends State<HomePage>
               context,
               "NutriShop",
               () {
-                var bottomNav = Provider.of<BottomNavigationBarNotifier>(
-                    context,
-                    listen: false);
+                final bottomNav = context.read<BottomNavigationBarNotifier>();
+
                 bottomNav.selectedIndex = 3;
                 bottomNav.backgroundColor = scaffoldBackgroundColor;
               },
@@ -378,10 +394,13 @@ class _HomePageState extends State<HomePage>
               ],
             ),
             const SizedBox(height: 16),
-            Divider(color: dividerColor.withOpacity(0.6)),
             Center(
               child: TextButton(
-                onPressed: () {},
+                onPressed: () => Navigator.pushNamed(
+                  context,
+                  nutrientsDetailRoute,
+                  arguments: widget.uid,
+                ),
                 child: Text(
                   "Lihat Detail",
                   style: Theme.of(context).textTheme.button?.copyWith(
@@ -443,23 +462,27 @@ class _HomePageState extends State<HomePage>
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Consumer<GetNewsNotifier>(
         builder: (context, result, child) {
-          return ListView.separated(
-            primary: false,
-            shrinkWrap: true,
-            padding: EdgeInsets.zero,
-            itemBuilder: (context, index) {
-              final news = result.news[index];
+          if (result.state == RequestState.success) {
+            return ListView.separated(
+              primary: false,
+              shrinkWrap: true,
+              padding: EdgeInsets.zero,
+              itemBuilder: (context, index) {
+                final news = result.news[index];
 
-              return CardNutriNewsHome(
-                news: news.copyWith(uid: widget.user.uid),
-                heroTag: 'home:${news.url}',
-              );
-            },
-            separatorBuilder: (context, index) {
-              return const SizedBox(height: 10);
-            },
-            itemCount: result.news.length,
-          );
+                return CardNutriNewsHome(
+                  news: news.copyWith(uid: widget.uid),
+                  heroTag: 'home:${news.url}',
+                );
+              },
+              separatorBuilder: (context, index) {
+                return const SizedBox(height: 10);
+              },
+              itemCount: result.news.length,
+            );
+          }
+
+          return const LoadingIndicator();
         },
       ),
     );

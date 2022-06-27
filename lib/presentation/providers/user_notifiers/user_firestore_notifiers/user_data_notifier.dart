@@ -34,6 +34,14 @@ class UserDataNotifier extends ChangeNotifier {
   late bool _isNewUser;
   bool get isNewUser => _isNewUser;
 
+  bool _isReload = false;
+  bool get isReload => _isReload;
+
+  set isReload(bool value) {
+    _isReload = value;
+    notifyListeners();
+  }
+
   Future<void> createUserData(UserDataEntity userData) async {
     final result = await createUserDataUseCase.execute(userData);
 
@@ -51,6 +59,9 @@ class UserDataNotifier extends ChangeNotifier {
   }
 
   Future<void> readUserData(String uid) async {
+    _state = UserState.empty;
+    notifyListeners();
+
     final result = await readUserDataUseCase.execute(uid);
 
     result.fold(
@@ -109,6 +120,23 @@ class UserDataNotifier extends ChangeNotifier {
       },
       (isNewUser) {
         _isNewUser = isNewUser;
+        _state = UserState.success;
+      },
+    );
+
+    notifyListeners();
+  }
+
+  Future<void> refresh(String uid) async {
+    final result = await readUserDataUseCase.execute(uid);
+
+    result.fold(
+      (failure) {
+        _error = failure.message;
+        _state = UserState.error;
+      },
+      (userData) {
+        _userData = userData;
         _state = UserState.success;
       },
     );

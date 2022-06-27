@@ -60,3 +60,33 @@ const healthProductBaseUrls = <String>[
 
 const recommendationProductBaseUrl =
     '$shopBaseUrl/products?search%5Bkeywords%5D=buku%20makanan%20kesehatan';
+
+const userNutrientQuestions = <UserNutrientQuestion>[
+  UserNutrientQuestion(
+    'Detail nutrisi harian saya tidak muncul.',
+    'Kami memerlukan data berupa umur, usia, berat badan, dan tinggi badan untuk menentukan kebutuhan nutrisi harian anda. Jika belum, silahkan lengkapi data anda pada menu pengaturan profil.',
+  ),
+  UserNutrientQuestion(
+    'Bagaimana aplikasi menghitung kebutuhan nutrisi harian saya?',
+    'Kebutuhan nutrisi yang tertera di atas adalah Basal Metabolic Rate (BMR) anda yang dihitung mengggunakan rumus Harris-Benedict.',
+  ),
+  UserNutrientQuestion(
+    'Apa itu BMR?',
+    'Basal Metabolic Rate (BMR) adalah kalori yang tubuh Anda perlukan untuk melakukan aktivitas dasar tubuh. Aktivitas tersebut mencakup memompa jantung, mencerna makanan, bernapas, memperbaiki sel tubuh, hingga membuang racun dalam tubuh.',
+  ),
+  UserNutrientQuestion(
+    'Apa itu kalori dan fungsinya untuk tubuh?',
+    'Kalori adalah sumber bahan bakar tubuh yang didapatkan dari mengonsumsi beragam makanan dan minuman. Kalori dari makanan dan minuman tersebut akan digunakan tubuh sebagai energi untuk melakukan segala aktivitas fisik.',
+  ),
+  UserNutrientQuestion(
+    'Apakah BMR sudah akurat dalam menentukan kebutuhan nutrisi?',
+    'BMR hanyalah jumlah kalori minimum yang dibutuhkan tubuh Anda untuk dapat menjalankan fungsi organ-organ vital tubuh. Namun, setiap harinya Anda perlu mengonsumsi makanan dan minuman dengan jumlah kalori lebih dari itu.',
+  ),
+];
+
+class UserNutrientQuestion {
+  final String question;
+  final String answer;
+
+  const UserNutrientQuestion(this.question, this.answer);
+}

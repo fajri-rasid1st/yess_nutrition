@@ -28,7 +28,7 @@ class _MainPageState extends State<MainPage> {
     super.initState();
 
     _pages.addAll([
-      HomePage(user: widget.user),
+      HomePage(uid: widget.user.uid),
       const Scaffold(),
       NewsPage(uid: widget.user.uid),
       ShopPage(uid: widget.user.uid),

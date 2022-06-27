@@ -25,6 +25,14 @@ class UserNutrientsNotifier extends ChangeNotifier {
   late UserNutrientsEntity? _userNutrients;
   UserNutrientsEntity? get userNutrients => _userNutrients;
 
+  bool _isReload = false;
+  bool get isReload => _isReload;
+
+  set isReload(bool value) {
+    _isReload = value;
+    notifyListeners();
+  }
+
   Future<void> createUserNutrients(UserNutrientsEntity userNutrients) async {
     final result = await createUserNutrientsUseCase.execute(userNutrients);
 
@@ -43,6 +51,9 @@ class UserNutrientsNotifier extends ChangeNotifier {
   }
 
   Future<void> readUserNutrients(String uid) async {
+    _state = UserState.empty;
+    notifyListeners();
+
     final result = await readUserNutrientsUseCase.execute(uid);
 
     result.fold(
@@ -69,6 +80,23 @@ class UserNutrientsNotifier extends ChangeNotifier {
       },
       (message) {
         _message = message;
+        _state = UserState.success;
+      },
+    );
+
+    notifyListeners();
+  }
+
+  Future<void> refresh(String uid) async {
+    final result = await readUserNutrientsUseCase.execute(uid);
+
+    result.fold(
+      (failure) {
+        _message = failure.message;
+        _state = UserState.error;
+      },
+      (userNutrients) {
+        _userNutrients = userNutrients;
         _state = UserState.success;
       },
     );

@@ -25,6 +25,32 @@ class UserNutrientsEntity extends Equatable {
     required this.currentDate,
   });
 
+  UserNutrientsEntity copyWith({
+    String? uid,
+    int? currentCalories,
+    int? maxCalories,
+    int? currentCarbohydrate,
+    int? maxCarbohydrate,
+    int? currentProtein,
+    int? maxProtein,
+    int? currentFat,
+    int? maxFat,
+    DateTime? currentDate,
+  }) {
+    return UserNutrientsEntity(
+      uid: uid ?? this.uid,
+      currentCalories: currentCalories ?? this.currentCalories,
+      maxCalories: maxCalories ?? this.maxCalories,
+      currentCarbohydrate: currentCarbohydrate ?? this.currentCarbohydrate,
+      maxCarbohydrate: maxCarbohydrate ?? this.maxCarbohydrate,
+      currentProtein: currentProtein ?? this.currentProtein,
+      maxProtein: maxProtein ?? this.maxProtein,
+      currentFat: currentFat ?? this.currentFat,
+      maxFat: maxFat ?? this.maxFat,
+      currentDate: currentDate ?? this.currentDate,
+    );
+  }
+
   @override
   List<Object> get props => [
         uid,

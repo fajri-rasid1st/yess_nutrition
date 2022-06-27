@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:yess_nutrition/domain/entities/user_nutrients_entity.dart';
 
@@ -52,7 +53,7 @@ class UserNutrientsModel extends Equatable {
       maxProtein: userNutrients['maxProtein'],
       currentFat: userNutrients['currentFat'],
       maxFat: userNutrients['maxFat'],
-      currentDate: userNutrients['currentDate'],
+      currentDate: (userNutrients['currentDate'] as Timestamp).toDate(),
     );
   }
 
@@ -82,7 +83,7 @@ class UserNutrientsModel extends Equatable {
       'maxProtein': maxProtein,
       'currentFat': currentFat,
       'maxFat': maxFat,
-      'currentDate': currentDate,
+      'currentDate': Timestamp.fromDate(currentDate),
     };
   }
 
