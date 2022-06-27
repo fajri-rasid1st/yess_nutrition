@@ -97,15 +97,15 @@ class Utilities {
     BuildContext context, {
     required String title,
     required String question,
-    VoidCallback? onPressedPrimaryAction,
-    VoidCallback? onPressedSecondaryAction,
+    required VoidCallback onPressedPrimaryAction,
+    required VoidCallback onPressedSecondaryAction,
   }) async {
     showGeneralDialog(
       context: context,
       barrierLabel: '',
       barrierDismissible: true,
       transitionBuilder: (context, animStart, animEnd, child) {
-        final curvedValue = Curves.ease.transform(animStart.value) - 3.75;
+        final curvedValue = Curves.ease.transform(animStart.value) - 3.8;
         final height = (MediaQuery.of(context).size.height / 8) * -1;
 
         return Transform(
@@ -141,9 +141,9 @@ class Utilities {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         TextButton(
-                          onPressed: onPressedPrimaryAction,
+                          onPressed: onPressedSecondaryAction,
                           child: const Text(
-                            'Oke',
+                            'Batal',
                             style: TextStyle(
                               color: primaryColor,
                               fontWeight: FontWeight.bold,
@@ -158,9 +158,9 @@ class Utilities {
                           ),
                         ),
                         TextButton(
-                          onPressed: onPressedSecondaryAction,
+                          onPressed: onPressedPrimaryAction,
                           child: const Text(
-                            'Batal',
+                            'Oke',
                             style: TextStyle(
                               color: primaryColor,
                               fontWeight: FontWeight.bold,

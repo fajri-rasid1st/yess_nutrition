@@ -87,15 +87,13 @@ class _NewsBookmarksPageState extends State<NewsBookmarksPage> with RouteAware {
                     Utilities.showConfirmDialog(
                       context,
                       title: 'Konfirmasi',
-                      question: 'Hapus semua artikel bookmarks?',
+                      question: 'Hapus semua daftar artikel?',
                       onPressedPrimaryAction: () {
                         clearBookmarks(context).then((_) {
                           Navigator.pop(context);
                         });
                       },
-                      onPressedSecondaryAction: () {
-                        Navigator.pop(context);
-                      },
+                      onPressedSecondaryAction: () => Navigator.pop(context),
                     );
                   },
             icon: const Icon(

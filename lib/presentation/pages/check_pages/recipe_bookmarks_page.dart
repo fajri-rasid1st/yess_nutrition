@@ -88,15 +88,13 @@ class _RecipeBookmarksPageState extends State<RecipeBookmarksPage>
                     Utilities.showConfirmDialog(
                       context,
                       title: 'Konfirmasi',
-                      question: 'Hapus semua resep bookmarks?',
+                      question: 'Hapus semua daftar resep?',
                       onPressedPrimaryAction: () {
                         clearBookmarks(context).then((_) {
                           Navigator.pop(context);
                         });
                       },
-                      onPressedSecondaryAction: () {
-                        Navigator.pop(context);
-                      },
+                      onPressedSecondaryAction: () => Navigator.pop(context),
                     );
                   },
             icon: const Icon(

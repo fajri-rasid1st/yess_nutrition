@@ -64,7 +64,7 @@ const recommendationProductBaseUrl =
 const userNutrientQuestions = <UserNutrientQuestion>[
   UserNutrientQuestion(
     'Detail nutrisi harian saya tidak muncul.',
-    'Kami memerlukan data berupa umur, usia, berat badan, dan tinggi badan untuk menentukan kebutuhan nutrisi harian anda. Jika belum, silahkan lengkapi data anda pada menu pengaturan profil.',
+    'Kami perlu data umur, usia, berat badan, dan tinggi badan untuk menentukan kebutuhan nutrisi harian anda. Lengkapi data anda pada menu pengaturan profil atau Input secara manual dengan mengklik icon di pojok kanan atas.',
   ),
   UserNutrientQuestion(
     'Bagaimana aplikasi menghitung kebutuhan nutrisi harian saya?',

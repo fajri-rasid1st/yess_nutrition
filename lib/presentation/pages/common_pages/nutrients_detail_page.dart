@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +11,7 @@ import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/user_nutrients_entity.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_nutrients_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
+import 'package:yess_nutrition/presentation/widgets/nutrient_input_field.dart';
 
 class NutrientsDetailPage extends StatefulWidget {
   final String uid;
@@ -21,9 +23,13 @@ class NutrientsDetailPage extends StatefulWidget {
 }
 
 class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
+  late final GlobalKey<FormBuilderState> _formKey;
+
   @override
   void initState() {
     super.initState();
+
+    _formKey = GlobalKey<FormBuilderState>();
 
     Future.microtask(() {
       Provider.of<UserNutrientsNotifier>(context, listen: false)
@@ -51,11 +57,17 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
           ),
           tooltip: 'Back',
         ),
-        actions: <IconButton>[
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(MdiIcons.clipboardEditOutline),
-            tooltip: 'Edit',
+        actions: <Consumer>[
+          Consumer<UserNutrientsNotifier>(
+            builder: (context, notifier, child) {
+              return IconButton(
+                onPressed: notifier.state == UserState.success
+                    ? () => showFormDialog(context, notifier.userNutrients)
+                    : null,
+                icon: const Icon(MdiIcons.clipboardEditOutline),
+                tooltip: 'Edit',
+              );
+            },
           )
         ],
       ),
@@ -121,10 +133,10 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
               children: <Widget>[
                 Text(
                   'Detail Nutrisi Harian',
-                  style: Theme.of(context).textTheme.headline6!.copyWith(
-                        color: primaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  style: Theme.of(context)
+                      .textTheme
+                      .headline6!
+                      .copyWith(fontWeight: FontWeight.bold),
                 ),
                 const Spacer(),
                 Text(
@@ -204,27 +216,15 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
                   Utilities.showConfirmDialog(
                     context,
                     title: 'Konfirmasi',
-                    question: 'Ingin mengatur ulang progress dari nol?',
+                    question: 'Atur ulang progress dari nol?',
                     onPressedPrimaryAction: () {
-                      // Close confirm dialog
-                      Navigator.pop(context);
-
-                      // Show loading dialog
-                      showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (context) => const LoadingIndicator(),
-                      );
-
-                      // Reset progress and then remove loading dialog.
-                      resetProgress(context, userNutrients).then((value) {
-                        Navigator.pop(context);
-                      });
+                      // Reset daily progress
+                      resetDailyProgress(context, userNutrients);
                     },
                     onPressedSecondaryAction: () => Navigator.pop(context),
                   );
                 },
-                child: const Text('Reset Progress'),
+                child: const Text('Reset Progress Harian'),
               ),
             ),
           ],
@@ -257,7 +257,7 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
               children: <Widget>[
                 const Icon(
                   Icons.info_outline_rounded,
-                  color: Colors.blue,
+                  color: primaryColor,
                   size: 28,
                 ),
                 const SizedBox(width: 8),
@@ -275,28 +275,32 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               itemBuilder: (context, index) {
-                return ExpansionTile(
-                  tilePadding: EdgeInsets.zero,
-                  childrenPadding: const EdgeInsets.only(bottom: 16),
-                  title: Text(
-                    userNutrientQuestions[index].question,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                        color: scaffoldBackgroundColor,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Text(
-                          userNutrientQuestions[index].answer,
-                          style: const TextStyle(color: secondaryTextColor),
+                return Theme(
+                  data: Theme.of(context)
+                      .copyWith(dividerColor: Colors.transparent),
+                  child: ExpansionTile(
+                    tilePadding: EdgeInsets.zero,
+                    childrenPadding: const EdgeInsets.only(bottom: 16),
+                    title: Text(
+                      userNutrientQuestions[index].question,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    children: <Widget>[
+                      Container(
+                        decoration: BoxDecoration(
+                          color: scaffoldBackgroundColor,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8),
+                          child: Text(
+                            userNutrientQuestions[index].answer,
+                            style: const TextStyle(color: secondaryTextColor),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 );
               },
               itemCount: userNutrientQuestions.length,
@@ -343,7 +347,7 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
             animation: true,
             animationDuration: 1000,
             padding: EdgeInsets.zero,
-            percent: nutrientValue,
+            percent: nutrientValue > 1 ? 1 : nutrientValue,
             progressColor: progressColor,
             backgroundColor: backgroundColor,
           ),
@@ -364,13 +368,168 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
     return currentValue / maxValue;
   }
 
-  Future<void> showFormDialog() async {}
-
-  Future<void> resetProgress(
+  Future<void> showFormDialog(
     BuildContext context,
     UserNutrientsEntity? userNutrients,
   ) async {
-    if (userNutrients == null) return;
+    showDialog(
+      context: context,
+      barrierLabel: '',
+      barrierDismissible: false,
+      builder: (context) {
+        return AlertDialog(
+          elevation: 0,
+          scrollable: true,
+          clipBehavior: Clip.antiAlias,
+          contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),
+          actionsPadding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          title: const Text('Maksimal Kebutuhan Nutrisi Harian'),
+          content: FormBuilder(
+            key: _formKey,
+            child: Column(
+              children: <Widget>[
+                NutrientInputField(
+                  name: 'calories',
+                  initialValue: userNutrients?.maxCalories.toString() ?? '0',
+                  prefixText: 'Kalori:\t',
+                  suffixText: 'Kkal',
+                  isAutoFocus: true,
+                ),
+                const SizedBox(height: 10),
+                NutrientInputField(
+                  name: 'carbohydrate',
+                  initialValue:
+                      userNutrients?.maxCarbohydrate.toString() ?? '0',
+                  prefixText: 'Karbohidrat:\t',
+                  suffixText: 'gram',
+                ),
+                const SizedBox(height: 10),
+                NutrientInputField(
+                  name: 'protein',
+                  initialValue: userNutrients?.maxProtein.toString() ?? '0',
+                  prefixText: 'Protein:\t',
+                  suffixText: 'gram',
+                ),
+                const SizedBox(height: 10),
+                NutrientInputField(
+                  name: 'fat',
+                  initialValue: userNutrients?.maxFat.toString() ?? '0',
+                  prefixText: 'Lemak:\t',
+                  suffixText: 'gram',
+                  textInputAction: TextInputAction.done,
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text(
+                    'Batal',
+                    style: TextStyle(color: primaryColor),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    // Create UserNutrientsEntity if userNutrients is null.
+                    // otherwise, it will be updated.
+                    onPressedEditSubmitButton(context, userNutrients);
+                  },
+                  child: const Text(
+                    'Selesai',
+                    style: TextStyle(
+                      color: primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> onPressedEditSubmitButton(
+    BuildContext context,
+    UserNutrientsEntity? userNutrients,
+  ) async {
+    FocusScope.of(context).unfocus();
+
+    _formKey.currentState!.save();
+
+    if (_formKey.currentState!.validate()) {
+      final value = _formKey.currentState!.value;
+      final userNutrientsNotifier = context.read<UserNutrientsNotifier>();
+
+      // Show loading indicator
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const LoadingIndicator(),
+      );
+
+      if (userNutrients == null) {
+        await userNutrientsNotifier.createUserNutrients(
+          UserNutrientsEntity(
+            uid: widget.uid,
+            maxCalories: int.parse(value['calories']),
+            maxCarbohydrate: int.parse(value['carbohydrate']),
+            maxProtein: int.parse(value['protein']),
+            maxFat: int.parse(value['fat']),
+            currentDate: DateTime.now(),
+          ),
+        );
+      } else {
+        await userNutrientsNotifier.updateUserNutrients(
+          userNutrients.copyWith(
+            maxCalories: int.parse(value['calories']),
+            maxCarbohydrate: int.parse(value['carbohydrate']),
+            maxProtein: int.parse(value['protein']),
+            maxFat: int.parse(value['fat']),
+          ),
+        );
+      }
+
+      await userNutrientsNotifier.refresh(widget.uid);
+
+      // Close loading indicator
+      navigatorKey.currentState!.pop();
+
+      // Close dialog
+      navigatorKey.currentState!.pop();
+
+      final message = userNutrientsNotifier.message;
+      final snackBar = Utilities.createSnackBar(message);
+
+      scaffoldMessengerKey.currentState!
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackBar);
+    }
+  }
+
+  Future<void> resetDailyProgress(
+    BuildContext context,
+    UserNutrientsEntity? userNutrients,
+  ) async {
+    if (userNutrients == null) {
+      Navigator.pop(context);
+      return;
+    }
+
+    // Show loading indicator
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const LoadingIndicator(),
+    );
 
     final userNutrientsNotifier = context.read<UserNutrientsNotifier>();
 
@@ -383,13 +542,19 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
       ),
     );
 
+    await userNutrientsNotifier.refresh(widget.uid);
+
+    // Close loading indicator
+    navigatorKey.currentState!.pop();
+
+    // Close dialog
+    navigatorKey.currentState!.pop();
+
     final message = userNutrientsNotifier.message;
     final snackBar = Utilities.createSnackBar(message);
 
     scaffoldMessengerKey.currentState!
       ..hideCurrentSnackBar()
       ..showSnackBar(snackBar);
-
-    await userNutrientsNotifier.refresh(widget.uid);
   }
 }

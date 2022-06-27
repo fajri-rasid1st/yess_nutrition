@@ -207,7 +207,10 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
       ),
       validator: FormBuilderValidators.compose([
         FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
-        FormBuilderValidators.integer(errorText: 'Input berupa angka integer.'),
+        FormBuilderValidators.match(
+          r'^[1-9]\d*$',
+          errorText: 'Format yang dimasukkan salah.',
+        ),
       ]),
     );
   }
@@ -225,7 +228,10 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
       ),
       validator: FormBuilderValidators.compose([
         FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
-        FormBuilderValidators.integer(errorText: 'Input berupa angka integer.'),
+        FormBuilderValidators.match(
+          r'^[1-9]\d*$',
+          errorText: 'Format yang dimasukkan salah.',
+        ),
       ]),
     );
   }
@@ -243,7 +249,10 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
       ),
       validator: FormBuilderValidators.compose([
         FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
-        FormBuilderValidators.integer(errorText: 'Input berupa angka integer.'),
+        FormBuilderValidators.match(
+          r'^[1-9]\d*$',
+          errorText: 'Format yang dimasukkan salah.',
+        ),
       ]),
     );
   }

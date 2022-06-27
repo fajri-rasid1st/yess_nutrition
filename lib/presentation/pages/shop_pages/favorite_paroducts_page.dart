@@ -56,24 +56,24 @@ class _FavoriteProductsPageState extends State<FavoriteProductsPage> {
         ),
         actions: <Widget>[
           IconButton(
-            onPressed:
-                context.watch<FavoriteProductNotifier>().favorites.isEmpty
-                    ? null
-                    : () {
-                        Utilities.showConfirmDialog(
-                          context,
-                          title: 'Konfirmasi',
-                          question: 'Hapus semua produk favorite?',
-                          onPressedPrimaryAction: () {
-                            clearFavorites(context).then((_) {
-                              Navigator.pop(context);
-                            });
-                          },
-                          onPressedSecondaryAction: () {
-                            Navigator.pop(context);
-                          },
-                        );
+            onPressed: context
+                    .watch<FavoriteProductNotifier>()
+                    .favorites
+                    .isEmpty
+                ? null
+                : () {
+                    Utilities.showConfirmDialog(
+                      context,
+                      title: 'Konfirmasi',
+                      question: 'Hapus semua produk favorite?',
+                      onPressedPrimaryAction: () {
+                        clearFavorites(context).then((_) {
+                          Navigator.pop(context);
+                        });
                       },
+                      onPressedSecondaryAction: () => Navigator.pop(context),
+                    );
+                  },
             icon: const Icon(
               Icons.clear_all_rounded,
               size: 28,

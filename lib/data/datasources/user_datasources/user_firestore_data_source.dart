@@ -154,7 +154,7 @@ class UserFirestoreDataSourceImpl implements UserFirestoreDataSource {
 
       final document = userNutrients.toDocument();
 
-      await reference.set(document, SetOptions(merge: true));
+      await reference.update(document);
 
       return 'Jadwal kebutuhan harian berhasil diubah';
     } catch (e) {

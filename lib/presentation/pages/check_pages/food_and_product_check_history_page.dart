@@ -76,9 +76,7 @@ class _FoodAndProductCheckHistoryPageState
                           Navigator.pop(context);
                         });
                       },
-                      onPressedSecondaryAction: () {
-                        Navigator.pop(context);
-                      },
+                      onPressedSecondaryAction: () => Navigator.pop(context),
                     );
                   },
             icon: const Icon(
