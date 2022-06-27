@@ -68,7 +68,7 @@ const userNutrientQuestions = <UserNutrientQuestion>[
   ),
   UserNutrientQuestion(
     'Bagaimana aplikasi menghitung kebutuhan nutrisi harian saya?',
-    'Kebutuhan nutrisi yang tertera di atas adalah Basal Metabolic Rate (BMR) anda yang dihitung mengggunakan rumus Harris-Benedict.',
+    'Kebutuhan nutrisi yang tertera di atas adalah Basal Metabolic Rate (BMR) anda yang dihitung menggunakan rumus Harris-Benedict.',
   ),
   UserNutrientQuestion(
     'Apa itu BMR?',

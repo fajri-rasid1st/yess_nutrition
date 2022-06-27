@@ -82,6 +82,8 @@ class UserAuthDataSourceImpl implements UserAuthDataSource {
       return await firebaseAuth.signOut();
     } on FirebaseAuthException catch (e) {
       throw FirebaseAuthException(code: e.code);
+    } on PlatformException catch (e) {
+      throw PlatformException(code: e.code);
     }
   }
 

@@ -84,6 +84,8 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
       return Right(result);
     } on FirebaseAuthException catch (e) {
       return Left(AuthFailure(e.message ?? e.code));
+    } on PlatformException catch (e) {
+      return Left(AuthFailure(e.message ?? e.code));
     }
   }
 

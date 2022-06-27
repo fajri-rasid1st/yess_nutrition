@@ -102,6 +102,8 @@ class GetNewsNotifier extends ChangeNotifier {
   }
 
   Future<void> refresh() async {
+    _currentPageLoad = 1;
+
     final result = await getNewsUseCase.execute(10, _currentPageLoad);
 
     result.fold(

@@ -135,7 +135,7 @@ class MyApp extends StatelessWidget {
           create: (_) => WebViewNotifier(),
         ),
         ChangeNotifierProvider(
-          create: (_) => NewsNotifier(),
+          create: (_) => NewsFabNotifier(),
         ),
       ],
       child: MaterialApp(

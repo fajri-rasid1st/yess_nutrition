@@ -11,7 +11,7 @@ import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/news_entity.dart';
 import 'package:yess_nutrition/presentation/pages/news_pages/news_detail_page.dart';
-import 'package:yess_nutrition/presentation/providers/common_notifiers/news_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/common_notifiers/news_fab_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/get_news_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/news_bookmark_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/search_news_notifier.dart';
@@ -58,7 +58,7 @@ class _NewsPageState extends State<NewsPage>
   Widget build(BuildContext context) {
     super.build(context);
 
-    return Consumer3<NewsNotifier, GetNewsNotifier, SearchNewsNotifier>(
+    return Consumer3<NewsFabNotifier, GetNewsNotifier, SearchNewsNotifier>(
       builder: (context, fabNotifier, newsNotifier, searchNotifier, child) {
         return Scaffold(
           resizeToAvoidBottomInset: false,
@@ -72,7 +72,7 @@ class _NewsPageState extends State<NewsPage>
   }
 
   NotificationListener _buildBody(
-    NewsNotifier fabNotifier,
+    NewsFabNotifier fabNotifier,
     GetNewsNotifier newsNotifier,
     SearchNewsNotifier searchNotifier,
   ) {
@@ -173,7 +173,7 @@ class _NewsPageState extends State<NewsPage>
     );
   }
 
-  Padding? _buildFab(NewsNotifier fabNotifier) {
+  Padding? _buildFab(NewsFabNotifier fabNotifier) {
     return fabNotifier.isFabVisible
         ? Padding(
             padding: const EdgeInsets.only(top: 32),
@@ -198,10 +198,10 @@ class _NewsPageState extends State<NewsPage>
         : null;
   }
 
-  SearchField _buildSearchField(SearchNewsNotifier newsNotifier) {
+  SearchField _buildSearchField(SearchNewsNotifier searchNotifier) {
     return SearchField(
       controller: _searchController,
-      query: newsNotifier.onChangedQuery,
+      query: searchNotifier.onChangedQuery,
       hintText: 'Cari judul artikel atau berita...',
       onTap: () {
         _scrollController.animateTo(
@@ -211,58 +211,66 @@ class _NewsPageState extends State<NewsPage>
         );
       },
       onChanged: (value) {
-        newsNotifier.onChangedQuery = value.trim();
+        searchNotifier.onChangedQuery = value.trim();
       },
       onSubmitted: (value) async {
         if (value.trim().isNotEmpty) {
-          await newsNotifier.searchNews(page: 1, query: value);
+          await searchNotifier.searchNews(page: 1, query: value);
         }
       },
     );
   }
 
-  SlidableAutoCloseBehavior _buildNewsList(GetNewsNotifier newsNotifier) {
-    return SlidableAutoCloseBehavior(
-      child: ListView.separated(
-        padding: const EdgeInsets.all(0),
-        itemCount: newsNotifier.hasMoreData
-            ? newsNotifier.news.length + 1
-            : newsNotifier.news.length,
-        itemBuilder: (context, index) {
-          if (index >= newsNotifier.news.length) {
-            if (!newsNotifier.isLoading) {
-              newsNotifier.getMoreNews();
+  RefreshIndicator _buildNewsList(GetNewsNotifier newsNotifier) {
+    return RefreshIndicator(
+      onRefresh: () => newsNotifier.refresh(),
+      child: SlidableAutoCloseBehavior(
+        child: ListView.separated(
+          physics: const NeverScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(0),
+          itemCount: newsNotifier.hasMoreData
+              ? newsNotifier.news.length + 1
+              : newsNotifier.news.length,
+          itemBuilder: (context, index) {
+            if (index >= newsNotifier.news.length) {
+              if (!newsNotifier.isLoading) {
+                newsNotifier.getMoreNews();
+              }
+
+              return _buildBottomLoading();
             }
 
-            return _buildBottomLoading();
-          }
-
-          return _buildSlidableListTile(newsNotifier.news[index]);
-        },
-        separatorBuilder: (context, index) => const Divider(height: 1),
+            return _buildSlidableListTile(newsNotifier.news[index]);
+          },
+          separatorBuilder: (context, index) => const Divider(height: 1),
+        ),
       ),
     );
   }
 
-  SlidableAutoCloseBehavior _buildSearchList(SearchNewsNotifier newsNotifier) {
-    return SlidableAutoCloseBehavior(
-      child: ListView.separated(
-        padding: const EdgeInsets.all(0),
-        itemCount: newsNotifier.hasMoreData
-            ? newsNotifier.results.length + 1
-            : newsNotifier.results.length,
-        itemBuilder: (context, index) {
-          if (index >= newsNotifier.results.length) {
-            if (!newsNotifier.isLoading) {
-              newsNotifier.searchMoreNews();
+  RefreshIndicator _buildSearchList(SearchNewsNotifier searchNotifier) {
+    return RefreshIndicator(
+      onRefresh: () => searchNotifier.refresh(),
+      child: SlidableAutoCloseBehavior(
+        child: ListView.separated(
+          physics: const NeverScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(0),
+          itemCount: searchNotifier.hasMoreData
+              ? searchNotifier.results.length + 1
+              : searchNotifier.results.length,
+          itemBuilder: (context, index) {
+            if (index >= searchNotifier.results.length) {
+              if (!searchNotifier.isLoading) {
+                searchNotifier.searchMoreNews();
+              }
+
+              return _buildBottomLoading();
             }
 
-            return _buildBottomLoading();
-          }
-
-          return _buildSlidableListTile(newsNotifier.results[index]);
-        },
-        separatorBuilder: (context, index) => const Divider(height: 1),
+            return _buildSlidableListTile(searchNotifier.results[index]);
+          },
+          separatorBuilder: (context, index) => const Divider(height: 1),
+        ),
       ),
     );
   }
@@ -386,28 +394,28 @@ class _NewsPageState extends State<NewsPage>
     );
   }
 
-  SingleChildScrollView _buildSearchError(SearchNewsNotifier newsNotifier) {
+  SingleChildScrollView _buildSearchError(SearchNewsNotifier searchNotifier) {
     return SingleChildScrollView(
       physics: const NeverScrollableScrollPhysics(),
       child: CustomInformation(
         key: const Key('error_message'),
         imgPath: 'assets/svg/error_robot_cuate.svg',
-        title: newsNotifier.message,
+        title: searchNotifier.message,
         subtitle: 'Silahkan coba beberapa saat lagi.',
         child: ElevatedButton.icon(
-          onPressed: newsNotifier.isReload
+          onPressed: searchNotifier.isReload
               ? null
               : () {
-                  newsNotifier.isReload = true;
+                  searchNotifier.isReload = true;
 
                   Future.wait([
                     Future.delayed(const Duration(seconds: 1)),
-                    newsNotifier.refresh(),
+                    searchNotifier.refresh(),
                   ]).then((_) {
-                    newsNotifier.isReload = false;
+                    searchNotifier.isReload = false;
                   });
                 },
-          icon: newsNotifier.isReload
+          icon: searchNotifier.isReload
               ? const SizedBox(
                   width: 18,
                   height: 18,
@@ -417,7 +425,7 @@ class _NewsPageState extends State<NewsPage>
                   ),
                 )
               : const Icon(Icons.refresh_rounded),
-          label: newsNotifier.isReload
+          label: searchNotifier.isReload
               ? const Text('Tunggu sebentar...')
               : const Text('Coba lagi'),
         ),
@@ -439,7 +447,7 @@ class _NewsPageState extends State<NewsPage>
 
   bool onScrollNotification(
     UserScrollNotification notification,
-    NewsNotifier fabNotifier,
+    NewsFabNotifier fabNotifier,
   ) {
     // get the scroll position in pixel
     final scrollPosition = _scrollController.position.pixels;

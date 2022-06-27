@@ -102,6 +102,8 @@ class SearchNewsNotifier extends ChangeNotifier {
   }
 
   Future<void> refresh() async {
+    _currentPageLoad = 1;
+
     final result = await searchNewsUseCase.execute(
       10,
       _currentPageLoad,

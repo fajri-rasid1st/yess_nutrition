@@ -9,7 +9,6 @@ import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/user_nutrients_entity.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_nutrients_notifier.dart';
-import 'package:yess_nutrition/presentation/widgets/custom_information.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
 class NutrientsDetailPage extends StatefulWidget {
@@ -60,21 +59,22 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
           )
         ],
       ),
-      body: Consumer<UserNutrientsNotifier>(
-        builder: ((context, notifier, child) {
-          if (notifier.state == UserState.success) {
-            return _buildDetailNutritionPage(context, notifier.userNutrients);
-          }
+      body: RefreshIndicator(
+        onRefresh: () {
+          return context.read<UserNutrientsNotifier>().refresh(widget.uid);
+        },
+        child: Consumer<UserNutrientsNotifier>(
+          builder: ((context, notifier, child) {
+            if (notifier.state == UserState.success) {
+              return _buildDetailNutritionPage(context, notifier.userNutrients);
+            }
 
-          if (notifier.state == UserState.error) {
-            return _buildDetailError(notifier);
-          }
-
-          return Container(
-            color: primaryBackgroundColor,
-            child: const LoadingIndicator(),
-          );
-        }),
+            return Container(
+              color: primaryBackgroundColor,
+              child: const LoadingIndicator(),
+            );
+          }),
+        ),
       ),
     );
   }
@@ -204,15 +204,24 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
                   Utilities.showConfirmDialog(
                     context,
                     title: 'Konfirmasi',
-                    question: 'Ingin mengatur ulang progress ke nol?',
+                    question: 'Ingin mengatur ulang progress dari nol?',
                     onPressedPrimaryAction: () {
-                      resetProgress(context, userNutrients).then((_) {
+                      // Close confirm dialog
+                      Navigator.pop(context);
+
+                      // Show loading dialog
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) => const LoadingIndicator(),
+                      );
+
+                      // Reset progress and then remove loading dialog.
+                      resetProgress(context, userNutrients).then((value) {
                         Navigator.pop(context);
                       });
                     },
-                    onPressedSecondaryAction: () {
-                      Navigator.pop(context);
-                    },
+                    onPressedSecondaryAction: () => Navigator.pop(context),
                   );
                 },
                 child: const Text('Reset Progress'),
@@ -330,60 +339,16 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
           width: double.infinity,
           child: LinearPercentIndicator(
             lineHeight: 10,
-            percent: nutrientValue,
+            barRadius: const Radius.circular(10),
             animation: true,
             animationDuration: 1000,
+            padding: EdgeInsets.zero,
+            percent: nutrientValue,
             progressColor: progressColor,
             backgroundColor: backgroundColor,
-            barRadius: const Radius.circular(10),
-            padding: EdgeInsets.zero,
           ),
         ),
       ],
-    );
-  }
-
-  Container _buildDetailError(UserNutrientsNotifier notifier) {
-    return Container(
-      color: primaryBackgroundColor,
-      child: CustomInformation(
-        key: const Key('error_message'),
-        imgPath: 'assets/svg/error_robot_cuate.svg',
-        title: notifier.message,
-        subtitle: 'Silahkan coba beberapa saat lagi.',
-        child: ElevatedButton.icon(
-          onPressed: notifier.isReload
-              ? null
-              : () {
-                  // set isReload to true
-                  notifier.isReload = true;
-
-                  Future.wait([
-                    // create one second delay
-                    Future.delayed(const Duration(seconds: 1)),
-
-                    // refresh page
-                    notifier.refresh(widget.uid),
-                  ]).then((_) {
-                    // set isReload to true
-                    notifier.isReload = false;
-                  });
-                },
-          icon: notifier.isReload
-              ? const SizedBox(
-                  width: 18,
-                  height: 18,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: dividerColor,
-                  ),
-                )
-              : const Icon(Icons.refresh_rounded),
-          label: notifier.isReload
-              ? const Text('Tunggu sebentar...')
-              : const Text('Coba lagi'),
-        ),
-      ),
     );
   }
 
