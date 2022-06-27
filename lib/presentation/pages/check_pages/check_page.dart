@@ -11,7 +11,7 @@ class CheckPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
+        shadowColor: Colors.black.withOpacity(0.5),
         toolbarHeight: 64,
         centerTitle: true,
         title: const Text(

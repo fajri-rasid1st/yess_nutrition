@@ -53,7 +53,7 @@ class _WebViewPageState extends State<WebViewPage> {
         ),
         actions: <Widget>[
           PopupMenuButton(
-            padding: EdgeInsets.zero,
+            padding: const EdgeInsets.symmetric(horizontal: 8),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
             ),

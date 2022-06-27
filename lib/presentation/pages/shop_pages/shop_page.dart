@@ -329,7 +329,7 @@ class _ShopPageState extends State<ShopPage>
                     Future.delayed(const Duration(seconds: 1)),
 
                     // refresh page
-                    notifier.refresh(),
+                    notifier.getProducts(),
                   ]).then((_) {
                     // set isReload to true
                     notifier.isReload = false;

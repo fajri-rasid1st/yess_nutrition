@@ -7,6 +7,7 @@ const forgotPasswordRoute = '/forgot-password';
 const additionalInfoRoute = '/add-info';
 
 const mainRoute = '/main';
+const nutrientsDetailRoute = '/nutrients-detail';
 const webviewRoute = '/webview';
 
 const profileRoute = '/profile';

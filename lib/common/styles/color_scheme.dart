@@ -10,8 +10,8 @@ const primaryTextColor = Color(0XFF2E3142);
 const secondaryTextColor = Color(0XFF9C9DB9);
 const dividerColor = Color(0XFFD2D1E1);
 const errorColor = Color(0XFFF9877B);
-const clockOutline = Color(0xFFEAECFF);
-const clockBG = Color(0xFF444974);
+const clockOutlineColor = Color(0XFFEAECFF);
+const clockBackgroundColor = Color(0XFF444974);
 
 // Color scheme
 final colorScheme = ColorScheme.fromSeed(
@@ -34,28 +34,28 @@ class GradientColors {
   const GradientColors(this.colors);
 
   static List<Color> sky = [
-    const Color(0xFF6448FE),
-    const Color(0xFF5FC6FF),
+    const Color(0XFF6448FE),
+    const Color(0XFF5FC6FF),
   ];
 
   static List<Color> sunset = [
-    const Color(0xFFFE6197),
-    const Color(0xFFFFB463),
+    const Color(0XFFFE6197),
+    const Color(0XFFFFB463),
   ];
 
   static List<Color> sea = [
-    const Color(0xFF61A3FE),
-    const Color(0xFF63FFD5),
+    const Color(0XFF61A3FE),
+    const Color(0XFF63FFD5),
   ];
 
   static List<Color> mango = [
-    const Color(0xFFFFA738),
-    const Color(0xFFFFE130),
+    const Color(0XFFFFA738),
+    const Color(0XFFFFE130),
   ];
 
   static List<Color> fire = [
-    const Color(0xFFFF5DCD),
-    const Color(0xFFFF8484),
+    const Color(0XFFFF5DCD),
+    const Color(0XFFFF8484),
   ];
 }
 

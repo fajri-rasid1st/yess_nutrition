@@ -54,9 +54,9 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
                   floating: true,
                   snap: true,
                   forceElevated: innerBoxIsScrolled,
-                  toolbarHeight: 64,
                   backgroundColor: secondaryBackgroundColor,
                   shadowColor: Colors.black.withOpacity(0.5),
+                  toolbarHeight: 64,
                   centerTitle: true,
                   title: const Text(
                     'Food Nutrition Check',

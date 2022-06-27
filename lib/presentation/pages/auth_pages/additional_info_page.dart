@@ -10,6 +10,7 @@ import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_data_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_nutrients_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
 class AdditionalInfoPage extends StatefulWidget {
@@ -265,6 +266,7 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
     if (_formKey.currentState!.validate()) {
       final value = _formKey.currentState!.value;
       final userDataNotifier = context.read<UserDataNotifier>();
+      final userNutrientsNotifier = context.read<UserNutrientsNotifier>();
 
       // show loading when on process
       showDialog(
@@ -291,7 +293,14 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
         // update user data on firestore
         await userDataNotifier.updateUserData(updatedUserData);
 
-        if (userDataNotifier.state == UserState.success) {
+        // get user daily nutrients needs (BMR)
+        final userNutrients = Utilities.calculateUserNutrients(updatedUserData);
+
+        // create user nutrients firestore document
+        await userNutrientsNotifier.createUserNutrients(userNutrients);
+
+        if (userDataNotifier.state == UserState.success &&
+            userNutrientsNotifier.state == UserState.success) {
           // close loading indicator
           navigatorKey.currentState!.pop();
 

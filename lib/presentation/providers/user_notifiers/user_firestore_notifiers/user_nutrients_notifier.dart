@@ -19,21 +19,18 @@ class UserNutrientsNotifier extends ChangeNotifier {
   UserState _state = UserState.empty;
   UserState get state => _state;
 
-  String _error = '';
-  String get error => _error;
-
   String _message = '';
   String get message => _message;
 
   late UserNutrientsEntity? _userNutrients;
   UserNutrientsEntity? get userNutrients => _userNutrients;
 
-  Future<void> createUserNutrients(UserNutrientsEntity userData) async {
-    final result = await createUserNutrientsUseCase.execute(userData);
+  Future<void> createUserNutrients(UserNutrientsEntity userNutrients) async {
+    final result = await createUserNutrientsUseCase.execute(userNutrients);
 
     result.fold(
       (failure) {
-        _error = failure.message;
+        _message = failure.message;
         _state = UserState.error;
       },
       (message) {
@@ -50,7 +47,7 @@ class UserNutrientsNotifier extends ChangeNotifier {
 
     result.fold(
       (failure) {
-        _error = failure.message;
+        _message = failure.message;
         _state = UserState.error;
       },
       (userNutrients) {
@@ -62,12 +59,12 @@ class UserNutrientsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> updateUserNutrients(UserNutrientsEntity userData) async {
-    final result = await updateUserNutrientsUseCase.execute(userData);
+  Future<void> updateUserNutrients(UserNutrientsEntity userNutrients) async {
+    final result = await updateUserNutrientsUseCase.execute(userNutrients);
 
     result.fold(
       (failure) {
-        _error = failure.message;
+        _message = failure.message;
         _state = UserState.error;
       },
       (message) {

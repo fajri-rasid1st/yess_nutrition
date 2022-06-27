@@ -45,9 +45,9 @@ class _ProductCheckPageState extends State<ProductCheckPage> {
       resizeToAvoidBottomInset: false,
       backgroundColor: primaryBackgroundColor,
       appBar: AppBar(
-        toolbarHeight: 64,
         backgroundColor: secondaryBackgroundColor,
         shadowColor: Colors.black.withOpacity(0.5),
+        toolbarHeight: 64,
         centerTitle: true,
         title: const Text(
           'Product Nutrition Check',

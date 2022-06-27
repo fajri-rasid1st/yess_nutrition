@@ -31,55 +31,6 @@ class ProductsNotifier extends ChangeNotifier {
   int get randIndex => _randIndex;
 
   Future<void> getProducts() async {
-    _state = RequestState.loading;
-    notifyListeners();
-
-    final foodProducts =
-        await getProductsUseCase.execute(foodProductBaseUrls[randIndex]);
-
-    final healthProducts =
-        await getProductsUseCase.execute(healthProductBaseUrls[randIndex]);
-
-    final recommendationProducts =
-        await getProductsUseCase.execute(recommendationProductBaseUrl);
-
-    foodProducts.fold(
-      (failure) {
-        _message = failure.message;
-        _state = RequestState.error;
-      },
-      (products) {
-        _productsMap['food'] = products;
-        _state = RequestState.success;
-      },
-    );
-
-    healthProducts.fold(
-      (failure) {
-        _message = failure.message;
-        _state = RequestState.error;
-      },
-      (products) {
-        _productsMap['health'] = products;
-        _state = RequestState.success;
-      },
-    );
-
-    recommendationProducts.fold(
-      (failure) {
-        _message = failure.message;
-        _state = RequestState.error;
-      },
-      (products) {
-        _productsMap['recommendation'] = products;
-        _state = RequestState.success;
-      },
-    );
-
-    notifyListeners();
-  }
-
-  Future<void> refresh() async {
     final foodProducts =
         await getProductsUseCase.execute(foodProductBaseUrls[randIndex]);
 
