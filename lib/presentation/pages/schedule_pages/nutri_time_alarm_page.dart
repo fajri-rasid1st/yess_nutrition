@@ -3,6 +3,7 @@
 // import 'package:dotted_border/dotted_border.dart';
 // import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 // import 'package:intl/intl.dart';
+// import 'package:yess_nutrition/domain/entities/alarm_entity.dart';
 // import '../main_page.dart';
 
 // class AlarmNutriTimePage extends StatefulWidget {
@@ -13,6 +14,24 @@
 // }
 
 // class _AlarmNutriTimePageState extends State<AlarmNutriTimePage> {
+// //   List<AlarmEntity> alarms = [
+// //   AlarmEntity(
+// //     title: 'Sarapan',
+// //     alarmDateTime: DateTime.now().add(const Duration(hours: 1)),
+// //     gradientColorIndex: 0,
+// //   ),
+// //   AlarmEntity(
+// //     title: 'Makan Siang',
+// //     alarmDateTime: DateTime.now().add(const Duration(hours: 1)),
+// //     gradientColorIndex: 1,
+// //   ),
+// //   AlarmEntity(
+// //     title: 'Makan Malam',
+// //     alarmDateTime: DateTime.now().add(const Duration(hours: 1)),
+// //     gradientColorIndex: 2,
+// //   ),
+// // ];
+
 //   DateTime? _alarmTime;
 //   String? _alarmTimeString;
 //   final NutriTimeHelper _alarmHelper = NutriTimeHelper();

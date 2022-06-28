@@ -32,6 +32,8 @@ class ScheduleNotifier extends ChangeNotifier {
       (failure) => _message = failure.message,
       (success) => _message = success,
     );
+
+    notifyListeners();
   }
 
   Future<void> getAlarms(String uid) async {
@@ -58,5 +60,7 @@ class ScheduleNotifier extends ChangeNotifier {
       (failure) => _message = failure.message,
       (success) => _message = success,
     );
+
+    notifyListeners();
   }
 }

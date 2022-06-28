@@ -1,5 +1,5 @@
 import 'package:yess_nutrition/common/utils/exception.dart';
-import 'package:yess_nutrition/data/datasources/database/database_helper.dart';
+import 'package:yess_nutrition/data/datasources/helpers/database_helper.dart';
 import 'package:yess_nutrition/data/models/schedule_models/alarm_model.dart';
 
 abstract class ScheduleDataSource {
@@ -20,7 +20,7 @@ class ScheduleDataSourceImpl implements ScheduleDataSource {
     try {
       await databaseHelper.createAlarm(alarm);
 
-      return 'Alarm berhasil dibuat';
+      return 'Alarm waktu makan berhasil dibuat';
     } catch (e) {
       throw DatabaseException(e.toString());
     }
@@ -42,27 +42,9 @@ class ScheduleDataSourceImpl implements ScheduleDataSource {
     try {
       await databaseHelper.deleteAlarm(alarm);
 
-      return 'Alarm berhasil dihapus';
+      return 'Alarm waktu makan berhasil dihapus';
     } catch (e) {
       throw DatabaseException(e.toString());
     }
   }
 }
-
-// List<AlarmScheduleModel> alarms = [
-//   AlarmScheduleModel(
-//     title: 'Sarapan',
-//     alarmDateTime: DateTime.now().add(const Duration(hours: 1)),
-//     gradientColorIndex: 0,
-//   ),
-//   AlarmScheduleModel(
-//     title: 'Makan Siang',
-//     alarmDateTime: DateTime.now().add(const Duration(hours: 1)),
-//     gradientColorIndex: 1,
-//   ),
-//   AlarmScheduleModel(
-//     title: 'Makan Malam',
-//     alarmDateTime: DateTime.now().add(const Duration(hours: 1)),
-//     gradientColorIndex: 2,
-//   ),
-// ];

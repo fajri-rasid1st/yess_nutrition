@@ -82,7 +82,9 @@ class Utilities {
     return encrypted.base64;
   }
 
-  /// Function to create snack bar with [message] as text that will be displayed
+  /// Function to create snack bar with [message] as text that will be displayed.
+  ///
+  /// Its only create snackbar, not showing it.
   static SnackBar createSnackBar(String message) {
     return SnackBar(
       content: Text(message, style: GoogleFonts.plusJakartaSans()),
@@ -90,6 +92,41 @@ class Utilities {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       duration: const Duration(seconds: 3),
     );
+  }
+
+  /// Function to scheduled time based on [timePattern]
+  ///
+  /// The [timePattern] must match with **H:m:s** format, ex: 23:59:00.
+  static DateTime dateTimeScheduled(String timePattern) {
+    final now = DateTime.now();
+
+    final dateFormat = DateFormat('y/M/d');
+    final completeFormat = DateFormat('y/M/d H:m:s');
+
+    // Date and time today format
+    // ex. output: 2022/4/7
+    final todayDate = dateFormat.format(now);
+
+    // ex. output: 2022/4/7 11:00:00
+    final todayDateAndTime = '$todayDate $timePattern';
+
+    // ex. output: 2022-04-07 11:00:00.000
+    final resultToday = completeFormat.parseStrict(todayDateAndTime);
+
+    // Date and time tomorrow format
+    // ex. output: 2022-04-08 11:00:00.000
+    final formatted = resultToday.add(const Duration(days: 1));
+
+    // ex. output: 2022/4/8
+    final tomorrowDate = dateFormat.format(formatted);
+
+    // ex. output: 2022/4/8 11:00:00
+    final tomorrowDateAndTime = '$tomorrowDate $timePattern';
+
+    // ex. output: 2022-04-08 11:00:00.000
+    final resultTomorrow = completeFormat.parseStrict(tomorrowDateAndTime);
+
+    return now.isAfter(resultToday) ? resultTomorrow : resultToday;
   }
 
   /// Function to show confirm dialog with two action button

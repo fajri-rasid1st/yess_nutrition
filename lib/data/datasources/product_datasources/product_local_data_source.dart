@@ -1,5 +1,5 @@
 import 'package:yess_nutrition/common/utils/exception.dart';
-import 'package:yess_nutrition/data/datasources/database/database_helper.dart';
+import 'package:yess_nutrition/data/datasources/helpers/database_helper.dart';
 import 'package:yess_nutrition/data/models/product_models/product_table.dart';
 
 abstract class ProductLocalDataSource {
