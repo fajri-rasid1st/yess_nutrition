@@ -137,6 +137,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => NewsFabNotifier(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<HomePageNotifier>(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
