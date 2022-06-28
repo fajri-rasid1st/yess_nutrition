@@ -189,6 +189,13 @@ class MyApp extends StatelessWidget {
                 builder: (_) => AdditionalInfoPage(user: user),
                 settings: settings,
               );
+            case webviewRoute:
+              final url = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => WebViewPage(url: url),
+                settings: settings,
+              );
             case mainRoute:
               final user = settings.arguments as UserEntity;
 
@@ -204,13 +211,7 @@ class MyApp extends StatelessWidget {
                 builder: (_) => NutrientsDetailPage(uid: uid),
                 settings: settings,
               );
-            case webviewRoute:
-              final url = settings.arguments as String;
 
-              return MaterialPageRoute(
-                builder: (_) => WebViewPage(url: url),
-                settings: settings,
-              );
             case profileRoute:
               final uid = settings.arguments as String;
 
@@ -223,6 +224,13 @@ class MyApp extends StatelessWidget {
 
               return MaterialPageRoute(
                 builder: (_) => UpdateProfilePage(userData: userData),
+                settings: settings,
+              );
+            case scheduleAlarmRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => ScheduleAlarmPage(uid: uid),
                 settings: settings,
               );
             case checkRoute:

@@ -272,13 +272,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
-  flutter_alarm_clock:
-    dependency: "direct main"
-    description:
-      name: flutter_alarm_clock
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.2"
   flutter_barcode_scanner:
     dependency: "direct main"
     description:
@@ -354,13 +347,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.2.3+1"
-  flutter_page_indicator:
-    dependency: transitive
-    description:
-      name: flutter_page_indicator
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.0.3"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -389,13 +375,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.0"
-  flutter_swiper:
-    dependency: "direct main"
-    description:
-      name: flutter_swiper
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.6"
   flutter_switch:
     dependency: "direct main"
     description:
@@ -778,7 +757,7 @@ packages:
     source: hosted
     version: "3.1.0"
   rxdart:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: rxdart
       url: "https://pub.dartlang.org"
@@ -915,13 +894,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.8.0"
-  transformer_page_view:
-    dependency: transitive
-    description:
-      name: transformer_page_view
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.6"
   typed_data:
     dependency: transitive
     description:
