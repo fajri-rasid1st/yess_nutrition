@@ -6,7 +6,6 @@ import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
-import 'package:yess_nutrition/presentation/providers/common_notifiers/bottom_navigation_bar_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/get_news_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_nutrients_notifier.dart';
@@ -19,8 +18,13 @@ import 'package:yess_nutrition/presentation/widgets/small_circular_progress.dart
 
 class HomePage extends StatefulWidget {
   final String uid;
+  final PageController pageController;
 
-  const HomePage({Key? key, required this.uid}) : super(key: key);
+  const HomePage({
+    Key? key,
+    required this.uid,
+    required this.pageController,
+  }) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -190,12 +194,7 @@ class _HomePageState extends State<HomePage>
             _buildTitleContent(
               context,
               "NutriNews",
-              () {
-                final bottomNav = context.read<BottomNavigationBarNotifier>();
-
-                bottomNav.selectedIndex = 2;
-                bottomNav.backgroundColor = primaryBackgroundColor;
-              },
+              () => widget.pageController.jumpToPage(2),
             ),
             const SizedBox(height: 8),
             _buildListNutriNews(),
@@ -203,12 +202,7 @@ class _HomePageState extends State<HomePage>
             _buildTitleContent(
               context,
               "NutriShop",
-              () {
-                final bottomNav = context.read<BottomNavigationBarNotifier>();
-
-                bottomNav.selectedIndex = 3;
-                bottomNav.backgroundColor = scaffoldBackgroundColor;
-              },
+              () => widget.pageController.jumpToPage(3),
             ),
             const SizedBox(height: 8),
             _buildListNutriShop(),

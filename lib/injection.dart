@@ -53,7 +53,10 @@ void init() {
 
   // User storage providers
   locator.registerFactory(
-    () => UserStorageNotifier(uploadProfilePictureUseCase: locator()),
+    () => UserStorageNotifier(
+      uploadProfilePictureUseCase: locator(),
+      deleteProfilePictureUseCase: locator(),
+    ),
   );
 
   // Schedule providers
@@ -158,6 +161,7 @@ void init() {
 
   // User storage usecases
   locator.registerLazySingleton(() => UploadProfilePicture(locator()));
+  locator.registerLazySingleton(() => DeleteProfilePicture(locator()));
 
   // Schedule usecases
   locator.registerLazySingleton(() => CreateAlarm(locator()));

@@ -34,7 +34,6 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   late final TextEditingController _ageController;
   late final TextEditingController _weightController;
   late final TextEditingController _heightController;
-  // late Widget _profilePicture;
 
   @override
   void initState() {
@@ -50,16 +49,6 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     _ageController.text = widget.userData.age.toString();
     _weightController.text = widget.userData.weight.toString();
     _heightController.text = widget.userData.height.toString();
-
-    // _profilePicture = widget.userData.imgUrl.isNotEmpty
-    //     ? Image.network(
-    //         widget.userData.imgUrl,
-    //         fit: BoxFit.cover,
-    //       )
-    //     : Image.asset(
-    //         'assets/img/default_user_pict.png',
-    //         fit: BoxFit.cover,
-    //       );
 
     super.initState();
   }
@@ -488,6 +477,14 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
                 _pickImage(ImageSource.gallery);
               },
             ),
+            ListTile(
+              leading: const Icon(MdiIcons.deleteForeverOutline),
+              title: const Text('Hapus Gambar Profil'),
+              onTap: () {
+                Navigator.pop(context);
+                _deleteProfilePicture(widget.userData.uid);
+              },
+            ),
           ],
         ),
       ),
@@ -596,6 +593,72 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
         ..showSnackBar(snackBar);
+    }
+  }
+
+  Future<void> _deleteProfilePicture(String uid) async {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const LoadingIndicator(),
+    );
+
+    final userDataNotifier = context.read<UserDataNotifier>();
+
+    // read user data
+    await userDataNotifier.readUserData(uid);
+
+    if (!mounted) return;
+
+    if (userDataNotifier.state == UserState.success) {
+      if (!userDataNotifier.userData.imgUrl
+          .contains('lh3.googleusercontent.com')) {
+        final deleteProfilePictureNotifier =
+            context.read<UserStorageNotifier>();
+
+        await deleteProfilePictureNotifier.deleteProfilePicture(uid);
+
+        if (!mounted) return;
+
+        if (deleteProfilePictureNotifier.state == UserState.error) {
+          final snackBar =
+              Utilities.createSnackBar(deleteProfilePictureNotifier.error);
+
+          // close loading indicator
+          Navigator.pop(context);
+
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(snackBar);
+        }
+      }
+      // get user data
+      final userData = userDataNotifier.userData;
+
+      // updated user data
+      final updatedUserData = userData.copyWith(
+        imgUrl: '',
+      );
+
+      // update user data on firestore
+      await userDataNotifier.updateUserData(updatedUserData);
+
+      if (!mounted) return;
+
+      if (userDataNotifier.state == UserState.success) {
+        // close loading indicator
+        Navigator.pop(context);
+
+        // Close Update Profile Page
+        Navigator.pop(context, true);
+
+        // Reload Profile Page
+        Navigator.pushReplacementNamed(
+          context,
+          profileRoute,
+          arguments: widget.userData.uid,
+        );
+      }
     }
   }
 }
