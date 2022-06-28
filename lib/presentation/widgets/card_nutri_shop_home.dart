@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
+import 'package:yess_nutrition/common/utils/utils.dart';
 import 'package:yess_nutrition/domain/entities/entities.dart';
 
 class CardNutriShopHome extends StatelessWidget {
@@ -61,24 +62,12 @@ class CardNutriShopHome extends StatelessWidget {
                       ),
                 ),
                 const SizedBox(height: 4),
-                Row(
-                  children: <Widget>[
-                    Text(
-                      "Rp.",
-                      style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w900,
-                            color: errorColor,
-                          ),
-                    ),
-                    Text(
-                      product.price,
-                      style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                            fontWeight: FontWeight.w900,
-                            color: errorColor,
-                          ),
-                    ),
-                  ],
+                Text(
+                  product.price,
+                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
+                        fontWeight: FontWeight.w900,
+                        color: errorColor,
+                      ),
                 )
               ],
             ),
@@ -87,12 +76,11 @@ class CardNutriShopHome extends StatelessWidget {
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: () {},
-                // onTap: () => Navigator.pushNamed(
-                //   context,
-                //   newsDetailRoute,
-                //   arguments: NewsDetailPageArgs(news, heroTag),
-                // ),
+                onTap: () => Navigator.pushNamed(
+                  context,
+                  webviewRoute,
+                  arguments: product.url,
+                ),
               ),
             ),
           ),
