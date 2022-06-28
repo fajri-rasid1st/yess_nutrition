@@ -61,6 +61,7 @@ void init() {
     () => ScheduleNotifier(
       createAlarmUseCase: locator(),
       getAlarmsUseCase: locator(),
+      updateAlarmUseCase: locator(),
       deleteAlarmUseCase: locator(),
     ),
   );
@@ -162,6 +163,7 @@ void init() {
   // Schedule usecases
   locator.registerLazySingleton(() => CreateAlarm(locator()));
   locator.registerLazySingleton(() => GetAlarms(locator()));
+  locator.registerLazySingleton(() => UpdateAlarm(locator()));
   locator.registerLazySingleton(() => DeleteAlarm(locator()));
 
   // Food usecases
@@ -308,8 +310,9 @@ void init() {
   * Common services section
   */
 
-  // Databases
+  // Helper
   locator.registerLazySingleton(() => DatabaseHelper());
+  locator.registerLazySingleton(() => NotificationHelper());
 
   // Services
   locator.registerLazySingleton(() => FirebaseAuth.instance);

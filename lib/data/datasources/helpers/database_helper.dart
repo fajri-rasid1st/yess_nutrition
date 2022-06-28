@@ -117,7 +117,7 @@ class DatabaseHelper {
       alarmScheduleTable,
       where: 'uid = ?',
       whereArgs: [uid],
-      orderBy: 'createdAt DESC',
+      orderBy: 'scheduledAt DESC',
     );
 
     final alarms = List<AlarmModel>.from(
@@ -125,6 +125,18 @@ class DatabaseHelper {
     );
 
     return alarms;
+  }
+
+  /// update previous alarm with new [alarm] value
+  Future<int> updateAlarm(AlarmModel alarm) async {
+    final db = await database;
+
+    return await db.update(
+      alarmScheduleTable,
+      alarm.toMap(),
+      where: 'id = ? AND uid = ?',
+      whereArgs: [alarm.id, alarm.uid],
+    );
   }
 
   /// delete [alarm] from alarm schedule table

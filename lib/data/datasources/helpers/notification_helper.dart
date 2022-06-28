@@ -1,37 +1,32 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+import 'package:yess_nutrition/common/utils/routes.dart';
+import 'package:yess_nutrition/domain/entities/entities.dart';
 
+final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 final selectNotificationSubject = BehaviorSubject<String>();
 
 class NotificationHelper {
   static NotificationHelper? _notificationHelper;
 
-  NotificationHelper._internal() {
+  NotificationHelper._instance() {
     _notificationHelper = this;
   }
 
   factory NotificationHelper() {
-    return _notificationHelper ?? NotificationHelper._internal();
+    return _notificationHelper ?? NotificationHelper._instance();
   }
 
-  /// Menginisialisasi pengaturan notifikasi
-  Future<void> initNotifications(
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
-  ) async {
+  /// Initialize notification
+  Future<void> initNotifications() async {
+    await _configureLocalTimeZone();
+
     const initSettingsAndroid = AndroidInitializationSettings('app_icon');
-
-    const initSettingsIOS = IOSInitializationSettings(
-      requestAlertPermission: false,
-      requestBadgePermission: false,
-      requestSoundPermission: false,
-    );
-
-    const initSettings = InitializationSettings(
-      android: initSettingsAndroid,
-      iOS: initSettingsIOS,
-    );
+    const initSettings = InitializationSettings(android: initSettingsAndroid);
 
     final details =
         await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
@@ -48,55 +43,94 @@ class NotificationHelper {
     );
   }
 
-  /// Menampilkan notifikasi dengan payload berupa string encoding dari [restaurant]
-  Future<void> showNotification(
-    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin,
-    Restaurant restaurant,
+  /// Schedule notification
+  Future<void> scheduleNotification(
+    int id,
+    int hour,
+    int minutes,
+    String uid,
+    AlarmEntity alarm,
   ) async {
-    const channelId = '1';
-    const channelName = 'channel_01';
-    const channelDescription = 'restaurant_channel';
+    final channelId = 'channel_$id';
+    const channelName = 'my_channel';
+    const channelDescription = 'my_description_channel';
 
-    const androidPlatformChannelSpecifics = AndroidNotificationDetails(
+    final androidPlatformChannelSpecifics = AndroidNotificationDetails(
       channelId,
       channelName,
       channelDescription: channelDescription,
       importance: Importance.max,
       priority: Priority.high,
       ticker: 'ticker',
-      styleInformation: DefaultStyleInformation(true, true),
+      sound: const RawResourceAndroidNotificationSound('slow_spring_board'),
+      styleInformation: const DefaultStyleInformation(true, true),
     );
 
-    const iOSPlatformChannelSpecifics = IOSNotificationDetails();
-
-    const platformChannelSpecifics = NotificationDetails(
+    final platformChannelSpecifics = NotificationDetails(
       android: androidPlatformChannelSpecifics,
-      iOS: iOSPlatformChannelSpecifics,
     );
 
-    final title = '<b>${restaurant.name}</b>';
-    const body = 'Rekomendasi restaurant untukmu. Klik untuk melihat detail.';
+    final title = '<b>${alarm.title}</b>';
+    const body = 'Waktunya Anda untuk makan. Lihat jadwal makanan Anda.';
 
-    await flutterLocalNotificationsPlugin.show(
-      0,
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      id,
       title,
       body,
+      _convertTime(hour, minutes),
       platformChannelSpecifics,
-      payload: jsonEncode(restaurant.toMap()),
+      payload: uid,
+      androidAllowWhileIdle: true,
+      matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
     );
   }
 
-  /// Melakukan konfigurasi/listen notifikasi, sehingga mengarah ke halaman
-  /// detail restaurant saat notifikasi ditekan
+  /// Determine location and timezone
+  Future<void> _configureLocalTimeZone() async {
+    tz.initializeTimeZones();
+
+    final String timeZone = await FlutterNativeTimezone.getLocalTimezone();
+
+    tz.setLocalLocation(tz.getLocation(timeZone));
+  }
+
+  /// Convert Datetime to TZDateTime for notifications
+  tz.TZDateTime _convertTime(int hour, int minutes) {
+    final now = tz.TZDateTime.now(tz.local);
+
+    var scheduleDate = tz.TZDateTime(
+      tz.local,
+      now.year,
+      now.month,
+      now.day,
+      hour,
+      minutes,
+    );
+
+    if (scheduleDate.isBefore(now)) {
+      scheduleDate = scheduleDate.add(const Duration(days: 1));
+    }
+
+    return scheduleDate;
+  }
+
+  /// Configure selected notification subject. Navigate to schedule page
+  /// when notification on tapped.
   void configureSelectNotificationSubject(BuildContext context) {
     selectNotificationSubject.stream.listen((payload) {
-      final result = jsonDecode(payload);
-      final restaurant = Restaurant.fromMap(result);
-
-      Utilities.navigateToDetailScreen(
-        context: context,
-        restaurant: restaurant,
-      );
+      Navigator.pushNamed(context, scheduleRoute, arguments: payload);
     });
+  }
+
+  /// Remove specific schedule
+  Future<void> removeSchedule(int id) async {
+    return await flutterLocalNotificationsPlugin.cancel(id);
+  }
+
+  /// Clear all schedules
+  Future<void> clearSchedules() async {
+    return await flutterLocalNotificationsPlugin.cancelAll();
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
+import 'package:yess_nutrition/data/datasources/helpers/notification_helper.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
 import 'package:yess_nutrition/presentation/pages/common_pages/home_page.dart';
 import 'package:yess_nutrition/presentation/pages/news_pages/news_page.dart';
@@ -21,6 +22,7 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   final List<Widget> _pages = <Widget>[];
+  final NotificationHelper _notificationHelper = NotificationHelper();
 
   late PageController _pageController;
 
@@ -36,6 +38,7 @@ class _MainPageState extends State<MainPage> {
     ]);
 
     _pageController = PageController();
+    _notificationHelper.configureSelectNotificationSubject(context);
   }
 
   @override

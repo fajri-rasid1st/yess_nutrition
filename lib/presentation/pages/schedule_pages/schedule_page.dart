@@ -23,12 +23,13 @@ class _NutriTimePagePageState extends State<SchedulePage>
       backgroundColor: primaryBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        toolbarHeight: 64,
+        toolbarHeight: 86,
         elevation: 0,
         title: const Text(
           'NutriTime',
           style: TextStyle(
             color: primaryColor,
+            fontSize: 24,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -47,10 +48,11 @@ class _NutriTimePagePageState extends State<SchedulePage>
                     onPressed: () => Navigator.pushNamed(
                       context,
                       scheduleAlarmRoute,
+                      arguments: widget.uid,
                     ),
-                    icon: const Icon(Icons.edit_notifications_outlined),
+                    icon: const Icon(Icons.schedule_outlined),
                     color: primaryColor,
-                    tooltip: 'Alarm Notification',
+                    tooltip: 'Notification',
                   ),
                 ),
               ),

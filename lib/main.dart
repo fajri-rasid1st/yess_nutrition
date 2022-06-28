@@ -8,36 +8,15 @@ import 'common/styles/styles.dart';
 import 'common/utils/http_ssl_pinning.dart';
 import 'common/utils/keys.dart';
 import 'common/utils/routes.dart';
+import 'data/datasources/helpers/notification_helper.dart';
 import 'domain/entities/entities.dart';
 import 'firebase_options.dart';
 import 'injection.dart' as di;
 import 'presentation/pages/pages.dart';
 import 'presentation/providers/providers.dart';
 
-// final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-//     FlutterLocalNotificationsPlugin();
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // var initializationSettingsAndroid =
-  //     const AndroidInitializationSettings('splash');
-
-  // var initializationSettingsIOS = IOSInitializationSettings(
-  //     requestAlertPermission: true,
-  //     requestBadgePermission: true,
-  //     requestSoundPermission: true,
-  //     onDidReceiveLocalNotification: (id, title, body, payload) async {});
-
-  // var initializationSettings = InitializationSettings(
-  //     android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
-
-  // await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-  //     onSelectNotification: (payload) async {
-  //   if (payload != null) {
-  //     debugPrint('notification payload: $payload');
-  //   }
-  // });
 
   // Prevent landscape orientation
   SystemChrome.setPreferredOrientations(<DeviceOrientation>[
@@ -60,6 +39,9 @@ void main() async {
 
   // Initialize service locator
   di.init();
+
+  // Initialize notification
+  await di.locator<NotificationHelper>().initNotifications();
 
   runApp(const MyApp());
 }
@@ -224,6 +206,13 @@ class MyApp extends StatelessWidget {
 
               return MaterialPageRoute(
                 builder: (_) => UpdateProfilePage(userData: userData),
+                settings: settings,
+              );
+            case scheduleRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => SchedulePage(uid: uid),
                 settings: settings,
               );
             case scheduleAlarmRoute:

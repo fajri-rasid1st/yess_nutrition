@@ -42,7 +42,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
             index: 1,
             selectedIcon: MdiIcons.timer,
             unselectedIcon: MdiIcons.timerOutline,
-            backgroundColor: scaffoldBackgroundColor,
+            backgroundColor: primaryBackgroundColor,
           ),
           SizedBox(
             height: kBottomNavigationBarHeight + 8,

@@ -7,5 +7,7 @@ abstract class ScheduleRepository {
 
   Future<Either<Failure, List<AlarmEntity>>> getAlarms(String uid);
 
+  Future<Either<Failure, String>> updateAlarm(AlarmEntity alarm);
+
   Future<Either<Failure, String>> deleteAlarm(AlarmEntity alarm);
 }
