@@ -19,7 +19,7 @@ class Wrapper extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.active) {
           final UserEntity? user = snapshot.data;
 
-          return user == null ? const LoginPage() : MainPage(user: user);
+          return user == null ? LoginPage() : MainPage(user: user);
         } else {
           return const Scaffold(body: LoadingIndicator());
         }

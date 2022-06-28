@@ -13,40 +13,10 @@ import 'package:yess_nutrition/presentation/providers/user_notifiers/user_auth_n
 import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({Key? key}) : super(key: key);
+class RegisterPage extends StatelessWidget {
+  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
 
-  @override
-  State<RegisterPage> createState() => _RegisterPageState();
-}
-
-class _RegisterPageState extends State<RegisterPage> {
-  late final GlobalKey<FormBuilderState> _formKey;
-  late final TextEditingController _nameController;
-  late final TextEditingController _emailController;
-  late final TextEditingController _passwordController;
-  late final TextEditingController _confirmPasswordController;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _formKey = GlobalKey<FormBuilderState>();
-    _nameController = TextEditingController();
-    _emailController = TextEditingController();
-    _passwordController = TextEditingController();
-    _confirmPasswordController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-
-    _nameController.dispose();
-    _emailController.dispose();
-    _passwordController.dispose();
-    _confirmPasswordController.dispose();
-  }
+  RegisterPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -133,7 +103,6 @@ class _RegisterPageState extends State<RegisterPage> {
   FormBuilderTextField _buildNameField() {
     return FormBuilderTextField(
       name: 'name',
-      controller: _nameController,
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.name,
       maxLength: 100,
@@ -151,7 +120,6 @@ class _RegisterPageState extends State<RegisterPage> {
   FormBuilderTextField _buildEmailField() {
     return FormBuilderTextField(
       name: 'email',
-      controller: _emailController,
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.emailAddress,
       decoration: const InputDecoration(
@@ -173,7 +141,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
         return FormBuilderTextField(
           name: 'password',
-          controller: _passwordController,
           textInputAction: TextInputAction.next,
           keyboardType: TextInputType.visiblePassword,
           obscureText: !isVisible,
@@ -210,7 +177,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
         return FormBuilderTextField(
           name: 'confirm_password',
-          controller: _confirmPasswordController,
           textInputAction: TextInputAction.done,
           keyboardType: TextInputType.visiblePassword,
           obscureText: !isVisible,

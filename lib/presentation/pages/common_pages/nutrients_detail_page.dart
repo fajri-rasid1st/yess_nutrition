@@ -393,7 +393,7 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
               children: <Widget>[
                 NutrientInputField(
                   name: 'calories',
-                  initialValue: userNutrients?.maxCalories.toString() ?? '0',
+                  initialValue: userNutrients?.maxCalories.toString() ?? '',
                   prefixText: 'Kalori:\t',
                   suffixText: 'Kkal',
                   isAutoFocus: true,
@@ -401,22 +401,21 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
                 const SizedBox(height: 10),
                 NutrientInputField(
                   name: 'carbohydrate',
-                  initialValue:
-                      userNutrients?.maxCarbohydrate.toString() ?? '0',
+                  initialValue: userNutrients?.maxCarbohydrate.toString() ?? '',
                   prefixText: 'Karbohidrat:\t',
                   suffixText: 'gram',
                 ),
                 const SizedBox(height: 10),
                 NutrientInputField(
                   name: 'protein',
-                  initialValue: userNutrients?.maxProtein.toString() ?? '0',
+                  initialValue: userNutrients?.maxProtein.toString() ?? '',
                   prefixText: 'Protein:\t',
                   suffixText: 'gram',
                 ),
                 const SizedBox(height: 10),
                 NutrientInputField(
                   name: 'fat',
-                  initialValue: userNutrients?.maxFat.toString() ?? '0',
+                  initialValue: userNutrients?.maxFat.toString() ?? '',
                   prefixText: 'Lemak:\t',
                   suffixText: 'gram',
                   textInputAction: TextInputAction.done,

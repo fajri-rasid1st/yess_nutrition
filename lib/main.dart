@@ -172,15 +172,15 @@ class MyApp extends StatelessWidget {
           switch (settings.name) {
             case loginRoute:
               return MaterialPageRoute(
-                builder: (_) => const LoginPage(),
+                builder: (_) => LoginPage(),
               );
             case registerRoute:
               return MaterialPageRoute(
-                builder: (_) => const RegisterPage(),
+                builder: (_) => RegisterPage(),
               );
             case forgotPasswordRoute:
               return MaterialPageRoute(
-                builder: (_) => const ForgotPasswordPage(),
+                builder: (_) => ForgotPasswordPage(),
               );
             case additionalInfoRoute:
               final user = settings.arguments as UserEntity;

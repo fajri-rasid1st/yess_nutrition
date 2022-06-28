@@ -10,31 +10,10 @@ import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/user_auth_notifiers/user_auth_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
-class ForgotPasswordPage extends StatefulWidget {
-  const ForgotPasswordPage({Key? key}) : super(key: key);
+class ForgotPasswordPage extends StatelessWidget {
+  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
 
-  @override
-  State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
-}
-
-class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
-  late final GlobalKey<FormBuilderState> _formKey;
-  late final TextEditingController _emailController;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _formKey = GlobalKey<FormBuilderState>();
-    _emailController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-
-    _emailController.dispose();
-  }
+  ForgotPasswordPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +93,6 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   FormBuilderTextField _buildEmailField() {
     return FormBuilderTextField(
       name: 'email',
-      controller: _emailController,
       textInputAction: TextInputAction.done,
       keyboardType: TextInputType.emailAddress,
       decoration: const InputDecoration(

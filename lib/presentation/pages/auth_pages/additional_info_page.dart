@@ -13,39 +13,12 @@ import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firest
 import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_nutrients_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
-class AdditionalInfoPage extends StatefulWidget {
+class AdditionalInfoPage extends StatelessWidget {
   final UserEntity user;
 
-  const AdditionalInfoPage({Key? key, required this.user}) : super(key: key);
+  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
 
-  @override
-  State<AdditionalInfoPage> createState() => _AdditionalInfoPageState();
-}
-
-class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
-  late final GlobalKey<FormBuilderState> _formKey;
-  late final TextEditingController _ageController;
-  late final TextEditingController _weightController;
-  late final TextEditingController _heightController;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _formKey = GlobalKey<FormBuilderState>();
-    _ageController = TextEditingController();
-    _weightController = TextEditingController();
-    _heightController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-
-    _ageController.dispose();
-    _weightController.dispose();
-    _heightController.dispose();
-  }
+  AdditionalInfoPage({Key? key, required this.user}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +28,7 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
           context,
           mainRoute,
           (route) => false,
-          arguments: widget.user,
+          arguments: user,
         );
 
         return Future.value(true);
@@ -81,7 +54,7 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
                           context,
                           mainRoute,
                           (route) => false,
-                          arguments: widget.user,
+                          arguments: user,
                         );
                       },
                       icon: const Icon(Icons.close_rounded),
@@ -197,7 +170,6 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
   FormBuilderTextField _buildAgeField() {
     return FormBuilderTextField(
       name: 'age',
-      controller: _ageController,
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.number,
       decoration: const InputDecoration(
@@ -218,7 +190,6 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
   FormBuilderTextField _buildWeightField() {
     return FormBuilderTextField(
       name: 'weight',
-      controller: _weightController,
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.number,
       decoration: const InputDecoration(
@@ -239,7 +210,6 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
   FormBuilderTextField _buildHeightField() {
     return FormBuilderTextField(
       name: 'height',
-      controller: _heightController,
       textInputAction: TextInputAction.done,
       keyboardType: TextInputType.number,
       decoration: const InputDecoration(
@@ -285,7 +255,7 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
       );
 
       // read user data
-      await userDataNotifier.readUserData(widget.user.uid);
+      await userDataNotifier.readUserData(user.uid);
 
       if (userDataNotifier.state == UserState.success) {
         // get user data
@@ -317,7 +287,7 @@ class _AdditionalInfoPageState extends State<AdditionalInfoPage> {
           navigatorKey.currentState!.pushNamedAndRemoveUntil(
             mainRoute,
             (route) => false,
-            arguments: widget.user,
+            arguments: user,
           );
         }
       } else {

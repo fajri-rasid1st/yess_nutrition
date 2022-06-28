@@ -15,34 +15,10 @@ import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firest
 import 'package:yess_nutrition/presentation/widgets/clickable_text.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class LoginPage extends StatelessWidget {
+  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
 
-  @override
-  State<LoginPage> createState() => _LoginPageState();
-}
-
-class _LoginPageState extends State<LoginPage> {
-  late final GlobalKey<FormBuilderState> _formKey;
-  late final TextEditingController _emailController;
-  late final TextEditingController _passwordController;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _formKey = GlobalKey<FormBuilderState>();
-    _emailController = TextEditingController();
-    _passwordController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-
-    _emailController.dispose();
-    _passwordController.dispose();
-  }
+  LoginPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -150,7 +126,6 @@ class _LoginPageState extends State<LoginPage> {
   FormBuilderTextField _buildEmailField() {
     return FormBuilderTextField(
       name: 'email',
-      controller: _emailController,
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.emailAddress,
       decoration: const InputDecoration(
@@ -172,7 +147,6 @@ class _LoginPageState extends State<LoginPage> {
 
         return FormBuilderTextField(
           name: 'password',
-          controller: _passwordController,
           textInputAction: TextInputAction.done,
           keyboardType: TextInputType.visiblePassword,
           obscureText: !isVisible,
