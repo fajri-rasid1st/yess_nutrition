@@ -31,14 +31,17 @@ class _MainPageState extends State<MainPage> {
   void initState() {
     super.initState();
 
+    _pageController = PageController();
+
     _pages.addAll([
-      HomePage(user: widget.user),
+      HomePage(
+        user: widget.user,
+        pageController: _pageController,
+      ),
       const Scaffold(),
       NewsPage(uid: widget.user.uid),
       ShopPage(uid: widget.user.uid),
     ]);
-
-    _pageController = PageController();
   }
 
   @override

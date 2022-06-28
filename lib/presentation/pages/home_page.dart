@@ -4,20 +4,26 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
+import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
-import 'package:yess_nutrition/presentation/providers/common_notifiers/bottom_navigation_bar_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/news_notifiers/get_news_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/providers.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_news_home.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_shop_home.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_time_task.dart';
 import 'package:yess_nutrition/presentation/widgets/large_circular_progress.dart';
+import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 import 'package:yess_nutrition/presentation/widgets/small_circular_progress.dart';
 
 class HomePage extends StatefulWidget {
   final UserEntity user;
+  final PageController pageController;
 
-  const HomePage({Key? key, required this.user}) : super(key: key);
+  const HomePage({
+    Key? key,
+    required this.user,
+    required this.pageController,
+  }) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -32,6 +38,8 @@ class _HomePageState extends State<HomePage>
     Future.microtask(() {
       Provider.of<GetNewsNotifier>(context, listen: false)
           .getNewsByCount(count: 5);
+      Provider.of<UserDataNotifier>(context, listen: false)
+          .readUserData(widget.user.uid);
     });
   }
 
@@ -67,82 +75,89 @@ class _HomePageState extends State<HomePage>
               horizontal: 16,
               vertical: 36,
             ),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        width: 50,
-                        height: 50,
-                        margin: const EdgeInsets.only(right: 12),
-                        decoration: const BoxDecoration(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(8),
+            child:
+                Consumer<UserDataNotifier>(builder: (context, result, child) {
+              if (result.state == UserState.success) {
+                return Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                            width: 50,
+                            height: 50,
+                            margin: const EdgeInsets.only(right: 12),
+                            decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(8),
+                              ),
+                            ),
+                            clipBehavior: Clip.hardEdge,
+                            child: result.userData.imgUrl.isEmpty
+                                ? Image.asset(
+                                    'assets/img/default_user_pict.png',
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.network(
+                                    result.userData.imgUrl,
+                                    fit: BoxFit.cover,
+                                  ),
                           ),
-                        ),
-                        clipBehavior: Clip.hardEdge,
-                        child: widget.user.imgUrl.isEmpty
-                            ? Image.asset(
-                                'assets/img/default_user_pict.png',
-                                fit: BoxFit.cover,
-                              )
-                            : Image.network(
-                                widget.user.imgUrl,
-                                fit: BoxFit.cover,
-                              ),
-                      ),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Text(
-                              'Hai, ${widget.user.name}',
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: primaryBackgroundColor,
-                                fontSize: 20,
-                                fontWeight: FontWeight.w800,
-                              ),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                Text(
+                                  'Hai, ${result.userData.name}',
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    color: primaryBackgroundColor,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w800,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  "Selamat Datang",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .caption
+                                      ?.copyWith(color: primaryBackgroundColor),
+                                ),
+                              ],
                             ),
-                            const SizedBox(height: 4),
-                            Text(
-                              "Selamat Datang",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .caption
-                                  ?.copyWith(color: primaryBackgroundColor),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: primaryColor,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: IconButton(
-                    onPressed: () {
-                      Navigator.pushNamed(
-                        context,
-                        profileRoute,
-                        arguments: widget.user.uid,
-                      );
-                    },
-                    icon: const Icon(
-                      Icons.settings_outlined,
-                      color: primaryBackgroundColor,
-                      size: 28,
                     ),
-                    tooltip: 'Pengaturan',
-                  ),
-                ),
-              ],
-            ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: primaryColor,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.pushNamed(
+                            context,
+                            profileRoute,
+                            arguments: widget.user.uid,
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.settings_outlined,
+                          color: primaryBackgroundColor,
+                          size: 28,
+                        ),
+                        tooltip: 'Pengaturan',
+                      ),
+                    ),
+                  ],
+                );
+              } else {
+                return const Scaffold(body: LoadingIndicator());
+              }
+            }),
           ),
         ),
       ],
@@ -173,11 +188,7 @@ class _HomePageState extends State<HomePage>
               context,
               "NutriNews",
               () {
-                var bottomNav = Provider.of<BottomNavigationBarNotifier>(
-                    context,
-                    listen: false);
-                bottomNav.selectedIndex = 2;
-                bottomNav.backgroundColor = primaryBackgroundColor;
+                widget.pageController.jumpToPage(2);
               },
             ),
             const SizedBox(height: 8),
@@ -187,11 +198,7 @@ class _HomePageState extends State<HomePage>
               context,
               "NutriShop",
               () {
-                var bottomNav = Provider.of<BottomNavigationBarNotifier>(
-                    context,
-                    listen: false);
-                bottomNav.selectedIndex = 3;
-                bottomNav.backgroundColor = scaffoldBackgroundColor;
+                widget.pageController.jumpToPage(3);
               },
             ),
             const SizedBox(height: 8),
