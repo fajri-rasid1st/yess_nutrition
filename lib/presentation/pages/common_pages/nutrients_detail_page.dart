@@ -378,7 +378,7 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
       barrierDismissible: false,
       builder: (context) {
         return AlertDialog(
-          elevation: 0,
+          elevation: 8,
           scrollable: true,
           clipBehavior: Clip.antiAlias,
           contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 0),

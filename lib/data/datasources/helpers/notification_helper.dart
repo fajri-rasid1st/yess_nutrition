@@ -1,3 +1,4 @@
+import 'package:day_night_time_picker/lib/state/time.dart' as time;
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
@@ -43,12 +44,24 @@ class NotificationHelper {
     );
   }
 
+  /// Determine location and timezone
+  Future<void> _configureLocalTimeZone() async {
+    tz.initializeTimeZones();
+
+    final timeZone = await FlutterNativeTimezone.getLocalTimezone();
+
+    if (timeZone != 'GMT') {
+      tz.setLocalLocation(tz.getLocation(timeZone));
+    } else {
+      tz.setLocalLocation(tz.getLocation('Asia/Jakarta'));
+    }
+  }
+
   /// Schedule notification
   Future<void> scheduleNotification(
     int id,
-    int hour,
-    int minutes,
     String uid,
+    time.Time time,
     AlarmEntity alarm,
   ) async {
     final channelId = 'channel_$id';
@@ -77,40 +90,31 @@ class NotificationHelper {
       id,
       title,
       body,
-      _convertTime(hour, minutes),
+      _convertTime(time),
       platformChannelSpecifics,
       payload: uid,
       androidAllowWhileIdle: true,
-      matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+      matchDateTimeComponents: DateTimeComponents.time,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
     );
   }
 
-  /// Determine location and timezone
-  Future<void> _configureLocalTimeZone() async {
-    tz.initializeTimeZones();
-
-    final String timeZone = await FlutterNativeTimezone.getLocalTimezone();
-
-    tz.setLocalLocation(tz.getLocation(timeZone));
-  }
-
   /// Convert Datetime to TZDateTime for notifications
-  tz.TZDateTime _convertTime(int hour, int minutes) {
+  tz.TZDateTime _convertTime(time.Time time) {
     final now = tz.TZDateTime.now(tz.local);
 
-    var scheduleDate = tz.TZDateTime(
+    final scheduleDate = tz.TZDateTime(
       tz.local,
       now.year,
       now.month,
       now.day,
-      hour,
-      minutes,
+      time.hour,
+      time.minute,
     );
 
     if (scheduleDate.isBefore(now)) {
-      scheduleDate = scheduleDate.add(const Duration(days: 1));
+      return scheduleDate.add(const Duration(days: 1));
     }
 
     return scheduleDate;
@@ -120,7 +124,7 @@ class NotificationHelper {
   /// when notification on tapped.
   void configureSelectNotificationSubject(BuildContext context) {
     selectNotificationSubject.stream.listen((payload) {
-      Navigator.pushNamed(context, scheduleRoute, arguments: payload);
+      Navigator.pushNamed(context, scheduleAlarmRoute, arguments: payload);
     });
   }
 

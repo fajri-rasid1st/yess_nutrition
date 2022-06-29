@@ -108,13 +108,16 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<FavoriteProductNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => BottomNavigationBarNotifier(),
+          create: (_) => BottomNavbarNotifier(),
         ),
         ChangeNotifierProvider(
-          create: (_) => PasswordNotifier(),
+          create: (_) => PasswordFieldNotifier(),
         ),
         ChangeNotifierProvider(
           create: (_) => WebViewNotifier(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ScheduleTimeNotifier(),
         ),
         ChangeNotifierProvider(
           create: (_) => NewsFabNotifier(),
@@ -206,13 +209,6 @@ class MyApp extends StatelessWidget {
 
               return MaterialPageRoute(
                 builder: (_) => UpdateProfilePage(userData: userData),
-                settings: settings,
-              );
-            case scheduleRoute:
-              final uid = settings.arguments as String;
-
-              return MaterialPageRoute(
-                builder: (_) => SchedulePage(uid: uid),
                 settings: settings,
               );
             case scheduleAlarmRoute:

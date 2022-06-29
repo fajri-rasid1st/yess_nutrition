@@ -33,17 +33,17 @@ class GradientColors {
 
   static const List<Color> morning = <Color>[
     secondaryBackgroundColor,
-    Color.fromARGB(255, 82, 199, 235),
+    Color.fromARGB(255, 58, 199, 241),
   ];
 
   static const List<Color> day = <Color>[
     primaryColor,
-    Color.fromARGB(255, 48, 190, 233),
+    Color.fromARGB(255, 35, 157, 194),
   ];
 
   static const List<Color> night = <Color>[
     Color(0XFF444974),
-    Color.fromARGB(255, 22, 179, 226),
+    Color.fromARGB(255, 12, 82, 104),
   ];
 }
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 
-class BottomNavigationBarNotifier extends ChangeNotifier {
+class BottomNavbarNotifier extends ChangeNotifier {
   int _selectedIndex = 0;
   int get selectedIndex => _selectedIndex;
 

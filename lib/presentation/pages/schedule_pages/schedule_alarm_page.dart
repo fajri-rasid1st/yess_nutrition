@@ -1,11 +1,18 @@
+import 'package:day_night_time_picker/day_night_time_picker.dart';
+import 'package:day_night_time_picker/lib/state/time.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_switch/flutter_switch.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
+import 'package:yess_nutrition/common/utils/keys.dart';
+import 'package:yess_nutrition/common/utils/utilities.dart';
+import 'package:yess_nutrition/data/datasources/helpers/notification_helper.dart';
 import 'package:yess_nutrition/domain/entities/alarm_entity.dart';
+import 'package:yess_nutrition/presentation/providers/common_notifiers/schedule_time_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/schedule_notifiers/schedule_notifier.dart';
+import 'package:yess_nutrition/presentation/widgets/alarm_card.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_information.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
@@ -19,6 +26,9 @@ class ScheduleAlarmPage extends StatefulWidget {
 }
 
 class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
+  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
+  final NotificationHelper _notificationHelper = NotificationHelper();
+
   @override
   void initState() {
     super.initState();
@@ -32,6 +42,7 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: primaryBackgroundColor,
       appBar: AppBar(
         backgroundColor: primaryBackgroundColor,
@@ -62,14 +73,14 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
               size: 26,
             ),
             color: primaryColor,
-            tooltip: 'Clear All',
+            tooltip: 'Add Schedule',
           ),
         ],
       ),
       body: Consumer<ScheduleNotifier>(
-        builder: ((context, scheduleNotifier, child) {
-          if (scheduleNotifier.state == RequestState.success) {
-            if (scheduleNotifier.alarms.isEmpty) {
+        builder: ((context, schedule, child) {
+          if (schedule.state == RequestState.success) {
+            if (schedule.alarms.isEmpty) {
               return const CustomInformation(
                 key: Key('bookmarks_empty'),
                 imgPath: 'assets/svg/eating_time_cuate.svg',
@@ -78,12 +89,12 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
               );
             }
 
-            return _buildAlarmList(scheduleNotifier.alarms);
-          } else if (scheduleNotifier.state == RequestState.error) {
+            return _buildAlarmList(schedule.alarms);
+          } else if (schedule.state == RequestState.error) {
             return CustomInformation(
               key: const Key('error_message'),
               imgPath: 'assets/svg/feeling_sorry_cuate.svg',
-              title: scheduleNotifier.message,
+              title: schedule.message,
               subtitle: 'Silahkan kembali beberapa saat lagi.',
             );
           }
@@ -98,94 +109,19 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
     return ListView.separated(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 16),
       itemBuilder: (context, index) {
-        return _buildAlarmCard(context, alarms[index]);
+        return AlarmCard(
+          alarm: alarms[index],
+          onPressedEditIcon: () {},
+          onPressedDeleteIcon: () {},
+          onToggledSwitcher: (value) {},
+        );
       },
-      separatorBuilder: (context, index) => const SizedBox(height: 12),
+      separatorBuilder: (context, index) => const SizedBox(height: 16),
       itemCount: alarms.length,
     );
   }
 
-  Container _buildAlarmCard(BuildContext context, AlarmEntity alarm) {
-    final alarmTime = DateFormat('hh:mm aa').format(alarm.scheduledAt);
-    final alarmDay = DateFormat('EEEE').format(alarm.scheduledAt);
-    final gradientColor = gradientTemplates[alarm.gradientColorIndex].colors;
-
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: gradientColor.last.withOpacity(0.25),
-            offset: const Offset(4, 4),
-            blurRadius: 8,
-            spreadRadius: 2,
-          ),
-        ],
-        gradient: LinearGradient(
-          colors: gradientColor,
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              const Icon(
-                Icons.label,
-                color: primaryBackgroundColor,
-              ),
-              const SizedBox(width: 8),
-              Text(
-                alarm.title,
-                style: const TextStyle(color: primaryBackgroundColor),
-              ),
-              const Spacer(),
-              FlutterSwitch(
-                value: true,
-                onToggle: (value) {},
-              ),
-            ],
-          ),
-          Text(
-            alarmDay,
-            style: Theme.of(context)
-                .textTheme
-                .subtitle1!
-                .copyWith(color: primaryBackgroundColor),
-          ),
-          Row(
-            children: <Widget>[
-              Text(
-                alarmTime,
-                style: Theme.of(context)
-                    .textTheme
-                    .headline5!
-                    .copyWith(color: primaryBackgroundColor),
-              ),
-              const Spacer(),
-              IconButton(
-                icon: const Icon(Icons.edit_outlined),
-                color: primaryBackgroundColor,
-                onPressed: () {},
-              ),
-              const SizedBox(width: 8),
-              IconButton(
-                icon: const Icon(Icons.delete_rounded),
-                color: primaryBackgroundColor,
-                onPressed: () {},
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
   Future<void> onPressedAddAlarmIcon(BuildContext context) async {
-    var alarmTime = DateFormat('HH:mm').format(DateTime.now());
-
     showModalBottomSheet(
       context: context,
       useRootNavigator: true,
@@ -194,99 +130,179 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return Container(
-              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
+        return Container(
+          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+          child: Consumer<ScheduleTimeNotifier>(
+            builder: (context, timeNotifier, child) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  GestureDetector(
-                    onTap: () async {
-                      final selectedTime = await showTimePicker(
-                        context: context,
-                        initialTime: TimeOfDay.now(),
-                      );
-
-                      if (selectedTime != null) {
-                        final now = DateTime.now();
-
-                        final selectedDateTime = DateTime(
-                          now.year,
-                          now.month,
-                          now.day,
-                          selectedTime.hour,
-                          selectedTime.minute,
-                        );
-
-                        setState(() {
-                          alarmTime =
-                              DateFormat('HH:mm').format(selectedDateTime);
-                        });
-                      }
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: secondaryColor,
-                        borderRadius: BorderRadius.circular(16),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Text(
-                          alarmTime,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headline3!
-                              .copyWith(color: primaryColor),
+                  Text(
+                    'Atur Notifikasi',
+                    style: Theme.of(context).textTheme.headline5!.copyWith(
+                          color: primaryColor,
+                          fontWeight: FontWeight.bold,
                         ),
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        timeNotifier.timeString,
+                        style: Theme.of(context)
+                            .textTheme
+                            .headline4!
+                            .copyWith(color: primaryColor),
                       ),
+                      IconButton(
+                        onPressed: () {
+                          showTimePicker(context, timeNotifier);
+                        },
+                        icon: const Icon(Icons.edit_rounded),
+                        color: primaryColor,
+                        tooltip: 'Edit Time',
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  FormBuilder(
+                    key: _formKey,
+                    child: FormBuilderTextField(
+                      name: 'title',
+                      textInputAction: TextInputAction.done,
+                      textCapitalization: TextCapitalization.words,
+                      maxLength: 50,
+                      decoration: const InputDecoration(
+                        labelText: 'Judul',
+                        hintText: 'Makan pagi, siang, sore, etc',
+                      ),
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(
+                          errorText: 'Bagian ini harus diisi',
+                        ),
+                      ]),
                     ),
                   ),
-                  const ListTile(
-                    title: Text('Title'),
-                    trailing: Icon(Icons.arrow_forward_ios),
-                  ),
+                  const SizedBox(height: 12),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
-                      onPressed: () {},
-                      icon: const Icon(Icons.alarm),
+                      onPressed: () async {
+                        await onPressedSaveButton(context, timeNotifier);
+                      },
+                      icon: const Icon(Icons.add_rounded),
                       label: const Text('Simpan'),
                     ),
                   ),
                 ],
-              ),
-            );
-          },
+              );
+            },
+          ),
         );
       },
     );
   }
 
-  // Future<void> createAlarmNotification(AlarmEntity alarm) {}
+  void showTimePicker(BuildContext context, ScheduleTimeNotifier timeNotifier) {
+    Navigator.push(
+      context,
+      showPicker(
+        context: context,
+        value: TimeOfDay.now(),
+        elevation: 8,
+        borderRadius: 12,
+        accentColor: secondaryBackgroundColor,
+        barrierDismissible: false,
+        onChange: (time) {
+          timeNotifier.setTimeFromTimeOfDay(time);
+        },
+        onChangeDateTime: (datetime) {
+          timeNotifier.setTimeStringFromDateTime(datetime);
+        },
+        cancelText: 'Batal',
+        cancelStyle: Theme.of(context).textTheme.button!.copyWith(
+              color: primaryColor,
+              fontWeight: FontWeight.bold,
+            ),
+        okStyle: Theme.of(context).textTheme.button!.copyWith(
+              color: primaryColor,
+              fontWeight: FontWeight.bold,
+            ),
+      ),
+    );
+  }
 
-  // void deleteAlarm(int id) {
-  //   _alarmHelper.delete(id);
-  //   //unsubscribe for notification
-  //   loadAlarms();
-  // }
+  Future<void> onPressedSaveButton(
+    BuildContext context,
+    ScheduleTimeNotifier timeNotifier,
+  ) async {
+    FocusScope.of(context).unfocus();
 
-  // void onSaveAlarm() {
-  //   DateTime scheduleAlarmDateTime;
-  //   if (_alarmTime!.isAfter(DateTime.now())) {
-  //     scheduleAlarmDateTime = _alarmTime!;
-  //   } else {
-  //     scheduleAlarmDateTime = _alarmTime!.add(const Duration(days: 1));
-  //   }
+    _formKey.currentState!.save();
 
-  //   var alarmInfo = NutriTimeInfo(
-  //     alarmDateTime: scheduleAlarmDateTime,
-  //     gradientColorIndex: _currentAlarms.length,
-  //     title: 'alarm',
-  //   );
-  //   _alarmHelper.insertAlarm(alarmInfo);
-  //   scheduleAlarm(scheduleAlarmDateTime, alarmInfo);
-  //   Navigator.pop(context);
-  //   loadAlarms();
-  // }
+    if (_formKey.currentState!.validate()) {
+      final value = _formKey.currentState!.value;
+      final scheduleNotifier = context.read<ScheduleNotifier>();
+
+      // show loading
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const LoadingIndicator(),
+      );
+
+      final now = DateTime.now();
+      final dateSchedule = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        timeNotifier.time.hour,
+        timeNotifier.time.minute,
+      );
+      final alarm = AlarmEntity(
+        uid: widget.uid,
+        title: value['title'],
+        scheduledAt: dateSchedule,
+        isPending: false,
+        gradientColorIndex: setGradientColorIndex(timeNotifier.time),
+      );
+
+      // insert alarm to database
+      await scheduleNotifier.createAlarm(alarm);
+
+      // read alarm from database
+      await scheduleNotifier.getAlarms(widget.uid);
+
+      // create alarm notification schedule
+      await _notificationHelper.scheduleNotification(
+        scheduleNotifier.alarms.last.id!,
+        widget.uid,
+        timeNotifier.time,
+        alarm,
+      );
+
+      // close loading
+      navigatorKey.currentState!.pop();
+
+      // close bottom sheet
+      navigatorKey.currentState!.pop();
+
+      final message = scheduleNotifier.message;
+      final snackBar = Utilities.createSnackBar(message);
+
+      scaffoldMessengerKey.currentState!
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackBar);
+    }
+  }
+
+  int setGradientColorIndex(Time time) {
+    if (time.hour >= 6 && time.hour <= 12) return 0;
+
+    if (time.hour >= 12 && time.hour <= 18) return 1;
+
+    return 2;
+  }
 }

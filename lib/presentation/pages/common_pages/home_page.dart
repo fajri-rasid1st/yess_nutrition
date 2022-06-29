@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
-import 'package:yess_nutrition/presentation/providers/common_notifiers/bottom_navigation_bar_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/common_notifiers/bottom_navbar_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/get_news_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_nutrients_notifier.dart';
@@ -191,7 +191,7 @@ class _HomePageState extends State<HomePage>
               context,
               "NutriNews",
               () {
-                final bottomNav = context.read<BottomNavigationBarNotifier>();
+                final bottomNav = context.read<BottomNavbarNotifier>();
 
                 bottomNav.selectedIndex = 2;
                 bottomNav.backgroundColor = primaryBackgroundColor;
@@ -204,7 +204,7 @@ class _HomePageState extends State<HomePage>
               context,
               "NutriShop",
               () {
-                final bottomNav = context.read<BottomNavigationBarNotifier>();
+                final bottomNav = context.read<BottomNavbarNotifier>();
 
                 bottomNav.selectedIndex = 3;
                 bottomNav.backgroundColor = scaffoldBackgroundColor;

@@ -13,7 +13,6 @@ const webviewRoute = '/webview';
 const profileRoute = '/profile';
 const updateProfileRoute = '/profile/update';
 
-const scheduleRoute = '/schedule';
 const scheduleAlarmRoute = '/schedule/schedule-alarm';
 
 const checkRoute = '/check';
