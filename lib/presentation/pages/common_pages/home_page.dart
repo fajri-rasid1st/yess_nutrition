@@ -13,7 +13,6 @@ import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firest
 import 'package:yess_nutrition/presentation/widgets/card_nutri_news_home.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_shop_home.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_time_task.dart';
-import 'package:yess_nutrition/presentation/widgets/large_circular_progress.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 import 'package:yess_nutrition/presentation/widgets/small_circular_progress.dart';
 
@@ -45,9 +44,7 @@ class _HomePageState extends State<HomePage>
           .readUserNutrients(widget.uid);
 
       Provider.of<HomePageNotifier>(context, listen: false)
-          .getNewsByCount(count: 5);
-
-      Provider.of<ProductsNotifier>(context, listen: false).getProducts();
+          .getAllContentHomePage();
     });
   }
 
@@ -192,31 +189,39 @@ class _HomePageState extends State<HomePage>
         color: scaffoldBackgroundColor,
       ),
       clipBehavior: Clip.hardEdge,
-      child: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            const SizedBox(height: 24),
-            _buildCardSummary(context),
-            const SizedBox(height: 20),
-            _buildCardNutriTime(context),
-            const SizedBox(height: 20),
-            _buildTitleContent(
-              context,
-              "NutriNews",
-              () => widget.pageController.jumpToPage(2),
-            ),
-            const SizedBox(height: 8),
-            _buildListNutriNews(),
-            const SizedBox(height: 20),
-            _buildTitleContent(
-              context,
-              "NutriShop",
-              () => widget.pageController.jumpToPage(3),
-            ),
-            const SizedBox(height: 8),
-            _buildListNutriShop(),
-            const SizedBox(height: 60),
-          ],
+      child: RefreshIndicator(
+        onRefresh: () {
+          return Future.microtask(() {
+            context.read<HomePageNotifier>().refresh();
+            context.read<UserNutrientsNotifier>().refresh(widget.uid);
+          });
+        },
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              const SizedBox(height: 24),
+              _buildCardSummary(context),
+              const SizedBox(height: 20),
+              _buildCardNutriTime(context),
+              const SizedBox(height: 20),
+              _buildTitleContent(
+                context,
+                "NutriNews",
+                () => widget.pageController.jumpToPage(2),
+              ),
+              const SizedBox(height: 8),
+              _buildListNutriNews(),
+              const SizedBox(height: 20),
+              _buildTitleContent(
+                context,
+                "NutriShop",
+                () => widget.pageController.jumpToPage(3),
+              ),
+              const SizedBox(height: 8),
+              _buildListNutriShop(),
+              const SizedBox(height: 60),
+            ],
+          ),
         ),
       ),
     );
@@ -507,23 +512,23 @@ class _HomePageState extends State<HomePage>
 
   SizedBox _buildListNutriShop() {
     return SizedBox(
-      height: 190,
-      child: Consumer<ProductsNotifier>(
+      height: 200,
+      child: Consumer<HomePageNotifier>(
         builder: (context, result, child) {
           if (result.state == RequestState.success) {
-            final productsMap = result.productsMap;
+            final productsMap = result.products;
             return ListView.separated(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
-                final products = productsMap['health']!;
+                final products = productsMap;
 
                 return CardNutriShopHome(product: products[index]);
               },
               separatorBuilder: (context, index) {
                 return const SizedBox(width: 8);
               },
-              itemCount: productsMap['health']!.length,
+              itemCount: productsMap.length,
             );
           }
 

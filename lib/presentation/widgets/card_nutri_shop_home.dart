@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
-import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/common/utils/utils.dart';
 import 'package:yess_nutrition/domain/entities/entities.dart';
 
@@ -17,7 +16,7 @@ class CardNutriShopHome extends StatelessWidget {
         children: <Widget>[
           Container(
             width: 130,
-            height: 190,
+            height: 200,
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: primaryBackgroundColor,
@@ -46,14 +45,6 @@ class CardNutriShopHome extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 8),
-                const Text(
-                  "Kesehatan",
-                  style: TextStyle(
-                    color: secondaryTextColor,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 9,
-                  ),
-                ),
                 Text(
                   product.title,
                   overflow: TextOverflow.ellipsis,
@@ -62,6 +53,24 @@ class CardNutriShopHome extends StatelessWidget {
                       ),
                 ),
                 const SizedBox(height: 4),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: <Widget>[
+                    Icon(
+                      Icons.star_rate_rounded,
+                      color: Colors.orange[400],
+                      size: 14,
+                    ),
+                    Text(
+                      product.rating.toString(),
+                      style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                            color: Colors.orange[400],
+                            fontSize: 12,
+                          ),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 2),
                 Text(
                   product.price,
                   style: Theme.of(context).textTheme.bodyText2?.copyWith(

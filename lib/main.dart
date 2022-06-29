@@ -182,8 +182,10 @@ class MyApp extends StatelessWidget {
                 builder: (_) => RegisterPage(),
               );
             case forgotPasswordRoute:
+              final email = settings.arguments as String?;
+
               return MaterialPageRoute(
-                builder: (_) => ForgotPasswordPage(),
+                builder: (_) => ForgotPasswordPage(email: email),
               );
             case additionalInfoRoute:
               final user = settings.arguments as UserEntity;

@@ -12,8 +12,9 @@ import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
 class ForgotPasswordPage extends StatelessWidget {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
+  final String? email;
 
-  ForgotPasswordPage({Key? key}) : super(key: key);
+  ForgotPasswordPage({Key? key, this.email}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -95,6 +96,7 @@ class ForgotPasswordPage extends StatelessWidget {
       name: 'email',
       textInputAction: TextInputAction.done,
       keyboardType: TextInputType.emailAddress,
+      initialValue: email,
       decoration: const InputDecoration(
         labelText: 'Email',
         hintText: 'Masukkan email kamu',

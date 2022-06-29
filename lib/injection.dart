@@ -139,7 +139,10 @@ void init() {
 
   // Home Page Provider
   locator.registerFactory(
-    () => HomePageNotifier(getNewsUseCase: locator()),
+    () => HomePageNotifier(
+      getNewsUseCase: locator(),
+      getProductsUseCase: locator(),
+    ),
   );
 
   /*
