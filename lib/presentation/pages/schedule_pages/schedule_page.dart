@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
+import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
+import 'package:yess_nutrition/domain/entities/user_food_schedule_entity.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_food_schedule_notifier.dart';
+import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
 class SchedulePage extends StatefulWidget {
   final String uid;
@@ -18,13 +23,10 @@ class _NutriTimePagePageState extends State<SchedulePage>
     super.build(context);
 
     return Scaffold(
-      extendBodyBehindAppBar: true,
       resizeToAvoidBottomInset: false,
-      backgroundColor: primaryBackgroundColor,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         toolbarHeight: 86,
-        elevation: 0,
         title: const Text(
           'NutriTime',
           style: TextStyle(
@@ -60,9 +62,30 @@ class _NutriTimePagePageState extends State<SchedulePage>
           ),
         ],
       ),
-      body: const SingleChildScrollView(),
+      body: RefreshIndicator(
+        onRefresh: () {
+          return context.read<UserFoodScheduleNotifier>().refresh(widget.uid);
+        },
+        child: Consumer<UserFoodScheduleNotifier>(
+          builder: ((context, schedule, child) {
+            if (schedule.state == UserState.success) {
+              // return _buildFoodScheduleList(context, schedule.foodSchedules);
+            }
+
+            return Container(
+              color: primaryBackgroundColor,
+              child: const LoadingIndicator(),
+            );
+          }),
+        ),
+      ),
     );
   }
+
+  // Widget _buildFoodScheduleList(
+  //   BuildContext context,
+  //   List<UserFoodScheduleEntity> foodSchedules,
+  // ) {}
 
   @override
   bool get wantKeepAlive => true;

@@ -7,6 +7,7 @@ class UserFoodScheduleEntity extends Equatable {
   final String foodName;
   final String foodImage;
   final NutrientsEntity foodNutrients;
+  final int totalServing;
   final int scheduleType;
   final String scheduleLabel;
   final DateTime scheduledAt;
@@ -19,6 +20,7 @@ class UserFoodScheduleEntity extends Equatable {
     required this.foodName,
     required this.foodImage,
     required this.foodNutrients,
+    required this.totalServing,
     required this.scheduleType,
     required this.scheduleLabel,
     required this.scheduledAt,
@@ -32,6 +34,7 @@ class UserFoodScheduleEntity extends Equatable {
     String? foodName,
     String? foodImage,
     NutrientsEntity? foodNutrients,
+    int? totalServing,
     int? scheduleType,
     String? scheduleLabel,
     DateTime? scheduledAt,
@@ -44,6 +47,7 @@ class UserFoodScheduleEntity extends Equatable {
       foodName: foodName ?? this.foodName,
       foodImage: foodImage ?? this.foodImage,
       foodNutrients: foodNutrients ?? this.foodNutrients,
+      totalServing: totalServing ?? this.totalServing,
       scheduleType: scheduleType ?? this.scheduleType,
       scheduleLabel: scheduleLabel ?? this.scheduleLabel,
       scheduledAt: scheduledAt ?? this.scheduledAt,
@@ -59,6 +63,7 @@ class UserFoodScheduleEntity extends Equatable {
         foodName,
         foodImage,
         foodNutrients,
+        totalServing,
         scheduleType,
         scheduleLabel,
         scheduledAt,

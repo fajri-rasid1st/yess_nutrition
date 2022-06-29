@@ -49,6 +49,7 @@ class _HomePageState extends State<HomePage>
     super.build(context);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
@@ -77,7 +78,7 @@ class _HomePageState extends State<HomePage>
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
-                    vertical: 36,
+                    vertical: 32,
                   ),
                   child: Row(
                     children: <Widget>[
@@ -169,7 +170,7 @@ class _HomePageState extends State<HomePage>
 
   Container _buildContentHomePage(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 130),
+      margin: const EdgeInsets.only(top: 132),
       width: double.infinity,
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
@@ -284,24 +285,18 @@ class _HomePageState extends State<HomePage>
               },
               itemCount: 2,
               separatorBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 6),
-                  child: Divider(color: dividerColor.withOpacity(0.6)),
+                return const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 6),
+                  child: Divider(),
                 );
               },
             ),
             const SizedBox(height: 16),
-            Divider(color: dividerColor.withOpacity(0.6)),
+            const Divider(),
             Center(
               child: TextButton(
                 onPressed: () {},
-                child: Text(
-                  "Lihat Detail",
-                  style: Theme.of(context).textTheme.button?.copyWith(
-                        color: primaryColor,
-                        letterSpacing: 0.5,
-                      ),
-                ),
+                child: const Text('Lihat Detail'),
               ),
             ),
           ],
@@ -394,6 +389,7 @@ class _HomePageState extends State<HomePage>
               ],
             ),
             const SizedBox(height: 16),
+            const Divider(),
             Center(
               child: TextButton(
                 onPressed: () => Navigator.pushNamed(
@@ -401,13 +397,7 @@ class _HomePageState extends State<HomePage>
                   nutrientsDetailRoute,
                   arguments: widget.uid,
                 ),
-                child: Text(
-                  "Lihat Detail",
-                  style: Theme.of(context).textTheme.button?.copyWith(
-                        color: primaryColor,
-                        letterSpacing: 0.5,
-                      ),
-                ),
+                child: const Text('Lihat Detail'),
               ),
             ),
           ],

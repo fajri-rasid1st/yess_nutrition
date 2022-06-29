@@ -24,8 +24,8 @@ class UserFoodScheduleNotifier extends ChangeNotifier {
   String _message = '';
   String get message => _message;
 
-  List<UserFoodScheduleEntity> _schedules = <UserFoodScheduleEntity>[];
-  List<UserFoodScheduleEntity> get schedules => _schedules;
+  List<UserFoodScheduleEntity> _foodSchedules = <UserFoodScheduleEntity>[];
+  List<UserFoodScheduleEntity> get foodSchedules => _foodSchedules;
 
   bool _isReload = false;
   bool get isReload => _isReload;
@@ -63,8 +63,8 @@ class UserFoodScheduleNotifier extends ChangeNotifier {
         _message = failure.message;
         _state = UserState.error;
       },
-      (schedules) {
-        _schedules = schedules;
+      (foodSchedules) {
+        _foodSchedules = foodSchedules;
         _state = UserState.success;
       },
     );
@@ -131,8 +131,8 @@ class UserFoodScheduleNotifier extends ChangeNotifier {
         _message = failure.message;
         _state = UserState.error;
       },
-      (schedules) {
-        _schedules = schedules;
+      (foodSchedules) {
+        _foodSchedules = foodSchedules;
         _state = UserState.success;
       },
     );

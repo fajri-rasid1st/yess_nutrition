@@ -111,8 +111,8 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
       itemBuilder: (context, index) {
         return AlarmCard(
           alarm: alarms[index],
-          onPressedEditIcon: () async {
-            await showFormBottomSheet(context: context, alarm: alarms[index]);
+          onPressedEditIcon: () {
+            showFormBottomSheet(context: context, alarm: alarms[index]);
           },
           onPressedDeleteIcon: () {
             Utilities.showConfirmDialog(
@@ -137,10 +137,10 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
     );
   }
 
-  Future<void> showFormBottomSheet({
+  void showFormBottomSheet({
     required BuildContext context,
     AlarmEntity? alarm,
-  }) async {
+  }) {
     var date = DateTime.now();
     var time = TimeOfDay.now();
 

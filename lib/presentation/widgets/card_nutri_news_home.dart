@@ -47,7 +47,7 @@ class CardNutriNewsHome extends StatelessWidget {
                       height: 68,
                       fit: BoxFit.cover,
                       imgUrl: news.urlToImage,
-                      placeHolderSize: 16,
+                      placeHolderSize: 34,
                       errorIcon: Icons.motion_photos_off_outlined,
                     ),
                   ),

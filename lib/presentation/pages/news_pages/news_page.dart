@@ -86,8 +86,8 @@ class _NewsPageState extends State<NewsPage>
           return <Widget>[
             SliverAppBar(
               backgroundColor: primaryBackgroundColor,
-              toolbarHeight: 230,
-              expandedHeight: 230,
+              toolbarHeight: 220,
+              expandedHeight: 220,
               actions: <Widget>[
                 SafeArea(
                   child: Padding(

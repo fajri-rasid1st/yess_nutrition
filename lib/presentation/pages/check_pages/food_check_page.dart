@@ -236,7 +236,7 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
     return const CustomInformation(
       key: Key('first_view'),
       imgPath: 'assets/svg/pasta_cuate.svg',
-      title: 'Mau cari apa hari ini?',
+      title: 'Mau makan apa hari ini?',
       subtitle: 'Hasil pencarian anda akan muncul di sini.',
     );
   }

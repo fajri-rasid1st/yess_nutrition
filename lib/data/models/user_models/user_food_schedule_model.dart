@@ -9,6 +9,7 @@ class UserFoodScheduleModel extends Equatable {
   final String foodName;
   final String foodImage;
   final NutrientsTable foodNutrients;
+  final int totalServing;
   final int scheduleType;
   final String scheduleLabel;
   final DateTime scheduledAt;
@@ -21,6 +22,7 @@ class UserFoodScheduleModel extends Equatable {
     required this.foodName,
     required this.foodImage,
     required this.foodNutrients,
+    required this.totalServing,
     required this.scheduleType,
     required this.scheduleLabel,
     required this.scheduledAt,
@@ -35,6 +37,7 @@ class UserFoodScheduleModel extends Equatable {
       foodName: schedule.foodName,
       foodImage: schedule.foodImage,
       foodNutrients: NutrientsTable.fromEntity(schedule.foodNutrients),
+      totalServing: schedule.totalServing,
       scheduleType: schedule.scheduleType,
       scheduleLabel: schedule.scheduleLabel,
       scheduledAt: schedule.scheduledAt,
@@ -50,6 +53,7 @@ class UserFoodScheduleModel extends Equatable {
       foodName: schedule['foodName'],
       foodImage: schedule['foodImage'],
       foodNutrients: NutrientsTable.fromString(schedule['foodNutrients']),
+      totalServing: schedule['totalServing'],
       scheduleType: schedule['scheduleType'],
       scheduleLabel: schedule['scheduleLabel'],
       scheduledAt: (schedule['scheduledAt'] as Timestamp).toDate(),
@@ -65,6 +69,7 @@ class UserFoodScheduleModel extends Equatable {
       foodName: foodName,
       foodImage: foodImage,
       foodNutrients: foodNutrients.toEntity(),
+      totalServing: totalServing,
       scheduleType: scheduleType,
       scheduleLabel: scheduleLabel,
       scheduledAt: scheduledAt,
@@ -80,6 +85,7 @@ class UserFoodScheduleModel extends Equatable {
       'foodName': foodName,
       'foodImage': foodImage,
       'foodNutrients': foodNutrients.toString(),
+      'totalServing': totalServing,
       'scheduleType': scheduleType,
       'scheduleLabel': scheduleLabel,
       'scheduledAt': Timestamp.fromDate(scheduledAt),
@@ -95,6 +101,7 @@ class UserFoodScheduleModel extends Equatable {
         foodName,
         foodImage,
         foodNutrients,
+        totalServing,
         scheduleType,
         scheduleLabel,
         scheduledAt,

@@ -130,13 +130,13 @@ class Utilities {
   }
 
   /// Function to show confirm dialog with two action button
-  static Future<void> showConfirmDialog(
+  static void showConfirmDialog(
     BuildContext context, {
     required String title,
     required String question,
     required VoidCallback onPressedPrimaryAction,
     required VoidCallback onPressedSecondaryAction,
-  }) async {
+  }) {
     showGeneralDialog(
       context: context,
       barrierLabel: '',

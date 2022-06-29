@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
@@ -368,10 +369,10 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
     return currentValue / maxValue;
   }
 
-  Future<void> showFormDialog(
+  void showFormDialog(
     BuildContext context,
     UserNutrientsEntity? userNutrients,
-  ) async {
+  ) {
     showDialog(
       context: context,
       barrierLabel: '',
@@ -462,6 +463,18 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
   ) async {
     FocusScope.of(context).unfocus();
 
+    if (!await InternetConnectionChecker().hasConnection) {
+      Navigator.pop(context);
+
+      scaffoldMessengerKey.currentState!
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          Utilities.createSnackBar('Proses gagal. Periksa koneksi internet.'),
+        );
+
+      return;
+    }
+
     _formKey.currentState!.save();
 
     if (_formKey.currentState!.validate()) {
@@ -518,8 +531,21 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
     BuildContext context,
     UserNutrientsEntity? userNutrients,
   ) async {
+    if (!await InternetConnectionChecker().hasConnection) {
+      Navigator.pop(context);
+
+      scaffoldMessengerKey.currentState!
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          Utilities.createSnackBar('Proses gagal. Periksa koneksi internet.'),
+        );
+
+      return;
+    }
+
     if (userNutrients == null) {
       Navigator.pop(context);
+
       return;
     }
 
