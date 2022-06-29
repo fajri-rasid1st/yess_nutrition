@@ -66,6 +66,9 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<UserNutrientsNotifier>(),
         ),
         ChangeNotifierProvider(
+          create: (_) => di.locator<UserFoodScheduleNotifier>(),
+        ),
+        ChangeNotifierProvider(
           create: (_) => di.locator<UserStorageNotifier>(),
         ),
         ChangeNotifierProvider(

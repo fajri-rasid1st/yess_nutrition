@@ -48,6 +48,15 @@ void init() {
       updateUserNutrientsUseCase: locator(),
     ),
   );
+  locator.registerFactory(
+    () => UserFoodScheduleNotifier(
+      createUserFoodScheduleUseCase: locator(),
+      readUserFoodSchedulesUseCase: locator(),
+      updateUserFoodScheduleUseCase: locator(),
+      deleteUserFoodScheduleUseCase: locator(),
+      resetUserFoodSchedulesUseCase: locator(),
+    ),
+  );
 
   // User storage providers
   locator.registerFactory(
@@ -152,6 +161,11 @@ void init() {
   locator.registerLazySingleton(() => CreateUserNutrients(locator()));
   locator.registerLazySingleton(() => ReadUserNutrients(locator()));
   locator.registerLazySingleton(() => UpdateUserNutrients(locator()));
+  locator.registerLazySingleton(() => CreateUserFoodSchedule(locator()));
+  locator.registerLazySingleton(() => ReadUserFoodSchedules(locator()));
+  locator.registerLazySingleton(() => UpdateUserFoodSchedule(locator()));
+  locator.registerLazySingleton(() => DeleteUserFoodSchedule(locator()));
+  locator.registerLazySingleton(() => ResetUserFoodSchedules(locator()));
 
   // User storage usecases
   locator.registerLazySingleton(() => UploadProfilePicture(locator()));
