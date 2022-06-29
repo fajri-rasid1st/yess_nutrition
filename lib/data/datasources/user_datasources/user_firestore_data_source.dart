@@ -10,8 +10,6 @@ abstract class UserFirestoreDataSource {
 
   Future<void> updateUserData(UserDataModel userData);
 
-  Future<void> deleteUserData(String uid);
-
   Future<bool> isNewUser(String uid);
 
   Future<String> createUserNutrients(UserNutrientsModel userNutrients);
@@ -60,22 +58,6 @@ class UserFirestoreDataSourceImpl implements UserFirestoreDataSource {
       final userDocument = userData.toDocument();
 
       await reference.update(userDocument);
-    } catch (e) {
-      throw FirestoreException(e.toString());
-    }
-  }
-
-  @override
-  Future<void> deleteUserData(String uid) async {
-    try {
-      final userReference = firebaseFirestore.collection('users').doc(uid);
-
-      await userReference.delete();
-
-      final userNutrientsReference =
-          firebaseFirestore.collection('user-nutrients').doc(uid);
-
-      await userNutrientsReference.delete();
     } catch (e) {
       throw FirestoreException(e.toString());
     }

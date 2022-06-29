@@ -14,8 +14,6 @@ abstract class UserAuthDataSource {
 
   Future<void> resetPassword(String email);
 
-  Future<void> deleteUser();
-
   // OAuth/third party sign in method
   Future<UserModel?> signInWithGoogle();
 }
@@ -91,15 +89,6 @@ class UserAuthDataSourceImpl implements UserAuthDataSource {
   Future<void> resetPassword(String email) async {
     try {
       return await firebaseAuth.sendPasswordResetEmail(email: email);
-    } on FirebaseAuthException catch (e) {
-      throw FirebaseAuthException(code: e.code);
-    }
-  }
-
-  @override
-  Future<void> deleteUser() async {
-    try {
-      return await firebaseAuth.currentUser?.delete();
     } on FirebaseAuthException catch (e) {
       throw FirebaseAuthException(code: e.code);
     }

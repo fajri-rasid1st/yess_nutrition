@@ -10,8 +10,6 @@ abstract class UserFirestoreRepository {
 
   Future<Either<Failure, void>> updateUserData(UserDataEntity userData);
 
-  Future<Either<Failure, void>> deleteUserData(String uid);
-
   Future<Either<Failure, bool>> isNewUser(String uid);
 
   Future<Either<Failure, String>> createUserNutrients(

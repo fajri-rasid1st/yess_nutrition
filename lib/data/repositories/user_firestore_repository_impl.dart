@@ -53,17 +53,6 @@ class UserFirestoreRepositoryImpl implements UserFirestoreRepository {
   }
 
   @override
-  Future<Either<Failure, void>> deleteUserData(String uid) async {
-    try {
-      final result = await userFirestoreDataSource.deleteUserData(uid);
-
-      return Right(result);
-    } on FirestoreException {
-      return const Left(FirestoreFailure('Oops, terjadi kesalahan'));
-    }
-  }
-
-  @override
   Future<Either<Failure, bool>> isNewUser(String uid) async {
     try {
       final result = await userFirestoreDataSource.isNewUser(uid);

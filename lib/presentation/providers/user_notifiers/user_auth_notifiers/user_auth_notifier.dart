@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/domain/entities/user_entity.dart';
-import 'package:yess_nutrition/domain/usecases/user_usecases/user_auth_usecases/delete_user.dart';
 import 'package:yess_nutrition/domain/usecases/user_usecases/user_auth_usecases/reset_password.dart';
 import 'package:yess_nutrition/domain/usecases/user_usecases/user_auth_usecases/sign_in.dart';
 import 'package:yess_nutrition/domain/usecases/user_usecases/user_auth_usecases/sign_in_with_google.dart';
@@ -14,7 +13,6 @@ class UserAuthNotifier extends ChangeNotifier {
   final SignUp signUpUseCase;
   final ResetPassword resetPasswordUseCase;
   final SignOut signOutUseCase;
-  final DeleteUser deleteUserUseCase;
 
   UserAuthNotifier({
     required this.signInUseCase,
@@ -22,7 +20,6 @@ class UserAuthNotifier extends ChangeNotifier {
     required this.signUpUseCase,
     required this.resetPasswordUseCase,
     required this.signOutUseCase,
-    required this.deleteUserUseCase,
   });
 
   UserState _state = UserState.empty;
@@ -116,22 +113,6 @@ class UserAuthNotifier extends ChangeNotifier {
 
   Future<void> signOut() async {
     final result = await signOutUseCase.execute();
-
-    result.fold(
-      (failure) {
-        _error = failure.message;
-        _state = UserState.error;
-      },
-      (_) {
-        _state = UserState.success;
-      },
-    );
-
-    notifyListeners();
-  }
-
-  Future<void> deleteUser() async {
-    final result = await deleteUserUseCase.execute();
 
     result.fold(
       (failure) {

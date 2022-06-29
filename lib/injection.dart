@@ -26,7 +26,6 @@ void init() {
       signUpUseCase: locator(),
       resetPasswordUseCase: locator(),
       signOutUseCase: locator(),
-      deleteUserUseCase: locator(),
     ),
   );
   locator.registerFactory(
@@ -39,7 +38,6 @@ void init() {
       createUserDataUseCase: locator(),
       readUserDataUseCase: locator(),
       updateUserDataUseCase: locator(),
-      deleteUserDataUseCase: locator(),
       getUserStatusUseCase: locator(),
     ),
   );
@@ -145,13 +143,11 @@ void init() {
   locator.registerLazySingleton(() => SignUp(locator()));
   locator.registerLazySingleton(() => SignOut(locator()));
   locator.registerLazySingleton(() => ResetPassword(locator()));
-  locator.registerLazySingleton(() => DeleteUser(locator()));
 
   // User firestore usecases
   locator.registerLazySingleton(() => CreateUserData(locator()));
   locator.registerLazySingleton(() => ReadUserData(locator()));
   locator.registerLazySingleton(() => UpdateUserData(locator()));
-  locator.registerLazySingleton(() => DeleteUserData(locator()));
   locator.registerLazySingleton(() => GetUserStatus(locator()));
   locator.registerLazySingleton(() => CreateUserNutrients(locator()));
   locator.registerLazySingleton(() => ReadUserNutrients(locator()));
