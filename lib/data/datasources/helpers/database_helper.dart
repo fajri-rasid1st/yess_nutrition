@@ -46,7 +46,7 @@ class DatabaseHelper {
         uid TEXT,
         title TEXT,
         scheduledAt TEXT,
-        isPending INTEGER,
+        isActive INTEGER,
         gradientColorIndex INTEGER)
         ''');
 
@@ -117,7 +117,6 @@ class DatabaseHelper {
       alarmScheduleTable,
       where: 'uid = ?',
       whereArgs: [uid],
-      orderBy: 'scheduledAt DESC',
     );
 
     final alarms = List<AlarmModel>.from(

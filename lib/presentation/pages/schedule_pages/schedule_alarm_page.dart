@@ -67,7 +67,7 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
         ),
         actions: <Widget>[
           IconButton(
-            onPressed: () => onPressedAddAlarmIcon(context),
+            onPressed: () => showFormBottomSheet(context: context),
             icon: const Icon(
               Icons.add_alarm_rounded,
               size: 26,
@@ -111,9 +111,25 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
       itemBuilder: (context, index) {
         return AlarmCard(
           alarm: alarms[index],
-          onPressedEditIcon: () {},
-          onPressedDeleteIcon: () {},
-          onToggledSwitcher: (value) {},
+          onPressedEditIcon: () async {
+            await showFormBottomSheet(context: context, alarm: alarms[index]);
+          },
+          onPressedDeleteIcon: () {
+            Utilities.showConfirmDialog(
+              context,
+              title: 'Konfirmasi',
+              question: 'Hapus jadwal notifikasi dari list?',
+              onPressedPrimaryAction: () {
+                deleteAlarmNotification(context, alarms[index]).then((_) {
+                  Navigator.pop(context);
+                });
+              },
+              onPressedSecondaryAction: () => Navigator.pop(context),
+            );
+          },
+          onToggledSwitcher: (isActive) async {
+            await toggleAlarmNotification(context, isActive, alarms[index]);
+          },
         );
       },
       separatorBuilder: (context, index) => const SizedBox(height: 16),
@@ -121,20 +137,44 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
     );
   }
 
-  Future<void> onPressedAddAlarmIcon(BuildContext context) async {
+  Future<void> showFormBottomSheet({
+    required BuildContext context,
+    AlarmEntity? alarm,
+  }) async {
+    var date = DateTime.now();
+    var time = TimeOfDay.now();
+
+    if (alarm != null) {
+      date = alarm.scheduledAt;
+      time = TimeOfDay.fromDateTime(date);
+
+      context.read<ScheduleTimeNotifier>().setTimeFromTimeOfDay(time);
+      context.read<ScheduleTimeNotifier>().setTimeStringFromDateTime(date);
+    } else {
+      context.read<ScheduleTimeNotifier>().setTimeFromTimeOfDay(time);
+      context.read<ScheduleTimeNotifier>().setTimeStringFromDateTime(date);
+    }
+
     showModalBottomSheet(
       context: context,
       useRootNavigator: true,
+      isScrollControlled: true,
       clipBehavior: Clip.antiAlias,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
         return Container(
-          padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 20),
+          padding: EdgeInsets.fromLTRB(
+            20,
+            24,
+            20,
+            24 + MediaQuery.of(context).viewInsets.bottom,
+          ),
           child: Consumer<ScheduleTimeNotifier>(
             builder: (context, timeNotifier, child) {
               return Column(
+                mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
@@ -157,9 +197,7 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
                             .copyWith(color: primaryColor),
                       ),
                       IconButton(
-                        onPressed: () {
-                          showTimePicker(context, timeNotifier);
-                        },
+                        onPressed: () => showTimePicker(context, timeNotifier),
                         icon: const Icon(Icons.edit_rounded),
                         color: primaryColor,
                         tooltip: 'Edit Time',
@@ -171,6 +209,7 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
                     key: _formKey,
                     child: FormBuilderTextField(
                       name: 'title',
+                      initialValue: alarm?.title ?? '',
                       textInputAction: TextInputAction.done,
                       textCapitalization: TextCapitalization.words,
                       maxLength: 50,
@@ -189,11 +228,15 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton.icon(
-                      onPressed: () async {
-                        await onPressedSaveButton(context, timeNotifier);
+                      onPressed: () {
+                        if (alarm != null) {
+                          editAlarmNotification(context, alarm, timeNotifier);
+                        } else {
+                          createAlarmNotification(context, timeNotifier);
+                        }
                       },
-                      icon: const Icon(Icons.add_rounded),
-                      label: const Text('Simpan'),
+                      icon: const Icon(Icons.schedule_rounded),
+                      label: const Text('Atur Jadwal'),
                     ),
                   ),
                 ],
@@ -203,6 +246,190 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
         );
       },
     );
+  }
+
+  Future<void> createAlarmNotification(
+    BuildContext context,
+    ScheduleTimeNotifier timeNotifier,
+  ) async {
+    FocusScope.of(context).unfocus();
+
+    _formKey.currentState!.save();
+
+    if (_formKey.currentState!.validate()) {
+      final value = _formKey.currentState!.value;
+      final scheduleNotifier = context.read<ScheduleNotifier>();
+
+      final now = DateTime.now();
+      final dateSchedule = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        timeNotifier.time.hour,
+        timeNotifier.time.minute,
+      );
+
+      final alarm = AlarmEntity(
+        uid: widget.uid,
+        title: value['title'],
+        scheduledAt: dateSchedule,
+        isActive: true,
+        gradientColorIndex: setGradientColorIndex(timeNotifier.time),
+      );
+
+      // insert alarm to database
+      await scheduleNotifier.createAlarm(alarm);
+
+      // read alarm from database
+      await scheduleNotifier.getAlarms(widget.uid);
+
+      if (scheduleNotifier.state == RequestState.success) {
+        // create alarm notification schedule
+        await _notificationHelper.scheduleNotification(
+          id: scheduleNotifier.alarms.last.id!,
+          uid: widget.uid,
+          title: alarm.title,
+          time: timeNotifier.time,
+        );
+      }
+
+      // close bottom sheet
+      navigatorKey.currentState!.pop();
+
+      final message = scheduleNotifier.message;
+      final snackBar = Utilities.createSnackBar(message);
+
+      scaffoldMessengerKey.currentState!
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackBar);
+    }
+  }
+
+  Future<void> editAlarmNotification(
+    BuildContext context,
+    AlarmEntity alarm,
+    ScheduleTimeNotifier timeNotifier,
+  ) async {
+    FocusScope.of(context).unfocus();
+
+    _formKey.currentState!.save();
+
+    if (_formKey.currentState!.validate()) {
+      final value = _formKey.currentState!.value;
+      final scheduleNotifier = context.read<ScheduleNotifier>();
+
+      final now = DateTime.now();
+      final dateSchedule = DateTime(
+        now.year,
+        now.month,
+        now.day,
+        timeNotifier.time.hour,
+        timeNotifier.time.minute,
+      );
+
+      final updatedAlarm = alarm.copyWith(
+        title: value['title'],
+        scheduledAt: dateSchedule,
+        gradientColorIndex: setGradientColorIndex(timeNotifier.time),
+      );
+
+      // update alarm from database
+      await scheduleNotifier.updateAlarm(updatedAlarm);
+
+      // read alarm from database
+      await scheduleNotifier.getAlarms(widget.uid);
+
+      if (scheduleNotifier.state == RequestState.success) {
+        // remove previous notification schedule
+        await _notificationHelper.removeSchedule(alarm.id!);
+
+        // create new alarm notification schedule
+        await _notificationHelper.scheduleNotification(
+          id: alarm.id!,
+          uid: widget.uid,
+          title: alarm.title,
+          time: timeNotifier.time,
+        );
+      }
+
+      // close bottom sheet
+      navigatorKey.currentState!.pop();
+
+      final message = scheduleNotifier.message;
+      final snackBar = Utilities.createSnackBar(message);
+
+      scaffoldMessengerKey.currentState!
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackBar);
+    }
+  }
+
+  Future<void> deleteAlarmNotification(
+    BuildContext context,
+    AlarmEntity alarm,
+  ) async {
+    final scheduleNotifier = context.read<ScheduleNotifier>();
+
+    // delete alarm from database
+    await scheduleNotifier.deleteAlarm(alarm);
+
+    // read alarm from database
+    await scheduleNotifier.getAlarms(widget.uid);
+
+    if (scheduleNotifier.state == RequestState.success) {
+      // remove previous notification schedule
+      await _notificationHelper.removeSchedule(alarm.id!);
+    }
+
+    final message = scheduleNotifier.message;
+    final snackBar = Utilities.createSnackBar(message);
+
+    scaffoldMessengerKey.currentState!
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
+  }
+
+  Future<void> toggleAlarmNotification(
+    BuildContext context,
+    bool isActive,
+    AlarmEntity alarm,
+  ) async {
+    var message = '';
+
+    final scheduleNotifier = context.read<ScheduleNotifier>();
+
+    final updatedAlarm = alarm.copyWith(isActive: isActive);
+
+    // update alarm from database
+    await scheduleNotifier.updateAlarm(updatedAlarm);
+
+    // read alarm from database
+    await scheduleNotifier.getAlarms(widget.uid);
+
+    if (scheduleNotifier.state == RequestState.success) {
+      if (isActive) {
+        message = 'Notifikasi diaktifkan';
+
+        // activate alarm notification schedule
+        await _notificationHelper.scheduleNotification(
+          id: alarm.id!,
+          uid: widget.uid,
+          title: alarm.title,
+          time: Time.fromTimeOfDay(TimeOfDay.fromDateTime(alarm.scheduledAt)),
+        );
+      } else {
+        message = 'Notifikasi dinon-aktifkan';
+
+        // non activate notification schedule
+        await _notificationHelper.removeSchedule(alarm.id!);
+      }
+    }
+
+    final snackBar = Utilities.createSnackBar(message);
+
+    scaffoldMessengerKey.currentState!
+      ..hideCurrentSnackBar()
+      ..showSnackBar(snackBar);
   }
 
   void showTimePicker(BuildContext context, ScheduleTimeNotifier timeNotifier) {
@@ -232,70 +459,6 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
             ),
       ),
     );
-  }
-
-  Future<void> onPressedSaveButton(
-    BuildContext context,
-    ScheduleTimeNotifier timeNotifier,
-  ) async {
-    FocusScope.of(context).unfocus();
-
-    _formKey.currentState!.save();
-
-    if (_formKey.currentState!.validate()) {
-      final value = _formKey.currentState!.value;
-      final scheduleNotifier = context.read<ScheduleNotifier>();
-
-      // show loading
-      showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => const LoadingIndicator(),
-      );
-
-      final now = DateTime.now();
-      final dateSchedule = DateTime(
-        now.year,
-        now.month,
-        now.day,
-        timeNotifier.time.hour,
-        timeNotifier.time.minute,
-      );
-      final alarm = AlarmEntity(
-        uid: widget.uid,
-        title: value['title'],
-        scheduledAt: dateSchedule,
-        isPending: false,
-        gradientColorIndex: setGradientColorIndex(timeNotifier.time),
-      );
-
-      // insert alarm to database
-      await scheduleNotifier.createAlarm(alarm);
-
-      // read alarm from database
-      await scheduleNotifier.getAlarms(widget.uid);
-
-      // create alarm notification schedule
-      await _notificationHelper.scheduleNotification(
-        scheduleNotifier.alarms.last.id!,
-        widget.uid,
-        timeNotifier.time,
-        alarm,
-      );
-
-      // close loading
-      navigatorKey.currentState!.pop();
-
-      // close bottom sheet
-      navigatorKey.currentState!.pop();
-
-      final message = scheduleNotifier.message;
-      final snackBar = Utilities.createSnackBar(message);
-
-      scaffoldMessengerKey.currentState!
-        ..hideCurrentSnackBar()
-        ..showSnackBar(snackBar);
-    }
   }
 
   int setGradientColorIndex(Time time) {

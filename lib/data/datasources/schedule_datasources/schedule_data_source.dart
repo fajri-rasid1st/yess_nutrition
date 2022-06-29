@@ -22,7 +22,7 @@ class ScheduleDataSourceImpl implements ScheduleDataSource {
     try {
       await databaseHelper.createAlarm(alarm);
 
-      return 'Alarm waktu makan berhasil dibuat';
+      return 'Berhasil menambahkan alarm notifikasi';
     } catch (e) {
       throw DatabaseException(e.toString());
     }
@@ -44,7 +44,7 @@ class ScheduleDataSourceImpl implements ScheduleDataSource {
     try {
       await databaseHelper.updateAlarm(alarm);
 
-      return 'Alarm waktu makan berhasil diedit';
+      return 'Alarm notifikasi telah diedit';
     } catch (e) {
       throw DatabaseException(e.toString());
     }
@@ -55,7 +55,7 @@ class ScheduleDataSourceImpl implements ScheduleDataSource {
     try {
       await databaseHelper.deleteAlarm(alarm);
 
-      return 'Alarm waktu makan berhasil dihapus';
+      return 'Berhasil menghapus alarm notifikasi';
     } catch (e) {
       throw DatabaseException(e.toString());
     }

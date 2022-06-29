@@ -8,7 +8,7 @@ class AlarmModel extends Equatable {
   final String uid;
   final String title;
   final DateTime scheduledAt;
-  final bool isPending;
+  final bool isActive;
   final int gradientColorIndex;
 
   const AlarmModel({
@@ -16,7 +16,7 @@ class AlarmModel extends Equatable {
     required this.uid,
     required this.title,
     required this.scheduledAt,
-    required this.isPending,
+    required this.isActive,
     required this.gradientColorIndex,
   });
 
@@ -26,7 +26,7 @@ class AlarmModel extends Equatable {
       uid: alarm.uid,
       title: alarm.title,
       scheduledAt: alarm.scheduledAt,
-      isPending: alarm.isPending,
+      isActive: alarm.isActive,
       gradientColorIndex: alarm.gradientColorIndex,
     );
   }
@@ -37,7 +37,7 @@ class AlarmModel extends Equatable {
       uid: alarm['uid'] as String,
       title: alarm['title'] as String,
       scheduledAt: DateTime.parse(alarm['scheduledAt'] as String),
-      isPending: (alarm['isPending'] as int) == 1 ? true : false,
+      isActive: (alarm['isActive'] as int) == 1 ? true : false,
       gradientColorIndex: alarm['gradientColorIndex'] as int,
     );
   }
@@ -48,7 +48,7 @@ class AlarmModel extends Equatable {
       uid: uid,
       title: title,
       scheduledAt: scheduledAt,
-      isPending: isPending,
+      isActive: isActive,
       gradientColorIndex: gradientColorIndex,
     );
   }
@@ -59,7 +59,7 @@ class AlarmModel extends Equatable {
       'uid': uid,
       'title': title,
       'scheduledAt': scheduledAt.toIso8601String(),
-      'isPending': isPending ? 1 : 0,
+      'isActive': isActive ? 1 : 0,
       'gradientColorIndex': gradientColorIndex,
     };
   }
@@ -70,7 +70,7 @@ class AlarmModel extends Equatable {
         uid,
         title,
         scheduledAt,
-        isPending,
+        isActive,
         gradientColorIndex,
       ];
 }

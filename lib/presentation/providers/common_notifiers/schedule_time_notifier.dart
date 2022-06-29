@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class ScheduleTimeNotifier extends ChangeNotifier {
-  Time _time = Time.fromTimeOfDay(TimeOfDay.now());
+  late Time _time;
   Time get time => _time;
 
   setTimeFromTimeOfDay(TimeOfDay value) {
@@ -11,7 +11,7 @@ class ScheduleTimeNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  String _timeString = DateFormat('hh:mm a').format(DateTime.now());
+  late String _timeString;
   String get timeString => _timeString;
 
   setTimeStringFromDateTime(DateTime value) {

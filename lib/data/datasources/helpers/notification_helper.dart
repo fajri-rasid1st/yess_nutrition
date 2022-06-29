@@ -6,7 +6,6 @@ import 'package:rxdart/rxdart.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 import 'package:yess_nutrition/common/utils/routes.dart';
-import 'package:yess_nutrition/domain/entities/entities.dart';
 
 final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 final selectNotificationSubject = BehaviorSubject<String>();
@@ -33,13 +32,13 @@ class NotificationHelper {
         await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
 
     if (details != null && details.didNotificationLaunchApp) {
-      selectNotificationSubject.add(details.payload ?? 'empty_payload');
+      selectNotificationSubject.add(details.payload ?? '');
     }
 
     await flutterLocalNotificationsPlugin.initialize(
       initSettings,
       onSelectNotification: (payload) async {
-        selectNotificationSubject.add(payload ?? 'empty_payload');
+        selectNotificationSubject.add(payload ?? '');
       },
     );
   }
@@ -58,12 +57,12 @@ class NotificationHelper {
   }
 
   /// Schedule notification
-  Future<void> scheduleNotification(
-    int id,
-    String uid,
-    time.Time time,
-    AlarmEntity alarm,
-  ) async {
+  Future<void> scheduleNotification({
+    required int id,
+    required String uid,
+    required String title,
+    required time.Time time,
+  }) async {
     final channelId = 'channel_$id';
     const channelName = 'my_channel';
     const channelDescription = 'my_description_channel';
@@ -79,16 +78,15 @@ class NotificationHelper {
       styleInformation: const DefaultStyleInformation(true, true),
     );
 
-    final platformChannelSpecifics = NotificationDetails(
-      android: androidPlatformChannelSpecifics,
-    );
+    final platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
 
-    final title = '<b>${alarm.title}</b>';
-    const body = 'Waktunya Anda untuk makan. Lihat jadwal makanan Anda.';
+    final header = '<b>$title</b>';
+    const body = 'Waktunya Anda untuk makan! Lihat jadwal makanan Anda.';
 
     await flutterLocalNotificationsPlugin.zonedSchedule(
       id,
-      title,
+      header,
       body,
       _convertTime(time),
       platformChannelSpecifics,
@@ -131,10 +129,5 @@ class NotificationHelper {
   /// Remove specific schedule
   Future<void> removeSchedule(int id) async {
     return await flutterLocalNotificationsPlugin.cancel(id);
-  }
-
-  /// Clear all schedules
-  Future<void> clearSchedules() async {
-    return await flutterLocalNotificationsPlugin.cancelAll();
   }
 }

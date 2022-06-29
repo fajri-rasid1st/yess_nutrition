@@ -46,23 +46,40 @@ class AlarmCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 const Icon(
                   Icons.label,
                   color: primaryBackgroundColor,
+                  size: 28,
                 ),
                 const SizedBox(width: 8),
-                Text(
-                  alarm.title,
-                  style: const TextStyle(color: primaryBackgroundColor),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 4),
+                    child: Text(
+                      alarm.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                            color: primaryBackgroundColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                    ),
+                  ),
                 ),
-                const Spacer(),
+                const SizedBox(width: 12),
                 FlutterSwitch(
-                  value: !alarm.isPending,
+                  value: alarm.isActive,
                   onToggle: onToggledSwitcher,
+                  width: 54,
+                  height: 30,
+                  activeColor: primaryColor,
+                  inactiveColor: primaryTextColor.withOpacity(0.8),
                 ),
               ],
             ),
+            const SizedBox(height: 16),
             Row(
               children: <Widget>[
                 Text(
@@ -79,7 +96,6 @@ class AlarmCard extends StatelessWidget {
                   onPressed: onPressedEditIcon,
                   tooltip: 'Edit Time',
                 ),
-                const SizedBox(width: 8),
                 IconButton(
                   icon: const Icon(Icons.delete_rounded),
                   color: primaryBackgroundColor,
