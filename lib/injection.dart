@@ -27,7 +27,6 @@ void init() {
       signUpUseCase: locator(),
       resetPasswordUseCase: locator(),
       signOutUseCase: locator(),
-      deleteUserUseCase: locator(),
     ),
   );
   locator.registerFactory(
@@ -40,7 +39,6 @@ void init() {
       createUserDataUseCase: locator(),
       readUserDataUseCase: locator(),
       updateUserDataUseCase: locator(),
-      deleteUserDataUseCase: locator(),
       getUserStatusUseCase: locator(),
     ),
   );
@@ -49,6 +47,15 @@ void init() {
       createUserNutrientsUseCase: locator(),
       readUserNutrientsUseCase: locator(),
       updateUserNutrientsUseCase: locator(),
+    ),
+  );
+  locator.registerFactory(
+    () => UserFoodScheduleNotifier(
+      createUserFoodScheduleUseCase: locator(),
+      readUserFoodSchedulesUseCase: locator(),
+      updateUserFoodScheduleUseCase: locator(),
+      deleteUserFoodScheduleUseCase: locator(),
+      resetUserFoodSchedulesUseCase: locator(),
     ),
   );
 
@@ -65,6 +72,7 @@ void init() {
     () => ScheduleNotifier(
       createAlarmUseCase: locator(),
       getAlarmsUseCase: locator(),
+      updateAlarmUseCase: locator(),
       deleteAlarmUseCase: locator(),
     ),
   );
@@ -156,17 +164,20 @@ void init() {
   locator.registerLazySingleton(() => SignUp(locator()));
   locator.registerLazySingleton(() => SignOut(locator()));
   locator.registerLazySingleton(() => ResetPassword(locator()));
-  locator.registerLazySingleton(() => DeleteUser(locator()));
 
   // User firestore usecases
   locator.registerLazySingleton(() => CreateUserData(locator()));
   locator.registerLazySingleton(() => ReadUserData(locator()));
   locator.registerLazySingleton(() => UpdateUserData(locator()));
-  locator.registerLazySingleton(() => DeleteUserData(locator()));
   locator.registerLazySingleton(() => GetUserStatus(locator()));
   locator.registerLazySingleton(() => CreateUserNutrients(locator()));
   locator.registerLazySingleton(() => ReadUserNutrients(locator()));
   locator.registerLazySingleton(() => UpdateUserNutrients(locator()));
+  locator.registerLazySingleton(() => CreateUserFoodSchedule(locator()));
+  locator.registerLazySingleton(() => ReadUserFoodSchedules(locator()));
+  locator.registerLazySingleton(() => UpdateUserFoodSchedule(locator()));
+  locator.registerLazySingleton(() => DeleteUserFoodSchedule(locator()));
+  locator.registerLazySingleton(() => ResetUserFoodSchedules(locator()));
 
   // User storage usecases
   locator.registerLazySingleton(() => UploadProfilePicture(locator()));
@@ -175,6 +186,7 @@ void init() {
   // Schedule usecases
   locator.registerLazySingleton(() => CreateAlarm(locator()));
   locator.registerLazySingleton(() => GetAlarms(locator()));
+  locator.registerLazySingleton(() => UpdateAlarm(locator()));
   locator.registerLazySingleton(() => DeleteAlarm(locator()));
 
   // Food usecases
@@ -321,8 +333,9 @@ void init() {
   * Common services section
   */
 
-  // Databases
+  // Helper
   locator.registerLazySingleton(() => DatabaseHelper());
+  locator.registerLazySingleton(() => NotificationHelper());
 
   // Services
   locator.registerLazySingleton(() => FirebaseAuth.instance);

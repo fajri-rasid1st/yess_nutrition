@@ -8,7 +8,7 @@ import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
-import 'package:yess_nutrition/presentation/providers/common_notifiers/password_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/common_notifiers/password_field_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/user_auth_notifiers/user_auth_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
@@ -134,8 +134,8 @@ class RegisterPage extends StatelessWidget {
     );
   }
 
-  Consumer<PasswordNotifier> _buildPasswordField() {
-    return Consumer<PasswordNotifier>(
+  Consumer<PasswordFieldNotifier> _buildPasswordField() {
+    return Consumer<PasswordFieldNotifier>(
       builder: (context, provider, child) {
         final isVisible = provider.isSignUpPasswordVisible;
 
@@ -170,8 +170,8 @@ class RegisterPage extends StatelessWidget {
     );
   }
 
-  Consumer<PasswordNotifier> _buildConfirmPasswordField() {
-    return Consumer<PasswordNotifier>(
+  Consumer<PasswordFieldNotifier> _buildConfirmPasswordField() {
+    return Consumer<PasswordFieldNotifier>(
       builder: (context, provider, child) {
         final isVisible = provider.isSignUpConfirmPasswordVisible;
 

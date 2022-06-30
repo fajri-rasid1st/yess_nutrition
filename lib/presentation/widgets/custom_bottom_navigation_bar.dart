@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
-import 'package:yess_nutrition/presentation/providers/common_notifiers/bottom_navigation_bar_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/common_notifiers/bottom_navbar_notifier.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
-  final BottomNavigationBarNotifier notifier;
+  final BottomNavbarNotifier notifier;
   final PageController pageController;
 
   const CustomBottomNavigationBar({
@@ -25,7 +25,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
             color: secondaryColor.withOpacity(0.6),
             offset: const Offset(0.0, -4.0),
             blurRadius: 24,
-          )
+          ),
         ],
       ),
       child: Row(

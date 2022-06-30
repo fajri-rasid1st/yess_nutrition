@@ -36,6 +36,19 @@ class ScheduleRepositoryImpl implements ScheduleRepository {
   }
 
   @override
+  Future<Either<Failure, String>> updateAlarm(AlarmEntity alarm) async {
+    try {
+      final alarmModel = AlarmModel.fromEntity(alarm);
+
+      final result = await scheduleDataSource.updateAlarm(alarmModel);
+
+      return Right(result);
+    } on DatabaseException {
+      return const Left(DatabaseFailure('Gagal mengedit alarm. Coba lagi.'));
+    }
+  }
+
+  @override
   Future<Either<Failure, String>> deleteAlarm(AlarmEntity alarm) async {
     try {
       final alarmModel = AlarmModel.fromEntity(alarm);

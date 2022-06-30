@@ -7,6 +7,8 @@ abstract class ScheduleDataSource {
 
   Future<List<AlarmModel>> getAlarms(String uid);
 
+  Future<String> updateAlarm(AlarmModel alarm);
+
   Future<String> deleteAlarm(AlarmModel alarm);
 }
 
@@ -20,7 +22,7 @@ class ScheduleDataSourceImpl implements ScheduleDataSource {
     try {
       await databaseHelper.createAlarm(alarm);
 
-      return 'Alarm waktu makan berhasil dibuat';
+      return 'Berhasil menambahkan alarm notifikasi';
     } catch (e) {
       throw DatabaseException(e.toString());
     }
@@ -38,11 +40,22 @@ class ScheduleDataSourceImpl implements ScheduleDataSource {
   }
 
   @override
+  Future<String> updateAlarm(AlarmModel alarm) async {
+    try {
+      await databaseHelper.updateAlarm(alarm);
+
+      return 'Alarm notifikasi telah diedit';
+    } catch (e) {
+      throw DatabaseException(e.toString());
+    }
+  }
+
+  @override
   Future<String> deleteAlarm(AlarmModel alarm) async {
     try {
       await databaseHelper.deleteAlarm(alarm);
 
-      return 'Alarm waktu makan berhasil dihapus';
+      return 'Berhasil menghapus alarm notifikasi';
     } catch (e) {
       throw DatabaseException(e.toString());
     }

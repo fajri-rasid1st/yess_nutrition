@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/domain/entities/user_data_entity.dart';
 import 'package:yess_nutrition/domain/usecases/user_usecases/user_firestore_usecases/create_user_data.dart';
-import 'package:yess_nutrition/domain/usecases/user_usecases/user_firestore_usecases/delete_user_data.dart';
 import 'package:yess_nutrition/domain/usecases/user_usecases/user_firestore_usecases/get_user_status.dart';
 import 'package:yess_nutrition/domain/usecases/user_usecases/user_firestore_usecases/read_user_data.dart';
 import 'package:yess_nutrition/domain/usecases/user_usecases/user_firestore_usecases/update_user_data.dart';
@@ -11,14 +10,12 @@ class UserDataNotifier extends ChangeNotifier {
   final CreateUserData createUserDataUseCase;
   final ReadUserData readUserDataUseCase;
   final UpdateUserData updateUserDataUseCase;
-  final DeleteUserData deleteUserDataUseCase;
   final GetUserStatus getUserStatusUseCase;
 
   UserDataNotifier({
     required this.createUserDataUseCase,
     required this.readUserDataUseCase,
     required this.updateUserDataUseCase,
-    required this.deleteUserDataUseCase,
     required this.getUserStatusUseCase,
   });
 
@@ -80,22 +77,6 @@ class UserDataNotifier extends ChangeNotifier {
 
   Future<void> updateUserData(UserDataEntity userData) async {
     final result = await updateUserDataUseCase.execute(userData);
-
-    result.fold(
-      (failure) {
-        _error = failure.message;
-        _state = UserState.error;
-      },
-      (_) {
-        _state = UserState.success;
-      },
-    );
-
-    notifyListeners();
-  }
-
-  Future<void> deleteUserData(String uid) async {
-    final result = await deleteUserDataUseCase.execute(uid);
 
     result.fold(
       (failure) {

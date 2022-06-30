@@ -1,4 +1,3 @@
-export 'delete_user.dart';
 export 'get_user.dart';
 export 'reset_password.dart';
 export 'sign_in.dart';

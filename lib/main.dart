@@ -8,36 +8,15 @@ import 'common/styles/styles.dart';
 import 'common/utils/http_ssl_pinning.dart';
 import 'common/utils/keys.dart';
 import 'common/utils/routes.dart';
+import 'data/datasources/helpers/notification_helper.dart';
 import 'domain/entities/entities.dart';
 import 'firebase_options.dart';
 import 'injection.dart' as di;
 import 'presentation/pages/pages.dart';
 import 'presentation/providers/providers.dart';
 
-// final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-//     FlutterLocalNotificationsPlugin();
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // var initializationSettingsAndroid =
-  //     const AndroidInitializationSettings('splash');
-
-  // var initializationSettingsIOS = IOSInitializationSettings(
-  //     requestAlertPermission: true,
-  //     requestBadgePermission: true,
-  //     requestSoundPermission: true,
-  //     onDidReceiveLocalNotification: (id, title, body, payload) async {});
-
-  // var initializationSettings = InitializationSettings(
-  //     android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
-
-  // await flutterLocalNotificationsPlugin.initialize(initializationSettings,
-  //     onSelectNotification: (payload) async {
-  //   if (payload != null) {
-  //     debugPrint('notification payload: $payload');
-  //   }
-  // });
 
   // Prevent landscape orientation
   SystemChrome.setPreferredOrientations(<DeviceOrientation>[
@@ -61,6 +40,9 @@ void main() async {
   // Initialize service locator
   di.init();
 
+  // Initialize notification
+  await di.locator<NotificationHelper>().initNotifications();
+
   runApp(const MyApp());
 }
 
@@ -82,6 +64,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => di.locator<UserNutrientsNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<UserFoodScheduleNotifier>(),
         ),
         ChangeNotifierProvider(
           create: (_) => di.locator<UserStorageNotifier>(),
@@ -126,13 +111,16 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<FavoriteProductNotifier>(),
         ),
         ChangeNotifierProvider(
-          create: (_) => BottomNavigationBarNotifier(),
+          create: (_) => BottomNavbarNotifier(),
         ),
         ChangeNotifierProvider(
-          create: (_) => PasswordNotifier(),
+          create: (_) => PasswordFieldNotifier(),
         ),
         ChangeNotifierProvider(
           create: (_) => WebViewNotifier(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ScheduleTimeNotifier(),
         ),
         ChangeNotifierProvider(
           create: (_) => NewsFabNotifier(),
@@ -194,6 +182,13 @@ class MyApp extends StatelessWidget {
                 builder: (_) => AdditionalInfoPage(user: user),
                 settings: settings,
               );
+            case webviewRoute:
+              final url = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => WebViewPage(url: url),
+                settings: settings,
+              );
             case mainRoute:
               final user = settings.arguments as UserEntity;
 
@@ -209,13 +204,7 @@ class MyApp extends StatelessWidget {
                 builder: (_) => NutrientsDetailPage(uid: uid),
                 settings: settings,
               );
-            case webviewRoute:
-              final url = settings.arguments as String;
 
-              return MaterialPageRoute(
-                builder: (_) => WebViewPage(url: url),
-                settings: settings,
-              );
             case profileRoute:
               final uid = settings.arguments as String;
 
@@ -228,6 +217,13 @@ class MyApp extends StatelessWidget {
 
               return MaterialPageRoute(
                 builder: (_) => UpdateProfilePage(userData: userData),
+                settings: settings,
+              );
+            case scheduleAlarmRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => ScheduleAlarmPage(uid: uid),
                 settings: settings,
               );
             case checkRoute:

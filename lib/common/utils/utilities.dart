@@ -1,11 +1,23 @@
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
+import 'package:uuid/uuid.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
+import 'package:yess_nutrition/common/utils/keys.dart';
+import 'package:yess_nutrition/domain/entities/food_entity.dart';
 import 'package:yess_nutrition/domain/entities/user_data_entity.dart';
+import 'package:yess_nutrition/domain/entities/user_food_schedule_entity.dart';
 import 'package:yess_nutrition/domain/entities/user_nutrients_entity.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_food_schedule_notifier.dart';
+import 'package:yess_nutrition/presentation/widgets/custom_network_image.dart';
+import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
 class Utilities {
   /// Function to calculate user total daily nutritional needs (BMR)
@@ -53,11 +65,11 @@ class Utilities {
     return toBeginningOfSentenceCase(timeago.format(dateTime, locale: 'id'))!;
   }
 
-  /// Function to format [dateTime] to **dd MMM y** string pattern
-  static String dateTimeToddMMMy(DateTime dateTime) {
+  /// Function to format [dateTime] to **d MMM y** string pattern
+  static String dateTimeTodMMMy(DateTime dateTime) {
     if (dateTime.year == 0) return '?';
 
-    return DateFormat('dd MMM y').format(dateTime);
+    return DateFormat('d MMM y').format(dateTime);
   }
 
   /// Function to convert [number] according to [decimalDigit]
@@ -94,49 +106,14 @@ class Utilities {
     );
   }
 
-  /// Function to scheduled time based on [timePattern]
-  ///
-  /// The [timePattern] must match with **H:m:s** format, ex: 23:59:00.
-  static DateTime dateTimeScheduled(String timePattern) {
-    final now = DateTime.now();
-
-    final dateFormat = DateFormat('y/M/d');
-    final completeFormat = DateFormat('y/M/d H:m:s');
-
-    // Date and time today format
-    // ex. output: 2022/4/7
-    final todayDate = dateFormat.format(now);
-
-    // ex. output: 2022/4/7 11:00:00
-    final todayDateAndTime = '$todayDate $timePattern';
-
-    // ex. output: 2022-04-07 11:00:00.000
-    final resultToday = completeFormat.parseStrict(todayDateAndTime);
-
-    // Date and time tomorrow format
-    // ex. output: 2022-04-08 11:00:00.000
-    final formatted = resultToday.add(const Duration(days: 1));
-
-    // ex. output: 2022/4/8
-    final tomorrowDate = dateFormat.format(formatted);
-
-    // ex. output: 2022/4/8 11:00:00
-    final tomorrowDateAndTime = '$tomorrowDate $timePattern';
-
-    // ex. output: 2022-04-08 11:00:00.000
-    final resultTomorrow = completeFormat.parseStrict(tomorrowDateAndTime);
-
-    return now.isAfter(resultToday) ? resultTomorrow : resultToday;
-  }
-
   /// Function to show confirm dialog with two action button
-  static Future<void> showConfirmDialog(
+  static void showConfirmDialog(
     BuildContext context, {
     required String title,
     required String question,
     required VoidCallback onPressedPrimaryAction,
     required VoidCallback onPressedSecondaryAction,
-  }) async {
+  }) {
     showGeneralDialog(
       context: context,
       barrierLabel: '',
@@ -216,5 +193,235 @@ class Utilities {
       transitionDuration: const Duration(milliseconds: 250),
       pageBuilder: (context, animStart, animEnd) => const SizedBox(),
     );
+  }
+
+  /// Function to show food schedule bottom sheet for adding user food schedule
+  static void showAddFoodScheduleBottomSheet(
+    BuildContext context, {
+    required String uid,
+    required FoodEntity food,
+  }) {
+    final formKey = GlobalKey<FormBuilderState>();
+
+    showModalBottomSheet(
+      context: context,
+      useRootNavigator: true,
+      isScrollControlled: true,
+      clipBehavior: Clip.antiAlias,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        final height = MediaQuery.of(context).viewInsets.bottom;
+        final bottom = height > 0 ? 0 : 24 + height;
+
+        return Container(
+          padding: EdgeInsets.fromLTRB(20, 24, 20, bottom.toDouble()),
+          child: Column(
+            mainAxisSize: height > 0 ? MainAxisSize.max : MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(
+                'Buat Jadwal Makan',
+                style: Theme.of(context).textTheme.headline5!.copyWith(
+                      color: primaryColor,
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: <Widget>[
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: CustomNetworkImage(
+                      width: 68,
+                      height: 68,
+                      imgUrl: food.image,
+                      placeHolderSize: 34,
+                      errorIcon: Icons.fastfood_outlined,
+                    ),
+                  ),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(
+                            food.label,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.subtitle1,
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '${toBeginningOfSentenceCase(food.categoryLabel)}, ${food.category}',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context)
+                                .textTheme
+                                .caption!
+                                .copyWith(color: secondaryTextColor),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            '${food.nutrients.calories.toStringAsFixed(0)} Kkal per porsi',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(color: primaryColor),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8),
+                child: Divider(),
+              ),
+              FormBuilder(
+                key: formKey,
+                child: Column(
+                  children: <Widget>[
+                    FormBuilderRadioGroup(
+                      name: 'scheduleType',
+                      activeColor: primaryColor,
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.zero,
+                        focusColor: primaryColor,
+                        border: InputBorder.none,
+                        labelText: 'Pilih waktu makan',
+                        labelStyle: Theme.of(context)
+                            .textTheme
+                            .headline5!
+                            .copyWith(color: primaryColor),
+                      ),
+                      options: const <FormBuilderFieldOption<String>>[
+                        FormBuilderFieldOption(value: 'Sarapan'),
+                        FormBuilderFieldOption(value: 'Makan Siang'),
+                        FormBuilderFieldOption(value: 'Makan Malam'),
+                        FormBuilderFieldOption(value: 'Lainnya'),
+                      ],
+                      validator: FormBuilderValidators.required(
+                        errorText: 'Bagian ini harus diisi',
+                      ),
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.only(bottom: 12),
+                      child: Divider(),
+                    ),
+                    FormBuilderTextField(
+                      name: 'totalServing',
+                      initialValue: '1',
+                      keyboardType: TextInputType.number,
+                      textInputAction: TextInputAction.done,
+                      decoration: const InputDecoration(
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
+                        prefixText: 'Jumlah\t',
+                        suffixText: 'Porsi',
+                      ),
+                      inputFormatters: <TextInputFormatter>[
+                        LengthLimitingTextInputFormatter(2),
+                      ],
+                      validator: FormBuilderValidators.compose([
+                        FormBuilderValidators.required(
+                          errorText: 'Bagian ini harus diisi.',
+                        ),
+                        FormBuilderValidators.match(
+                          r'^[1-9]\d*$',
+                          errorText: 'Minimal 1 Porsi',
+                        ),
+                      ]),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () => _onPressedSubmitButton(
+                    context,
+                    uid,
+                    food,
+                    formKey,
+                  ),
+                  icon: const Icon(Icons.add_rounded),
+                  label: const Text('Buat Jadwal'),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  static Future<void> _onPressedSubmitButton(
+    BuildContext context,
+    String uid,
+    FoodEntity food,
+    GlobalKey<FormBuilderState> formKey,
+  ) async {
+    FocusScope.of(context).unfocus();
+
+    if (!await InternetConnectionChecker().hasConnection) {
+      Navigator.pop(context);
+
+      scaffoldMessengerKey.currentState!
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          Utilities.createSnackBar('Proses gagal. Periksa koneksi internet.'),
+        );
+
+      return;
+    }
+
+    formKey.currentState!.save();
+
+    if (formKey.currentState!.validate()) {
+      final value = formKey.currentState!.value;
+      final foodScheduleNotifier = context.read<UserFoodScheduleNotifier>();
+
+      // Show loading indicator
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const LoadingIndicator(),
+      );
+
+      await foodScheduleNotifier.createUserFoodSchedule(
+        UserFoodScheduleEntity(
+          id: const Uuid().v4(),
+          uid: uid,
+          totalServing: int.parse(value['totalServing']),
+          scheduleType: value['scheduleType'],
+          isDone: false,
+          foodName: food.label,
+          foodImage: food.image,
+          foodNutrients: food.nutrients.multiplyBy(
+            value: int.parse(value['totalServing']),
+          ),
+        ),
+      );
+
+      // refresh food schedule list
+      await foodScheduleNotifier.refresh(uid);
+
+      // Close loading indicator
+      navigatorKey.currentState!.pop();
+
+      // Close dialog
+      navigatorKey.currentState!.pop();
+
+      final message = foodScheduleNotifier.message;
+      final snackBar = Utilities.createSnackBar(message);
+
+      scaffoldMessengerKey.currentState!
+        ..hideCurrentSnackBar()
+        ..showSnackBar(snackBar);
+    }
   }
 }

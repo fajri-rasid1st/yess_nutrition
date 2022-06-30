@@ -5,7 +5,7 @@ class AlarmEntity extends Equatable {
   final String uid;
   final String title;
   final DateTime scheduledAt;
-  final bool isPending;
+  final bool isActive;
   final int gradientColorIndex;
 
   const AlarmEntity({
@@ -13,9 +13,27 @@ class AlarmEntity extends Equatable {
     required this.uid,
     required this.title,
     required this.scheduledAt,
-    required this.isPending,
+    required this.isActive,
     required this.gradientColorIndex,
   });
+
+  AlarmEntity copyWith({
+    int? id,
+    String? uid,
+    String? title,
+    DateTime? scheduledAt,
+    bool? isActive,
+    int? gradientColorIndex,
+  }) {
+    return AlarmEntity(
+      id: id ?? this.id,
+      uid: uid ?? this.uid,
+      title: title ?? this.title,
+      scheduledAt: scheduledAt ?? this.scheduledAt,
+      isActive: isActive ?? this.isActive,
+      gradientColorIndex: gradientColorIndex ?? this.gradientColorIndex,
+    );
+  }
 
   @override
   List<Object?> get props => [
@@ -23,7 +41,7 @@ class AlarmEntity extends Equatable {
         uid,
         title,
         scheduledAt,
-        isPending,
+        isActive,
         gradientColorIndex,
       ];
 }

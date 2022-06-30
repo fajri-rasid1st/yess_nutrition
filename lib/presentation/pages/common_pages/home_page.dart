@@ -8,6 +8,8 @@ import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/presentation/providers/common_notifiers/home_page_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/product_notifiers/products_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/common_notifiers/bottom_navbar_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/news_notifiers/get_news_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_nutrients_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_news_home.dart';
@@ -53,6 +55,7 @@ class _HomePageState extends State<HomePage>
     super.build(context);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
@@ -81,7 +84,7 @@ class _HomePageState extends State<HomePage>
                 child: Padding(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 16,
-                    vertical: 36,
+                    vertical: 32,
                   ),
                   child: Row(
                     children: <Widget>[
@@ -179,7 +182,7 @@ class _HomePageState extends State<HomePage>
 
   Container _buildContentHomePage(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 130),
+      margin: const EdgeInsets.only(top: 132),
       width: double.infinity,
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.only(
@@ -290,26 +293,20 @@ class _HomePageState extends State<HomePage>
               itemBuilder: (context, index) {
                 return const CardNutriTimeTask();
               },
-              itemCount: 2,
               separatorBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 6),
-                  child: Divider(color: dividerColor.withOpacity(0.6)),
+                return const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 6),
+                  child: Divider(),
                 );
               },
+              itemCount: 2,
             ),
             const SizedBox(height: 16),
-            Divider(color: dividerColor.withOpacity(0.6)),
+            const Divider(),
             Center(
               child: TextButton(
                 onPressed: () {},
-                child: Text(
-                  "Lihat Detail",
-                  style: Theme.of(context).textTheme.button?.copyWith(
-                        color: primaryColor,
-                        letterSpacing: 0.5,
-                      ),
-                ),
+                child: const Text('Lihat Detail'),
               ),
             ),
           ],

@@ -43,18 +43,37 @@ class _ShopPageState extends State<ShopPage>
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        toolbarHeight: 86,
-        title: const Text(
-          'NutriShop',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 24,
+        toolbarHeight: 104,
+        title: Padding(
+          padding: const EdgeInsets.only(top: 12),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              const Text(
+                'NutriShop',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 32,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'Belanja kebutuhan makanan atau kesehatan',
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context)
+                    .textTheme
+                    .caption!
+                    .copyWith(color: primaryBackgroundColor),
+              ),
+            ],
           ),
         ),
         actions: <Widget>[
           SafeArea(
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(16, 36, 16, 0),
               child: Align(
                 alignment: Alignment.topRight,
                 child: Container(
@@ -101,7 +120,7 @@ class _ShopPageState extends State<ShopPage>
     final productsMap = notifier.productsMap;
 
     return ClipRRect(
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
       child: Container(
         color: scaffoldBackgroundColor,
         child: SingleChildScrollView(

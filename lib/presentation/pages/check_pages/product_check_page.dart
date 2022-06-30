@@ -5,6 +5,7 @@ import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/failure.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
+import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/food_entity.dart';
 import 'package:yess_nutrition/presentation/providers/food_notifiers/food_history_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/food_notifiers/search_product_notifier.dart';
@@ -203,7 +204,13 @@ class _ProductCheckPageState extends State<ProductCheckPage> {
 
               return FoodListTile(
                 food: products[index],
-                onPressedTimeIcon: () {},
+                onPressedTimeIcon: () {
+                  Utilities.showAddFoodScheduleBottomSheet(
+                    context,
+                    uid: widget.uid,
+                    food: products[index],
+                  );
+                },
               );
             },
             separatorBuilder: (context, index) => const Divider(height: 1),

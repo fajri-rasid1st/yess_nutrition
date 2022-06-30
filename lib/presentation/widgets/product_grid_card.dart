@@ -42,7 +42,7 @@ class ProductGridCard extends StatelessWidget {
                   decoration: const BoxDecoration(
                     color: secondaryColor,
                     borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(8),
+                      bottomLeft: Radius.circular(12),
                     ),
                   ),
                   child: IconButton(

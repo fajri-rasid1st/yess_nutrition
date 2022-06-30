@@ -110,17 +110,6 @@ class UserAuthRepositoryImpl implements UserAuthRepository {
   }
 
   @override
-  Future<Either<Failure, void>> deleteUser() async {
-    try {
-      final result = await userAuthDataSource.deleteUser();
-
-      return Right(result);
-    } on FirebaseAuthException catch (e) {
-      return Left(AuthFailure(e.message ?? e.code));
-    }
-  }
-
-  @override
   Future<Either<Failure, UserEntity?>> signInWithGoogle() async {
     try {
       final result = await userAuthDataSource.signInWithGoogle();

@@ -153,7 +153,7 @@ class _FoodAndProductCheckHistoryPageState
             ),
             const SizedBox(width: 8),
             Text(
-              Utilities.dateTimeToddMMMy(dateCreated),
+              Utilities.dateTimeTodMMMy(dateCreated),
               style: const TextStyle(color: primaryColor),
             ),
           ],
@@ -181,7 +181,13 @@ class _FoodAndProductCheckHistoryPageState
       ),
       child: FoodListTile(
         food: food,
-        onPressedTimeIcon: () {},
+        onPressedTimeIcon: () {
+          Utilities.showAddFoodScheduleBottomSheet(
+            context,
+            uid: widget.uid,
+            food: food,
+          );
+        },
       ),
     );
   }

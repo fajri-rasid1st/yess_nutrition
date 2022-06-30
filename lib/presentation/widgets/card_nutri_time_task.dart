@@ -55,9 +55,10 @@ class CardNutriTimeTask extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               "200 ml",
-              style: Theme.of(context).textTheme.caption?.copyWith(
-                    color: primaryColor,
-                  ),
+              style: Theme.of(context)
+                  .textTheme
+                  .caption
+                  ?.copyWith(color: primaryColor),
             ),
           ],
         ),
