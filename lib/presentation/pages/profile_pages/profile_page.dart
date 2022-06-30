@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
+import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/user_auth_notifiers/user_auth_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_data_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
@@ -98,12 +99,18 @@ class _ProfilePageState extends State<ProfilePage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
-                        Text(
-                          user.userData.name,
-                          style: const TextStyle(
-                            fontSize: 24,
-                            color: primaryTextColor,
-                            fontWeight: FontWeight.w800,
+                        Flexible(
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 300),
+                            child: Text(
+                              user.userData.name,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 24,
+                                color: primaryTextColor,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
                           ),
                         ),
                         const SizedBox(width: 2),
@@ -250,7 +257,13 @@ class _ProfilePageState extends State<ProfilePage> {
                           _buildListTileProfile(
                             MdiIcons.lockOutline,
                             "Ubah Password",
-                            () {},
+                            () {
+                              Navigator.pushNamed(
+                                context,
+                                forgotPasswordRoute,
+                                arguments: user.userData.email,
+                              );
+                            },
                           ),
                           const SizedBox(height: 16),
                           Divider(
@@ -266,15 +279,26 @@ class _ProfilePageState extends State<ProfilePage> {
                           _buildListTileProfile(
                             MdiIcons.logout,
                             "Keluar",
-                            () async {
-                              await context.read<UserAuthNotifier>().signOut();
-
-                              if (!mounted) return;
-
-                              Navigator.pushNamedAndRemoveUntil(
+                            () {
+                              Utilities.showConfirmDialog(
                                 context,
-                                loginRoute,
-                                (route) => false,
+                                title: 'Konfirmasi',
+                                question: 'Apakah anda yakin ingin keluar?',
+                                onPressedPrimaryAction: () async {
+                                  await context
+                                      .read<UserAuthNotifier>()
+                                      .signOut();
+
+                                  if (!mounted) return;
+
+                                  Navigator.pushNamedAndRemoveUntil(
+                                    context,
+                                    loginRoute,
+                                    (route) => false,
+                                  );
+                                },
+                                onPressedSecondaryAction: () =>
+                                    Navigator.pop(context),
                               );
                             },
                           ),
@@ -293,42 +317,54 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  GestureDetector _buildListTileProfile(
+  Widget _buildListTileProfile(
     IconData icon,
     String title,
     VoidCallback onTap,
   ) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Row(
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: Stack(
         children: <Widget>[
-          Container(
-            width: 46,
-            height: 46,
-            decoration: BoxDecoration(
-              color: scaffoldBackgroundColor,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(
-              icon,
-              size: 22,
-              color: primaryColor,
-            ),
+          Row(
+            children: <Widget>[
+              Container(
+                width: 46,
+                height: 46,
+                decoration: BoxDecoration(
+                  color: scaffoldBackgroundColor,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  icon,
+                  size: 22,
+                  color: primaryColor,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: primaryTextColor,
+                ),
+              ),
+              const Spacer(),
+              const Icon(
+                MdiIcons.chevronRight,
+                size: 26,
+                color: primaryColor,
+              ),
+            ],
           ),
-          const SizedBox(width: 12),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: primaryTextColor,
+          Positioned.fill(
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: onTap,
+              ),
             ),
-          ),
-          const Spacer(),
-          const Icon(
-            MdiIcons.chevronRight,
-            size: 26,
-            color: primaryColor,
           ),
         ],
       ),

@@ -31,12 +31,12 @@ class _MainPageState extends State<MainPage> {
     super.initState();
 
     _pages.addAll([
-      HomePage(uid: widget.user.uid),
+      HomePage(uid: widget.user.uid, pageController: _pageController),
       SchedulePage(uid: widget.user.uid),
       NewsPage(uid: widget.user.uid),
       ShopPage(uid: widget.user.uid),
     ]);
-
+    
     _notificationHelper = NotificationHelper();
     _notificationHelper.configureSelectNotificationSubject(context);
 

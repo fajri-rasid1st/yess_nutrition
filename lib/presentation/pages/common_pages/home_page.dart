@@ -6,6 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
+import 'package:yess_nutrition/presentation/providers/common_notifiers/home_page_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/product_notifiers/products_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/common_notifiers/bottom_navbar_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/news_notifiers/get_news_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_data_notifier.dart';
@@ -13,14 +15,18 @@ import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firest
 import 'package:yess_nutrition/presentation/widgets/card_nutri_news_home.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_shop_home.dart';
 import 'package:yess_nutrition/presentation/widgets/card_nutri_time_task.dart';
-import 'package:yess_nutrition/presentation/widgets/large_circular_progress.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 import 'package:yess_nutrition/presentation/widgets/small_circular_progress.dart';
 
 class HomePage extends StatefulWidget {
   final String uid;
+  final PageController pageController;
 
-  const HomePage({Key? key, required this.uid}) : super(key: key);
+  const HomePage({
+    Key? key,
+    required this.uid,
+    required this.pageController,
+  }) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -39,8 +45,8 @@ class _HomePageState extends State<HomePage>
       Provider.of<UserNutrientsNotifier>(context, listen: false)
           .readUserNutrients(widget.uid);
 
-      Provider.of<GetNewsNotifier>(context, listen: false)
-          .getNewsByCount(count: 5);
+      Provider.of<HomePageNotifier>(context, listen: false)
+          .getAllContentHomePage();
     });
   }
 
@@ -168,6 +174,12 @@ class _HomePageState extends State<HomePage>
     );
   }
 
+  double getNutrientValue(int? currentValue, int? maxValue) {
+    if (currentValue == null || maxValue == null) return 0;
+
+    return currentValue / maxValue;
+  }
+
   Container _buildContentHomePage(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 132),
@@ -180,41 +192,39 @@ class _HomePageState extends State<HomePage>
         color: scaffoldBackgroundColor,
       ),
       clipBehavior: Clip.hardEdge,
-      child: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            const SizedBox(height: 24),
-            _buildCardSummary(context),
-            const SizedBox(height: 20),
-            _buildCardNutriTime(context),
-            const SizedBox(height: 20),
-            _buildTitleContent(
-              context,
-              "NutriNews",
-              () {
-                final bottomNav = context.read<BottomNavbarNotifier>();
-
-                bottomNav.selectedIndex = 2;
-                bottomNav.backgroundColor = primaryBackgroundColor;
-              },
-            ),
-            const SizedBox(height: 8),
-            _buildListNutriNews(),
-            const SizedBox(height: 20),
-            _buildTitleContent(
-              context,
-              "NutriShop",
-              () {
-                final bottomNav = context.read<BottomNavbarNotifier>();
-
-                bottomNav.selectedIndex = 3;
-                bottomNav.backgroundColor = scaffoldBackgroundColor;
-              },
-            ),
-            const SizedBox(height: 8),
-            _buildListNutriShop(),
-            const SizedBox(height: 120),
-          ],
+      child: RefreshIndicator(
+        onRefresh: () {
+          return Future.microtask(() {
+            context.read<HomePageNotifier>().refresh();
+            context.read<UserNutrientsNotifier>().refresh(widget.uid);
+          });
+        },
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              const SizedBox(height: 24),
+              _buildCardSummary(context),
+              const SizedBox(height: 20),
+              _buildCardNutriTime(context),
+              const SizedBox(height: 20),
+              _buildTitleContent(
+                context,
+                "NutriNews",
+                () => widget.pageController.jumpToPage(2),
+              ),
+              const SizedBox(height: 8),
+              _buildListNutriNews(),
+              const SizedBox(height: 20),
+              _buildTitleContent(
+                context,
+                "NutriShop",
+                () => widget.pageController.jumpToPage(3),
+              ),
+              const SizedBox(height: 8),
+              _buildListNutriShop(),
+              const SizedBox(height: 60),
+            ],
+          ),
         ),
       ),
     );
@@ -327,80 +337,99 @@ class _HomePageState extends State<HomePage>
           right: 18.0,
           bottom: 10.0,
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              "Ringkasan Nutrisi Harian",
-              style: Theme.of(context)
-                  .textTheme
-                  .subtitle1
-                  ?.copyWith(fontWeight: FontWeight.w800),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const <Widget>[
-                LargeCircularProgress(
-                  backgroundColor: secondaryColor,
-                  descriptionProgress: "Kalori",
-                  progressColor: secondaryBackgroundColor,
-                  progress: 0.25,
-                ),
-                SizedBox(
-                  width: 24,
-                ),
-                LargeCircularProgress(
-                  backgroundColor: secondaryColor,
-                  descriptionProgress: "Air",
-                  progressColor: secondaryBackgroundColor,
-                  progress: 1,
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                SmallCircularProgress(
-                  backgroundColor: const Color(0XFF5ECFF2).withOpacity(0.2),
-                  descriptionProgress: "Protein",
-                  progressColor: const Color(0XFF5ECFF2),
-                  progress: 0.5,
-                ),
-                const SizedBox(
-                  width: 24,
-                ),
-                SmallCircularProgress(
-                  backgroundColor: const Color(0XFFEF5EF2).withOpacity(0.2),
-                  descriptionProgress: "Protein",
-                  progressColor: const Color(0XFFEF5EF2),
-                  progress: 0.75,
-                ),
-                const SizedBox(
-                  width: 24,
-                ),
-                SmallCircularProgress(
-                  backgroundColor: const Color(0XFFFB958B).withOpacity(0.2),
-                  descriptionProgress: "Lemak",
-                  progressColor: errorColor,
-                  progress: 0.8,
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            const Divider(),
-            Center(
-              child: TextButton(
-                onPressed: () => Navigator.pushNamed(
-                  context,
-                  nutrientsDetailRoute,
-                  arguments: widget.uid,
-                ),
-                child: const Text('Lihat Detail'),
-              ),
-            ),
-          ],
+        child: Consumer<UserNutrientsNotifier>(
+          builder: (context, result, child) {
+            if (result.state == UserState.success) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    "Ringkasan Nutrisi Harian",
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle1
+                        ?.copyWith(fontWeight: FontWeight.w800),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      SmallCircularProgress(
+                        backgroundColor: secondaryColor,
+                        descriptionProgress: "Kalori",
+                        progressColor: secondaryBackgroundColor,
+                        progress: getNutrientValue(
+                          result.userNutrients?.currentCalories,
+                          result.userNutrients?.maxCalories,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      SmallCircularProgress(
+                        backgroundColor:
+                            const Color(0XFF5ECFF2).withOpacity(0.2),
+                        descriptionProgress: "Karbo",
+                        progressColor: const Color(0XFF5ECFF2),
+                        progress: getNutrientValue(
+                          result.userNutrients?.currentCarbohydrate,
+                          result.userNutrients?.maxCarbohydrate,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      SmallCircularProgress(
+                        backgroundColor:
+                            const Color(0XFFEF5EF2).withOpacity(0.2),
+                        descriptionProgress: "Protein",
+                        progressColor: const Color(0XFFEF5EF2),
+                        progress: getNutrientValue(
+                          result.userNutrients?.currentProtein,
+                          result.userNutrients?.maxProtein,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      SmallCircularProgress(
+                        backgroundColor:
+                            const Color(0XFFFB958B).withOpacity(0.2),
+                        descriptionProgress: "Lemak",
+                        progressColor: errorColor,
+                        progress: getNutrientValue(
+                          result.userNutrients?.currentFat,
+                          result.userNutrients?.maxFat,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Center(
+                    child: TextButton(
+                      onPressed: () => Navigator.pushNamed(
+                        context,
+                        nutrientsDetailRoute,
+                        arguments: widget.uid,
+                      ),
+                      child: Text(
+                        "Lihat Detail",
+                        style: Theme.of(context).textTheme.button?.copyWith(
+                              color: primaryColor,
+                              letterSpacing: 0.5,
+                            ),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }
+
+            return Container(
+              color: primaryBackgroundColor,
+              child: const LoadingIndicator(),
+            );
+          },
         ),
       ),
     );
@@ -450,7 +479,7 @@ class _HomePageState extends State<HomePage>
   Padding _buildListNutriNews() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Consumer<GetNewsNotifier>(
+      child: Consumer<HomePageNotifier>(
         builder: (context, result, child) {
           if (result.state == RequestState.success) {
             return ListView.separated(
@@ -480,23 +509,28 @@ class _HomePageState extends State<HomePage>
 
   SizedBox _buildListNutriShop() {
     return SizedBox(
-      height: 190,
-      child: ListView.separated(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) {
-          return const CardNutriShopHome(
-            picture:
-                'https://images.pexels.com/photos/3766180/pexels-photo-3766180.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
-            category: 'Minuman',
-            title: 'Air Jeruk',
-            price: 30000,
-          );
+      height: 200,
+      child: Consumer<HomePageNotifier>(
+        builder: (context, result, child) {
+          if (result.state == RequestState.success) {
+            final productsMap = result.products;
+            return ListView.separated(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) {
+                final products = productsMap;
+
+                return CardNutriShopHome(product: products[index]);
+              },
+              separatorBuilder: (context, index) {
+                return const SizedBox(width: 8);
+              },
+              itemCount: productsMap.length,
+            );
+          }
+
+          return const LoadingIndicator();
         },
-        separatorBuilder: (context, index) {
-          return const SizedBox(width: 8);
-        },
-        itemCount: 5,
       ),
     );
   }

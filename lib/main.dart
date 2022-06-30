@@ -125,6 +125,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => NewsFabNotifier(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<HomePageNotifier>(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
@@ -167,8 +170,10 @@ class MyApp extends StatelessWidget {
                 builder: (_) => RegisterPage(),
               );
             case forgotPasswordRoute:
+              final email = settings.arguments as String?;
+
               return MaterialPageRoute(
-                builder: (_) => ForgotPasswordPage(),
+                builder: (_) => ForgotPasswordPage(email: email),
               );
             case additionalInfoRoute:
               final user = settings.arguments as UserEntity;

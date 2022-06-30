@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:yess_nutrition/presentation/providers/common_notifiers/home_page_notifier.dart';
 
 import 'common/utils/http_ssl_pinning.dart';
 import 'data/datasources/datasources.dart';
@@ -60,7 +61,10 @@ void init() {
 
   // User storage providers
   locator.registerFactory(
-    () => UserStorageNotifier(uploadProfilePictureUseCase: locator()),
+    () => UserStorageNotifier(
+      uploadProfilePictureUseCase: locator(),
+      deleteProfilePictureUseCase: locator(),
+    ),
   );
 
   // Schedule providers
@@ -141,6 +145,14 @@ void init() {
     ),
   );
 
+  // Home Page Provider
+  locator.registerFactory(
+    () => HomePageNotifier(
+      getNewsUseCase: locator(),
+      getProductsUseCase: locator(),
+    ),
+  );
+
   /*
   * Use cases section
   */
@@ -169,6 +181,7 @@ void init() {
 
   // User storage usecases
   locator.registerLazySingleton(() => UploadProfilePicture(locator()));
+  locator.registerLazySingleton(() => DeleteProfilePicture(locator()));
 
   // Schedule usecases
   locator.registerLazySingleton(() => CreateAlarm(locator()));

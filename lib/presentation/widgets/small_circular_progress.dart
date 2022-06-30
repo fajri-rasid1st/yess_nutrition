@@ -18,7 +18,7 @@ class SmallCircularProgress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CircularPercentIndicator(
-      radius: 38.0,
+      radius: 36.0,
       lineWidth: 11,
       percent: progress,
       animation: true,
@@ -30,7 +30,7 @@ class SmallCircularProgress extends StatelessWidget {
         style: Theme.of(context)
             .textTheme
             .bodyText1
-            ?.copyWith(fontWeight: FontWeight.w800),
+            ?.copyWith(fontWeight: FontWeight.w800, fontSize: 15),
         suffix: "%",
       ),
       progressColor: progressColor,

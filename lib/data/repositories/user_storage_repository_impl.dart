@@ -23,4 +23,15 @@ class UserStorageRepositoryImpl implements UserStorageRepository {
       return const Left(StorageFailure('Oops, terjadi kesalahan'));
     }
   }
+
+  @override
+  Future<Either<Failure, void>> deleteProfilePicture(String filename) async {
+    try {
+      final result = await userStorageDataSource.deleteProfilePicture(filename);
+
+      return Right(result);
+    } on StorageException {
+      return const Left(StorageFailure('Oops, terjadi kesalahan'));
+    }
+  }
 }
