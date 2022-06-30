@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:intl/intl.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
@@ -29,7 +30,7 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
   @override
   void initState() {
     super.initState();
-
+    
     _formKey = GlobalKey<FormBuilderState>();
 
     Future.microtask(() {
@@ -121,7 +122,7 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
             offset: const Offset(0, 1),
             color: Colors.black.withOpacity(0.05),
             blurRadius: 20,
-          )
+          ),
         ],
       ),
       child: Padding(
@@ -132,20 +133,18 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
           children: <Widget>[
             Row(
               children: <Widget>[
-                Text(
-                  'Detail Nutrisi Harian',
-                  style: Theme.of(context)
-                      .textTheme
-                      .headline6!
-                      .copyWith(fontWeight: FontWeight.bold),
-                ),
-                const Spacer(),
-                Text(
-                  Utilities.dateTimeToddMMMy(DateTime.now()),
-                  style: const TextStyle(
-                    color: secondaryTextColor,
-                    fontWeight: FontWeight.bold,
+                Expanded(
+                  child: Text(
+                    'Detail Nutrisi Harian',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline6!
+                        .copyWith(fontWeight: FontWeight.bold),
                   ),
+                ),
+                Text(
+                  DateFormat('E, d MMM').format(DateTime.now()),
+                  style: const TextStyle(color: secondaryTextColor),
                 ),
               ],
             ),
@@ -360,7 +359,7 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
   String getNutrientTextValue(int? currentValue, int? maxValue) {
     if (currentValue == null || maxValue == null) return 'Belum ditentukan';
 
-    return '$currentValue / $maxValue telah terpenuhi';
+    return '$currentValue / $maxValue Telah terpenuhi';
   }
 
   double getNutrientValue(int? currentValue, int? maxValue) {

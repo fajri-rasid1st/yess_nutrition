@@ -8,10 +8,7 @@ class UserFoodScheduleEntity extends Equatable {
   final String foodImage;
   final NutrientsEntity foodNutrients;
   final int totalServing;
-  final int scheduleType;
-  final String scheduleLabel;
-  final DateTime scheduledAt;
-  final DateTime currentDate;
+  final String scheduleType;
   final bool isDone;
 
   const UserFoodScheduleEntity({
@@ -22,9 +19,6 @@ class UserFoodScheduleEntity extends Equatable {
     required this.foodNutrients,
     required this.totalServing,
     required this.scheduleType,
-    required this.scheduleLabel,
-    required this.scheduledAt,
-    required this.currentDate,
     required this.isDone,
   });
 
@@ -35,10 +29,7 @@ class UserFoodScheduleEntity extends Equatable {
     String? foodImage,
     NutrientsEntity? foodNutrients,
     int? totalServing,
-    int? scheduleType,
-    String? scheduleLabel,
-    DateTime? scheduledAt,
-    DateTime? currentDate,
+    String? scheduleType,
     bool? isDone,
   }) {
     return UserFoodScheduleEntity(
@@ -49,9 +40,6 @@ class UserFoodScheduleEntity extends Equatable {
       foodNutrients: foodNutrients ?? this.foodNutrients,
       totalServing: totalServing ?? this.totalServing,
       scheduleType: scheduleType ?? this.scheduleType,
-      scheduleLabel: scheduleLabel ?? this.scheduleLabel,
-      scheduledAt: scheduledAt ?? this.scheduledAt,
-      currentDate: currentDate ?? this.currentDate,
       isDone: isDone ?? this.isDone,
     );
   }
@@ -65,9 +53,6 @@ class UserFoodScheduleEntity extends Equatable {
         foodNutrients,
         totalServing,
         scheduleType,
-        scheduleLabel,
-        scheduledAt,
-        currentDate,
         isDone,
       ];
 }

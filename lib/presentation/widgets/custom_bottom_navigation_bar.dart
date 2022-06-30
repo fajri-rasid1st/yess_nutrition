@@ -25,7 +25,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
             color: secondaryColor.withOpacity(0.6),
             offset: const Offset(0.0, -4.0),
             blurRadius: 24,
-          )
+          ),
         ],
       ),
       child: Row(
@@ -42,7 +42,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
             index: 1,
             selectedIcon: MdiIcons.timer,
             unselectedIcon: MdiIcons.timerOutline,
-            backgroundColor: primaryBackgroundColor,
+            backgroundColor: scaffoldBackgroundColor,
           ),
           SizedBox(
             height: kBottomNavigationBarHeight + 8,

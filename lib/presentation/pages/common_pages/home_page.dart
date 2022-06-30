@@ -283,13 +283,13 @@ class _HomePageState extends State<HomePage>
               itemBuilder: (context, index) {
                 return const CardNutriTimeTask();
               },
-              itemCount: 2,
               separatorBuilder: (context, index) {
                 return const Padding(
                   padding: EdgeInsets.symmetric(vertical: 6),
                   child: Divider(),
                 );
               },
+              itemCount: 2,
             ),
             const SizedBox(height: 16),
             const Divider(),

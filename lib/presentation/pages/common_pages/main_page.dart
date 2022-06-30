@@ -22,9 +22,9 @@ class MainPage extends StatefulWidget {
 
 class _MainPageState extends State<MainPage> {
   final List<Widget> _pages = <Widget>[];
-  final NotificationHelper _notificationHelper = NotificationHelper();
 
-  late PageController _pageController;
+  late final NotificationHelper _notificationHelper;
+  late final PageController _pageController;
 
   @override
   void initState() {
@@ -37,6 +37,7 @@ class _MainPageState extends State<MainPage> {
       ShopPage(uid: widget.user.uid),
     ]);
 
+    _notificationHelper = NotificationHelper();
     _notificationHelper.configureSelectNotificationSubject(context);
 
     _pageController = PageController();

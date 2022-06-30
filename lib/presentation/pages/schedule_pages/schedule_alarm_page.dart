@@ -26,12 +26,15 @@ class ScheduleAlarmPage extends StatefulWidget {
 }
 
 class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
-  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
-  final NotificationHelper _notificationHelper = NotificationHelper();
+  late GlobalKey<FormBuilderState> _formKey;
+  late NotificationHelper _notificationHelper;
 
   @override
   void initState() {
     super.initState();
+
+    _formKey = GlobalKey<FormBuilderState>();
+    _notificationHelper = NotificationHelper();
 
     Future.microtask(() {
       Provider.of<ScheduleNotifier>(context, listen: false)
@@ -164,13 +167,10 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) {
+        final height = MediaQuery.of(context).viewInsets.bottom;
+
         return Container(
-          padding: EdgeInsets.fromLTRB(
-            20,
-            24,
-            20,
-            24 + MediaQuery.of(context).viewInsets.bottom,
-          ),
+          padding: EdgeInsets.fromLTRB(20, 24, 20, 24 + height),
           child: Consumer<ScheduleTimeNotifier>(
             builder: (context, timeNotifier, child) {
               return Column(
@@ -178,7 +178,7 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    'Atur Notifikasi',
+                    alarm != null ? 'Edit Notifikasi' : 'Tambah Notifikasi',
                     style: Theme.of(context).textTheme.headline5!.copyWith(
                           color: primaryColor,
                           fontWeight: FontWeight.bold,
@@ -215,13 +215,11 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
                       maxLength: 50,
                       decoration: const InputDecoration(
                         labelText: 'Judul',
-                        hintText: 'Makan pagi, siang, sore, etc',
+                        hintText: 'Makan pagi, siang, sore,...',
                       ),
-                      validator: FormBuilderValidators.compose([
-                        FormBuilderValidators.required(
-                          errorText: 'Bagian ini harus diisi',
-                        ),
-                      ]),
+                      validator: FormBuilderValidators.required(
+                        errorText: 'Bagian ini harus diisi',
+                      ),
                     ),
                   ),
                   const SizedBox(height: 12),
@@ -236,7 +234,7 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
                         }
                       },
                       icon: const Icon(Icons.schedule_rounded),
-                      label: const Text('Atur Jadwal'),
+                      label: const Text('Simpan Perubahan'),
                     ),
                   ),
                 ],

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
+import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/presentation/providers/food_notifiers/food_history_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/food_notifiers/search_food_notifier.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_information.dart';
@@ -176,7 +177,13 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
               itemBuilder: (context, index) {
                 return FoodListTile(
                   food: results[index],
-                  onPressedTimeIcon: () {},
+                  onPressedTimeIcon: () {
+                    Utilities.showAddFoodScheduleBottomSheet(
+                      context,
+                      uid: widget.uid,
+                      food: results[index],
+                    );
+                  },
                 );
               },
               separatorBuilder: (context, index) => const Divider(height: 1),
@@ -221,7 +228,13 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
                       await addSearchedToHistory(context, foodNotifier);
                     });
                   },
-                  onPressedTimeIcon: () {},
+                  onPressedTimeIcon: () {
+                    Utilities.showAddFoodScheduleBottomSheet(
+                      context,
+                      uid: widget.uid,
+                      food: hints[index],
+                    );
+                  },
                 );
               },
               separatorBuilder: (context, index) => const Divider(height: 1),

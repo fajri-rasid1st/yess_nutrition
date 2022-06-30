@@ -147,7 +147,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                           iconColor: primaryBackgroundColor,
                         ),
                         CustomChip(
-                          label: Utilities.dateTimeToddMMMy(
+                          label: Utilities.dateTimeTodMMMy(
                             widget.news.publishedAt,
                           ),
                           labelColor: primaryBackgroundColor,

@@ -15,6 +15,16 @@ class NutrientsEntity extends Equatable {
     required this.fiber,
   });
 
+  NutrientsEntity multiplyBy({required int value}) {
+    return NutrientsEntity(
+      calories: (calories * value).roundToDouble(),
+      carbohydrate: (carbohydrate * value).roundToDouble(),
+      protein: (protein * value).roundToDouble(),
+      fat: (fat * value).roundToDouble(),
+      fiber: (fiber * value).roundToDouble(),
+    );
+  }
+
   @override
   List<Object> get props => [calories, carbohydrate, protein, fat, fiber];
 }
