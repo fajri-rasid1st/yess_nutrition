@@ -73,22 +73,17 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
           )
         ],
       ),
-      body: RefreshIndicator(
-        onRefresh: () {
-          return context.read<UserNutrientsNotifier>().refresh(widget.uid);
-        },
-        child: Consumer<UserNutrientsNotifier>(
-          builder: ((context, notifier, child) {
-            if (notifier.state == UserState.success) {
-              return _buildDetailNutritionPage(context, notifier.userNutrients);
-            }
+      body: Consumer<UserNutrientsNotifier>(
+        builder: ((context, notifier, child) {
+          if (notifier.state == UserState.success) {
+            return _buildDetailNutritionPage(context, notifier.userNutrients);
+          }
 
-            return Container(
-              color: primaryBackgroundColor,
-              child: const LoadingIndicator(),
-            );
-          }),
-        ),
+          return Container(
+            color: primaryBackgroundColor,
+            child: const LoadingIndicator(),
+          );
+        }),
       ),
     );
   }

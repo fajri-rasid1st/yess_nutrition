@@ -213,11 +213,12 @@ class Utilities {
       ),
       builder: (context) {
         final height = MediaQuery.of(context).viewInsets.bottom;
+        final bottom = height > 0 ? 0 : 24 + height;
 
         return Container(
-          padding: EdgeInsets.fromLTRB(20, 24, 20, 24 + height),
+          padding: EdgeInsets.fromLTRB(20, 24, 20, bottom.toDouble()),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: height > 0 ? MainAxisSize.max : MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               Text(
