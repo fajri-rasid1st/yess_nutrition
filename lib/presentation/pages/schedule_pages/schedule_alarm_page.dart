@@ -122,10 +122,8 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
               context,
               title: 'Konfirmasi',
               question: 'Hapus jadwal notifikasi dari list?',
-              onPressedPrimaryAction: () {
-                deleteAlarmNotification(context, alarms[index]).then((_) {
-                  Navigator.pop(context);
-                });
+              onPressedPrimaryAction: () async {
+                await deleteAlarmNotification(context, alarms[index]);
               },
               onPressedSecondaryAction: () => Navigator.pop(context),
             );
@@ -337,18 +335,16 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
       // read alarm from database
       await scheduleNotifier.getAlarms(widget.uid);
 
-      if (scheduleNotifier.state == RequestState.success) {
-        // remove previous notification schedule
-        await _notificationHelper.removeSchedule(alarm.id!);
+      // remove previous notification schedule
+      await _notificationHelper.removeSchedule(alarm.id!);
 
-        // create new alarm notification schedule
-        await _notificationHelper.scheduleNotification(
-          id: alarm.id!,
-          uid: widget.uid,
-          title: alarm.title,
-          time: timeNotifier.time,
-        );
-      }
+      // create new alarm notification schedule
+      await _notificationHelper.scheduleNotification(
+        id: alarm.id!,
+        uid: widget.uid,
+        title: alarm.title,
+        time: timeNotifier.time,
+      );
 
       // close bottom sheet
       navigatorKey.currentState!.pop();
@@ -374,10 +370,11 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
     // read alarm from database
     await scheduleNotifier.getAlarms(widget.uid);
 
-    if (scheduleNotifier.state == RequestState.success) {
-      // remove previous notification schedule
-      await _notificationHelper.removeSchedule(alarm.id!);
-    }
+    // remove previous notification schedule
+    await _notificationHelper.removeSchedule(alarm.id!);
+
+    // remove confirm dialog
+    navigatorKey.currentState!.pop();
 
     final message = scheduleNotifier.message;
     final snackBar = Utilities.createSnackBar(message);
@@ -404,23 +401,21 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
     // read alarm from database
     await scheduleNotifier.getAlarms(widget.uid);
 
-    if (scheduleNotifier.state == RequestState.success) {
-      if (isActive) {
-        message = 'Notifikasi diaktifkan';
+    if (isActive) {
+      message = 'Notifikasi diaktifkan';
 
-        // activate alarm notification schedule
-        await _notificationHelper.scheduleNotification(
-          id: alarm.id!,
-          uid: widget.uid,
-          title: alarm.title,
-          time: Time.fromTimeOfDay(TimeOfDay.fromDateTime(alarm.scheduledAt)),
-        );
-      } else {
-        message = 'Notifikasi dinon-aktifkan';
+      // activate alarm notification schedule
+      await _notificationHelper.scheduleNotification(
+        id: alarm.id!,
+        uid: widget.uid,
+        title: alarm.title,
+        time: Time.fromTimeOfDay(TimeOfDay.fromDateTime(alarm.scheduledAt)),
+      );
+    } else {
+      message = 'Notifikasi dinon-aktifkan';
 
-        // non activate notification schedule
-        await _notificationHelper.removeSchedule(alarm.id!);
-      }
+      // non activate notification schedule
+      await _notificationHelper.removeSchedule(alarm.id!);
     }
 
     final snackBar = Utilities.createSnackBar(message);

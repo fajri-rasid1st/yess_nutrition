@@ -10,6 +10,7 @@ export 'custom_information.dart';
 export 'custom_network_image.dart';
 export 'food_hint_list_tile.dart';
 export 'food_list_tile.dart';
+export 'food_schedule_list_tile.dart';
 export 'large_circular_progress.dart';
 export 'loading_indicator.dart';
 export 'news_list_tile.dart';

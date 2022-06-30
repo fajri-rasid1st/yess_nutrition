@@ -382,7 +382,7 @@ class Utilities {
 
     if (formKey.currentState!.validate()) {
       final value = formKey.currentState!.value;
-      final foodSchedule = context.read<UserFoodScheduleNotifier>();
+      final foodScheduleNotifier = context.read<UserFoodScheduleNotifier>();
 
       // Show loading indicator
       showDialog(
@@ -391,7 +391,7 @@ class Utilities {
         builder: (context) => const LoadingIndicator(),
       );
 
-      await foodSchedule.createUserFoodSchedule(
+      await foodScheduleNotifier.createUserFoodSchedule(
         UserFoodScheduleEntity(
           id: const Uuid().v4(),
           uid: uid,
@@ -407,7 +407,7 @@ class Utilities {
       );
 
       // refresh food schedule list
-      await foodSchedule.refresh(uid);
+      await foodScheduleNotifier.refresh(uid);
 
       // Close loading indicator
       navigatorKey.currentState!.pop();
@@ -415,7 +415,7 @@ class Utilities {
       // Close dialog
       navigatorKey.currentState!.pop();
 
-      final message = foodSchedule.message;
+      final message = foodScheduleNotifier.message;
       final snackBar = Utilities.createSnackBar(message);
 
       scaffoldMessengerKey.currentState!

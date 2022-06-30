@@ -30,7 +30,7 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
   @override
   void initState() {
     super.initState();
-    
+
     _formKey = GlobalKey<FormBuilderState>();
 
     Future.microtask(() {
@@ -217,9 +217,9 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
                     context,
                     title: 'Konfirmasi',
                     question: 'Atur ulang progress dari nol?',
-                    onPressedPrimaryAction: () {
+                    onPressedPrimaryAction: () async {
                       // Reset daily progress
-                      resetDailyProgress(context, userNutrients);
+                      await resetDailyProgress(context, userNutrients);
                     },
                     onPressedSecondaryAction: () => Navigator.pop(context),
                   );
@@ -435,10 +435,10 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () {
+                  onPressed: () async {
                     // Create UserNutrientsEntity if userNutrients is null.
                     // otherwise, it will be updated.
-                    onPressedEditSubmitButton(context, userNutrients);
+                    await onPressedEditSubmitButton(context, userNutrients);
                   },
                   child: const Text(
                     'Selesai',
