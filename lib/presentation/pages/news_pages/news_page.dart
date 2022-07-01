@@ -173,26 +173,28 @@ class _NewsPageState extends State<NewsPage>
     );
   }
 
-  Padding? _buildFab(NewsFabNotifier fabNotifier) {
+  SafeArea? _buildFab(NewsFabNotifier fabNotifier) {
     return fabNotifier.isFabVisible
-        ? Padding(
-            padding: const EdgeInsets.only(top: 32),
-            child: FloatingActionButton.extended(
-              elevation: 2,
-              highlightElevation: 4,
-              backgroundColor: scaffoldBackgroundColor,
-              label: const Text(
-                'Kembali ke atas',
-                style: TextStyle(fontSize: 12),
+        ? SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 24),
+              child: FloatingActionButton.extended(
+                elevation: 2,
+                highlightElevation: 4,
+                backgroundColor: scaffoldBackgroundColor,
+                label: const Text(
+                  'Kembali ke atas',
+                  style: TextStyle(fontSize: 12),
+                ),
+                icon: const Icon(
+                  Icons.arrow_upward_rounded,
+                  size: 18,
+                ),
+                onPressed: () {
+                  _scrollController.jumpTo(0);
+                  fabNotifier.isFabVisible = false;
+                },
               ),
-              icon: const Icon(
-                Icons.arrow_upward_rounded,
-                size: 18,
-              ),
-              onPressed: () {
-                _scrollController.jumpTo(0);
-                fabNotifier.isFabVisible = false;
-              },
             ),
           )
         : null;
