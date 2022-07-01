@@ -6,6 +6,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
@@ -14,7 +15,6 @@ import 'package:yess_nutrition/common/styles/button_style.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/keys.dart';
-import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/entities.dart';
 import 'package:yess_nutrition/presentation/providers/providers.dart';
@@ -357,6 +357,17 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   Future<void> _onPressedSubmitButton(BuildContext context) async {
     FocusScope.of(context).unfocus();
 
+    // If no internet connection, return
+    if (!await InternetConnectionChecker().hasConnection) {
+      scaffoldMessengerKey.currentState!
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          Utilities.createSnackBar('Proses gagal. Koneksi internet tidak ada.'),
+        );
+
+      return;
+    }
+
     _formKey.currentState!.save();
 
     if (_formKey.currentState!.validate()) {
@@ -465,6 +476,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     await showModalBottomSheet(
       context: context,
       builder: (context) => BottomSheet(
+        enableDrag: false,
         onClosing: () {},
         builder: (context) => Column(
           mainAxisSize: MainAxisSize.min,
@@ -500,12 +512,9 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   }
 
   Future<void> _pickImage(ImageSource source) async {
-    final ImagePicker picker = ImagePicker();
+    final picker = ImagePicker();
 
-    final pickedFile = await picker.pickImage(
-      source: source,
-      imageQuality: 50,
-    );
+    final pickedFile = await picker.pickImage(source: source, imageQuality: 50);
 
     if (pickedFile == null) return;
 
@@ -522,6 +531,18 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   }
 
   Future<void> _uploadFile(String path) async {
+    // If no internet connection, return
+    if (!await InternetConnectionChecker().hasConnection) {
+      scaffoldMessengerKey.currentState!
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          Utilities.createSnackBar('Proses gagal. Koneksi internet tidak ada.'),
+        );
+
+      return;
+    }
+
+    // show loading
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -540,7 +561,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     if (uploadProfilePictureNotifier.state == UserState.success) {
       final userDataNotifier = context.read<UserDataNotifier>();
 
-      String url = uploadProfilePictureNotifier.downloadUrl;
+      final url = uploadProfilePictureNotifier.downloadUrl;
 
       // read user data
       await userDataNotifier.readUserData(widget.userData.uid);
@@ -558,18 +579,13 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
         if (!mounted) return;
 
         if (userDataNotifier.state == UserState.success) {
+          userDataNotifier.refresh(userData.uid);
+
           // close loading indicator
           Navigator.pop(context);
 
-          // Close Update Profile Page
-          Navigator.pop(context, true);
-
-          // Reload Profile Page
-          Navigator.pushReplacementNamed(
-            context,
-            profileRoute,
-            arguments: widget.userData.uid,
-          );
+          // close update profile page
+          Navigator.pop(context);
         }
       }
     } else {
@@ -585,6 +601,18 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   }
 
   Future<void> _deleteProfilePicture(String uid) async {
+    // If no internet connection, return
+    if (!await InternetConnectionChecker().hasConnection) {
+      scaffoldMessengerKey.currentState!
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          Utilities.createSnackBar('Proses gagal. Koneksi internet tidak ada.'),
+        );
+
+      return;
+    }
+
+    // show loading
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -599,26 +627,38 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     if (!mounted) return;
 
     if (userDataNotifier.state == UserState.success) {
-      if (!userDataNotifier.userData.imgUrl
-          .contains('lh3.googleusercontent.com')) {
-        final deleteProfilePictureNotifier =
-            context.read<UserStorageNotifier>();
+      final imgUrl = userDataNotifier.userData.imgUrl;
 
-        await deleteProfilePictureNotifier.deleteProfilePicture(uid);
+      if (imgUrl.isEmpty || imgUrl.contains('lh3.googleusercontent.com')) {
+        // close loading indicator
+        Navigator.pop(context);
 
-        if (!mounted) return;
+        scaffoldMessengerKey.currentState!
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            Utilities.createSnackBar('Gambar default tidak dapat dihapus'),
+          );
 
-        if (deleteProfilePictureNotifier.state == UserState.error) {
-          // close loading indicator
-          Navigator.pop(context);
-
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              Utilities.createSnackBar(deleteProfilePictureNotifier.error),
-            );
-        }
+        return;
       }
+
+      final deleteProfilePictureNotifier = context.read<UserStorageNotifier>();
+
+      await deleteProfilePictureNotifier.deleteProfilePicture(uid);
+
+      if (!mounted) return;
+
+      if (deleteProfilePictureNotifier.state == UserState.error) {
+        // close loading indicator
+        Navigator.pop(context);
+
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            Utilities.createSnackBar(deleteProfilePictureNotifier.error),
+          );
+      }
+
       // get user data
       final userData = userDataNotifier.userData;
 
@@ -631,18 +671,13 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       if (!mounted) return;
 
       if (userDataNotifier.state == UserState.success) {
+        userDataNotifier.refresh(userData.uid);
+
         // close loading indicator
         Navigator.pop(context);
 
-        // Close Update Profile Page
-        Navigator.pop(context, true);
-
-        // Reload Profile Page
-        Navigator.pushReplacementNamed(
-          context,
-          profileRoute,
-          arguments: widget.userData.uid,
-        );
+        // Close Update profile page
+        Navigator.pop(context);
       }
     }
   }

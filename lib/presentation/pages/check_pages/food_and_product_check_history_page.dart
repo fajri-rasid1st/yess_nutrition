@@ -96,7 +96,7 @@ class _FoodAndProductCheckHistoryPageState
                 key: Key('bookmarks_empty'),
                 imgPath: 'assets/svg/reading_glasses_cuate.svg',
                 title: 'Riwayat pencarian masih kosong',
-                subtitle: 'Riwayat pencarian anda akan muncul di sini.',
+                subtitle: 'Riwayat pencarian akan muncul di sini.',
               );
             }
 

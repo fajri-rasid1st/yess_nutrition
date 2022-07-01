@@ -113,8 +113,8 @@ class _RecipeBookmarksPageState extends State<RecipeBookmarksPage>
               return const CustomInformation(
                 key: Key('bookmarks_empty'),
                 imgPath: 'assets/svg/reading_glasses_cuate.svg',
-                title: 'Resep masih kosong',
-                subtitle: 'Resep bookmarks akan muncul di sini.',
+                title: 'Daftar resep masih kosong',
+                subtitle: 'Daftar resep yang disimpan akan muncul di sini.',
               );
             }
 

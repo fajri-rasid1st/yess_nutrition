@@ -91,7 +91,7 @@ class _FavoriteProductsPageState extends State<FavoriteProductsPage> {
                 key: Key('favorite_empty'),
                 imgPath: 'assets/svg/groceries_cuate.svg',
                 title: 'Produk favorite masih kosong',
-                subtitle: 'Produk favorite anda akan muncul di sini.',
+                subtitle: 'Produk favorite akan muncul di sini.',
               );
             }
 

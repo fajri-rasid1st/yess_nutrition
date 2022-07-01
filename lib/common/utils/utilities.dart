@@ -72,17 +72,6 @@ class Utilities {
     return DateFormat('d MMM y').format(dateTime);
   }
 
-  /// Function to convert [number] according to [decimalDigit]
-  static String numberToIdr(dynamic number, int decimalDigit) {
-    final currencyFormatter = NumberFormat.currency(
-      locale: 'id',
-      symbol: '',
-      decimalDigits: decimalDigit,
-    );
-
-    return currencyFormatter.format(number);
-  }
-
   /// Function to encrypt [text] with **Salsa20 engine**
   static String encryptText(String text) {
     final key = encrypt.Key.fromLength(32);
@@ -359,6 +348,7 @@ class Utilities {
     );
   }
 
+  /// Function called when user tapped submit button from [showAddFoodScheduleBottomSheet]
   static Future<void> _onPressedSubmitButton(
     BuildContext context,
     String uid,

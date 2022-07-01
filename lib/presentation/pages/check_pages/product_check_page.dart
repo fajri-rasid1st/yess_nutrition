@@ -169,7 +169,7 @@ class _ProductCheckPageState extends State<ProductCheckPage> {
                 },
                 icon: const Icon(Icons.qr_code_scanner_rounded),
                 color: primaryBackgroundColor,
-                tooltip: 'Scan Barcode/QRcode',
+                tooltip: 'Barcode/QRcode',
               ),
             ),
           ],
@@ -225,7 +225,7 @@ class _ProductCheckPageState extends State<ProductCheckPage> {
       key: Key('first_view'),
       imgPath: 'assets/svg/product_hunt_cuate.svg',
       title: 'Mau cari produk apa?',
-      subtitle: 'Hasil pencarian anda akan muncul di sini.',
+      subtitle: 'Hasil pencarian akan muncul di sini.',
     );
   }
 

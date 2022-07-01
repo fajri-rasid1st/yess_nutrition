@@ -250,7 +250,7 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
       key: Key('first_view'),
       imgPath: 'assets/svg/pasta_cuate.svg',
       title: 'Mau makan apa hari ini?',
-      subtitle: 'Hasil pencarian anda akan muncul di sini.',
+      subtitle: 'Hasil pencarian akan muncul di sini.',
     );
   }
 

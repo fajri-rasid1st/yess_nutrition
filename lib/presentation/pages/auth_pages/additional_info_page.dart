@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
@@ -249,6 +250,17 @@ class AdditionalInfoPage extends StatelessWidget {
 
   Future<void> _onPressedSubmitButton(BuildContext context) async {
     FocusScope.of(context).unfocus();
+
+    // If no internet connection, return
+    if (!await InternetConnectionChecker().hasConnection) {
+      scaffoldMessengerKey.currentState!
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          Utilities.createSnackBar('Proses gagal. Koneksi internet tidak ada.'),
+        );
+
+      return;
+    }
 
     _formKey.currentState!.save();
 

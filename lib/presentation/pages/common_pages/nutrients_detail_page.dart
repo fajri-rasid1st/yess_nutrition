@@ -442,7 +442,7 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
                     await onPressedEditSubmitButton(context, userNutrients);
                   },
                   child: const Text(
-                    'Selesai',
+                    'Simpan',
                     style: TextStyle(
                       color: primaryColor,
                       fontWeight: FontWeight.bold,

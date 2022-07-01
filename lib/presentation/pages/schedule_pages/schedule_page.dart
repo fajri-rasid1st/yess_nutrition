@@ -138,7 +138,7 @@ class _NutriTimePagePageState extends State<SchedulePage>
               children: <Widget>[
                 Expanded(
                   child: Text(
-                    'Progress Makan',
+                    'Progres Makan',
                     style: Theme.of(context)
                         .textTheme
                         .headline6!

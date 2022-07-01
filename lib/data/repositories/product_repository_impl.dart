@@ -28,7 +28,7 @@ class ProductRepositoryImpl implements ProductRepository {
 
       return Right(result);
     } on DatabaseException {
-      return const Left(DatabaseFailure('Gagal menambah product ke favorite'));
+      return const Left(DatabaseFailure('Gagal menambah produk ke favorite'));
     }
   }
 
@@ -40,7 +40,7 @@ class ProductRepositoryImpl implements ProductRepository {
 
       return Right(result.map((table) => table.toEntity()).toList());
     } on DatabaseException {
-      return const Left(DatabaseFailure('Gagal memuat product favorite'));
+      return const Left(DatabaseFailure('Gagal memuat produk favorite'));
     }
   }
 
@@ -55,7 +55,7 @@ class ProductRepositoryImpl implements ProductRepository {
 
       return Right(result);
     } on DatabaseException {
-      return const Left(DatabaseFailure('Gagal menghapus product favorite'));
+      return const Left(DatabaseFailure('Gagal menghapus produk favorite'));
     }
   }
 
@@ -81,7 +81,7 @@ class ProductRepositoryImpl implements ProductRepository {
 
       return Right(result);
     } on DatabaseException {
-      return const Left(DatabaseFailure('Gagal memuat product favorite'));
+      return const Left(DatabaseFailure('Gagal memuat produk favorite'));
     }
   }
 

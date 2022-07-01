@@ -87,7 +87,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                       : Icons.bookmark_border_rounded,
                   size: 26,
                 ),
-                tooltip: 'Bookmark',
+                tooltip: 'Save',
               );
             },
           ),

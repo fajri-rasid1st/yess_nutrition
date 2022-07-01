@@ -24,7 +24,7 @@ class ProductLocalDataSourceImpl implements ProductLocalDataSource {
     try {
       await databaseHelper.createFavoriteProduct(product);
 
-      return 'Product ditambahkan ke favorite';
+      return 'Produk ditambahkan ke favorite';
     } catch (e) {
       throw DatabaseException(e.toString());
     }
@@ -46,7 +46,7 @@ class ProductLocalDataSourceImpl implements ProductLocalDataSource {
     try {
       await databaseHelper.deleteFavoriteProduct(product);
 
-      return 'Product dihapus dari favorite';
+      return 'Produk dihapus dari favorite';
     } catch (e) {
       throw DatabaseException(e.toString());
     }
@@ -57,7 +57,7 @@ class ProductLocalDataSourceImpl implements ProductLocalDataSource {
     try {
       await databaseHelper.clearFavoriteProducts(uid);
 
-      return 'Semua product favorite berhasil dihapus';
+      return 'Semua produk favorite berhasil dihapus';
     } catch (e) {
       throw DatabaseException(e.toString());
     }

@@ -165,7 +165,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
             isExist ? Icons.bookmark_rounded : Icons.bookmark_border_rounded,
             size: 26,
           ),
-          tooltip: 'Bookmark',
+          tooltip: 'Save',
         );
       },
     );
@@ -248,7 +248,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
               Padding(
                 padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
                 child: Text(
-                  'Nutrition Facts',
+                  'Kandungan Nutrisi',
                   style: Theme.of(context)
                       .textTheme
                       .headline6!
@@ -335,7 +335,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
               _buildLabelsSection(
                 context,
                 recipeDetail.cautionLabels,
-                'Tidak dianjurkan untuk',
+                'Kategori penyakit/alergi',
                 errorColor,
                 errorColor,
                 errorColor.withOpacity(0.2),

@@ -53,7 +53,7 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
         toolbarHeight: 64,
         centerTitle: true,
         title: const Text(
-          'NutriTime Notification',
+          'NutriTime Notifikasi',
           style: TextStyle(
             color: primaryColor,
             fontWeight: FontWeight.bold,
@@ -121,7 +121,7 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
             Utilities.showConfirmDialog(
               context,
               title: 'Konfirmasi',
-              question: 'Hapus jadwal notifikasi dari list?',
+              question: 'Hapus jadwal notifikasi dari daftar?',
               onPressedPrimaryAction: () async {
                 await deleteAlarmNotification(context, alarms[index]);
               },

@@ -164,7 +164,7 @@ class UserFirestoreDataSourceImpl implements UserFirestoreDataSource {
 
       await reference.update(document);
 
-      return 'Jadwal kebutuhan harian berhasil diubah';
+      return 'Jadwal kebutuhan harian berhasil diedit';
     } catch (e) {
       throw FirestoreException(e.toString());
     }
@@ -246,7 +246,7 @@ class UserFirestoreDataSourceImpl implements UserFirestoreDataSource {
 
       await reference.delete();
 
-      return 'Jadwal berhasil dihapus dari list';
+      return 'Jadwal makan berhasil dihapus dari list';
     } catch (e) {
       throw FirestoreException(e.toString());
     }

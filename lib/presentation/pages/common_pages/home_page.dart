@@ -163,7 +163,7 @@ class _HomePageState extends State<HomePage>
                       Icons.settings_outlined,
                       color: primaryBackgroundColor,
                     ),
-                    tooltip: 'Pengaturan',
+                    tooltip: 'Settings',
                   ),
                 ),
               ],

@@ -47,7 +47,7 @@ class GradientColors {
   ];
 }
 
-// Gradient template
+// Gradient templates
 const gradientTemplates = <GradientColors>[
   GradientColors(GradientColors.morning),
   GradientColors(GradientColors.day),

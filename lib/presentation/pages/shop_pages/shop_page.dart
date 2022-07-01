@@ -89,7 +89,7 @@ class _ShopPageState extends State<ShopPage>
                     ),
                     icon: const Icon(Icons.favorite),
                     color: primaryColor,
-                    tooltip: 'Favorite',
+                    tooltip: 'Favorites',
                   ),
                 ),
               ),
