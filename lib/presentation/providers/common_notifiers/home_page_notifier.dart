@@ -31,58 +31,12 @@ class HomePageNotifier extends ChangeNotifier {
   final int _randIndex = math.Random().nextInt(8);
   int get randIndex => _randIndex;
 
-  Future<void> getAllContents() async {
-    _state = RequestState.loading;
-    notifyListeners();
+  Future<void> getAllContents({bool refresh = false}) async {
+    if (!refresh) {
+      _state = RequestState.loading;
+      notifyListeners();
+    }
 
-    final resultNews = await getNewsUseCase.execute(5, 1);
-
-    final resultFoodProducts =
-        await getProductsUseCase.execute(foodProductBaseUrls[randIndex]);
-
-    final resultHealthProducts =
-        await getProductsUseCase.execute(healthProductBaseUrls[randIndex]);
-
-    resultNews.fold(
-      (failure) {
-        _message = failure.message;
-        _state = RequestState.error;
-      },
-      (news) {
-        _news = news;
-        _state = RequestState.success;
-      },
-    );
-
-    resultFoodProducts.fold(
-      (failure) {
-        _message = failure.message;
-        _state = RequestState.error;
-      },
-      (productsFood) {
-        _products = productsFood;
-        _state = RequestState.success;
-      },
-    );
-
-    resultHealthProducts.fold(
-      (failure) {
-        _message = failure.message;
-        _state = RequestState.error;
-      },
-      (productsHealth) {
-        _products = _products..addAll(productsHealth);
-        _state = RequestState.success;
-      },
-    );
-
-    _products.shuffle();
-    _products.removeRange(10, _products.length);
-
-    notifyListeners();
-  }
-
-  Future<void> refresh() async {
     final resultNews = await getNewsUseCase.execute(5, 1);
 
     final resultFoodProducts =

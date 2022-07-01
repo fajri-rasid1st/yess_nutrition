@@ -39,30 +39,17 @@ class SearchFoodNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> searchFoods({required String query}) async {
+  Future<void> searchFoods({
+    required String query,
+    bool refresh = false,
+  }) async {
     _onSubmittedQuery = query;
 
-    _state = RequestState.loading;
-    notifyListeners();
+    if (!refresh) {
+      _state = RequestState.loading;
+      notifyListeners();
+    }
 
-    final result = await searchFoodsUseCase.execute('ingr=$query');
-
-    result.fold(
-      (failure) {
-        _message = failure.message;
-        _state = RequestState.error;
-      },
-      (results) {
-        _results = results['parsed']!;
-        _hints = results['hints']!;
-        _state = RequestState.success;
-      },
-    );
-
-    notifyListeners();
-  }
-
-  Future<void> refresh() async {
     final result = await searchFoodsUseCase.execute('ingr=$_onSubmittedQuery');
 
     result.fold(

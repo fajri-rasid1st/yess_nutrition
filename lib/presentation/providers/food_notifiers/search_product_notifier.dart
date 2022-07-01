@@ -40,30 +40,17 @@ class SearchProductNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> searchProduct({required String upc}) async {
+  Future<void> searchProduct({
+    required String upc,
+    bool refresh = false,
+  }) async {
     _onSubmittedQuery = upc;
 
-    _state = RequestState.loading;
-    notifyListeners();
+    if (!refresh) {
+      _state = RequestState.loading;
+      notifyListeners();
+    }
 
-    final result = await searchFoodsUseCase.execute('upc=$upc');
-
-    result.fold(
-      (failure) {
-        _failure = failure;
-        _state = RequestState.error;
-      },
-      (results) {
-        _results = results['parsed']!;
-        _hints = results['hints']!;
-        _state = RequestState.success;
-      },
-    );
-
-    notifyListeners();
-  }
-
-  Future<void> refresh() async {
     final result = await searchFoodsUseCase.execute('upc=$_onSubmittedQuery');
 
     result.fold(

@@ -265,7 +265,10 @@ class _RecipeCheckPageState extends State<RecipeCheckPage> {
 
                 Future.wait([
                   Future.delayed(const Duration(seconds: 1)),
-                  recipesNotifier.refresh(),
+                  recipesNotifier.searchRecipes(
+                    query: recipesNotifier.onSubmittedQuery,
+                    refresh: true,
+                  ),
                 ]).then((_) {
                   recipesNotifier.isReload = false;
                 });

@@ -33,13 +33,15 @@ class GetNewsNotifier extends ChangeNotifier {
 
   int _currentPageLoad = 0;
 
-  Future<void> getNews({required int page}) async {
-    _state = RequestState.loading;
-    notifyListeners();
-
-    final result = await getNewsUseCase.execute(10, page);
-
+  Future<void> getNews({required int page, bool refresh = false}) async {
     _currentPageLoad = page;
+
+    if (!refresh) {
+      _state = RequestState.loading;
+      notifyListeners();
+    }
+
+    final result = await getNewsUseCase.execute(10, _currentPageLoad);
 
     result.fold(
       (failure) {
@@ -49,26 +51,6 @@ class GetNewsNotifier extends ChangeNotifier {
       (news) {
         _news = news;
         _hasMoreData = true;
-        _state = RequestState.success;
-      },
-    );
-
-    notifyListeners();
-  }
-
-  Future<void> getNewsByCount({required int count}) async {
-    _state = RequestState.loading;
-    notifyListeners();
-
-    final result = await getNewsUseCase.execute(count, 1);
-
-    result.fold(
-      (failure) {
-        _message = failure.message;
-        _state = RequestState.error;
-      },
-      (news) {
-        _news = news;
         _state = RequestState.success;
       },
     );
@@ -95,26 +77,6 @@ class GetNewsNotifier extends ChangeNotifier {
         } else {
           _news.addAll(news);
         }
-      },
-    );
-
-    notifyListeners();
-  }
-
-  Future<void> refresh() async {
-    _currentPageLoad = 1;
-
-    final result = await getNewsUseCase.execute(10, _currentPageLoad);
-
-    result.fold(
-      (failure) {
-        _message = failure.message;
-        _state = RequestState.error;
-      },
-      (news) {
-        _news = news;
-        _hasMoreData = true;
-        _state = RequestState.success;
       },
     );
 

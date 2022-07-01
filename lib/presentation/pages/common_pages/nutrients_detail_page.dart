@@ -15,29 +15,12 @@ import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firest
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 import 'package:yess_nutrition/presentation/widgets/nutrient_input_field.dart';
 
-class NutrientsDetailPage extends StatefulWidget {
+class NutrientsDetailPage extends StatelessWidget {
   final String uid;
 
-  const NutrientsDetailPage({Key? key, required this.uid}) : super(key: key);
+  NutrientsDetailPage({Key? key, required this.uid}) : super(key: key);
 
-  @override
-  State<NutrientsDetailPage> createState() => _NutrientsDetailPageState();
-}
-
-class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
-  late final GlobalKey<FormBuilderState> _formKey;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _formKey = GlobalKey<FormBuilderState>();
-
-    Future.microtask(() {
-      Provider.of<UserNutrientsNotifier>(context, listen: false)
-          .readUserNutrients(widget.uid);
-    });
-  }
+  final GlobalKey<FormBuilderState> _formKey = GlobalKey<FormBuilderState>();
 
   @override
   Widget build(BuildContext context) {
@@ -491,7 +474,7 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
       if (userNutrients == null) {
         await userNutrientsNotifier.createUserNutrients(
           UserNutrientsEntity(
-            uid: widget.uid,
+            uid: uid,
             maxCalories: int.parse(value['calories']),
             maxCarbohydrate: int.parse(value['carbohydrate']),
             maxProtein: int.parse(value['protein']),
@@ -510,7 +493,7 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
         );
       }
 
-      await userNutrientsNotifier.refresh(widget.uid);
+      await userNutrientsNotifier.readUserNutrients(uid, refresh: true);
 
       // Close loading indicator
       navigatorKey.currentState!.pop();
@@ -567,7 +550,7 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
       ),
     );
 
-    await userNutrientsNotifier.refresh(widget.uid);
+    await userNutrientsNotifier.readUserNutrients(uid, refresh: true);
 
     // Close loading indicator
     navigatorKey.currentState!.pop();

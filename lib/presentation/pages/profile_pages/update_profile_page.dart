@@ -429,7 +429,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     await userDataNotifier.updateUserData(userData);
 
     // refresh data
-    await userDataNotifier.refresh(widget.userData.uid);
+    await userDataNotifier.readUserData(widget.userData.uid, refresh: true);
 
     if (userDataNotifier.state == UserState.success) return Future.value(true);
 
@@ -463,7 +463,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     await userNutrientsNotifier.createUserNutrients(userNeeds);
 
     // refresh data
-    await userNutrientsNotifier.refresh(userData.uid);
+    await userNutrientsNotifier.readUserNutrients(userData.uid, refresh: true);
 
     if (userNutrientsNotifier.state == UserState.success) {
       return Future.value(true);
@@ -579,7 +579,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
         if (!mounted) return;
 
         if (userDataNotifier.state == UserState.success) {
-          userDataNotifier.refresh(userData.uid);
+          userDataNotifier.readUserData(userData.uid, refresh: true);
 
           // close loading indicator
           Navigator.pop(context);
@@ -671,8 +671,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       if (!mounted) return;
 
       if (userDataNotifier.state == UserState.success) {
-        userDataNotifier.refresh(userData.uid);
-
+        userDataNotifier.readUserData(userData.uid, refresh: true);
         // close loading indicator
         Navigator.pop(context);
 

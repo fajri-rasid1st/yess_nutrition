@@ -210,10 +210,8 @@ class MyApp extends StatelessWidget {
               );
 
             case profileRoute:
-              final uid = settings.arguments as String;
-
               return MaterialPageRoute(
-                builder: (_) => ProfilePage(uid: uid),
+                builder: (_) => const ProfilePage(),
                 settings: settings,
               );
             case updateProfileRoute:

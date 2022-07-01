@@ -50,9 +50,11 @@ class UserNutrientsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> readUserNutrients(String uid) async {
-    _state = UserState.empty;
-    notifyListeners();
+  Future<void> readUserNutrients(String uid, {bool refresh = false}) async {
+    if (!refresh) {
+      _state = UserState.empty;
+      notifyListeners();
+    }
 
     final result = await readUserNutrientsUseCase.execute(uid);
 
@@ -80,23 +82,6 @@ class UserNutrientsNotifier extends ChangeNotifier {
       },
       (message) {
         _message = message;
-        _state = UserState.success;
-      },
-    );
-
-    notifyListeners();
-  }
-
-  Future<void> refresh(String uid) async {
-    final result = await readUserNutrientsUseCase.execute(uid);
-
-    result.fold(
-      (failure) {
-        _message = failure.message;
-        _state = UserState.error;
-      },
-      (userNutrients) {
-        _userNutrients = userNutrients;
         _state = UserState.success;
       },
     );

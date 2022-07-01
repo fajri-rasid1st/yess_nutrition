@@ -36,29 +36,17 @@ class SearchRecipesNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> searchRecipes({required String query}) async {
+  Future<void> searchRecipes({
+    required String query,
+    bool refresh = false,
+  }) async {
     _onSubmittedQuery = query;
 
-    _state = RequestState.loading;
-    notifyListeners();
+    if (!refresh) {
+      _state = RequestState.loading;
+      notifyListeners();
+    }
 
-    final result = await searchRecipesUseCase.execute(query);
-
-    result.fold(
-      (failure) {
-        _message = failure.message;
-        _state = RequestState.error;
-      },
-      (results) {
-        _results = results;
-        _state = RequestState.success;
-      },
-    );
-
-    notifyListeners();
-  }
-
-  Future<void> refresh() async {
     final result = await searchRecipesUseCase.execute(_onSubmittedQuery);
 
     result.fold(

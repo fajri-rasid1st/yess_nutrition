@@ -225,7 +225,7 @@ class _NewsPageState extends State<NewsPage>
 
   RefreshIndicator _buildNewsList(GetNewsNotifier newsNotifier) {
     return RefreshIndicator(
-      onRefresh: () => newsNotifier.refresh(),
+      onRefresh: () => newsNotifier.getNews(page: 1, refresh: true),
       child: SlidableAutoCloseBehavior(
         child: ListView.separated(
           physics: const NeverScrollableScrollPhysics(),
@@ -252,7 +252,11 @@ class _NewsPageState extends State<NewsPage>
 
   RefreshIndicator _buildSearchList(SearchNewsNotifier searchNotifier) {
     return RefreshIndicator(
-      onRefresh: () => searchNotifier.refresh(),
+      onRefresh: () => searchNotifier.searchNews(
+        page: 1,
+        query: searchNotifier.onSubmittedQuery,
+        refresh: true,
+      ),
       child: SlidableAutoCloseBehavior(
         child: ListView.separated(
           physics: const NeverScrollableScrollPhysics(),
@@ -373,7 +377,7 @@ class _NewsPageState extends State<NewsPage>
 
                   Future.wait([
                     Future.delayed(const Duration(seconds: 1)),
-                    newsNotifier.refresh(),
+                    newsNotifier.getNews(page: 1, refresh: true),
                   ]).then((_) {
                     newsNotifier.isReload = false;
                   });
@@ -412,7 +416,11 @@ class _NewsPageState extends State<NewsPage>
 
                   Future.wait([
                     Future.delayed(const Duration(seconds: 1)),
-                    searchNotifier.refresh(),
+                    searchNotifier.searchNews(
+                      page: 1,
+                      query: searchNotifier.onSubmittedQuery,
+                      refresh: true,
+                    ),
                   ]).then((_) {
                     searchNotifier.isReload = false;
                   });

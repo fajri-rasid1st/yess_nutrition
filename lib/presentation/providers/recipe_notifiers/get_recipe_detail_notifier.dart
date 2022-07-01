@@ -26,30 +26,19 @@ class GetRecipeDetailNotifier extends ChangeNotifier {
   }
 
   String _recipeId = '';
+  String get recipeId => _recipeId;
 
-  Future<void> getRecipeDetail({required String recipeId}) async {
+  Future<void> getRecipeDetail({
+    required String recipeId,
+    bool refresh = false,
+  }) async {
     _recipeId = recipeId;
 
-    _state = RequestState.loading;
-    notifyListeners();
+    if (!refresh) {
+      _state = RequestState.loading;
+      notifyListeners();
+    }
 
-    final result = await getRecipeDetailUseCase.execute(recipeId);
-
-    result.fold(
-      (failure) {
-        _message = failure.message;
-        _state = RequestState.error;
-      },
-      (recipe) {
-        _recipe = recipe;
-        _state = RequestState.success;
-      },
-    );
-
-    notifyListeners();
-  }
-
-  Future<void> refresh() async {
     final result = await getRecipeDetailUseCase.execute(_recipeId);
 
     result.fold(

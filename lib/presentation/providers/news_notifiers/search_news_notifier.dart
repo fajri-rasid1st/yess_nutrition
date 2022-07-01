@@ -44,15 +44,24 @@ class SearchNewsNotifier extends ChangeNotifier {
 
   int _currentPageLoad = 0;
 
-  Future<void> searchNews({required int page, required String query}) async {
+  Future<void> searchNews({
+    required int page,
+    required String query,
+    bool refresh = false,
+  }) async {
+    _currentPageLoad = page;
     _onSubmittedQuery = query;
 
-    _state = RequestState.loading;
-    notifyListeners();
+    if (!refresh) {
+      _state = RequestState.loading;
+      notifyListeners();
+    }
 
-    final result = await searchNewsUseCase.execute(10, page, query);
-
-    _currentPageLoad = page;
+    final result = await searchNewsUseCase.execute(
+      10,
+      _currentPageLoad,
+      _onSubmittedQuery,
+    );
 
     result.fold(
       (failure) {
@@ -95,33 +104,6 @@ class SearchNewsNotifier extends ChangeNotifier {
         } else {
           _results.addAll(results);
         }
-      },
-    );
-
-    notifyListeners();
-  }
-
-  Future<void> refresh() async {
-    _currentPageLoad = 1;
-
-    final result = await searchNewsUseCase.execute(
-      10,
-      _currentPageLoad,
-      _onSubmittedQuery,
-    );
-
-    result.fold(
-      (failure) {
-        _message = failure.message;
-        _state = RequestState.error;
-      },
-      (results) {
-        if (results.isNotEmpty) {
-          _hasMoreData = true;
-        }
-
-        _results = results;
-        _state = RequestState.success;
       },
     );
 

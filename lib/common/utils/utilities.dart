@@ -398,7 +398,7 @@ class Utilities {
       );
 
       // refresh food schedule list
-      await foodScheduleNotifier.refresh(uid);
+      await foodScheduleNotifier.readUserFoodSchedules(uid, refresh: true);
 
       // Close loading indicator
       navigatorKey.currentState!.pop();

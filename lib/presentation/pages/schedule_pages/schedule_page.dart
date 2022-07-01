@@ -27,16 +27,6 @@ class SchedulePage extends StatefulWidget {
 class _NutriTimePagePageState extends State<SchedulePage>
     with AutomaticKeepAliveClientMixin {
   @override
-  void initState() {
-    super.initState();
-
-    Future.microtask(() {
-      Provider.of<UserFoodScheduleNotifier>(context, listen: false)
-          .readUserFoodSchedules(widget.uid);
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     super.build(context);
 
@@ -335,10 +325,13 @@ class _NutriTimePagePageState extends State<SchedulePage>
     );
 
     // Refresh user food schedule list
-    await userFoodScheduleNotifier.refresh(widget.uid);
+    await userFoodScheduleNotifier.readUserFoodSchedules(
+      widget.uid,
+      refresh: true,
+    );
 
     // Read user nutrients notifier, without changing state to empty
-    await userNutrientsNotifier.refresh(widget.uid);
+    await userNutrientsNotifier.readUserNutrients(widget.uid, refresh: true);
 
     final userNutrients = userNutrientsNotifier.userNutrients;
 
@@ -360,7 +353,7 @@ class _NutriTimePagePageState extends State<SchedulePage>
     }
 
     // Refresh user nutrients
-    await userNutrientsNotifier.refresh(widget.uid);
+    await userNutrientsNotifier.readUserNutrients(widget.uid, refresh: true);
 
     // Close loading indicator
     navigatorKey.currentState!.pop();
@@ -403,7 +396,7 @@ class _NutriTimePagePageState extends State<SchedulePage>
     await foodScheduleNotifier.deleteUserFoodSchedule(foodSchedule);
 
     // Refresh user food schedule list
-    await foodScheduleNotifier.refresh(widget.uid);
+    await foodScheduleNotifier.readUserFoodSchedules(widget.uid, refresh: true);
 
     // Close loading indicator
     navigatorKey.currentState!.pop();
@@ -446,7 +439,7 @@ class _NutriTimePagePageState extends State<SchedulePage>
     await foodScheduleNotifier.resetUserFoodSchedules(widget.uid);
 
     // Refresh user food schedule list
-    await foodScheduleNotifier.refresh(widget.uid);
+    await foodScheduleNotifier.readUserFoodSchedules(widget.uid, refresh: true);
 
     // Close loading indicator
     navigatorKey.currentState!.pop();

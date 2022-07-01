@@ -52,9 +52,11 @@ class UserFoodScheduleNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> readUserFoodSchedules(String uid) async {
-    _state = UserState.empty;
-    notifyListeners();
+  Future<void> readUserFoodSchedules(String uid, {bool refresh = false}) async {
+    if (!refresh) {
+      _state = UserState.empty;
+      notifyListeners();
+    }
 
     final result = await readUserFoodSchedulesUseCase.execute(uid);
 
@@ -116,23 +118,6 @@ class UserFoodScheduleNotifier extends ChangeNotifier {
       },
       (message) {
         _message = message;
-        _state = UserState.success;
-      },
-    );
-
-    notifyListeners();
-  }
-
-  Future<void> refresh(String uid) async {
-    final result = await readUserFoodSchedulesUseCase.execute(uid);
-
-    result.fold(
-      (failure) {
-        _message = failure.message;
-        _state = UserState.error;
-      },
-      (foodSchedules) {
-        _foodSchedules = foodSchedules;
         _state = UserState.success;
       },
     );

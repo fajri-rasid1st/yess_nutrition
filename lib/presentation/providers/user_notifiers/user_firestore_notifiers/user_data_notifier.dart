@@ -55,9 +55,11 @@ class UserDataNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> readUserData(String uid) async {
-    _state = UserState.empty;
-    notifyListeners();
+  Future<void> readUserData(String uid, {bool refresh = false}) async {
+    if (!refresh) {
+      _state = UserState.empty;
+      notifyListeners();
+    }
 
     final result = await readUserDataUseCase.execute(uid);
 
@@ -101,23 +103,6 @@ class UserDataNotifier extends ChangeNotifier {
       },
       (isNewUser) {
         _isNewUser = isNewUser;
-        _state = UserState.success;
-      },
-    );
-
-    notifyListeners();
-  }
-
-  Future<void> refresh(String uid) async {
-    final result = await readUserDataUseCase.execute(uid);
-
-    result.fold(
-      (failure) {
-        _error = failure.message;
-        _state = UserState.error;
-      },
-      (userData) {
-        _userData = userData;
         _state = UserState.success;
       },
     );

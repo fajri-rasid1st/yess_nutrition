@@ -12,9 +12,7 @@ import 'package:yess_nutrition/presentation/widgets/custom_network_image.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
 class ProfilePage extends StatefulWidget {
-  final String uid;
-
-  const ProfilePage({Key? key, required this.uid}) : super(key: key);
+  const ProfilePage({Key? key}) : super(key: key);
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -22,16 +20,6 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool status = false;
-
-  @override
-  void initState() {
-    super.initState();
-
-    Future.microtask(() {
-      Provider.of<UserDataNotifier>(context, listen: false)
-          .readUserData(widget.uid);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {

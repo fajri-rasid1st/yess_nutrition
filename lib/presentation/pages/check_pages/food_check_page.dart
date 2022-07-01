@@ -284,7 +284,10 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
                   Future.delayed(const Duration(seconds: 1)),
 
                   // refresh page
-                  foodNotifier.refresh(),
+                  foodNotifier.searchFoods(
+                    query: foodNotifier.onSubmittedQuery,
+                    refresh: true,
+                  ),
                 ]).then((_) async {
                   // add every search results to history
                   await addSearchedToHistory(context, foodNotifier);

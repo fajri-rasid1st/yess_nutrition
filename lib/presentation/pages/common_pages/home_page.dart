@@ -154,11 +154,7 @@ class _HomePageState extends State<HomePage>
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: IconButton(
-                    onPressed: () => Navigator.pushNamed(
-                      context,
-                      profileRoute,
-                      arguments: widget.uid,
-                    ),
+                    onPressed: () => Navigator.pushNamed(context, profileRoute),
                     icon: const Icon(
                       Icons.settings_outlined,
                       color: primaryBackgroundColor,
@@ -186,8 +182,11 @@ class _HomePageState extends State<HomePage>
       child: RefreshIndicator(
         onRefresh: () {
           return Future.microtask(() {
-            context.read<HomePageNotifier>().refresh();
-            context.read<UserNutrientsNotifier>().refresh(widget.uid);
+            context.read<HomePageNotifier>().getAllContents(refresh: true);
+            context.read<UserNutrientsNotifier>().readUserNutrients(
+                  widget.uid,
+                  refresh: true,
+                );
           });
         },
         child: SingleChildScrollView(
@@ -487,8 +486,8 @@ class _HomePageState extends State<HomePage>
           if (result.state == RequestState.success) {
             return ListView.separated(
               physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
               padding: EdgeInsets.zero,
+              shrinkWrap: true,
               itemBuilder: (context, index) {
                 final news = result.news[index];
 

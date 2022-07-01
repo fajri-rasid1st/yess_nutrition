@@ -517,7 +517,10 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                     Future.delayed(const Duration(seconds: 1)),
 
                     // refresh page
-                    detailNotifier.refresh(),
+                    detailNotifier.getRecipeDetail(
+                      recipeId: detailNotifier.recipeId,
+                      refresh: true,
+                    ),
                   ]).then((_) {
                     // set isReload to true
                     detailNotifier.isReload = false;
