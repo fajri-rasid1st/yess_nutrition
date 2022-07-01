@@ -8,6 +8,7 @@ import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/user_auth_notifiers/user_auth_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_data_notifier.dart';
+import 'package:yess_nutrition/presentation/widgets/custom_network_image.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -35,8 +36,8 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Consumer<UserDataNotifier>(
-      builder: (context, user, child) {
-        if (user.state == UserState.success) {
+      builder: (context, result, child) {
+        if (result.state == UserState.success) {
           return Scaffold(
             body: SafeArea(
               child: SingleChildScrollView(
@@ -63,16 +64,16 @@ class _ProfilePageState extends State<ProfilePage> {
                           ),
                           const Expanded(
                             child: Text(
-                              "Pengaturan Profil",
+                              'Pengaturan Profil',
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 16,
                                 color: primaryTextColor,
                                 fontWeight: FontWeight.bold,
+                                fontSize: 16,
                               ),
                             ),
                           ),
-                          const SizedBox(width: 45),
+                          const SizedBox(width: 46),
                         ],
                       ),
                     ),
@@ -85,14 +86,16 @@ class _ProfilePageState extends State<ProfilePage> {
                         color: secondaryColor,
                       ),
                       clipBehavior: Clip.hardEdge,
-                      child: user.userData.imgUrl.isEmpty
+                      child: result.userData.imgUrl.isEmpty
                           ? Image.asset(
                               'assets/img/default_user_pict.png',
                               fit: BoxFit.cover,
                             )
-                          : Image.network(
-                              user.userData.imgUrl,
+                          : CustomNetworkImage(
+                              imgUrl: result.userData.imgUrl,
                               fit: BoxFit.cover,
+                              placeHolderSize: 60,
+                              errorIcon: Icons.person_off_rounded,
                             ),
                     ),
                     const SizedBox(height: 20),
@@ -103,47 +106,46 @@ class _ProfilePageState extends State<ProfilePage> {
                           child: ConstrainedBox(
                             constraints: const BoxConstraints(maxWidth: 300),
                             child: Text(
-                              user.userData.name,
+                              result.userData.name,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
-                                fontSize: 24,
                                 color: primaryTextColor,
-                                fontWeight: FontWeight.w800,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 24,
                               ),
                             ),
                           ),
                         ),
                         const SizedBox(width: 2),
                         Icon(
-                          user.userData.gender == "Laki-laki"
+                          result.userData.gender == 'Laki-laki'
                               ? MdiIcons.genderMale
                               : MdiIcons.genderFemale,
-                          size: 24,
                           color: primaryColor,
                         ),
                       ],
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 6),
                     Text(
-                      "${user.userData.age} Tahun",
+                      '${result.userData.age} Tahun',
                       style: const TextStyle(
-                        fontSize: 14,
                         color: secondaryTextColor,
                         fontWeight: FontWeight.w500,
+                        fontSize: 14,
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 12),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 48),
                       child: Text(
-                        user.userData.bio.isNotEmpty
-                            ? user.userData.bio
-                            : "Belum ada bio.",
+                        result.userData.bio.isNotEmpty
+                            ? result.userData.bio
+                            : 'Belum ada bio.',
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          fontSize: 14,
                           color: primaryTextColor.withOpacity(0.8),
                           fontWeight: FontWeight.w400,
+                          fontSize: 14,
                         ),
                       ),
                     ),
@@ -153,20 +155,20 @@ class _ProfilePageState extends State<ProfilePage> {
                         Navigator.pushNamed(
                           context,
                           updateProfileRoute,
-                          arguments: user.userData,
+                          arguments: result.userData,
                         );
                       },
                       icon: const Icon(
                         MdiIcons.accountEditOutline,
                         size: 16,
                       ),
-                      label: const Text("Perbaharui Profil"),
+                      label: const Text('Perbaharui Profil'),
                       style: ElevatedButton.styleFrom(
                         elevation: 0,
                         textStyle: Theme.of(context)
                             .textTheme
-                            .button
-                            ?.copyWith(letterSpacing: 0.25),
+                            .button!
+                            .copyWith(letterSpacing: 0.25),
                         padding: const EdgeInsets.symmetric(
                           vertical: 12,
                           horizontal: 18,
@@ -210,8 +212,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                                 child: const Icon(
                                   MdiIcons.bellOutline,
-                                  size: 22,
                                   color: primaryColor,
+                                  size: 22,
                                 ),
                               ),
                               const SizedBox(width: 12),
@@ -219,20 +221,20 @@ class _ProfilePageState extends State<ProfilePage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: const <Widget>[
                                   Text(
-                                    "Pemberitahuan",
+                                    'Pemberitahuan',
                                     style: TextStyle(
-                                      fontSize: 16,
                                       fontWeight: FontWeight.w600,
                                       color: primaryTextColor,
+                                      fontSize: 16,
                                     ),
                                   ),
                                   SizedBox(height: 4),
                                   Text(
-                                    "Hidup atau matikan pemberitahuan",
+                                    'Hidup atau matikan pemberitahuan',
                                     style: TextStyle(
-                                      fontSize: 11,
                                       fontWeight: FontWeight.w400,
                                       color: primaryTextColor,
+                                      fontSize: 11,
                                     ),
                                   ),
                                 ],
@@ -245,10 +247,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                 inactiveToggleColor: primaryColor,
                                 activeColor: primaryColor,
                                 value: status,
-                                onToggle: (val) {
-                                  setState(() {
-                                    status = val;
-                                  });
+                                onToggle: (value) {
+                                  setState(() => status = value);
                                 },
                               ),
                             ],
@@ -256,12 +256,12 @@ class _ProfilePageState extends State<ProfilePage> {
                           const SizedBox(height: 16),
                           _buildListTileProfile(
                             MdiIcons.lockOutline,
-                            "Ubah Password",
+                            'Ubah Password',
                             () {
                               Navigator.pushNamed(
                                 context,
                                 forgotPasswordRoute,
-                                arguments: user.userData.email,
+                                arguments: result.userData.email,
                               );
                             },
                           ),
@@ -272,13 +272,13 @@ class _ProfilePageState extends State<ProfilePage> {
                           const SizedBox(height: 16),
                           _buildListTileProfile(
                             MdiIcons.informationOutline,
-                            "Informasi",
+                            'Informasi',
                             () {},
                           ),
                           const SizedBox(height: 16),
                           _buildListTileProfile(
                             MdiIcons.logout,
-                            "Keluar",
+                            'Keluar',
                             () {
                               Utilities.showConfirmDialog(
                                 context,
@@ -297,8 +297,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                     (route) => false,
                                   );
                                 },
-                                onPressedSecondaryAction: () =>
-                                    Navigator.pop(context),
+                                onPressedSecondaryAction: () {
+                                  Navigator.pop(context);
+                                },
                               );
                             },
                           ),
@@ -310,14 +311,14 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
           );
-        } else {
-          return const Scaffold(body: LoadingIndicator());
         }
+
+        return const Scaffold(body: LoadingIndicator());
       },
     );
   }
 
-  Widget _buildListTileProfile(
+  ClipRRect _buildListTileProfile(
     IconData icon,
     String title,
     VoidCallback onTap,
@@ -337,24 +338,24 @@ class _ProfilePageState extends State<ProfilePage> {
                 ),
                 child: Icon(
                   icon,
-                  size: 22,
                   color: primaryColor,
+                  size: 22,
                 ),
               ),
               const SizedBox(width: 12),
               Text(
                 title,
                 style: const TextStyle(
-                  fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: primaryTextColor,
+                  fontSize: 16,
                 ),
               ),
               const Spacer(),
               const Icon(
                 MdiIcons.chevronRight,
-                size: 26,
                 color: primaryColor,
+                size: 26,
               ),
             ],
           ),

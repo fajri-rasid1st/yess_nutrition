@@ -21,14 +21,19 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-  final List<Widget> _pages = <Widget>[];
-
   late final NotificationHelper _notificationHelper;
   late final PageController _pageController;
+
+  final List<Widget> _pages = <Widget>[];
 
   @override
   void initState() {
     super.initState();
+
+    _notificationHelper = NotificationHelper();
+    _notificationHelper.configureSelectNotificationSubject(context);
+
+    _pageController = PageController();
 
     _pages.addAll([
       HomePage(uid: widget.user.uid, pageController: _pageController),
@@ -36,11 +41,6 @@ class _MainPageState extends State<MainPage> {
       NewsPage(uid: widget.user.uid),
       ShopPage(uid: widget.user.uid),
     ]);
-    
-    _notificationHelper = NotificationHelper();
-    _notificationHelper.configureSelectNotificationSubject(context);
-
-    _pageController = PageController();
   }
 
   @override

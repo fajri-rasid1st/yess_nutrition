@@ -7,11 +7,11 @@ import 'package:yess_nutrition/domain/entities/entities.dart';
 import 'package:yess_nutrition/presentation/pages/news_pages/news_detail_page.dart';
 import 'package:yess_nutrition/presentation/widgets/widgets.dart';
 
-class CardNutriNewsHome extends StatelessWidget {
+class NutriNewsHomeCard extends StatelessWidget {
   final NewsEntity news;
   final String heroTag;
 
-  const CardNutriNewsHome({
+  const NutriNewsHomeCard({
     Key? key,
     required this.news,
     required this.heroTag,

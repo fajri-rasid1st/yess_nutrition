@@ -28,10 +28,7 @@ class CustomFloatingActionButton extends StatelessWidget {
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: <Color>[
-                  Color(0XFF8B80F8),
-                  Color(0XFF5C51C6),
-                ],
+                colors: <Color>[Color(0XFF8B80F8), Color(0XFF5C51C6)],
               ),
               boxShadow: <BoxShadow>[
                 BoxShadow(

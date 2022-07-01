@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/domain/entities/user_food_schedule_entity.dart';
 import 'package:yess_nutrition/presentation/widgets/custom_network_image.dart';
@@ -86,10 +85,7 @@ class FoodScheduleListTile extends StatelessWidget {
             ),
             child: IconButton(
               onPressed: foodSchedule.isDone ? null : onPressedChecklistButton,
-              icon: const Icon(
-                MdiIcons.check,
-                size: 18,
-              ),
+              icon: const Icon(Icons.check_rounded),
               color: primaryColor,
               tooltip: 'Checklist',
             ),

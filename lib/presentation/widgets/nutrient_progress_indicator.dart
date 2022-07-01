@@ -2,12 +2,12 @@ import 'package:countup/countup.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
 
-class LargeCircularProgress extends StatelessWidget {
+class NutrientProgressIndicator extends StatelessWidget {
   final Color backgroundColor, progressColor;
   final String descriptionProgress;
   final double progress;
 
-  const LargeCircularProgress({
+  const NutrientProgressIndicator({
     Key? key,
     required this.backgroundColor,
     required this.progressColor,
@@ -18,9 +18,9 @@ class LargeCircularProgress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CircularPercentIndicator(
-      radius: 50.0,
-      lineWidth: 14,
-      percent: progress,
+      radius: 40,
+      lineWidth: 12,
+      percent: progress > 1 ? 1 : progress,
       animation: true,
       animationDuration: 1000,
       center: Countup(
@@ -29,8 +29,8 @@ class LargeCircularProgress extends StatelessWidget {
         duration: const Duration(milliseconds: 1000),
         style: Theme.of(context)
             .textTheme
-            .headline6
-            ?.copyWith(fontWeight: FontWeight.w800),
+            .bodyText1!
+            .copyWith(fontWeight: FontWeight.w800, fontSize: 15),
         suffix: "%",
       ),
       progressColor: progressColor,
@@ -40,7 +40,7 @@ class LargeCircularProgress extends StatelessWidget {
         padding: const EdgeInsets.only(top: 8),
         child: Text(
           descriptionProgress,
-          style: Theme.of(context).textTheme.bodyText1,
+          style: Theme.of(context).textTheme.bodyText2,
         ),
       ),
     );

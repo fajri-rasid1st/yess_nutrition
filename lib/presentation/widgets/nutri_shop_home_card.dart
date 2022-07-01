@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/utils.dart';
 import 'package:yess_nutrition/domain/entities/entities.dart';
+import 'package:yess_nutrition/presentation/widgets/custom_network_image.dart';
 
-class CardNutriShopHome extends StatelessWidget {
+class NutriShopHomeCard extends StatelessWidget {
   final ProductEntity product;
 
-  const CardNutriShopHome({Key? key, required this.product}) : super(key: key);
+  const NutriShopHomeCard({Key? key, required this.product}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,18 +40,21 @@ class CardNutriShopHome extends StatelessWidget {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(6),
                   ),
-                  child: Image.network(
-                    product.imgUrl,
+                  child: CustomNetworkImage(
+                    imgUrl: product.imgUrl,
                     fit: BoxFit.cover,
+                    placeHolderSize: 55,
+                    errorIcon: Icons.motion_photos_off_outlined,
                   ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   product.title,
                   overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.subtitle2?.copyWith(
-                        color: primaryTextColor,
-                      ),
+                  style: Theme.of(context)
+                      .textTheme
+                      .subtitle2!
+                      .copyWith(color: primaryTextColor),
                 ),
                 const SizedBox(height: 4),
                 Row(
@@ -70,11 +74,11 @@ class CardNutriShopHome extends StatelessWidget {
                     )
                   ],
                 ),
-                const SizedBox(height: 2),
+                const SizedBox(height: 4),
                 Text(
                   product.price,
-                  style: Theme.of(context).textTheme.bodyText2?.copyWith(
-                        fontWeight: FontWeight.w900,
+                  style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                        fontWeight: FontWeight.bold,
                         color: errorColor,
                       ),
                 )

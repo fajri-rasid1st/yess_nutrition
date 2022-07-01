@@ -185,7 +185,13 @@ class _NutriTimePagePageState extends State<SchedulePage>
                   arguments: widget.uid,
                 ),
                 icon: const Icon(Icons.add_rounded),
-                label: const Text('Tambah Jadwal Makan'),
+                label: Text(
+                  'Tambah Jadwal Makan',
+                  style: Theme.of(context).textTheme.button!.copyWith(
+                        color: primaryColor,
+                        letterSpacing: 0.5,
+                      ),
+                ),
               ),
             ),
           ],
@@ -280,7 +286,7 @@ class _NutriTimePagePageState extends State<SchedulePage>
         motion: const ScrollMotion(),
         children: <Widget>[
           SlidableAction(
-            onPressed: (context) async {
+            onPressed: (_) async {
               await deleteFoodSchedule(context, foodSchedule);
             },
             icon: Icons.delete_outline_rounded,

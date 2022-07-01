@@ -309,7 +309,7 @@ class _ShopPageState extends State<ShopPage>
             child: Row(
               children: <Widget>[
                 Text(
-                  "Lihat semua",
+                  'Lihat semua',
                   style: Theme.of(context).textTheme.caption!.copyWith(
                         color: primaryColor,
                         fontWeight: FontWeight.bold,

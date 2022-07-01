@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -12,6 +13,7 @@ import 'package:provider/provider.dart';
 import 'package:yess_nutrition/common/styles/button_style.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
+import 'package:yess_nutrition/common/utils/keys.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/common/utils/utilities.dart';
 import 'package:yess_nutrition/domain/entities/entities.dart';
@@ -29,39 +31,12 @@ class UpdateProfilePage extends StatefulWidget {
 
 class _UpdateProfilePageState extends State<UpdateProfilePage> {
   late final GlobalKey<FormBuilderState> _formKey;
-  late final TextEditingController _nameController;
-  late final TextEditingController _bioController;
-  late final TextEditingController _ageController;
-  late final TextEditingController _weightController;
-  late final TextEditingController _heightController;
 
   @override
   void initState() {
-    _formKey = GlobalKey<FormBuilderState>();
-    _nameController = TextEditingController();
-    _bioController = TextEditingController();
-    _ageController = TextEditingController();
-    _weightController = TextEditingController();
-    _heightController = TextEditingController();
-
-    _nameController.text = widget.userData.name;
-    _bioController.text = widget.userData.bio;
-    _ageController.text = widget.userData.age.toString();
-    _weightController.text = widget.userData.weight.toString();
-    _heightController.text = widget.userData.height.toString();
-
     super.initState();
-  }
 
-  @override
-  void dispose() {
-    _nameController.dispose();
-    _bioController.dispose();
-    _ageController.dispose();
-    _weightController.dispose();
-    _heightController.dispose();
-
-    super.dispose();
+    _formKey = GlobalKey<FormBuilderState>();
   }
 
   @override
@@ -205,45 +180,40 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
   FormBuilderTextField _buildNameField() {
     return FormBuilderTextField(
       name: 'name',
-      controller: _nameController,
+      initialValue: widget.userData.name,
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.name,
       maxLength: 100,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+      decoration: const InputDecoration(
         labelText: 'Nama',
         hintText: 'Masukkan nama kamu',
-        hintStyle: const TextStyle(color: secondaryTextColor),
-        prefixIcon: const Icon(Icons.person_outline),
+        hintStyle: TextStyle(color: secondaryTextColor),
+        prefixIcon: Icon(Icons.person_outline),
       ),
-      validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
-      ]),
+      validator: FormBuilderValidators.required(
+        errorText: 'Bagian ini harus diisi.',
+      ),
     );
   }
 
   FormBuilderTextField _buildBioField() {
     return FormBuilderTextField(
       name: 'bio',
-      controller: _bioController,
+      initialValue: widget.userData.bio,
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.multiline,
       minLines: 1,
       maxLines: 5,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+      decoration: const InputDecoration(
         labelText: 'Bio',
         hintText: 'Masukkan bio anda',
-        hintStyle: const TextStyle(color: secondaryTextColor),
-        prefixIcon: const Icon(Icons.info_outline),
+        hintStyle: TextStyle(color: secondaryTextColor),
+        prefixIcon: Icon(Icons.info_outline),
       ),
-      validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
-      ]),
+      validator: FormBuilderValidators.maxLength(
+        255,
+        errorText: 'Maksimal 255 Karakter',
+      ),
     );
   }
 
@@ -302,75 +272,74 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
           ),
         ),
       ],
-      validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
-      ]),
     );
   }
 
   FormBuilderTextField _buildAgeField() {
     return FormBuilderTextField(
       name: 'age',
-      controller: _ageController,
+      initialValue: widget.userData.age == 0 ? '' : '${widget.userData.age}',
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.number,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+      decoration: const InputDecoration(
         labelText: 'Umur (tahun)',
         hintText: 'Masukkan umur kamu',
-        hintStyle: const TextStyle(color: secondaryTextColor),
-        prefixIcon: const Icon(Icons.man_outlined),
+        hintStyle: TextStyle(color: secondaryTextColor),
+        prefixIcon: Icon(Icons.man_outlined),
       ),
-      validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
-        FormBuilderValidators.integer(errorText: 'Input berupa angka integer.'),
-      ]),
+      inputFormatters: <TextInputFormatter>[
+        LengthLimitingTextInputFormatter(3),
+      ],
+      validator: FormBuilderValidators.match(
+        r'^[1-9]\d*$',
+        errorText: 'Format yang dimasukkan salah.',
+      ),
     );
   }
 
   FormBuilderTextField _buildWeightField() {
     return FormBuilderTextField(
       name: 'weight',
-      controller: _weightController,
+      initialValue:
+          widget.userData.weight == 0 ? '' : '${widget.userData.weight}',
       textInputAction: TextInputAction.next,
       keyboardType: TextInputType.number,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+      decoration: const InputDecoration(
         labelText: 'Berat Badan (kg)',
         hintText: 'Masukkan berat badan kamu',
-        hintStyle: const TextStyle(color: secondaryTextColor),
-        prefixIcon: const Icon(Icons.monitor_weight_outlined),
+        hintStyle: TextStyle(color: secondaryTextColor),
+        prefixIcon: Icon(Icons.monitor_weight_outlined),
       ),
-      validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
-        FormBuilderValidators.integer(errorText: 'Input berupa angka integer.'),
-      ]),
+      inputFormatters: <TextInputFormatter>[
+        LengthLimitingTextInputFormatter(3),
+      ],
+      validator: FormBuilderValidators.match(
+        r'^[1-9]\d*$',
+        errorText: 'Format yang dimasukkan salah.',
+      ),
     );
   }
 
   FormBuilderTextField _buildHeightField() {
     return FormBuilderTextField(
       name: 'height',
-      controller: _heightController,
+      initialValue:
+          widget.userData.height == 0 ? '' : '${widget.userData.height}',
       textInputAction: TextInputAction.done,
       keyboardType: TextInputType.number,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+      decoration: const InputDecoration(
         labelText: 'Tinggi Badan (cm)',
         hintText: 'Masukkan tinggi badan kamu',
-        hintStyle: const TextStyle(color: secondaryTextColor),
-        prefixIcon: const Icon(Icons.height_outlined),
+        hintStyle: TextStyle(color: secondaryTextColor),
+        prefixIcon: Icon(Icons.height_outlined),
       ),
-      validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
-        FormBuilderValidators.integer(errorText: 'Input berupa angka integer.'),
-      ]),
+      inputFormatters: <TextInputFormatter>[
+        LengthLimitingTextInputFormatter(3),
+      ],
+      validator: FormBuilderValidators.match(
+        r'^[1-9]\d*$',
+        errorText: 'Format yang dimasukkan salah.',
+      ),
     );
   }
 
@@ -392,7 +361,6 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
 
     if (_formKey.currentState!.validate()) {
       final value = _formKey.currentState!.value;
-      final userDataNotifier = context.read<UserDataNotifier>();
 
       // show loading when on process
       showDialog(
@@ -401,66 +369,106 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
         builder: (context) => const LoadingIndicator(),
       );
 
-      // read user data
-      await userDataNotifier.readUserData(widget.userData.uid);
+      // updated user data
+      final updatedUserData = widget.userData.copyWith(
+        name: value['name'],
+        bio: value['bio'],
+        gender: value['gender'],
+        age: int.tryParse(value['age']) ?? 0,
+        weight: int.tryParse(value['weight']) ?? 0,
+        height: int.tryParse(value['height']) ?? 0,
+      );
 
-      if (!mounted) return;
+      final isUpdated = await _updateUserData(context, updatedUserData) &&
+          await _createUserNutrients(context, updatedUserData);
 
-      if (userDataNotifier.state == UserState.success) {
-        // get user data
-        final userData = userDataNotifier.userData;
-
-        // updated user data
-        final updatedUserData = userData.copyWith(
-          name: value['name'],
-          bio: value['bio'],
-          gender: value['gender'],
-          age: int.tryParse(value['age']),
-          weight: int.tryParse(value['weight']),
-          height: int.tryParse(value['height']),
-        );
-
-        // update user data on firestore
-        await userDataNotifier.updateUserData(updatedUserData);
-
-        if (!mounted) return;
-
-        if (userDataNotifier.state == UserState.success) {
-          // close loading indicator
-          Navigator.pop(context);
-
-          // Close Update Profile Page
-          Navigator.pop(context);
-
-          // Reload Profile Page
-          Navigator.pushReplacementNamed(
-            context,
-            profileRoute,
-            arguments: widget.userData.uid,
-          );
-        }
-      } else {
-        final snackBar = Utilities.createSnackBar(userDataNotifier.error);
-
+      if (isUpdated) {
         // close loading indicator
-        Navigator.pop(context);
+        navigatorKey.currentState!.pop();
 
-        ScaffoldMessenger.of(context)
+        // Close Update Profile Page
+        navigatorKey.currentState!.pop();
+
+        scaffoldMessengerKey.currentState!
           ..hideCurrentSnackBar()
-          ..showSnackBar(snackBar);
+          ..showSnackBar(
+            Utilities.createSnackBar('Berhasil memperbaharui profil'),
+          );
+      } else {
+        // close loading indicator
+        navigatorKey.currentState!.pop();
+
+        scaffoldMessengerKey.currentState!
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            Utilities.createSnackBar('Terjadi kesalahan. Silahkan coba lagi'),
+          );
       }
     }
+  }
+
+  // return true if user data updated successfully, otherwise return false
+  Future<bool> _updateUserData(
+    BuildContext context,
+    UserDataEntity userData,
+  ) async {
+    final userDataNotifier = context.read<UserDataNotifier>();
+
+    // update user data on firestore
+    await userDataNotifier.updateUserData(userData);
+
+    // refresh data
+    await userDataNotifier.refresh(widget.userData.uid);
+
+    if (userDataNotifier.state == UserState.success) return Future.value(true);
+
+    return Future.value(false);
+  }
+
+  // return true if user nutrients updated successfully, otherwise return false
+  Future<bool> _createUserNutrients(
+    BuildContext context,
+    UserDataEntity userData,
+  ) async {
+    if (userData.age == 0 &&
+        userData.weight == 0 &&
+        userData.height == 0 &&
+        userData.gender.isEmpty) {
+      return Future.value(true);
+    }
+
+    final userNutrientsNotifier = context.read<UserNutrientsNotifier>();
+
+    await userNutrientsNotifier.readUserNutrients(userData.uid);
+
+    final userNutrients = userNutrientsNotifier.userNutrients;
+
+    if (userNutrients != null) return Future.value(true);
+
+    // get user daily nutrients needs (BMR)
+    final userNeeds = Utilities.calculateUserNutrients(userData);
+
+    // create user nutrients
+    await userNutrientsNotifier.createUserNutrients(userNeeds);
+
+    // refresh data
+    await userNutrientsNotifier.refresh(userData.uid);
+
+    if (userNutrientsNotifier.state == UserState.success) {
+      return Future.value(true);
+    }
+
+    return Future.value(false);
   }
 
   Future<void> _onPressedProfilePictureButton(BuildContext context) async {
     await showModalBottomSheet(
       context: context,
-      isScrollControlled: false,
       builder: (context) => BottomSheet(
         onClosing: () {},
         builder: (context) => Column(
           mainAxisSize: MainAxisSize.min,
-          children: [
+          children: <ListTile>[
             ListTile(
               leading: const Icon(MdiIcons.cameraOutline),
               title: const Text('Ambil Gambar'),
@@ -499,35 +507,18 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       imageQuality: 50,
     );
 
-    if (pickedFile == null) {
-      return;
-    }
+    if (pickedFile == null) return;
 
-    var file = await ImageCropper().cropImage(
+    final file = await ImageCropper().cropImage(
       sourcePath: pickedFile.path,
       aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
     );
 
-    if (file == null) {
-      return;
-    }
+    if (file == null) return;
 
-    var filecrop = await compressImage(file.path, 35);
+    final filecrop = await compressImage(file.path, 35);
 
     await _uploadFile(filecrop.path);
-  }
-
-  Future<File> compressImage(String path, int quality) async {
-    final newPath = p.join((await getTemporaryDirectory()).path,
-        '${widget.userData.uid}${p.extension(path)}');
-
-    final result = await FlutterImageCompress.compressAndGetFile(
-      path,
-      newPath,
-      quality: quality,
-    );
-
-    return result!;
   }
 
   Future<void> _uploadFile(String path) async {
@@ -540,7 +531,9 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
     final uploadProfilePictureNotifier = context.read<UserStorageNotifier>();
 
     await uploadProfilePictureNotifier.uploadProfilePicture(
-        path, p.basename(path));
+      path,
+      p.basename(path),
+    );
 
     if (!mounted) return;
 
@@ -552,16 +545,12 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
       // read user data
       await userDataNotifier.readUserData(widget.userData.uid);
 
-      if (!mounted) return;
-
       if (userDataNotifier.state == UserState.success) {
         // get user data
         final userData = userDataNotifier.userData;
 
         // updated user data
-        final updatedUserData = userData.copyWith(
-          imgUrl: url,
-        );
+        final updatedUserData = userData.copyWith(imgUrl: url);
 
         // update user data on firestore
         await userDataNotifier.updateUserData(updatedUserData);
@@ -584,15 +573,14 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
         }
       }
     } else {
-      final snackBar =
-          Utilities.createSnackBar(uploadProfilePictureNotifier.error);
-
       // close loading indicator
       Navigator.pop(context);
 
       ScaffoldMessenger.of(context)
         ..hideCurrentSnackBar()
-        ..showSnackBar(snackBar);
+        ..showSnackBar(
+          Utilities.createSnackBar(uploadProfilePictureNotifier.error),
+        );
     }
   }
 
@@ -621,24 +609,21 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
         if (!mounted) return;
 
         if (deleteProfilePictureNotifier.state == UserState.error) {
-          final snackBar =
-              Utilities.createSnackBar(deleteProfilePictureNotifier.error);
-
           // close loading indicator
           Navigator.pop(context);
 
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
-            ..showSnackBar(snackBar);
+            ..showSnackBar(
+              Utilities.createSnackBar(deleteProfilePictureNotifier.error),
+            );
         }
       }
       // get user data
       final userData = userDataNotifier.userData;
 
       // updated user data
-      final updatedUserData = userData.copyWith(
-        imgUrl: '',
-      );
+      final updatedUserData = userData.copyWith(imgUrl: '');
 
       // update user data on firestore
       await userDataNotifier.updateUserData(updatedUserData);
@@ -660,5 +645,20 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
         );
       }
     }
+  }
+
+  Future<File> compressImage(String path, int quality) async {
+    final newPath = p.join(
+      (await getTemporaryDirectory()).path,
+      '${widget.userData.uid}${p.extension(path)}',
+    );
+
+    final result = await FlutterImageCompress.compressAndGetFile(
+      path,
+      newPath,
+      quality: quality,
+    );
+
+    return result!;
   }
 }

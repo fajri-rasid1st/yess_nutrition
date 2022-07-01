@@ -6,5 +6,6 @@ abstract class UserStorageRepository {
     String path,
     String name,
   );
+  
   Future<Either<Failure, void>> deleteProfilePicture(String filename);
 }

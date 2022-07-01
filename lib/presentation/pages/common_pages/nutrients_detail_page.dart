@@ -219,7 +219,13 @@ class _NutrientsDetailPageState extends State<NutrientsDetailPage> {
                     onPressedSecondaryAction: () => Navigator.pop(context),
                   );
                 },
-                child: const Text('Reset Progress Harian'),
+                child: Text(
+                  'Reset Progress Harian',
+                  style: Theme.of(context).textTheme.button!.copyWith(
+                        color: primaryColor,
+                        letterSpacing: 0.5,
+                      ),
+                ),
               ),
             ),
           ],

@@ -7,16 +7,15 @@ import 'package:yess_nutrition/common/styles/color_scheme.dart';
 import 'package:yess_nutrition/common/utils/enum_state.dart';
 import 'package:yess_nutrition/common/utils/routes.dart';
 import 'package:yess_nutrition/presentation/providers/common_notifiers/home_page_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/product_notifiers/products_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/common_notifiers/bottom_navbar_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/news_notifiers/get_news_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_data_notifier.dart';
+import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_food_schedule_notifier.dart';
 import 'package:yess_nutrition/presentation/providers/user_notifiers/user_firestore_notifiers/user_nutrients_notifier.dart';
-import 'package:yess_nutrition/presentation/widgets/card_nutri_news_home.dart';
-import 'package:yess_nutrition/presentation/widgets/card_nutri_shop_home.dart';
-import 'package:yess_nutrition/presentation/widgets/card_nutri_time_task.dart';
+import 'package:yess_nutrition/presentation/widgets/custom_network_image.dart';
 import 'package:yess_nutrition/presentation/widgets/loading_indicator.dart';
-import 'package:yess_nutrition/presentation/widgets/small_circular_progress.dart';
+import 'package:yess_nutrition/presentation/widgets/nutri_news_home_card.dart';
+import 'package:yess_nutrition/presentation/widgets/nutri_shop_home_card.dart';
+import 'package:yess_nutrition/presentation/widgets/nutri_time_task_card.dart';
+import 'package:yess_nutrition/presentation/widgets/nutrient_progress_indicator.dart';
 
 class HomePage extends StatefulWidget {
   final String uid;
@@ -45,8 +44,10 @@ class _HomePageState extends State<HomePage>
       Provider.of<UserNutrientsNotifier>(context, listen: false)
           .readUserNutrients(widget.uid);
 
-      Provider.of<HomePageNotifier>(context, listen: false)
-          .getAllContentHomePage();
+      Provider.of<UserFoodScheduleNotifier>(context, listen: false)
+          .readUserFoodSchedules(widget.uid);
+
+      Provider.of<HomePageNotifier>(context, listen: false).getAllContents();
     });
   }
 
@@ -56,128 +57,121 @@ class _HomePageState extends State<HomePage>
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Stack(
-        fit: StackFit.expand,
-        children: <Widget>[
-          _buildHeaderHomePage(context),
-          _buildContentHomePage(context),
-        ],
+      body: Consumer<UserDataNotifier>(
+        builder: (context, result, child) {
+          if (result.state == UserState.success) {
+            return Stack(
+              fit: StackFit.expand,
+              children: <Widget>[
+                _buildHeaderHomePage(context, result),
+                _buildContentHomePage(context),
+              ],
+            );
+          }
+
+          return Container(
+            color: primaryBackgroundColor,
+            child: const LoadingIndicator(),
+          );
+        },
       ),
     );
   }
 
-  Consumer<UserDataNotifier> _buildHeaderHomePage(BuildContext context) {
-    return Consumer<UserDataNotifier>(
-      builder: (context, userDataNotifier, child) {
-        if (userDataNotifier.state == UserState.success) {
-          return Stack(
-            alignment: AlignmentDirectional.topStart,
-            clipBehavior: Clip.none,
-            children: <Widget>[
-              SvgPicture.asset(
-                'assets/svg/header_background.svg',
-                alignment: Alignment.topCenter,
-                fit: BoxFit.fitWidth,
-                width: double.infinity,
-              ),
-              SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 32,
-                  ),
+  Stack _buildHeaderHomePage(
+    BuildContext context,
+    UserDataNotifier userDataNotifier,
+  ) {
+    return Stack(
+      alignment: AlignmentDirectional.topStart,
+      clipBehavior: Clip.none,
+      children: <Widget>[
+        SvgPicture.asset(
+          'assets/svg/header_background.svg',
+          alignment: Alignment.topCenter,
+          fit: BoxFit.fitWidth,
+          width: double.infinity,
+        ),
+        SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 32),
+            child: Row(
+              children: <Widget>[
+                Expanded(
                   child: Row(
                     children: <Widget>[
+                      Container(
+                        width: 50,
+                        height: 50,
+                        margin: const EdgeInsets.only(right: 12),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        clipBehavior: Clip.hardEdge,
+                        child: userDataNotifier.userData.imgUrl.isEmpty
+                            ? Image.asset(
+                                'assets/img/default_user_pict.png',
+                                fit: BoxFit.cover,
+                              )
+                            : CustomNetworkImage(
+                                imgUrl: userDataNotifier.userData.imgUrl,
+                                fit: BoxFit.cover,
+                                placeHolderSize: 30,
+                                errorIcon: Icons.person_off_rounded,
+                              ),
+                      ),
                       Expanded(
-                        child: Row(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Container(
-                              width: 50,
-                              height: 50,
-                              margin: const EdgeInsets.only(right: 12),
-                              decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(8),
-                                ),
+                            Text(
+                              'Hai, ${userDataNotifier.userData.name}',
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: primaryBackgroundColor,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
                               ),
-                              clipBehavior: Clip.hardEdge,
-                              child: userDataNotifier.userData.imgUrl.isEmpty
-                                  ? Image.asset(
-                                      'assets/img/default_user_pict.png',
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Image.network(
-                                      userDataNotifier.userData.imgUrl,
-                                      fit: BoxFit.cover,
-                                    ),
                             ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  Text(
-                                    'Hai, ${userDataNotifier.userData.name}',
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      color: primaryBackgroundColor,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w800,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    "Selamat Datang",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .caption
-                                        ?.copyWith(
-                                            color: primaryBackgroundColor),
-                                  ),
-                                ],
-                              ),
+                            const SizedBox(height: 4),
+                            Text(
+                              'Selamat Datang',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .caption!
+                                  .copyWith(color: primaryBackgroundColor),
                             ),
                           ],
-                        ),
-                      ),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: primaryColor,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: IconButton(
-                          onPressed: () {
-                            Navigator.pushNamed(
-                              context,
-                              profileRoute,
-                              arguments: widget.uid,
-                            );
-                          },
-                          icon: const Icon(
-                            Icons.settings_outlined,
-                            color: primaryBackgroundColor,
-                            size: 28,
-                          ),
-                          tooltip: 'Pengaturan',
                         ),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ],
-          );
-        }
-
-        return const LoadingIndicator();
-      },
+                Container(
+                  decoration: BoxDecoration(
+                    color: primaryColor,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: IconButton(
+                    onPressed: () => Navigator.pushNamed(
+                      context,
+                      profileRoute,
+                      arguments: widget.uid,
+                    ),
+                    icon: const Icon(
+                      Icons.settings_outlined,
+                      color: primaryBackgroundColor,
+                    ),
+                    tooltip: 'Pengaturan',
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
-  }
-
-  double getNutrientValue(int? currentValue, int? maxValue) {
-    if (currentValue == null || maxValue == null) return 0;
-
-    return currentValue / maxValue;
   }
 
   Container _buildContentHomePage(BuildContext context) {
@@ -185,10 +179,7 @@ class _HomePageState extends State<HomePage>
       margin: const EdgeInsets.only(top: 132),
       width: double.infinity,
       decoration: const BoxDecoration(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
         color: scaffoldBackgroundColor,
       ),
       clipBehavior: Clip.hardEdge,
@@ -206,110 +197,23 @@ class _HomePageState extends State<HomePage>
               _buildCardSummary(context),
               const SizedBox(height: 20),
               _buildCardNutriTime(context),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
               _buildTitleContent(
                 context,
-                "NutriNews",
+                'NutriNews',
                 () => widget.pageController.jumpToPage(2),
               ),
-              const SizedBox(height: 8),
               _buildListNutriNews(),
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
               _buildTitleContent(
                 context,
-                "NutriShop",
+                'NutriShop',
                 () => widget.pageController.jumpToPage(3),
               ),
-              const SizedBox(height: 8),
               _buildListNutriShop(),
-              const SizedBox(height: 60),
+              const SizedBox(height: 40),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Container _buildCardNutriTime(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: primaryBackgroundColor,
-        borderRadius: const BorderRadius.all(Radius.circular(16)),
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            offset: const Offset(0.0, 0.0),
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 20,
-          )
-        ],
-      ),
-      child: Padding(
-        padding: const EdgeInsets.only(
-          top: 18.0,
-          left: 18.0,
-          right: 18.0,
-          bottom: 10.0,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Text(
-              "NutriTime",
-              style: Theme.of(context)
-                  .textTheme
-                  .subtitle1
-                  ?.copyWith(fontWeight: FontWeight.w800),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              "4 dari 8",
-              style: Theme.of(context)
-                  .textTheme
-                  .caption
-                  ?.copyWith(color: secondaryTextColor),
-            ),
-            const SizedBox(height: 8),
-            SizedBox(
-              width: double.infinity,
-              child: LinearPercentIndicator(
-                lineHeight: 8,
-                percent: 4 / 8,
-                animation: true,
-                animationDuration: 1000,
-                progressColor: primaryColor,
-                backgroundColor: secondaryColor,
-                barRadius: const Radius.circular(10),
-                padding: EdgeInsets.zero,
-              ),
-            ),
-            const SizedBox(height: 16),
-            ListView.separated(
-              primary: false,
-              padding: EdgeInsets.zero,
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                return const CardNutriTimeTask();
-              },
-              separatorBuilder: (context, index) {
-                return const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 6),
-                  child: Divider(),
-                );
-              },
-              itemCount: 2,
-            ),
-            const SizedBox(height: 16),
-            const Divider(),
-            Center(
-              child: TextButton(
-                onPressed: () {},
-                child: const Text('Lihat Detail'),
-              ),
-            ),
-          ],
         ),
       ),
     );
@@ -331,12 +235,7 @@ class _HomePageState extends State<HomePage>
         ],
       ),
       child: Padding(
-        padding: const EdgeInsets.only(
-          top: 18.0,
-          left: 18.0,
-          right: 18.0,
-          bottom: 10.0,
-        ),
+        padding: const EdgeInsets.fromLTRB(18, 18, 18, 10),
         child: Consumer<UserNutrientsNotifier>(
           builder: (context, result, child) {
             if (result.state == UserState.success) {
@@ -344,67 +243,66 @@ class _HomePageState extends State<HomePage>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    "Ringkasan Nutrisi Harian",
+                    'Ringkasan Nutrisi Harian',
                     style: Theme.of(context)
                         .textTheme
-                        .subtitle1
-                        ?.copyWith(fontWeight: FontWeight.w800),
+                        .subtitle1!
+                        .copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      SmallCircularProgress(
-                        backgroundColor: secondaryColor,
-                        descriptionProgress: "Kalori",
-                        progressColor: secondaryBackgroundColor,
-                        progress: getNutrientValue(
-                          result.userNutrients?.currentCalories,
-                          result.userNutrients?.maxCalories,
+                  SizedBox(
+                    height: 110,
+                    child: ListView(
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      children: <Widget>[
+                        NutrientProgressIndicator(
+                          descriptionProgress: 'Kalori',
+                          backgroundColor: secondaryColor,
+                          progressColor: secondaryBackgroundColor,
+                          progress: getNutrientValue(
+                            result.userNutrients?.currentCalories,
+                            result.userNutrients?.maxCalories,
+                          ),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      SmallCircularProgress(
-                        backgroundColor:
-                            const Color(0XFF5ECFF2).withOpacity(0.2),
-                        descriptionProgress: "Karbo",
-                        progressColor: const Color(0XFF5ECFF2),
-                        progress: getNutrientValue(
-                          result.userNutrients?.currentCarbohydrate,
-                          result.userNutrients?.maxCarbohydrate,
+                        const SizedBox(width: 12),
+                        NutrientProgressIndicator(
+                          descriptionProgress: 'Karbohidrat',
+                          backgroundColor:
+                              const Color(0XFF5ECFF2).withOpacity(0.2),
+                          progressColor: const Color(0XFF5ECFF2),
+                          progress: getNutrientValue(
+                            result.userNutrients?.currentCarbohydrate,
+                            result.userNutrients?.maxCarbohydrate,
+                          ),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      SmallCircularProgress(
-                        backgroundColor:
-                            const Color(0XFFEF5EF2).withOpacity(0.2),
-                        descriptionProgress: "Protein",
-                        progressColor: const Color(0XFFEF5EF2),
-                        progress: getNutrientValue(
-                          result.userNutrients?.currentProtein,
-                          result.userNutrients?.maxProtein,
+                        const SizedBox(width: 12),
+                        NutrientProgressIndicator(
+                          descriptionProgress: 'Protein',
+                          backgroundColor:
+                              const Color(0XFFEF5EF2).withOpacity(0.2),
+                          progressColor: const Color(0XFFEF5EF2),
+                          progress: getNutrientValue(
+                            result.userNutrients?.currentProtein,
+                            result.userNutrients?.maxProtein,
+                          ),
                         ),
-                      ),
-                      const SizedBox(
-                        width: 10,
-                      ),
-                      SmallCircularProgress(
-                        backgroundColor:
-                            const Color(0XFFFB958B).withOpacity(0.2),
-                        descriptionProgress: "Lemak",
-                        progressColor: errorColor,
-                        progress: getNutrientValue(
-                          result.userNutrients?.currentFat,
-                          result.userNutrients?.maxFat,
+                        const SizedBox(width: 12),
+                        NutrientProgressIndicator(
+                          descriptionProgress: 'Lemak',
+                          backgroundColor:
+                              const Color(0XFFFB958B).withOpacity(0.2),
+                          progressColor: errorColor,
+                          progress: getNutrientValue(
+                            result.userNutrients?.currentFat,
+                            result.userNutrients?.maxFat,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   const SizedBox(height: 16),
+                  const Divider(),
                   Center(
                     child: TextButton(
                       onPressed: () => Navigator.pushNamed(
@@ -413,8 +311,8 @@ class _HomePageState extends State<HomePage>
                         arguments: widget.uid,
                       ),
                       child: Text(
-                        "Lihat Detail",
-                        style: Theme.of(context).textTheme.button?.copyWith(
+                        'Lihat Detail',
+                        style: Theme.of(context).textTheme.button!.copyWith(
                               color: primaryColor,
                               letterSpacing: 0.5,
                             ),
@@ -425,10 +323,114 @@ class _HomePageState extends State<HomePage>
               );
             }
 
-            return Container(
-              color: primaryBackgroundColor,
-              child: const LoadingIndicator(),
-            );
+            return const LoadingIndicator(size: 30);
+          },
+        ),
+      ),
+    );
+  }
+
+  Container _buildCardNutriTime(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: primaryBackgroundColor,
+        borderRadius: const BorderRadius.all(Radius.circular(16)),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+            offset: const Offset(0.0, 0.0),
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 20,
+          )
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(18, 18, 18, 10),
+        child: Consumer<UserFoodScheduleNotifier>(
+          builder: (context, result, child) {
+            final schedulesTotal = result.foodSchedules.length;
+            final completeSchedulesTotal = result.foodSchedules
+                .where((schedule) => schedule.isDone == true)
+                .toList()
+                .length;
+
+            final percentage = completeSchedulesTotal / schedulesTotal;
+            final itemCount = result.foodSchedules.length;
+
+            if (result.state == UserState.success) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                children: <Widget>[
+                  Text(
+                    'NutriTime',
+                    style: Theme.of(context)
+                        .textTheme
+                        .subtitle1!
+                        .copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    percentage.isNaN
+                        ? 'Jadwal makan masih kosong'
+                        : '$completeSchedulesTotal / $schedulesTotal Telah selesai',
+                    style: Theme.of(context)
+                        .textTheme
+                        .caption!
+                        .copyWith(color: secondaryTextColor),
+                  ),
+                  const SizedBox(height: 8),
+                  SizedBox(
+                    width: double.infinity,
+                    child: LinearPercentIndicator(
+                      padding: EdgeInsets.zero,
+                      lineHeight: 8,
+                      animation: true,
+                      animationDuration: 1000,
+                      progressColor: primaryColor,
+                      backgroundColor: secondaryColor,
+                      barRadius: const Radius.circular(10),
+                      percent: percentage.isNaN ? 0 : percentage,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  ListView.separated(
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: EdgeInsets.zero,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      final foodSchedule = result.foodSchedules[index];
+
+                      return NutriTimeTaskCard(foodSchedule: foodSchedule);
+                    },
+                    separatorBuilder: (context, index) {
+                      return const Padding(
+                        padding: EdgeInsets.symmetric(vertical: 6),
+                        child: Divider(),
+                      );
+                    },
+                    itemCount: itemCount > 3 ? 3 : itemCount,
+                  ),
+                  const SizedBox(height: 16),
+                  const Divider(),
+                  Center(
+                    child: TextButton(
+                      onPressed: () => widget.pageController.jumpToPage(1),
+                      child: Text(
+                        'Lihat Detail',
+                        style: Theme.of(context).textTheme.button!.copyWith(
+                              color: primaryColor,
+                              letterSpacing: 0.5,
+                            ),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }
+
+            return const LoadingIndicator(size: 30);
           },
         ),
       ),
@@ -441,8 +443,9 @@ class _HomePageState extends State<HomePage>
     VoidCallback onTap,
   ) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.fromLTRB(16, 0, 10, 12),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Text(
             title,
@@ -457,10 +460,10 @@ class _HomePageState extends State<HomePage>
             child: Row(
               children: <Widget>[
                 Text(
-                  "Selengkapnya",
+                  'Selengkapnya',
                   style: Theme.of(context).textTheme.caption!.copyWith(
                         color: primaryColor,
-                        letterSpacing: 0.25,
+                        fontWeight: FontWeight.bold,
                       ),
                 ),
                 const Icon(
@@ -483,13 +486,13 @@ class _HomePageState extends State<HomePage>
         builder: (context, result, child) {
           if (result.state == RequestState.success) {
             return ListView.separated(
-              primary: false,
+              physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               padding: EdgeInsets.zero,
               itemBuilder: (context, index) {
                 final news = result.news[index];
 
-                return CardNutriNewsHome(
+                return NutriNewsHomeCard(
                   news: news.copyWith(uid: widget.uid),
                   heroTag: 'home:${news.url}',
                 );
@@ -501,7 +504,7 @@ class _HomePageState extends State<HomePage>
             );
           }
 
-          return const LoadingIndicator();
+          return const LoadingIndicator(size: 30);
         },
       ),
     );
@@ -513,26 +516,31 @@ class _HomePageState extends State<HomePage>
       child: Consumer<HomePageNotifier>(
         builder: (context, result, child) {
           if (result.state == RequestState.success) {
-            final productsMap = result.products;
             return ListView.separated(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               scrollDirection: Axis.horizontal,
               itemBuilder: (context, index) {
-                final products = productsMap;
+                final product = result.products[index];
 
-                return CardNutriShopHome(product: products[index]);
+                return NutriShopHomeCard(product: product);
               },
               separatorBuilder: (context, index) {
                 return const SizedBox(width: 8);
               },
-              itemCount: productsMap.length,
+              itemCount: result.products.length,
             );
           }
 
-          return const LoadingIndicator();
+          return const LoadingIndicator(size: 30);
         },
       ),
     );
+  }
+
+  double getNutrientValue(int? currentValue, int? maxValue) {
+    if (currentValue == null || maxValue == null) return 0;
+
+    return currentValue / maxValue;
   }
 
   @override

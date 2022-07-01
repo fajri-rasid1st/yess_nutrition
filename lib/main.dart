@@ -111,6 +111,9 @@ class MyApp extends StatelessWidget {
           create: (_) => di.locator<FavoriteProductNotifier>(),
         ),
         ChangeNotifierProvider(
+          create: (_) => di.locator<HomePageNotifier>(),
+        ),
+        ChangeNotifierProvider(
           create: (_) => BottomNavbarNotifier(),
         ),
         ChangeNotifierProvider(
@@ -124,9 +127,6 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => NewsFabNotifier(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => di.locator<HomePageNotifier>(),
         ),
       ],
       child: MaterialApp(

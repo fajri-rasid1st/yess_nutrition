@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -177,6 +178,9 @@ class AdditionalInfoPage extends StatelessWidget {
         hintText: 'Masukkan umur kamu',
         prefixIcon: Icon(Icons.man_outlined),
       ),
+      inputFormatters: <TextInputFormatter>[
+        LengthLimitingTextInputFormatter(3),
+      ],
       validator: FormBuilderValidators.compose([
         FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
         FormBuilderValidators.match(
@@ -197,6 +201,9 @@ class AdditionalInfoPage extends StatelessWidget {
         hintText: 'Masukkan berat badan kamu',
         prefixIcon: Icon(Icons.monitor_weight_outlined),
       ),
+      inputFormatters: <TextInputFormatter>[
+        LengthLimitingTextInputFormatter(3),
+      ],
       validator: FormBuilderValidators.compose([
         FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
         FormBuilderValidators.match(
@@ -217,6 +224,9 @@ class AdditionalInfoPage extends StatelessWidget {
         hintText: 'Masukkan tinggi badan kamu',
         prefixIcon: Icon(Icons.height_outlined),
       ),
+      inputFormatters: <TextInputFormatter>[
+        LengthLimitingTextInputFormatter(3),
+      ],
       validator: FormBuilderValidators.compose([
         FormBuilderValidators.required(errorText: 'Bagian ini harus diisi.'),
         FormBuilderValidators.match(
