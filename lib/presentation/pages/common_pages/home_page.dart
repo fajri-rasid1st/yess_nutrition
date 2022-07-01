@@ -183,7 +183,18 @@ class _HomePageState extends State<HomePage>
         onRefresh: () {
           return Future.microtask(() {
             context.read<HomePageNotifier>().getAllContents(refresh: true);
+
+            context.read<UserDataNotifier>().readUserData(
+                  widget.uid,
+                  refresh: true,
+                );
+
             context.read<UserNutrientsNotifier>().readUserNutrients(
+                  widget.uid,
+                  refresh: true,
+                );
+
+            context.read<UserFoodScheduleNotifier>().readUserFoodSchedules(
                   widget.uid,
                   refresh: true,
                 );
