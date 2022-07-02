@@ -2,25 +2,25 @@
 const newsBaseUrl = 'https://newsapi.org/v2';
 
 /// an API key, used with [newsBaseUrl]
-const newsApiKey = '7050119227e24e83bd10051e12a1b9c5';
+const newsApiKey = 'a2cf0f24021c44aebcd082a64255629e';
 
 /// a base API url for food and product database feature
 const foodBaseUrl = 'https://api.edamam.com/api/food-database/v2/parser';
 
 /// an app id, used with [foodBaseUrl]
-const foodAppId = 'b8bd9b3a';
+const foodAppId = 'd79c2580';
 
 /// an app key, used with [foodBaseUrl]
-const foodAppKey = '6cf3d53b97c0bfa283c2120350b0e532';
+const foodAppKey = '64a112f6eef502fe92858d780232ee98';
 
 /// a base API url for food recipe feauture
 const recipeBaseUrl = 'https://api.edamam.com/api/recipes/v2';
 
 /// an app id, used with [recipeBaseUrl]
-const recipeAppId = 'c4cfd3e2';
+const recipeAppId = '81f4800b';
 
 /// an app key, used with [recipeBaseUrl]
-const recipeAppKey = '25a1a63aff3f14b00da8df7ad109f4b5';
+const recipeAppKey = 'a3c9fb2ef8a69553992e131387fe7716';
 
 /// a list of certificates that used for request data from API
 const certificates = <String, String>{
