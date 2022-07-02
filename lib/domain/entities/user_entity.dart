@@ -24,6 +24,7 @@ class UserEntity extends Equatable {
       age: 0,
       weight: 0,
       height: 0,
+      bio: '',
     );
   }
 

@@ -11,8 +11,8 @@ const secondaryTextColor = Color(0XFF9C9DB9);
 const dividerColor = Color(0XFFD2D1E1);
 const errorColor = Color(0XFFF9877B);
 
-// Color Scheme
-final myColorScheme = ColorScheme.fromSeed(
+// Color scheme
+final colorScheme = ColorScheme.fromSeed(
   seedColor: primaryColor,
   brightness: Brightness.light,
   primary: primaryColor,
@@ -24,3 +24,32 @@ final myColorScheme = ColorScheme.fromSeed(
   error: errorColor,
   errorContainer: errorColor,
 );
+
+// Gradient color used for alarm schedule background color
+class GradientColors {
+  final List<Color> colors;
+
+  const GradientColors(this.colors);
+
+  static const List<Color> morning = <Color>[
+    secondaryBackgroundColor,
+    Color.fromARGB(255, 58, 199, 241),
+  ];
+
+  static const List<Color> day = <Color>[
+    primaryColor,
+    Color.fromARGB(255, 35, 157, 194),
+  ];
+
+  static const List<Color> night = <Color>[
+    Color(0XFF444974),
+    Color.fromARGB(255, 12, 82, 104),
+  ];
+}
+
+// Gradient templates
+const gradientTemplates = <GradientColors>[
+  GradientColors(GradientColors.morning),
+  GradientColors(GradientColors.day),
+  GradientColors(GradientColors.night),
+];

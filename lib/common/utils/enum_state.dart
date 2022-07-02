@@ -1,3 +1,5 @@
+/// A status of data from auth, firebase, and storage  process
 enum UserState { empty, success, error }
 
-// add more enum state here
+/// A status of data from request API process
+enum RequestState { empty, loading, success, error }

@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:yess_nutrition/common/styles/color_scheme.dart';
 
 class ClickableText extends StatelessWidget {
-  final VoidCallback onTap;
   final String text;
+  final VoidCallback onTap;
 
   const ClickableText({
     Key? key,
-    required this.onTap,
     required this.text,
+    required this.onTap,
   }) : super(key: key);
 
   @override

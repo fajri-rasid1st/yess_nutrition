@@ -1,31 +1,20 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:provider/single_child_widget.dart';
-import 'package:yess_nutrition/domain/entities/user_entity.dart';
-import 'package:yess_nutrition/presentation/pages/additional_info_page.dart';
-import 'package:yess_nutrition/presentation/pages/forgot_password_page.dart';
-import 'package:yess_nutrition/presentation/pages/home_page.dart';
-import 'package:yess_nutrition/presentation/pages/login_page.dart';
-import 'package:yess_nutrition/presentation/pages/auth_page.dart';
-import 'package:yess_nutrition/presentation/pages/register_page.dart';
-import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/delete_user_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/reset_password_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_in_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_in_with_google_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_out_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/sign_up_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user/auth_notifiers/get_user_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/create_user_data_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/delete_user_data_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/read_user_data_notifier.dart';
-import 'package:yess_nutrition/presentation/providers/user/firestore_notifiers/update_user_data_notifier.dart';
-import 'common/styles/color_scheme.dart';
-import 'common/styles/text_style.dart';
+
+import 'common/styles/styles.dart';
+import 'common/utils/http_ssl_pinning.dart';
+import 'common/utils/keys.dart';
 import 'common/utils/routes.dart';
+import 'data/datasources/helpers/notification_helper.dart';
+import 'domain/entities/entities.dart';
 import 'firebase_options.dart';
 import 'injection.dart' as di;
+import 'presentation/pages/pages.dart';
+import 'presentation/providers/providers.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -38,6 +27,7 @@ void main() async {
 
   // Change status bar and navigation color
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarIconBrightness: Brightness.light,
     systemNavigationBarColor: primaryBackgroundColor,
     systemNavigationBarIconBrightness: Brightness.dark,
   ));
@@ -45,8 +35,17 @@ void main() async {
   // Initialize firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
+  // Pass all uncaught errors from the framework to Crashlytics.
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+
+  // Initialize ssl pinning
+  await HttpSslPinning.init();
+
   // Initialize service locator
   di.init();
+
+  // Initialize notification
+  await di.locator<NotificationHelper>().initNotifications();
 
   runApp(const MyApp());
 }
@@ -58,38 +57,80 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: <SingleChildWidget>[
-        ChangeNotifierProvider<GetUserNotifier>(
+        ChangeNotifierProvider(
           create: (_) => di.locator<GetUserNotifier>(),
         ),
-        ChangeNotifierProvider<SignInNotifier>(
-          create: (_) => di.locator<SignInNotifier>(),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<UserAuthNotifier>(),
         ),
-        ChangeNotifierProvider<SignInWithGoogleNotifier>(
-          create: (_) => di.locator<SignInWithGoogleNotifier>(),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<UserDataNotifier>(),
         ),
-        ChangeNotifierProvider<SignUpNotifier>(
-          create: (_) => di.locator<SignUpNotifier>(),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<UserNutrientsNotifier>(),
         ),
-        ChangeNotifierProvider<SignOutNotifier>(
-          create: (_) => di.locator<SignOutNotifier>(),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<UserFoodScheduleNotifier>(),
         ),
-        ChangeNotifierProvider<ResetPasswordNotifier>(
-          create: (_) => di.locator<ResetPasswordNotifier>(),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<UserStorageNotifier>(),
         ),
-        ChangeNotifierProvider<DeleteUserNotifier>(
-          create: (_) => di.locator<DeleteUserNotifier>(),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<ScheduleNotifier>(),
         ),
-        ChangeNotifierProvider<CreateUserDataNotifier>(
-          create: (_) => di.locator<CreateUserDataNotifier>(),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<SearchFoodNotifier>(),
         ),
-        ChangeNotifierProvider<ReadUserDataNotifier>(
-          create: (_) => di.locator<ReadUserDataNotifier>(),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<SearchProductNotifier>(),
         ),
-        ChangeNotifierProvider<UpdateUserDataNotifier>(
-          create: (_) => di.locator<UpdateUserDataNotifier>(),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<FoodHistoryNotifier>(),
         ),
-        ChangeNotifierProvider<DeleteUserDataNotifier>(
-          create: (_) => di.locator<DeleteUserDataNotifier>(),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<SearchRecipesNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<GetRecipeDetailNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<RecipeBookmarkNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<GetNewsNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<SearchNewsNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<NewsBookmarkNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<ProductsNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<ProductListNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<FavoriteProductNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => di.locator<HomePageNotifier>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => BottomNavbarNotifier(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => PasswordFieldNotifier(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => WebViewNotifier(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ScheduleTimeNotifier(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => NewsFabNotifier(),
         ),
       ],
       child: MaterialApp(
@@ -97,26 +138,46 @@ class MyApp extends StatelessWidget {
         title: 'Yess Nutrition',
         theme: ThemeData(
           fontFamily: 'Plus Jakarta Sans',
-          colorScheme: myColorScheme,
-          textTheme: myTextTheme,
+          colorScheme: colorScheme,
+          textTheme: textTheme,
           dividerColor: dividerColor,
           scaffoldBackgroundColor: scaffoldBackgroundColor,
+          inputDecorationTheme: inputDecorationTheme,
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: elevatedButtonStyle,
+          ),
+          outlinedButtonTheme: OutlinedButtonThemeData(
+            style: outlinedButtonStyle,
+          ),
+          textButtonTheme: TextButtonThemeData(
+            style: textButtonStyle,
+          ),
+          pageTransitionsTheme: const PageTransitionsTheme(
+            builders: {
+              TargetPlatform.android: FadeUpwardsPageTransitionsBuilder()
+            },
+          ),
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: const AuthPage(),
+        navigatorKey: navigatorKey,
+        scaffoldMessengerKey: scaffoldMessengerKey,
+        navigatorObservers: [routeObserver],
+        home: const Wrapper(),
         onGenerateRoute: (settings) {
           switch (settings.name) {
             case loginRoute:
               return MaterialPageRoute(
-                builder: (_) => const LoginPage(),
+                builder: (_) => LoginPage(),
               );
             case registerRoute:
               return MaterialPageRoute(
-                builder: (_) => const RegisterPage(),
+                builder: (_) => RegisterPage(),
               );
             case forgotPasswordRoute:
+              final email = settings.arguments as String?;
+
               return MaterialPageRoute(
-                builder: (_) => const ForgotPasswordPage(),
+                builder: (_) => ForgotPasswordPage(email: email),
               );
             case additionalInfoRoute:
               final user = settings.arguments as UserEntity;
@@ -125,11 +186,133 @@ class MyApp extends StatelessWidget {
                 builder: (_) => AdditionalInfoPage(user: user),
                 settings: settings,
               );
-            case homeRoute:
+            case webviewRoute:
+              final url = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => WebViewPage(url: url),
+                settings: settings,
+              );
+            case mainRoute:
               final user = settings.arguments as UserEntity;
 
               return MaterialPageRoute(
-                builder: (_) => HomePage(user: user),
+                builder: (_) => MainPage(user: user),
+                settings: settings,
+              );
+
+            case nutrientsDetailRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => NutrientsDetailPage(uid: uid),
+                settings: settings,
+              );
+
+            case profileRoute:
+              return MaterialPageRoute(
+                builder: (_) => const ProfilePage(),
+                settings: settings,
+              );
+            case updateProfileRoute:
+              final userData = settings.arguments as UserDataEntity;
+
+              return MaterialPageRoute(
+                builder: (_) => UpdateProfilePage(userData: userData),
+                settings: settings,
+              );
+            case scheduleAlarmRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => ScheduleAlarmPage(uid: uid),
+                settings: settings,
+              );
+            case checkRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => CheckPage(uid: uid),
+                settings: settings,
+              );
+            case foodCheckRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => FoodCheckPage(uid: uid),
+                settings: settings,
+              );
+            case productCheckRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => ProductCheckPage(uid: uid),
+                settings: settings,
+              );
+            case recipeCheckRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => RecipeCheckPage(uid: uid),
+                settings: settings,
+              );
+            case foodAndProductCheckHistoryRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => FoodAndProductCheckHistoryPage(uid: uid),
+                settings: settings,
+              );
+            case recipeDetailRoute:
+              final arguments = settings.arguments as RecipeDetailPageArgs;
+
+              return MaterialPageRoute(
+                builder: (_) => RecipeDetailPage(
+                  recipe: arguments.recipe,
+                  heroTag: arguments.heroTag,
+                ),
+                settings: settings,
+              );
+            case recipeBookmarksRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => RecipeBookmarksPage(uid: uid),
+                settings: settings,
+              );
+            case newsDetailRoute:
+              final arguments = settings.arguments as NewsDetailPageArgs;
+
+              return MaterialPageRoute(
+                builder: (_) => NewsDetailPage(
+                  news: arguments.news,
+                  heroTag: arguments.heroTag,
+                ),
+                settings: settings,
+              );
+            case newsBookmarksRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => NewsBookmarksPage(uid: uid),
+                settings: settings,
+              );
+            case productsRoute:
+              final arguments = settings.arguments as ProductListPageArgs;
+
+              return MaterialPageRoute(
+                builder: (_) => ProductsPage(
+                  uid: arguments.uid,
+                  title: arguments.title,
+                  productBaseUrl: arguments.productBaseUrl,
+                ),
+                settings: settings,
+              );
+            case favoriteProductsRoute:
+              final uid = settings.arguments as String;
+
+              return MaterialPageRoute(
+                builder: (_) => FavoriteProductsPage(uid: uid),
                 settings: settings,
               );
             default:
