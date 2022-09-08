@@ -65,7 +65,7 @@ dependencies:
   internet_connection_checker: ^0.0.1+4
   intl: ^0.17.0
   material_design_icons_flutter: ^5.0.6595
-  path: 1.8.1
+  path: ^1.8.2
   path_provider: ^2.0.11
   percent_indicator: ^4.2.2
   provider: ^6.0.3
