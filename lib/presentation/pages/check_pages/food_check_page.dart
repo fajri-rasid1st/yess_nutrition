@@ -163,7 +163,7 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
               'Hasil Pencarian:',
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
           if (results.isEmpty) ...[
@@ -202,7 +202,7 @@ class _FoodCheckPageState extends State<FoodCheckPage> {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 'Rekomendasi untukmu:',
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.titleLarge,
               ),
             ),
             ListView.separated(

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -116,7 +118,7 @@ class NutrientsDetailPage extends StatelessWidget {
                     'Detail Nutrisi Harian',
                     style: Theme.of(context)
                         .textTheme
-                        .headline6!
+                        .titleLarge!
                         .copyWith(fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -204,7 +206,7 @@ class NutrientsDetailPage extends StatelessWidget {
                 },
                 child: Text(
                   'Reset Progress Harian',
-                  style: Theme.of(context).textTheme.button!.copyWith(
+                  style: Theme.of(context).textTheme.labelLarge!.copyWith(
                         color: primaryColor,
                         letterSpacing: 0.5,
                       ),
@@ -249,7 +251,7 @@ class NutrientsDetailPage extends StatelessWidget {
                   'Info',
                   style: Theme.of(context)
                       .textTheme
-                      .headline6!
+                      .titleLarge!
                       .copyWith(fontWeight: FontWeight.bold),
                 ),
               ],
@@ -311,7 +313,7 @@ class NutrientsDetailPage extends StatelessWidget {
           nutrientLabel,
           style: Theme.of(context)
               .textTheme
-              .subtitle1!
+              .titleMedium!
               .copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 6),
@@ -319,7 +321,7 @@ class NutrientsDetailPage extends StatelessWidget {
           nutrientTextValue,
           style: Theme.of(context)
               .textTheme
-              .caption!
+              .bodySmall!
               .copyWith(color: secondaryTextColor),
         ),
         const SizedBox(height: 10),

@@ -44,7 +44,7 @@ class NutriCheckCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context)
                             .textTheme
-                            .subtitle1!
+                            .titleMedium!
                             .copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 4),
@@ -52,7 +52,7 @@ class NutriCheckCard extends StatelessWidget {
                         subtitle,
                         style: Theme.of(context)
                             .textTheme
-                            .subtitle2!
+                            .titleSmall!
                             .copyWith(color: primaryColor),
                       ),
                       const SizedBox(height: 12),
@@ -68,7 +68,10 @@ class NutriCheckCard extends StatelessWidget {
                         children: <Widget>[
                           Text(
                             'Cobain deh',
-                            style: Theme.of(context).textTheme.button!.copyWith(
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge!
+                                .copyWith(
                                   color: primaryColor,
                                   fontWeight: FontWeight.bold,
                                 ),

@@ -175,7 +175,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
     BuildContext context,
     RecipeDetailEntity recipeDetail,
   ) {
-    final textStyle = Theme.of(context).textTheme.headline4!.copyWith(
+    final textStyle = Theme.of(context).textTheme.headlineMedium!.copyWith(
           color: primaryBackgroundColor,
           fontSize: 28,
           fontWeight: FontWeight.bold,
@@ -251,7 +251,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                   'Kandungan Nutrisi',
                   style: Theme.of(context)
                       .textTheme
-                      .headline6!
+                      .titleLarge!
                       .copyWith(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -354,7 +354,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                   'Bahan-bahan',
                   style: Theme.of(context)
                       .textTheme
-                      .headline6!
+                      .titleLarge!
                       .copyWith(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -378,7 +378,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
                   'Cara Pembuatan',
                   style: Theme.of(context)
                       .textTheme
-                      .headline6!
+                      .titleLarge!
                       .copyWith(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -415,12 +415,12 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
           title,
           style: Theme.of(context)
               .textTheme
-              .headline5!
+              .headlineSmall!
               .copyWith(fontWeight: FontWeight.bold),
         ),
         Text(
           subtitle,
-          style: Theme.of(context).textTheme.bodyText1,
+          style: Theme.of(context).textTheme.bodyLarge,
         ),
       ],
     );
@@ -437,12 +437,12 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
           title,
           style: Theme.of(context)
               .textTheme
-              .headline6!
+              .titleLarge!
               .copyWith(fontWeight: FontWeight.bold),
         ),
         Text(
           subtitle,
-          style: Theme.of(context).textTheme.bodyText2,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
       ],
     );
@@ -464,7 +464,7 @@ class _RecipeDetailPageState extends State<RecipeDetailPage> {
         children: <Widget>[
           Text(
             title,
-            style: Theme.of(context).textTheme.subtitle1!.copyWith(
+            style: Theme.of(context).textTheme.titleMedium!.copyWith(
                   color: titleColor,
                   fontWeight: FontWeight.bold,
                 ),

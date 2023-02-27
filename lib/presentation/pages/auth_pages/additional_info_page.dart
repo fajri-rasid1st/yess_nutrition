@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -77,7 +79,7 @@ class AdditionalInfoPage extends StatelessWidget {
                 'Lengkapi Data Anda',
                 style: Theme.of(context)
                     .textTheme
-                    .headline4!
+                    .headlineMedium!
                     .copyWith(color: primaryColor),
               ),
               const SizedBox(height: 4),

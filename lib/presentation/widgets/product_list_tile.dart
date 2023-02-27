@@ -47,7 +47,7 @@ class ProductListTile extends StatelessWidget {
                     product.price,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
                           fontWeight: FontWeight.bold,
                           color: primaryColor,
                         ),
@@ -65,7 +65,7 @@ class ProductListTile extends StatelessWidget {
                         product.rating.toString(),
                         style: Theme.of(context)
                             .textTheme
-                            .subtitle2!
+                            .titleSmall!
                             .copyWith(color: Colors.orange[400]),
                       )
                     ],

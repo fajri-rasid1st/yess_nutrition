@@ -125,12 +125,12 @@ class _NewsPageState extends State<NewsPage>
                       'NutriNews',
                       style: Theme.of(context)
                           .textTheme
-                          .headline3!
+                          .displaySmall!
                           .copyWith(fontWeight: FontWeight.bold),
                     ),
                     Text(
                       'Cari tahu berita dan artikel kesehatan di sini.',
-                      style: Theme.of(context).textTheme.bodyText2,
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 16),

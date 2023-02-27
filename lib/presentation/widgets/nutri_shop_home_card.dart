@@ -53,7 +53,7 @@ class NutriShopHomeCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context)
                       .textTheme
-                      .subtitle2!
+                      .titleSmall!
                       .copyWith(color: primaryTextColor),
                 ),
                 const SizedBox(height: 4),
@@ -67,7 +67,7 @@ class NutriShopHomeCard extends StatelessWidget {
                     ),
                     Text(
                       product.rating.toString(),
-                      style: Theme.of(context).textTheme.subtitle2!.copyWith(
+                      style: Theme.of(context).textTheme.titleSmall!.copyWith(
                             color: Colors.orange[400],
                             fontSize: 12,
                           ),
@@ -77,7 +77,7 @@ class NutriShopHomeCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   product.price,
-                  style: Theme.of(context).textTheme.bodyText2!.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         fontWeight: FontWeight.bold,
                         color: errorColor,
                       ),

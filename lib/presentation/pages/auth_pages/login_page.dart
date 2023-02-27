@@ -52,7 +52,7 @@ class LoginPage extends StatelessWidget {
                 children: <Widget>[
                   RichText(
                     text: TextSpan(
-                      style: Theme.of(context).textTheme.headline4,
+                      style: Theme.of(context).textTheme.headlineMedium,
                       children: const <TextSpan>[
                         TextSpan(
                           text: 'Halo, ',

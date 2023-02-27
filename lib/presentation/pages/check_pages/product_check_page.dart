@@ -192,7 +192,7 @@ class _ProductCheckPageState extends State<ProductCheckPage> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
               'Hasil Pencarian:',
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
           ListView.separated(

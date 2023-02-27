@@ -65,7 +65,7 @@ class RegisterPage extends StatelessWidget {
                     'Buat Akun Baru',
                     style: Theme.of(context)
                         .textTheme
-                        .headline4!
+                        .headlineMedium!
                         .copyWith(color: primaryColor),
                   ),
                   const SizedBox(height: 4),

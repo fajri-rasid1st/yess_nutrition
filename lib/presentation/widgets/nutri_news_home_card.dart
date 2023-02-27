@@ -63,7 +63,7 @@ class NutriNewsHomeCard extends StatelessWidget {
                         maxLines: 2,
                         style: Theme.of(context)
                             .textTheme
-                            .subtitle2!
+                            .titleSmall!
                             .copyWith(color: primaryTextColor),
                       ),
                       const SizedBox(height: 8),
@@ -122,7 +122,7 @@ class NutriNewsHomeCard extends StatelessWidget {
             child: Text(
               label,
               overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.caption!.copyWith(
+              style: Theme.of(context).textTheme.bodySmall!.copyWith(
                     color: secondaryTextColor,
                     letterSpacing: 0.25,
                   ),

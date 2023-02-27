@@ -63,7 +63,7 @@ class ForgotPasswordPage extends StatelessWidget {
                     'Lupa Password?',
                     style: Theme.of(context)
                         .textTheme
-                        .headline4!
+                        .headlineMedium!
                         .copyWith(color: primaryColor),
                   ),
                   const SizedBox(height: 4),

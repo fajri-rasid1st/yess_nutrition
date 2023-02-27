@@ -41,7 +41,7 @@ class CustomChip extends StatelessWidget {
               label,
               style: Theme.of(context)
                   .textTheme
-                  .caption!
+                  .bodySmall!
                   .copyWith(color: labelColor),
             ),
           ],

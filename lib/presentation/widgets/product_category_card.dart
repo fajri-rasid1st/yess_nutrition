@@ -7,7 +7,7 @@ import 'package:yess_nutrition/presentation/pages/shop_pages/products_page.dart'
 class ProductCategoryCard extends StatelessWidget {
   final String uid;
   final ProductCategoryModel productCategory;
-  
+
   const ProductCategoryCard({
     Key? key,
     required this.uid,
@@ -48,7 +48,7 @@ class ProductCategoryCard extends StatelessWidget {
                 textAlign: TextAlign.center,
                 style: Theme.of(context)
                     .textTheme
-                    .bodyText1!
+                    .bodyLarge!
                     .copyWith(color: primaryColor),
               ),
             ),

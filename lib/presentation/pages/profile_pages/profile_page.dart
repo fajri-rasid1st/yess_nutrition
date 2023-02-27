@@ -155,7 +155,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         elevation: 0,
                         textStyle: Theme.of(context)
                             .textTheme
-                            .button!
+                            .labelLarge!
                             .copyWith(letterSpacing: 0.25),
                         padding: const EdgeInsets.symmetric(
                           vertical: 12,

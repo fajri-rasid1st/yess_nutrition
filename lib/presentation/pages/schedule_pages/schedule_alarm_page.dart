@@ -178,7 +178,7 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
                 children: <Widget>[
                   Text(
                     alarm != null ? 'Edit Notifikasi' : 'Tambah Notifikasi',
-                    style: Theme.of(context).textTheme.headline5!.copyWith(
+                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                           color: primaryColor,
                           fontWeight: FontWeight.bold,
                         ),
@@ -192,7 +192,7 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
                         timeNotifier.timeString,
                         style: Theme.of(context)
                             .textTheme
-                            .headline4!
+                            .headlineMedium!
                             .copyWith(color: primaryColor),
                       ),
                       IconButton(
@@ -443,11 +443,11 @@ class _ScheduleAlarmPageState extends State<ScheduleAlarmPage> {
           timeNotifier.setTimeStringFromDateTime(datetime);
         },
         cancelText: 'Batal',
-        cancelStyle: Theme.of(context).textTheme.button!.copyWith(
+        cancelStyle: Theme.of(context).textTheme.labelLarge!.copyWith(
               color: primaryColor,
               fontWeight: FontWeight.bold,
             ),
-        okStyle: Theme.of(context).textTheme.button!.copyWith(
+        okStyle: Theme.of(context).textTheme.labelLarge!.copyWith(
               color: primaryColor,
               fontWeight: FontWeight.bold,
             ),
