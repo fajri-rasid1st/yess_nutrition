@@ -205,9 +205,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                               ),
                               const SizedBox(width: 12),
-                              Column(
+                              const Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const <Widget>[
+                                children: <Widget>[
                                   Text(
                                     'Pemberitahuan',
                                     style: TextStyle(
