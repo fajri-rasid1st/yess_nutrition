@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -234,12 +236,12 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
           color: primaryColor,
         ),
       ),
-      options: <FormBuilderChipOption<String>>[
+      options: const <FormBuilderChipOption<String>>[
         FormBuilderChipOption(
           value: 'Laki-laki',
           child: Row(
             mainAxisSize: MainAxisSize.min,
-            children: const <Widget>[
+            children: <Widget>[
               Icon(
                 Icons.male_outlined,
                 color: Color(0XFF5ECFF2),
@@ -257,7 +259,7 @@ class _UpdateProfilePageState extends State<UpdateProfilePage> {
           value: 'Perempuan',
           child: Row(
             mainAxisSize: MainAxisSize.min,
-            children: const <Widget>[
+            children: <Widget>[
               Icon(
                 Icons.female_outlined,
                 color: Color(0XFFEF5EF2),

@@ -29,7 +29,7 @@ class NutrientProgressIndicator extends StatelessWidget {
         duration: const Duration(milliseconds: 1000),
         style: Theme.of(context)
             .textTheme
-            .bodyText1!
+            .bodyLarge!
             .copyWith(fontWeight: FontWeight.w800, fontSize: 15),
         suffix: "%",
       ),
@@ -40,7 +40,7 @@ class NutrientProgressIndicator extends StatelessWidget {
         padding: const EdgeInsets.only(top: 8),
         child: Text(
           descriptionProgress,
-          style: Theme.of(context).textTheme.bodyText2,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
       ),
     );

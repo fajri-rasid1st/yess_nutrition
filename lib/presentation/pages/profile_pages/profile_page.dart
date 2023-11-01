@@ -155,7 +155,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         elevation: 0,
                         textStyle: Theme.of(context)
                             .textTheme
-                            .button!
+                            .labelLarge!
                             .copyWith(letterSpacing: 0.25),
                         padding: const EdgeInsets.symmetric(
                           vertical: 12,
@@ -205,9 +205,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                               ),
                               const SizedBox(width: 12),
-                              Column(
+                              const Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
-                                children: const <Widget>[
+                                children: <Widget>[
                                   Text(
                                     'Pemberitahuan',
                                     style: TextStyle(

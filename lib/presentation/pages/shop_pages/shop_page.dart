@@ -64,7 +64,7 @@ class _ShopPageState extends State<ShopPage>
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context)
                     .textTheme
-                    .caption!
+                    .bodySmall!
                     .copyWith(color: primaryBackgroundColor),
               ),
             ],
@@ -138,7 +138,7 @@ class _ShopPageState extends State<ShopPage>
                   'Kategori Kesehatan',
                   style: Theme.of(context)
                       .textTheme
-                      .subtitle1!
+                      .titleMedium!
                       .copyWith(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -165,7 +165,7 @@ class _ShopPageState extends State<ShopPage>
                   'Kategori Makanan & Minuman',
                   style: Theme.of(context)
                       .textTheme
-                      .subtitle1!
+                      .titleMedium!
                       .copyWith(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -300,7 +300,7 @@ class _ShopPageState extends State<ShopPage>
             title,
             style: Theme.of(context)
                 .textTheme
-                .subtitle1!
+                .titleMedium!
                 .copyWith(fontWeight: FontWeight.bold),
           ),
           const Spacer(),
@@ -310,7 +310,7 @@ class _ShopPageState extends State<ShopPage>
               children: <Widget>[
                 Text(
                   'Lihat semua',
-                  style: Theme.of(context).textTheme.caption!.copyWith(
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
                         color: primaryColor,
                         fontWeight: FontWeight.bold,
                       ),

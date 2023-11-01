@@ -139,7 +139,7 @@ class _HomePageState extends State<HomePage>
                               'Selamat Datang',
                               style: Theme.of(context)
                                   .textTheme
-                                  .caption!
+                                  .bodySmall!
                                   .copyWith(color: primaryBackgroundColor),
                             ),
                           ],
@@ -256,7 +256,7 @@ class _HomePageState extends State<HomePage>
                     'Ringkasan Nutrisi Harian',
                     style: Theme.of(context)
                         .textTheme
-                        .subtitle1!
+                        .titleMedium!
                         .copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 16),
@@ -322,7 +322,7 @@ class _HomePageState extends State<HomePage>
                       ),
                       child: Text(
                         'Lihat Detail',
-                        style: Theme.of(context).textTheme.button!.copyWith(
+                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
                               color: primaryColor,
                               letterSpacing: 0.5,
                             ),
@@ -377,7 +377,7 @@ class _HomePageState extends State<HomePage>
                     'NutriTime',
                     style: Theme.of(context)
                         .textTheme
-                        .subtitle1!
+                        .titleMedium!
                         .copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 4),
@@ -387,7 +387,7 @@ class _HomePageState extends State<HomePage>
                         : '$completeSchedulesTotal / $schedulesTotal Telah selesai',
                     style: Theme.of(context)
                         .textTheme
-                        .caption!
+                        .bodySmall!
                         .copyWith(color: secondaryTextColor),
                   ),
                   const SizedBox(height: 8),
@@ -429,7 +429,7 @@ class _HomePageState extends State<HomePage>
                       onPressed: () => widget.pageController.jumpToPage(1),
                       child: Text(
                         'Lihat Detail',
-                        style: Theme.of(context).textTheme.button!.copyWith(
+                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
                               color: primaryColor,
                               letterSpacing: 0.5,
                             ),
@@ -461,7 +461,7 @@ class _HomePageState extends State<HomePage>
             title,
             style: Theme.of(context)
                 .textTheme
-                .subtitle1!
+                .titleMedium!
                 .copyWith(fontWeight: FontWeight.bold),
           ),
           const Spacer(),
@@ -471,7 +471,7 @@ class _HomePageState extends State<HomePage>
               children: <Widget>[
                 Text(
                   'Selengkapnya',
-                  style: Theme.of(context).textTheme.caption!.copyWith(
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(
                         color: primaryColor,
                         fontWeight: FontWeight.bold,
                       ),

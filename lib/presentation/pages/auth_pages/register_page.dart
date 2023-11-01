@@ -65,7 +65,7 @@ class RegisterPage extends StatelessWidget {
                     'Buat Akun Baru',
                     style: Theme.of(context)
                         .textTheme
-                        .headline4!
+                        .headlineMedium!
                         .copyWith(color: primaryColor),
                   ),
                   const SizedBox(height: 4),
@@ -76,7 +76,6 @@ class RegisterPage extends StatelessWidget {
                   const SizedBox(height: 24),
                   FormBuilder(
                     key: _formKey,
-                    autoFocusOnValidationFailure: true,
                     child: Column(
                       children: <Widget>[
                         _buildNameField(),
@@ -220,9 +219,7 @@ class RegisterPage extends StatelessWidget {
   Future<void> _onPressedSubmitButton(BuildContext context) async {
     FocusScope.of(context).unfocus();
 
-    _formKey.currentState!.save();
-
-    if (_formKey.currentState!.validate()) {
+    if (_formKey.currentState!.saveAndValidate()) {
       final value = _formKey.currentState!.value;
       final authNotifier = context.read<UserAuthNotifier>();
       final userDataNotifier = context.read<UserDataNotifier>();

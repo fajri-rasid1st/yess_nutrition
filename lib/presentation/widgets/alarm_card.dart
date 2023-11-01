@@ -61,7 +61,7 @@ class AlarmCard extends StatelessWidget {
                       alarm.title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
                             color: primaryBackgroundColor,
                             fontWeight: FontWeight.bold,
                           ),
@@ -86,7 +86,7 @@ class AlarmCard extends StatelessWidget {
                   alarmTime,
                   style: Theme.of(context)
                       .textTheme
-                      .headline5!
+                      .headlineSmall!
                       .copyWith(color: primaryBackgroundColor),
                 ),
                 const Spacer(),

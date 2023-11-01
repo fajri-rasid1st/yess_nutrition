@@ -42,7 +42,7 @@ class NutriTimeTaskCard extends StatelessWidget {
                     const SizedBox(width: 2),
                     Text(
                       foodSchedule.scheduleType,
-                      style: Theme.of(context).textTheme.overline!.copyWith(
+                      style: Theme.of(context).textTheme.labelSmall!.copyWith(
                             color: secondaryTextColor,
                             letterSpacing: 0.75,
                           ),
@@ -50,7 +50,7 @@ class NutriTimeTaskCard extends StatelessWidget {
                     const SizedBox(width: 2),
                     Text(
                       foodSchedule.isDone ? '(Selesai)' : '(Pending)',
-                      style: Theme.of(context).textTheme.overline!.copyWith(
+                      style: Theme.of(context).textTheme.labelSmall!.copyWith(
                             color:
                                 foodSchedule.isDone ? Colors.green : Colors.red,
                             letterSpacing: 0.75,
@@ -65,7 +65,7 @@ class NutriTimeTaskCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context)
                       .textTheme
-                      .subtitle1!
+                      .titleMedium!
                       .copyWith(color: primaryTextColor),
                 ),
                 const SizedBox(height: 4),
@@ -73,7 +73,7 @@ class NutriTimeTaskCard extends StatelessWidget {
                   '${foodSchedule.foodNutrients.calories.toStringAsFixed(0)} Kkal (${foodSchedule.totalServing} Porsi)',
                   style: Theme.of(context)
                       .textTheme
-                      .caption!
+                      .bodySmall!
                       .copyWith(color: primaryColor),
                 ),
               ],

@@ -34,7 +34,7 @@ class CustomInformation extends StatelessWidget {
               textAlign: TextAlign.center,
               style: Theme.of(context)
                   .textTheme
-                  .headline6!
+                  .titleLarge!
                   .copyWith(fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 4),

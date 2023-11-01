@@ -4,6 +4,7 @@ import 'package:yess_nutrition/common/utils/exception.dart';
 
 abstract class UserStorageDataSource {
   Future<String> uploadProfilePicture(String path, String name);
+
   Future<void> deleteProfilePicture(String filename);
 }
 
@@ -14,7 +15,7 @@ class UserStorageDataSourceImpl implements UserStorageDataSource {
 
   @override
   Future<String> uploadProfilePicture(String path, String name) async {
-    File file = File(path);
+    final file = File(path);
 
     try {
       final upload =

@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
@@ -131,7 +133,7 @@ class _NutriTimePagePageState extends State<SchedulePage>
                     'Progres Makan',
                     style: Theme.of(context)
                         .textTheme
-                        .headline6!
+                        .titleLarge!
                         .copyWith(fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -148,7 +150,7 @@ class _NutriTimePagePageState extends State<SchedulePage>
                   : '$completeSchedulesTotal / $schedulesTotal Telah selesai',
               style: Theme.of(context)
                   .textTheme
-                  .bodyText1!
+                  .bodyLarge!
                   .copyWith(color: secondaryTextColor),
             ),
             const SizedBox(height: 12),
@@ -177,7 +179,7 @@ class _NutriTimePagePageState extends State<SchedulePage>
                 icon: const Icon(Icons.add_rounded),
                 label: Text(
                   'Tambah Jadwal Makan',
-                  style: Theme.of(context).textTheme.button!.copyWith(
+                  style: Theme.of(context).textTheme.labelLarge!.copyWith(
                         color: primaryColor,
                         letterSpacing: 0.5,
                       ),
@@ -218,7 +220,7 @@ class _NutriTimePagePageState extends State<SchedulePage>
                     'Jadwal Makan',
                     style: Theme.of(context)
                         .textTheme
-                        .subtitle1!
+                        .titleMedium!
                         .copyWith(fontWeight: FontWeight.bold),
                   ),
                 ),

@@ -52,7 +52,7 @@ class LoginPage extends StatelessWidget {
                 children: <Widget>[
                   RichText(
                     text: TextSpan(
-                      style: Theme.of(context).textTheme.headline4,
+                      style: Theme.of(context).textTheme.headlineMedium,
                       children: const <TextSpan>[
                         TextSpan(
                           text: 'Halo, ',
@@ -73,7 +73,6 @@ class LoginPage extends StatelessWidget {
                   const SizedBox(height: 24),
                   FormBuilder(
                     key: _formKey,
-                    autoFocusOnValidationFailure: true,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: <Widget>[
@@ -198,9 +197,7 @@ class LoginPage extends StatelessWidget {
   Future<void> _onPressedSubmitButton(BuildContext context) async {
     FocusScope.of(context).unfocus();
 
-    _formKey.currentState!.save();
-
-    if (_formKey.currentState!.validate()) {
+    if (_formKey.currentState!.saveAndValidate()) {
       final value = _formKey.currentState!.value;
       final authNotifier = context.read<UserAuthNotifier>();
 

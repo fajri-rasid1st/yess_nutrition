@@ -50,7 +50,7 @@ class FoodListTile extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context)
                             .textTheme
-                            .subtitle1!
+                            .titleMedium!
                             .copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(height: 4),
@@ -60,7 +60,7 @@ class FoodListTile extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: Theme.of(context)
                             .textTheme
-                            .caption!
+                            .bodySmall!
                             .copyWith(color: secondaryTextColor),
                       ),
                     ],
@@ -106,7 +106,7 @@ class FoodListTile extends StatelessWidget {
               'Kandungan nutrisi per porsi:',
               style: Theme.of(context)
                   .textTheme
-                  .subtitle2!
+                  .titleSmall!
                   .copyWith(fontWeight: FontWeight.bold),
             ),
           ),

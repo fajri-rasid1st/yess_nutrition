@@ -46,7 +46,7 @@ class FoodHintListTile extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context)
                         .textTheme
-                        .subtitle2!
+                        .titleSmall!
                         .copyWith(fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 2),
@@ -56,7 +56,7 @@ class FoodHintListTile extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     style: Theme.of(context)
                         .textTheme
-                        .caption!
+                        .bodySmall!
                         .copyWith(color: secondaryTextColor),
                   ),
                   const SizedBox(height: 4),

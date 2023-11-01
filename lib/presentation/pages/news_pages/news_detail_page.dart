@@ -129,10 +129,11 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                       widget.news.title,
                       maxLines: 4,
                       overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.headline5!.copyWith(
-                            color: primaryBackgroundColor,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      style:
+                          Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                color: primaryBackgroundColor,
+                                fontWeight: FontWeight.bold,
+                              ),
                     ),
                     const SizedBox(height: 8),
                     Wrap(
@@ -177,7 +178,7 @@ class _NewsDetailPageState extends State<NewsDetailPage> {
                         widget.news.source,
                         style: Theme.of(context)
                             .textTheme
-                            .headline6!
+                            .titleLarge!
                             .copyWith(fontWeight: FontWeight.bold),
                       ),
                     ),

@@ -75,9 +75,9 @@ class _WebViewPageState extends State<WebViewPage> {
                       );
                     }
                   },
-                  child: Row(
+                  child: const Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: const <Widget>[
+                    children: <Widget>[
                       Icon(
                         Icons.open_in_browser_rounded,
                         color: primaryColor,
@@ -92,9 +92,9 @@ class _WebViewPageState extends State<WebViewPage> {
                   onTap: () async {
                     await _webViewController.reload();
                   },
-                  child: Row(
+                  child: const Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: const <Widget>[
+                    children: <Widget>[
                       Icon(
                         Icons.refresh_rounded,
                         color: primaryColor,
@@ -120,9 +120,9 @@ class _WebViewPageState extends State<WebViewPage> {
                         );
                     });
                   },
-                  child: Row(
+                  child: const Row(
                     mainAxisSize: MainAxisSize.min,
-                    children: const <Widget>[
+                    children: <Widget>[
                       Icon(
                         Icons.cached_rounded,
                         color: primaryColor,

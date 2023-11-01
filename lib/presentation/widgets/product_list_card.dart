@@ -50,10 +50,11 @@ class ProductListCard extends StatelessWidget {
                         product.price,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: primaryColor,
-                            ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium!.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: primaryColor,
+                                ),
                       ),
                       const SizedBox(height: 4),
                       Row(
@@ -68,7 +69,7 @@ class ProductListCard extends StatelessWidget {
                             product.rating.toString(),
                             style: Theme.of(context)
                                 .textTheme
-                                .subtitle2!
+                                .titleSmall!
                                 .copyWith(color: Colors.orange[400]),
                           )
                         ],

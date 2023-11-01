@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:encrypt/encrypt.dart' as encrypt;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -131,7 +133,7 @@ class Utilities {
                       textAlign: TextAlign.center,
                       style: Theme.of(context)
                           .textTheme
-                          .subtitle1!
+                          .titleMedium!
                           .copyWith(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 16),
@@ -212,7 +214,7 @@ class Utilities {
             children: <Widget>[
               Text(
                 'Buat Jadwal Makan',
-                style: Theme.of(context).textTheme.headline5!.copyWith(
+                style: Theme.of(context).textTheme.headlineSmall!.copyWith(
                       color: primaryColor,
                       fontWeight: FontWeight.bold,
                     ),
@@ -241,7 +243,7 @@ class Utilities {
                             food.label,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: Theme.of(context).textTheme.subtitle1,
+                            style: Theme.of(context).textTheme.titleMedium,
                           ),
                           const SizedBox(height: 4),
                           Text(
@@ -250,7 +252,7 @@ class Utilities {
                             overflow: TextOverflow.ellipsis,
                             style: Theme.of(context)
                                 .textTheme
-                                .caption!
+                                .bodySmall!
                                 .copyWith(color: secondaryTextColor),
                           ),
                           const SizedBox(height: 4),
@@ -284,7 +286,7 @@ class Utilities {
                         labelText: 'Pilih waktu makan',
                         labelStyle: Theme.of(context)
                             .textTheme
-                            .headline5!
+                            .headlineSmall!
                             .copyWith(color: primaryColor),
                       ),
                       options: const <FormBuilderFieldOption<String>>[
