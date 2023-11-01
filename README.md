@@ -9,12 +9,14 @@
 _**YessNutrition**_ merupakan aplikasi pemenuhan kebutuhan gizi berbasis Android yang merupakan hasil Capstone Project Akhir dari grup CPSG-61 pada kegiatan SIB Dicoding x Kampus Merdeka Batch 2.
 
 ## Fitur-fitur
+
 - _**NutriCheck**_: Mencari berbagai jenis makanan dan minuman, produk makanan dan minuman, hingga resep masakan disertai dengan kandungan nutrisinya.
 - _**NutriTime**_: Menjadwalkan waktu makan, alarm pengingat/notifikasi waktu makan, dan pemilihan menu makan.
 - _**NutriNews**_: Membaca, mencari, dan menyimpan artikel atau berita seputar kesehatan serta segala hal yang berkaitan dengan gizi makanan.
 - _**NutriShop**_: Mencari dan melihat berbagai jenis dan kategori produk terkait dengan kebutuhan kesehatan dan pemenuhan kebutuhan gizi.
 
 ## Tampilan beberapa halaman
+
 <a href="https://raw.githubusercontent.com/fajri-rasid1st/assets/main/screenshot_app/ss_auth.jpg">
   <img alt="ss_auth" title="ss_auth" width="240px" height="512px" src="https://raw.githubusercontent.com/fajri-rasid1st/assets/main/screenshot_app/ss_auth.jpg" />
 </a>
@@ -40,8 +42,8 @@ _**YessNutrition**_ merupakan aplikasi pemenuhan kebutuhan gizi berbasis Android
   <img alt="ss_nutricheck" title="ss_nutricheck" width="240px" height="512px" src="https://raw.githubusercontent.com/fajri-rasid1st/assets/main/screenshot_app/ss_nutricheck.jpg" />
 </a>
 
-
 ## Demo beberapa fitur
+
 > [1. Autentikasi](https://raw.githubusercontent.com/fajri-rasid1st/assets/main/.github/images/auth.mp4)
 
 > [2. NutriCheck](https://raw.githubusercontent.com/fajri-rasid1st/assets/main/.github/images/nutri_check.mp4)
@@ -59,7 +61,7 @@ _**YessNutrition**_ merupakan aplikasi pemenuhan kebutuhan gizi berbasis Android
 > [8. NutriShop](https://raw.githubusercontent.com/fajri-rasid1st/assets/main/.github/images/nutri_shop.mp4)
 
 ## Download file APK
+
 Untuk mengetahui lebih jelas semua fitur dan kegunaan aplikasi, silahkan download file APK melalui link dibawah ini.
 
 [Download file APK YessNutrition](https://drive.google.com/drive/folders/1Nd0dSpEeQnQU8UFvw8WYGJ1FelWrJsAB?usp=sharing)
-
